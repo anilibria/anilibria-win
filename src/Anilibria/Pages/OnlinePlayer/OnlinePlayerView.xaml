@@ -1,0 +1,325 @@
+﻿<Page
+	x:Class="Anilibria.Pages.OnlinePlayer.OnlinePlayerView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="using:Anilibria.Pages.OnlinePlayer"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	d:DataContext="{d:DesignInstance local:OnlinePlayerViewModel}">
+
+	<Page.Resources>
+		<Storyboard x:Name="ShowPause">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="PauseIcon">
+				<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1.3"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="PauseIcon">
+				<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1.3"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PauseIcon">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0" />
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value=".6" />
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Name="HidePause">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="PauseIcon">
+				<EasingDoubleKeyFrame KeyTime="0" Value="1.3"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="PauseIcon">
+				<EasingDoubleKeyFrame KeyTime="0" Value="1.3"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PauseIcon">
+				<EasingDoubleKeyFrame KeyTime="0" Value=".6" />
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0" />
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Style TargetType="Button" x:Key="VolumeButton">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+			<Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
+			<Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
+			<Setter Property="Padding" Value="0,0,0,0" />
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+			<Setter Property="FontWeight" Value="Normal" />
+			<Setter Property="FontSize" Value="32" />
+			<Setter Property="UseSystemFocusVisuals" Value="False" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Normal">
+										<Storyboard>
+											<PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="PointerOver">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="LightGray" />
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+											</ObjectAnimationUsingKeyFrames>
+											<PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" />
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="LightGray" />
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+											</ObjectAnimationUsingKeyFrames>
+											<PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Disabled">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent" />
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<ContentPresenter x:Name="ContentPresenter"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								Content="{TemplateBinding Content}"
+								ContentTransitions="{TemplateBinding ContentTransitions}"
+								ContentTemplate="{TemplateBinding ContentTemplate}"
+								Padding="{TemplateBinding Padding}"
+								HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+								VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+								AutomationProperties.AccessibilityView="Raw"
+							/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Page.Resources>
+
+	<Grid>
+		<MediaPlayerElement
+			x:Name="OnlinePlayer"
+			Tapped="OnlinePlayer_Tapped"
+			DoubleTapped="OnlinePlayer_DoubleTapped"
+			AutoPlay="True"
+		/>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<StackPanel
+				Grid.Row="0"
+				Grid.Column="0"
+				Background="LightGray"
+				PointerEntered="StackPanel_PointerEntered"
+				PointerExited="StackPanel_PointerExited"
+				Opacity="0"
+				x:Name="VolumeArea"
+				Width="100">
+				<Button
+					Style="{StaticResource VolumeButton}"
+					Command="{Binding ChangeVolumeCommand}"
+					HorizontalAlignment="Stretch">
+					<Button.CommandParameter>
+						<x:Double>.1</x:Double>
+					</Button.CommandParameter>
+					<TextBlock>+</TextBlock>
+				</Button>
+				<Grid x:Name="VolumeText">
+					<TextBlock
+						Text="{Binding DisplayVolume}"
+						HorizontalAlignment="Center"
+						FontSize="30"
+						Foreground="Black">
+						<TextBlock.RenderTransform>
+							<TranslateTransform X="1" Y="1" />
+						</TextBlock.RenderTransform>
+					</TextBlock>
+					<TextBlock
+						Text="{Binding DisplayVolume}"
+						HorizontalAlignment="Center"
+						FontSize="30"
+						Foreground="White"
+					/>
+				</Grid>
+				<Button
+					Style="{StaticResource VolumeButton}"
+					Command="{Binding ChangeVolumeCommand}"
+					HorizontalAlignment="Stretch">
+					<Button.CommandParameter>
+						<x:Double>-.1</x:Double>
+					</Button.CommandParameter>
+					<TextBlock>-</TextBlock>
+				</Button>
+				<Button
+					Style="{StaticResource VolumeButton}"
+					Command="{Binding MuteCommand}"
+					HorizontalAlignment="Stretch">
+					<Image Source="ms-appx:///Assets/mute.svg" Width="36" Height="36" />
+				</Button>
+			</StackPanel>
+			<StackPanel
+				Grid.Row="0"
+				Grid.Column="1"
+				Grid.ColumnSpan="2"
+				Orientation="Vertical">
+				<Grid HorizontalAlignment="Right">
+					<Rectangle
+						Fill="LightGray"
+						Opacity=".4">
+					</Rectangle>
+					<TextBlock
+						x:Name="TitleLabel"
+						FontSize="30"
+						MaxLines="2"
+						TextWrapping="Wrap"
+						TextTrimming="CharacterEllipsis"
+						Foreground="LightGray">
+						(Восхождение героя щита)Tate no Yuusha no Nariagari
+					</TextBlock>
+				</Grid>
+			</StackPanel>
+			<Grid
+				Grid.RowSpan="3"
+				Grid.ColumnSpan="3"
+				IsHitTestVisible="False"
+				x:Name="PauseIcon"
+				Opacity="0"
+				RenderTransformOrigin=".5 .5">
+				<Grid.RenderTransform>
+					<CompositeTransform></CompositeTransform>
+				</Grid.RenderTransform>
+				<Viewbox
+					x:Name="PauseIconViewbox"
+					Width="245"
+					Height="245"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					IsHitTestVisible="False">
+					<PathIcon
+						Foreground="White"
+						IsHitTestVisible="False"
+						Data="M231.6,516.278c0,10.658-8.641,19.3-19.3,19.3H106.15c-10.659,0-19.3-8.641-19.3-19.3V19.3
+						c0-10.659,8.641-19.3,19.3-19.3h106.15c10.659,0,19.3,8.641,19.3,19.3V516.278z M448.728,516.278c0,10.658-8.641,19.3-19.3,19.3h-106.15c-10.659,0-19.3-8.641-19.3-19.3V19.3
+						c0-10.659,8.641-19.3,19.3-19.3h106.15c10.659,0,19.3,8.641,19.3,19.3V516.278z"
+					/>
+				</Viewbox>
+			</Grid>
+			<StackPanel
+				Grid.Row="2"
+				Grid.Column="2">
+				<Grid HorizontalAlignment="Right">
+					<Rectangle
+						Fill="LightGray"
+						Opacity=".4"
+					/>
+					<StackPanel Margin="2 0 2 0">
+						<TextBlock
+							x:Name="CurrentPositionLabel"
+							FontSize="30"
+							Foreground="White"
+							HorizontalAlignment="Right">
+							<Run Text="{Binding DisplayPosition}"></Run>
+							<Run Text="{Binding DisplayPositionPercent}"></Run>
+						</TextBlock>
+						<TextBlock
+							x:Name="DurationLabel"
+							FontSize="30"
+							Foreground="White"
+							HorizontalAlignment="Right"
+							Text="{Binding DisplayDuration}"
+						/>
+					</StackPanel>
+				</Grid>
+			</StackPanel>
+			<Grid
+				Grid.Row="2"
+				Grid.Column="0">
+				<Rectangle
+					Fill="LightGray"
+					Opacity=".4"
+				/>
+				<Button VerticalAlignment="Stretch">Show/Hide</Button>
+			</Grid>
+
+		</Grid>
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup>
+				<VisualState x:Name="ExtraWide">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="1800" MinWindowHeight="1200" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="PauseIconViewbox.Width" Value="245" />
+						<Setter Target="PauseIconViewbox.Height" Value="245" />
+						<Setter Target="TitleLabel.FontSize" Value="30" />
+						<Setter Target="CurrentPositionLabel.FontSize" Value="30" />
+						<Setter Target="DurationLabel.FontSize" Value="30" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="Wide">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="1400" MinWindowHeight="720" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="PauseIconViewbox.Width" Value="200"/>
+						<Setter Target="PauseIconViewbox.Height" Value="200"/>
+						<Setter Target="TitleLabel.FontSize" Value="24" />
+						<Setter Target="CurrentPositionLabel.FontSize" Value="24" />
+						<Setter Target="DurationLabel.FontSize" Value="24" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="Square">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="720" MinWindowHeight="440" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="PauseIconViewbox.Width" Value="100"/>
+						<Setter Target="PauseIconViewbox.Height" Value="100"/>
+						<Setter Target="TitleLabel.FontSize" Value="18" />
+						<Setter Target="CurrentPositionLabel.FontSize" Value="18" />
+						<Setter Target="DurationLabel.FontSize" Value="18" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="Snapped">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="PauseIconViewbox.Width" Value="50"/>
+						<Setter Target="PauseIconViewbox.Height" Value="50"/>
+						<Setter Target="TitleLabel.FontSize" Value="14" />
+						<Setter Target="CurrentPositionLabel.FontSize" Value="14" />
+						<Setter Target="DurationLabel.FontSize" Value="14" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+	</Grid>
+</Page>
