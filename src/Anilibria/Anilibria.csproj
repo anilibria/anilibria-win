@@ -135,6 +135,9 @@
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerViewModel.cs" />
     <Compile Include="Pages\OnlinePlayer\PlaybackState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IAnilibriaApiService.cs" />
+    <Compile Include="Services\Implementations\AnilibriaApiService.cs" />
+    <Compile Include="Services\PresentationClasses\Release.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -144,7 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Assets.txt" />
-    <Content Include="Assets\test.mkv" />
     <Content Include="Assets\mute.svg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -172,6 +174,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
