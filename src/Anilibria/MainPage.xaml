@@ -5,9 +5,12 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewmodel="using:Anilibria.Pages.OnlinePlayer"
-	mc:Ignorable="d">
+	xmlns:viewmodel2="using:Anilibria.Pages.Releases"
+	mc:Ignorable="d"
+	Loaded="Page_Loaded">
 
 	<Grid>
-		<viewmodel:OnlinePlayerView></viewmodel:OnlinePlayerView>
+		<!--<viewmodel:OnlinePlayerView></viewmodel:OnlinePlayerView>-->
+		<viewmodel2:ReleasesView></viewmodel2:ReleasesView>
 	</Grid>
 </Page>

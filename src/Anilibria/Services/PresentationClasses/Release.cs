@@ -14,25 +14,61 @@ namespace Anilibria.Services.PresentationClasses {
 		/// <summary>
 		/// Identifier.
 		/// </summary>
-		public string RId
+		public long Id
 		{
 			get;
 			set;
 		}
 
 		/// <summary>
-		/// Name.
+		/// Code.
 		/// </summary>
-		public IEnumerable<string> Name
+		public string Code
 		{
 			get;
 			set;
 		}
 
 		/// <summary>
-		/// Rating (probably number).
+		/// Names.
 		/// </summary>
-		public string Rating
+		public IEnumerable<string> Names
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Series.
+		/// </summary>
+		public string Series
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Poster for list.
+		/// </summary>
+		public string Poster
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Poster for card.
+		/// </summary>
+		public string PosterFull
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Favorite info.
+		/// </summary>
+		public Favorite Favorite
 		{
 			get;
 			set;
@@ -48,7 +84,7 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// ??????.
+		/// URL for external web player.
 		/// </summary>
 		public Uri Moon
 		{
@@ -57,9 +93,9 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Status (1 В работе 2 Завершен).
+		/// Status.
 		/// </summary>
-		public string Status
+		public StatusType Status
 		{
 			get;
 			set;
@@ -75,9 +111,18 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Genres between commas.
+		/// Genres.
 		/// </summary>
-		public string Genre
+		public IEnumerable<string> Genres
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Voices.
+		/// </summary>
+		public IEnumerable<string> Voices
 		{
 			get;
 			set;
@@ -111,15 +156,32 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Code.
+		/// Blocked info.
 		/// </summary>
-		public string Code
+		public BlockedInfo BlockedInfo
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Playlist.
+		/// </summary>
+		public IEnumerable<PlaylistItem> Playlist
+		{
+			get;
+			set;
+		}
 
+		/// <summary>
+		/// Torrents.
+		/// </summary>
+		public IEnumerable<TorrentItem> Torrents
+		{
+			get;
+			set;
+		}
 
 	}
+
 }

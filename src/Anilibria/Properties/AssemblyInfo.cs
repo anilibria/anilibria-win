@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Anilibria")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription ( "UWP client for website Anilibria" )]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Anilibria")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany ( "Anilibria" )]
+[assembly: AssemblyProduct ( "Anilibria Client" )]
+[assembly: AssemblyCopyright ( "Copyright © RomanAsylum 2019" )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
