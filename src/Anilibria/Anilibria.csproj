@@ -121,8 +121,8 @@
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="Pages\HomePage\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\UICommand.cs" />
     <Compile Include="MVVM\UIGenericCommand.cs" />
@@ -131,6 +131,8 @@
     <Compile Include="MVVM\WeakActionGeneric.cs" />
     <Compile Include="MVVM\WeakFunc.cs" />
     <Compile Include="MVVM\WeakFuncGeneric.cs" />
+    <Compile Include="Pages\HomePage\HomeViewModel.cs" />
+    <Compile Include="Pages\HomePage\PresentationClasses\SplitViewItem.cs" />
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerView.xaml.cs">
       <DependentUpon>OnlinePlayerView.xaml</DependentUpon>
     </Compile>
@@ -162,6 +164,9 @@
     <None Include="Anilibria_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\anilibriaicon.png" />
+    <Content Include="Assets\anilibriaposter.png" />
+    <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
     <Content Include="Assets\mute.svg" />
     <Content Include="Properties\Default.rd.xml" />
@@ -178,7 +183,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
+    <Page Include="Pages\HomePage\HomeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
