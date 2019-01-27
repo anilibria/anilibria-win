@@ -60,6 +60,8 @@ namespace Anilibria.Services.Implementations {
 			var result = await httpClient.PostAsync ( m_ApiReleasesUrl , formContent );
 			var content = await result.Content.ReadAsStringAsync ();
 
+			//content = content.Substring ( content.IndexOf ( '{' ) );
+
 			var releases = JsonConvert.DeserializeObject<ApiResponse<PagingList>> ( content );
 
 			if ( !releases.Status ) {

@@ -34,22 +34,41 @@
 					Grid.Column="0"
 				/>
 
-				<StackPanel
+				<Grid
 					Grid.Column="1"
 					Grid.Row="0"
 					Margin="3"
-					Orientation="Vertical">
-					<TextBlock
+					MaxWidth="250"
+					VerticalAlignment="Stretch"
+					Padding="0">
+					<Grid.RowDefinitions>
+						<RowDefinition />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+
+					<StackPanel
+						Grid.Row="0"
+						Orientation="Vertical">
+						<TextBlock
 						TextWrapping="Wrap"
 						TextTrimming="CharacterEllipsis"
 						MaxLines="3"
-						Foreground="#b32121"> 
-						<Bold>
-							<Run Text="{Binding Title}"/>
-						</Bold>
-					</TextBlock>
-					<StackPanel Orientation="Vertical">
-						<TextBlock>
+						Foreground="#b32121"
+						Text="{Binding Title}">
+						</TextBlock>
+						<StackPanel Orientation="Vertical">
+							<TextBlock>
+							<Run
+								Text="Год"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding Year}"
+							/>
+							</TextBlock>
+						</StackPanel>
+						<StackPanel Orientation="Vertical">
+							<TextBlock>
 							<Run
 								Text="Тип"
 								FontWeight="Bold"
@@ -57,10 +76,12 @@
 							<Run
 								Text="{Binding Type}"
 							/>
-						</TextBlock>
-					</StackPanel>
-					<StackPanel Orientation="Vertical">
-						<TextBlock MaxLines="2" TextWrapping="WrapWholeWords">
+							</TextBlock>
+						</StackPanel>
+						<StackPanel Orientation="Vertical">
+							<TextBlock
+							MaxLines="3"
+							TextWrapping="WrapWholeWords">
 							<Run
 								Text="Жанры"
 								FontWeight="Bold"
@@ -68,9 +89,39 @@
 							<Run
 								Text="{Binding Genres}"
 							/>
-						</TextBlock>
+							</TextBlock>
+						</StackPanel>
+						<StackPanel Orientation="Vertical">
+							<TextBlock
+							MaxLines="5"
+							TextWrapping="WrapWholeWords">
+							<Run
+								Text="Озвучка"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding Voices}"
+							/>
+							</TextBlock>
+						</StackPanel>
 					</StackPanel>
-				</StackPanel>
+					<Grid
+						Grid.Row="1"
+						VerticalAlignment="Bottom"
+						Height="28">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<Grid Grid.Column="0" VerticalAlignment="Center">
+							<TextBlock Height="20" FontFamily="Segoe MDL2 Assets" FontSize="18">&#xEB51;</TextBlock>
+						</Grid>
+						<Grid Grid.Column="1" VerticalAlignment="Top">
+							<TextBlock Height="20" Margin="4 0 0 0" FontSize="16" Text="{Binding Rating}" />
+						</Grid>
+					</Grid>
+				</Grid>
 			</Grid>
 		</DataTemplate>
 		<Style x:Key="GridViewStyle" TargetType="GridView">
@@ -100,7 +151,7 @@
 															Duration="0"
 															To="1"/>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}" />
+															<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent" />
 														</ObjectAnimationUsingKeyFrames>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
 															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
@@ -118,7 +169,7 @@
 															Duration="0"
 															To="1"/>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
+															<DiscreteObjectKeyFrame KeyTime="0" Value="#b32121" />
 														</ObjectAnimationUsingKeyFrames>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
 															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
@@ -140,7 +191,7 @@
 															Duration="0"
 															To="1"/>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+															<DiscreteObjectKeyFrame KeyTime="0" Value="#b32121" />
 														</ObjectAnimationUsingKeyFrames>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
 															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
@@ -165,7 +216,7 @@
 															Duration="0"
 															To="1"/>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentMediumBrush}" />
+															<DiscreteObjectKeyFrame KeyTime="0" Value="#cf2525" />
 														</ObjectAnimationUsingKeyFrames>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
 															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
@@ -192,7 +243,7 @@
 															To="1"
 														/>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentHighBrush}" />
+															<DiscreteObjectKeyFrame KeyTime="0" Value="LightGray" />
 														</ObjectAnimationUsingKeyFrames>
 														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
 															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
@@ -381,7 +432,7 @@
 											Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
 											Width="20"
 											Height="20"
-											Margin="0,0,5,5"
+											Margin="0,0,12,12"
 											VerticalAlignment="Bottom"
 											HorizontalAlignment="Right"
 											Visibility="Collapsed">
@@ -460,15 +511,10 @@
 			Grid.Row="1"
 			Orientation="Horizontal"
 			HorizontalAlignment="Right">
-			<TextBlock
-				FontSize="15"
-				VerticalAlignment="Center"
-				Margin="0 0 4 0">
-				Выбор:
-			</TextBlock>
 			<ToggleSwitch
 				OnContent="Множественный"
 				OffContent="Одиночный"
+				FontSize="12"
 				IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 			</ToggleSwitch>
 		</StackPanel>

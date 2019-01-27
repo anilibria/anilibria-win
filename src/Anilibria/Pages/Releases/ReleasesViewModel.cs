@@ -88,7 +88,8 @@ namespace Anilibria.Pages.Releases {
 					Series = a.Series ,
 					Status = GetStatus ( a.Status ) ,
 					Type = a.Type ,
-					Voices = a.Voices.Select ( b => b )
+					Voices = string.Join ( ", " , a.Voices ) ,
+					Year = a.Year
 				}
 			);
 		}
