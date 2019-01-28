@@ -168,6 +168,7 @@
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\Icons\humburger.svg" />
     <Content Include="Assets\mute.svg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

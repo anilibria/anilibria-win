@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Anilibria.Collections;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
@@ -28,6 +28,8 @@ namespace Anilibria.Pages.Releases {
 		/// <param name="anilibriaApiService">Anilibria Api Service.</param>
 		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+
+			CreateCommands ();
 		}
 
 		/// <summary>
@@ -36,6 +38,14 @@ namespace Anilibria.Pages.Releases {
 		public void Initialize () {
 
 			RefreshGroups ();
+		}
+
+		private void CreateCommands () {
+			ShowSidebarCommand = CreateCommand ( ToggleSidebar );
+		}
+
+		private void ToggleSidebar () {
+			ShowSidebar?.Invoke ();
 		}
 
 		/// <summary>
@@ -51,7 +61,9 @@ namespace Anilibria.Pages.Releases {
 			//RaiseSelectableCommands ();
 		}
 
-		private string GetStatus ( StatusType statusType ) {
+		private string GetStatus ( StatusType? statusType ) {
+			if ( !statusType.HasValue ) return "Неизвестно";
+
 			switch ( statusType ) {
 				case StatusType.Unknown:
 					return "Неизвестно";
@@ -83,8 +95,8 @@ namespace Anilibria.Pages.Releases {
 					Title = a.Names.FirstOrDefault () ,
 					Names = a.Names ,
 					Poster = m_AnilibriaApiService.GetUrl ( a.Poster.Replace ( "default" , a.Id.ToString () ) ) ,
-					PosterFull = m_AnilibriaApiService.GetUrl ( a.PosterFull.Replace ( "default" , a.Id.ToString () ) ) ,
-					Rating = a.Favorite.Rating ,
+					//PosterFull = m_AnilibriaApiService.GetUrl ( a.PosterFull.Replace ( "default" , a.Id.ToString () ) ) ,
+					Rating = a.Favorite?.Rating ?? 0 ,
 					Series = a.Series ,
 					Status = GetStatus ( a.Status ) ,
 					Type = a.Type ,
@@ -110,6 +122,24 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_IsMultipleSelect;
 			set => Set ( ref m_IsMultipleSelect , value );
+		}
+
+		/// <summary>
+		/// Show sidebar.
+		/// </summary>
+		public Action ShowSidebar
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Show sidebar command.
+		/// </summary>
+		public ICommand ShowSidebarCommand
+		{
+			get;
+			set;
 		}
 
 	}

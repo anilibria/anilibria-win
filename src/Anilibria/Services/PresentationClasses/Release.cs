@@ -95,7 +95,7 @@ namespace Anilibria.Services.PresentationClasses {
 		/// <summary>
 		/// Status.
 		/// </summary>
-		public StatusType Status
+		public StatusType? Status
 		{
 			get;
 			set;

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Anilibria.MVVM;
 using Anilibria.Pages.HomePage.PresentationClasses;
 using Windows.ApplicationModel;
@@ -38,7 +35,6 @@ namespace Anilibria.Pages.HomePage {
 		private string m_Version = "";
 
 		public HomeViewModel () {
-
 			var version = Package.Current.Id.Version;
 			m_Version = $"{version.Major}.{version.Minor}.{version.Revision}";
 		}

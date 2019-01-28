@@ -5,14 +5,14 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:onlineplayer="using:Anilibria.Pages.OnlinePlayer"
-	xmlns:viewmodel2="using:Anilibria.Pages.Releases"
+	xmlns:releases="using:Anilibria.Pages.Releases"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}">
 
 	<Grid>
 		<SplitView
-			IsPaneOpen="True"
+			x:Name="Sidebar"
 			DisplayMode="Overlay"
 			OpenPaneLength="260">
 			<SplitView.Pane>
@@ -72,7 +72,9 @@
 				</RelativePanel>
 			</SplitView.Pane>
 			<!--<viewmodel:OnlinePlayerView></viewmodel:OnlinePlayerView>-->
-			<viewmodel2:ReleasesView></viewmodel2:ReleasesView>
+			<releases:ReleasesView
+				x:Name="Releases"
+			/>
 		</SplitView>
 	</Grid>
 </Page>
