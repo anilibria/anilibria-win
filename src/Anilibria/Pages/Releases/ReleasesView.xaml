@@ -59,6 +59,17 @@
 						<StackPanel Orientation="Vertical">
 							<TextBlock>
 							<Run
+								Text="Статус"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding Status}"
+							/>
+							</TextBlock>
+						</StackPanel>
+						<StackPanel Orientation="Vertical">
+							<TextBlock>
+							<Run
 								Text="Год"
 								FontWeight="Bold"
 							/>
@@ -579,6 +590,34 @@
 						Source="/Assets/Icons/humburger.svg"
 					/>
 				</Button>
+				<Button
+					RelativePanel.AlignRightWithPanel="True"
+					Style="{StaticResource IconsButtonStyle}">
+					<Image
+						Width="{StaticResource IconSize}"
+						Height="{StaticResource IconSize}"
+						Source="/Assets/Icons/filter.svg"
+					/>
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel HorizontalAlignment="Stretch">
+								<TextBlock
+									Margin="4 0 4 4">
+									Имя
+								</TextBlock>
+								<TextBox
+									Width="200"
+									Margin="4 0 4 4"
+								/>
+								<Button
+									HorizontalAlignment="Stretch"
+									Margin="4 0 4 4">
+									Фильтровать
+								</Button>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
 			</RelativePanel>
 		</Border>
 		<StackPanel
@@ -601,5 +640,17 @@
 			HorizontalAlignment="Stretch"
 			HorizontalContentAlignment="Center"
 		/>
+		<Border
+			Margin="10"
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			BorderBrush="#881919"
+			BorderThickness="2"
+			Visibility="{Binding IsShowReleaseCard}">
+			<Grid
+				Background="White">
+			
+			</Grid>
+		</Border>
 	</Grid>
 </UserControl>

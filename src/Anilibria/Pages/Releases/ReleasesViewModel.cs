@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -7,7 +9,6 @@ using Anilibria.Collections;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
-using Anilibria.Services.PresentationClasses;
 
 namespace Anilibria.Pages.Releases {
 
@@ -20,7 +21,13 @@ namespace Anilibria.Pages.Releases {
 
 		private IncrementalLoadingCollection<ReleaseModel> m_Collection;
 
-		private readonly IAnilibriaApiService m_AnilibriaApiService;
+		private ObservableCollection<ReleaseModel> m_SelectedReleases;
+
+		private ReleaseModel m_OpenedRelease;
+
+		private bool m_IsShowReleaseCard;
+
+		private readonly IAnilibriaApiService m_AnilibriaApiService;		
 
 		/// <summary>
 		/// Constructor injection.
@@ -30,14 +37,7 @@ namespace Anilibria.Pages.Releases {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 
 			CreateCommands ();
-		}
-
-		/// <summary>
-		/// Initialize view model.
-		/// </summary>
-		public void Initialize () {
-
-			RefreshGroups ();
+			RefreshSelectedReleases ();
 		}
 
 		private void CreateCommands () {
@@ -46,6 +46,20 @@ namespace Anilibria.Pages.Releases {
 
 		private void ToggleSidebar () {
 			ShowSidebar?.Invoke ();
+		}
+
+		private void RefreshSelectedReleases () {
+			m_SelectedReleases = new ObservableCollection<ReleaseModel> ();
+			m_SelectedReleases.CollectionChanged += SelectedReleasesChanged;
+		}
+
+		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
+			RaiseCommands ();
+
+			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
+				OpenedRelease = SelectedReleases.First ();
+				IsShowReleaseCard = true;
+			}
 		}
 
 		/// <summary>
@@ -59,20 +73,6 @@ namespace Anilibria.Pages.Releases {
 			RaisePropertyChanged ( () => Collection );
 
 			//RaiseSelectableCommands ();
-		}
-
-		private string GetStatus ( StatusType? statusType ) {
-			if ( !statusType.HasValue ) return "Неизвестно";
-
-			switch ( statusType ) {
-				case StatusType.Unknown:
-					return "Неизвестно";
-				case StatusType.InWorking:
-					return "В работе";
-				case StatusType.Finished:
-					return "Завершен";
-				default: throw new NotSupportedException ( $"Status type {statusType} not supported." );
-			}
 		}
 
 		/// <summary>
@@ -98,12 +98,19 @@ namespace Anilibria.Pages.Releases {
 					//PosterFull = m_AnilibriaApiService.GetUrl ( a.PosterFull.Replace ( "default" , a.Id.ToString () ) ) ,
 					Rating = a.Favorite?.Rating ?? 0 ,
 					Series = a.Series ,
-					Status = GetStatus ( a.Status ) ,
+					Status = a.Status ,
 					Type = a.Type ,
 					Voices = string.Join ( ", " , a.Voices ) ,
 					Year = a.Year
 				}
 			);
+		}
+
+		/// <summary>
+		/// Initialize view model.
+		/// </summary>
+		public void Initialize () {
+			RefreshGroups ();
 		}
 
 		/// <summary>
@@ -122,6 +129,33 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_IsMultipleSelect;
 			set => Set ( ref m_IsMultipleSelect , value );
+		}
+
+		/// <summary>
+		/// Release for show in Release Card.
+		/// </summary>
+		public ReleaseModel OpenedRelease
+		{
+			get => m_OpenedRelease;
+			set => Set ( ref m_OpenedRelease , value );
+		}
+
+		/// <summary>
+		/// Release for show in Release Card.
+		/// </summary>
+		public bool IsShowReleaseCard
+		{
+			get => m_IsShowReleaseCard;
+			set => Set ( ref m_IsShowReleaseCard , value );
+		}
+
+		/// <summary>
+		/// Selected releases.
+		/// </summary>
+		public ObservableCollection<ReleaseModel> SelectedReleases
+		{
+			get => m_SelectedReleases;
+			set => Set ( ref m_SelectedReleases , value );
 		}
 
 		/// <summary>
