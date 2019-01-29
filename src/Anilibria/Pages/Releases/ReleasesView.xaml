@@ -50,12 +50,12 @@
 						Grid.Row="0"
 						Orientation="Vertical">
 						<TextBlock
-						TextWrapping="Wrap"
-						TextTrimming="CharacterEllipsis"
-						MaxLines="3"
-						Foreground="#b32121"
-						Text="{Binding Title}">
-						</TextBlock>
+							TextWrapping="Wrap"
+							TextTrimming="CharacterEllipsis"
+							MaxLines="3"
+							Foreground="#b32121"
+							Text="{Binding Title}"
+						/>
 						<StackPanel Orientation="Vertical">
 							<TextBlock>
 							<Run
@@ -640,16 +640,131 @@
 			HorizontalAlignment="Stretch"
 			HorizontalContentAlignment="Center"
 		/>
+		<Rectangle
+			Fill="Black"
+			Opacity=".5"
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Visibility="{Binding IsShowReleaseCard}">
+			
+		</Rectangle>
 		<Border
 			Margin="10"
 			Grid.Row="1"
 			Grid.RowSpan="2"
 			BorderBrush="#881919"
 			BorderThickness="2"
+			MaxWidth="800"
 			Visibility="{Binding IsShowReleaseCard}">
 			<Grid
 				Background="White">
-			
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<StackPanel
+					Grid.Row="0"
+					Grid.Column="0"
+					Margin="18 16 6 0">
+					<TextBlock
+						Foreground="#b32121"
+						Text="{Binding OpenedRelease.Title}"
+						TextWrapping="Wrap"
+						HorizontalAlignment="Center">
+						
+					</TextBlock>
+					<Border
+						BorderBrush="#d3d3d3"
+						BorderThickness="1"
+						Margin="0 0 0 4">
+					</Border>
+					<StackPanel Orientation="Vertical">
+						<TextBlock>
+							<Run
+								Text="Статус"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding OpenedRelease.Status}"
+							/>
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Vertical">
+						<TextBlock>
+							<Run
+								Text="Год"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding OpenedRelease.Year}"
+							/>
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Vertical">
+						<TextBlock>
+							<Run
+								Text="Тип"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding OpenedRelease.Type}"
+							/>
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Vertical">
+						<TextBlock
+							MaxLines="3"
+							TextWrapping="WrapWholeWords">
+							<Run
+								Text="Жанры"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding OpenedRelease.Genres}"
+							/>
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Vertical">
+						<TextBlock
+							MaxLines="5"
+							TextWrapping="WrapWholeWords">
+							<Run
+								Text="Озвучка"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding OpenedRelease.Voices}"
+							/>
+						</TextBlock>
+					</StackPanel>
+					<Border
+						BorderBrush="#d3d3d3"
+						BorderThickness="1"
+						Margin="0 6 0 4">
+					</Border>
+				</StackPanel>
+				<Grid
+					Grid.Row="0"
+					Grid.Column="1"
+					Margin="0 16 18 0">
+					<Border
+						BorderBrush="#d3d3d3"
+						BorderThickness="4"
+						HorizontalAlignment="Center">
+						<Image
+							Stretch="Uniform"
+							Height="500"
+							HorizontalAlignment="Center"
+							Source="{Binding OpenedRelease.Poster}"
+						/>
+					</Border>
+				</Grid>
 			</Grid>
 		</Border>
 	</Grid>
