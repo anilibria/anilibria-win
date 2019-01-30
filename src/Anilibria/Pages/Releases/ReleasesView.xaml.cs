@@ -22,6 +22,11 @@ namespace Anilibria.Pages.Releases {
 			dataContext.Initialize ();
 		}
 
+		private void Rectangle_Tapped ( object sender , Windows.UI.Xaml.Input.TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			dataContext.HideReleaseCardCommand.Execute ( null );
+		}
+
 	}
 
 }

@@ -27,7 +27,7 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsShowReleaseCard;
 
-		private readonly IAnilibriaApiService m_AnilibriaApiService;		
+		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
 		/// <summary>
 		/// Constructor injection.
@@ -42,6 +42,12 @@ namespace Anilibria.Pages.Releases {
 
 		private void CreateCommands () {
 			ShowSidebarCommand = CreateCommand ( ToggleSidebar );
+			HideReleaseCardCommand = CreateCommand ( HideReleaseCard );
+		}
+
+		private void HideReleaseCard () {
+			IsShowReleaseCard = false;
+			if ( SelectedReleases.Count == 1 ) RefreshSelectedReleases ();
 		}
 
 		private void ToggleSidebar () {
@@ -49,8 +55,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RefreshSelectedReleases () {
-			m_SelectedReleases = new ObservableCollection<ReleaseModel> ();
-			m_SelectedReleases.CollectionChanged += SelectedReleasesChanged;
+			SelectedReleases = new ObservableCollection<ReleaseModel> ();
+			SelectedReleases.CollectionChanged += SelectedReleasesChanged;
 		}
 
 		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
@@ -171,6 +177,15 @@ namespace Anilibria.Pages.Releases {
 		/// Show sidebar command.
 		/// </summary>
 		public ICommand ShowSidebarCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Hide release card command.
+		/// </summary>
+		public ICommand HideReleaseCardCommand
 		{
 			get;
 			set;

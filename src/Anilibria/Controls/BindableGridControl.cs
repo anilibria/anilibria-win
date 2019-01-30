@@ -41,11 +41,9 @@ namespace Anilibria.Controls {
 		);
 
 		private static void MultipleSelectedItemsChangedHandler ( DependencyObject d , DependencyPropertyChangedEventArgs e ) {
-			IList list = e.NewValue as IList;
-			BindableGridControl grid = d as BindableGridControl;
-			if ( grid == null ) return;
+			if ( !( d is BindableGridControl grid ) ) return;
 
-			if ( list == null || list.Count == 0 ) {
+			if ( !( e.NewValue is IList list ) || list.Count == 0 ) {
 				grid.SelectedItem = null;
 				return;
 			}

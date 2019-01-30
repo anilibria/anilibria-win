@@ -645,8 +645,8 @@
 			Opacity=".5"
 			Grid.Row="0"
 			Grid.RowSpan="3"
-			Visibility="{Binding IsShowReleaseCard}">
-			
+			Visibility="{Binding IsShowReleaseCard}"
+			Tapped="Rectangle_Tapped">
 		</Rectangle>
 		<Border
 			Margin="10"
@@ -676,6 +676,7 @@
 						Foreground="#b32121"
 						Text="{Binding OpenedRelease.Title}"
 						TextWrapping="Wrap"
+						TextAlignment="Center"
 						HorizontalAlignment="Center">
 						
 					</TextBlock>
@@ -719,7 +720,6 @@
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							MaxLines="3"
 							TextWrapping="WrapWholeWords">
 							<Run
 								Text="Жанры"
@@ -732,7 +732,6 @@
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							MaxLines="5"
 							TextWrapping="WrapWholeWords">
 							<Run
 								Text="Озвучка"
@@ -748,6 +747,18 @@
 						BorderThickness="1"
 						Margin="0 6 0 4">
 					</Border>
+					<StackPanel Orientation="Vertical">
+						<TextBlock
+							TextWrapping="WrapWholeWords">
+							<Run
+								Text="Описание"
+								FontWeight="Bold"
+							/>
+							<Run
+								Text="{Binding OpenedRelease.Description}"
+							/>
+						</TextBlock>
+					</StackPanel>
 				</StackPanel>
 				<Grid
 					Grid.Row="0"
