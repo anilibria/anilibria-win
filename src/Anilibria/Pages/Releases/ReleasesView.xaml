@@ -6,6 +6,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewmodel="using:Anilibria.Pages.Releases"
+	xmlns:converters="using:Anilibria.Converters"
 	mc:Ignorable="d"
 	d:DesignHeight="300"
 	d:DesignWidth="400"
@@ -749,14 +750,8 @@
 					</Border>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							TextWrapping="WrapWholeWords">
-							<Run
-								Text="Описание"
-								FontWeight="Bold"
-							/>
-							<Run
-								Text="{Binding OpenedRelease.Description}"
-							/>
+							TextWrapping="WrapWholeWords"
+							converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}">
 						</TextBlock>
 					</StackPanel>
 				</StackPanel>
@@ -764,17 +759,20 @@
 					Grid.Row="0"
 					Grid.Column="1"
 					Margin="0 16 18 0">
-					<Border
-						BorderBrush="#d3d3d3"
-						BorderThickness="4"
-						HorizontalAlignment="Center">
-						<Image
-							Stretch="Uniform"
-							Height="500"
+					<StackPanel VerticalAlignment="Top">
+						<Border
+							BorderBrush="#d3d3d3"
+							BorderThickness="4"
 							HorizontalAlignment="Center"
-							Source="{Binding OpenedRelease.Poster}"
-						/>
-					</Border>
+							Height="500">
+							<Image
+								Stretch="Uniform"
+								Height="500"
+								HorizontalAlignment="Center"
+								Source="{Binding OpenedRelease.Poster}"
+							/>
+						</Border>
+					</StackPanel>
 				</Grid>
 			</Grid>
 		</Border>

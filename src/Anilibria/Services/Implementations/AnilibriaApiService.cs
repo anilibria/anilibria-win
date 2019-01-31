@@ -60,8 +60,6 @@ namespace Anilibria.Services.Implementations {
 			var result = await httpClient.PostAsync ( m_ApiReleasesUrl , formContent );
 			var content = await result.Content.ReadAsStringAsync ();
 
-			//content = content.Substring ( content.IndexOf ( '{' ) );
-
 			var releases = JsonConvert.DeserializeObject<ApiResponse<PagingList>> ( content );
 
 			if ( !releases.Status ) {
@@ -87,7 +85,7 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <param name="content">Content.</param>
 		/// <returns>Formatted content.</returns>
-		private string FormatHtml ( string content ) => content.Replace ( "&gt;" , ">" ).Replace ( "&lt;" , "<" );
+		private string FormatHtml ( string content ) => content.Replace ( "&gt;" , ">" ).Replace ( "&lt;" , "<" ).Replace ( "&quot;" , "\"" );
 
 	}
 
