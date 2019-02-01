@@ -656,6 +656,7 @@
 			BorderBrush="#881919"
 			BorderThickness="2"
 			MaxWidth="800"
+			VerticalAlignment="Center"
 			Visibility="{Binding IsShowReleaseCard}">
 			<Grid
 				Background="White">
@@ -666,8 +667,7 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition />
-					<RowDefinition />
-					<RowDefinition />
+					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<StackPanel
 					Grid.Row="0"
@@ -772,6 +772,103 @@
 								Source="{Binding OpenedRelease.Poster}"
 							/>
 						</Border>
+					</StackPanel>
+				</Grid>
+				<Grid
+					Grid.Row="1"
+					Grid.ColumnSpan="2"
+					Padding="4"
+					Margin="0 0 0 10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="0.4*" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="0.6*" />
+					</Grid.ColumnDefinitions>
+					<StackPanel
+						Grid.Column="0"
+						Orientation="Vertical">
+						<TextBlock
+							TextAlignment="Center"
+							FontWeight="Bold"
+							FontSize="20"
+							Margin="0 0 0 4">
+							Смотреть онлайн
+						</TextBlock>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition />
+								<ColumnDefinition />
+							</Grid.ColumnDefinitions>
+							<TextBlock
+								VerticalAlignment="Center"
+								HorizontalAlignment="Right">
+								<Run>Доступно</Run>
+								<Run Text="{Binding OpenedRelease.CountVideoOnline}" />
+								<Run>видео</Run>
+							</TextBlock>
+							<Button
+								HorizontalAlignment="Center"
+								Grid.Column="1">
+								Открыть в плеере
+							</Button>
+						</Grid>
+					</StackPanel>
+					<Border
+						Grid.Column="1"
+						BorderBrush="#d3d3d3"
+						BorderThickness="0 0 2 0"
+						Margin="8 0 8 0"
+					/>
+					<StackPanel
+						Grid.Column="2">
+						<TextBlock
+							TextAlignment="Center"
+							FontWeight="Bold"
+							FontSize="20"
+							Margin="0 0 0 4">
+							Скачать торрентом
+						</TextBlock>
+						<ItemsControl
+							ItemsSource="{Binding OpenedRelease.Torrents}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<StackPanel Orientation="Vertical" />
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition />
+											<ColumnDefinition Width="Auto" />
+										</Grid.ColumnDefinitions>
+										<TextBlock
+											VerticalAlignment="Center">
+											<Run>Серия</Run>
+											<Run Text="{Binding Series}"></Run>
+											<Run Text="{Binding Quality}"></Run>
+										</TextBlock>
+										<TextBlock
+											Grid.Column="1"
+											VerticalAlignment="Center"
+											Margin="2 0 2 0">
+											<Run
+												Foreground="Olive"
+												Text="{Binding Size}"
+											/>
+											<Run>Скачан</Run>
+											<Run
+												Foreground="ForestGreen"
+												Text="{Binding Completed}"
+											/>
+										</TextBlock>
+										<Button Grid.Column="2" Margin="0 1 0 1">Скачать</Button>
+									</Grid>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
 					</StackPanel>
 				</Grid>
 			</Grid>

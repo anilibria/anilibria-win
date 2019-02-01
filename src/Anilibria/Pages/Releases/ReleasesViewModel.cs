@@ -29,6 +29,8 @@ namespace Anilibria.Pages.Releases {
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
+		private readonly string[] m_FileSizes = { "B" , "KB" , "MB" , "GB" , "TB" };
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -82,6 +84,21 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Get file size.
+		/// </summary>
+		/// <param name="size">Size.</param>
+		/// <returns>Readable size.</returns>
+		private string GetFileSize ( long size ) {
+			var readableSize = size;
+			int order = 0;
+			while ( readableSize >= 1024 && order < m_FileSizes.Length - 1 ) {
+				order++;
+				readableSize = readableSize / 1024;
+			}
+			return readableSize + " " + m_FileSizes[order];
+		}
+
+		/// <summary>
 		/// Get items page.
 		/// </summary>
 		/// <param name="page">Page.</param>
@@ -107,7 +124,16 @@ namespace Anilibria.Pages.Releases {
 					Status = a.Status ,
 					Type = a.Type ,
 					Voices = string.Join ( ", " , a.Voices ) ,
-					Year = a.Year
+					Year = a.Year ,
+					CountVideoOnline = a.Playlist?.Count () ?? 0 ,
+					Torrents = a.Torrents.Select (
+						torrent => new TorrentModel {
+							Completed = torrent.Completed ,
+							Quality = $"[{torrent.Quality}]" ,
+							Series = torrent.Series ,
+							Size = GetFileSize ( torrent.Size )
+						}
+					).ToList ()
 				}
 			);
 		}

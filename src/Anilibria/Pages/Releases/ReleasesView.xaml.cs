@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Input;
-using Anilibria.Services.Implementations;
+﻿using Anilibria.Services.Implementations;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
