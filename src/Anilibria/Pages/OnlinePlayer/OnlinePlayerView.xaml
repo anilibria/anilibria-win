@@ -5,10 +5,12 @@
 	xmlns:local="using:Anilibria.Pages.OnlinePlayer"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:converters="using:Anilibria.Converters"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance local:OnlinePlayerViewModel}">
 
 	<Page.Resources>
+		<converters:MediaSourceConverter x:Key="MediaSourceConverter" />
 		<Storyboard x:Name="ShowPause">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="PauseIcon">
 				<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
@@ -120,6 +122,7 @@
 			x:Name="OnlinePlayer"
 			Tapped="OnlinePlayer_Tapped"
 			DoubleTapped="OnlinePlayer_DoubleTapped"
+			Source="{Binding VideoSource, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MediaSourceConverter}}"
 			AutoPlay="True"
 		/>
 		<Grid>
@@ -133,7 +136,27 @@
 				<ColumnDefinition />
 				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
+			<Border
+				Grid.Row="0"
+				Grid.ColumnSpan="3"
+				Background="#b32121"
+				BorderBrush="#881919"
+				BorderThickness="0 0 0 2">
+				<RelativePanel
+					HorizontalAlignment="Stretch">
+					<Button
+						Style="{StaticResource IconsButtonStyle}"
+						Command="{Binding ShowSidebarCommand}">
+						<Image
+							Width="{StaticResource IconSize}"
+							Height="{StaticResource IconSize}"
+							Source="/Assets/Icons/humburger.svg"
+					/>
+					</Button>
+				</RelativePanel>
+			</Border>
 			<StackPanel
+				Visibility="Collapsed"
 				Grid.Row="0"
 				Grid.Column="0"
 				Background="LightGray"
@@ -195,6 +218,7 @@
 						Opacity=".4">
 					</Rectangle>
 					<TextBlock
+						Visibility="Collapsed"
 						x:Name="TitleLabel"
 						FontSize="30"
 						MaxLines="2"
@@ -258,16 +282,6 @@
 					</StackPanel>
 				</Grid>
 			</StackPanel>
-			<Grid
-				Grid.Row="2"
-				Grid.Column="0">
-				<Rectangle
-					Fill="LightGray"
-					Opacity=".4"
-				/>
-				<Button VerticalAlignment="Stretch">Show/Hide</Button>
-			</Grid>
-
 		</Grid>
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup>

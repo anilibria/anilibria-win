@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -24,6 +25,8 @@ namespace Anilibria.Services.Implementations {
 		private const string m_ApiReleasesUrl = m_WebSiteUrl + "/public/api/index.php";
 
 		private const string m_ApiLoginUrl = m_WebSiteUrl + "/public/login.php";
+
+		private const string m_SessionName = "PHPSESSID";
 
 		private static bool IsBase64String ( string value ) {
 			value = value.Trim ();
@@ -55,7 +58,7 @@ namespace Anilibria.Services.Implementations {
 					new KeyValuePair<string, string>("perPage", pageSize.ToString()),
 				}
 			);
-			//cookieContainer.Add ( new Uri ( m_WebSiteUrl ) , new Cookie ( "PHPSESSID" , "cookie_value" ) ); <-- user session
+			//cookieContainer.Add ( new Uri ( m_WebSiteUrl ) , new Cookie ( m_SessionName , "cookie_value" ) ); <-- user session
 			var httpClient = new HttpClient ( handler );
 			var result = await httpClient.PostAsync ( m_ApiReleasesUrl , formContent );
 			var content = await result.Content.ReadAsStringAsync ();
@@ -71,6 +74,30 @@ namespace Anilibria.Services.Implementations {
 			}
 
 			return releases.Data.Items;
+		}
+
+		public async Task<bool> Authentification ( string email , string password ) {
+			var cookieContainer = new CookieContainer ();
+			var handler = new HttpClientHandler { CookieContainer = cookieContainer };
+
+			var formContent = new FormUrlEncodedContent (
+				new[]
+				{
+					new KeyValuePair<string, string>("mail", email),
+					new KeyValuePair<string, string>("passwd", password)
+				}
+			);
+
+			var httpClient = new HttpClient ( handler );
+			var result = await httpClient.PostAsync ( m_ApiLoginUrl , formContent );
+			var content = await result.Content.ReadAsStringAsync ();
+
+			var cookies = cookieContainer.GetCookies ( new Uri ( m_WebSiteUrl ) ).Cast<Cookie> ();
+			var sessionCookie = cookies.FirstOrDefault ( a => a.Name == m_SessionName );
+
+			var sessionId = sessionCookie.Value;
+
+			return true;
 		}
 
 		/// <summary>

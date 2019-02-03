@@ -43,6 +43,8 @@ namespace Anilibria.Converters {
 			string formattedText = (string) e.NewValue ?? string.Empty;
 			if ( string.IsNullOrEmpty ( formattedText ) ) return;
 
+			formattedText = HtmlEntity.DeEntitize ( formattedText );
+
 			var doc = new HtmlDocument ();
 			doc.LoadHtml ( formattedText );
 

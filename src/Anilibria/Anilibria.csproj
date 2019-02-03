@@ -18,6 +18,12 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>Anilibria_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -121,6 +127,7 @@
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
+    <Compile Include="Converters\MediaSourceConverter.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
     <Compile Include="Pages\HomePage\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
@@ -134,6 +141,7 @@
     <Compile Include="MVVM\WeakFuncGeneric.cs" />
     <Compile Include="Pages\HomePage\HomeViewModel.cs" />
     <Compile Include="Pages\HomePage\PresentationClasses\SplitViewItem.cs" />
+    <Compile Include="Pages\INavigation.cs" />
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerView.xaml.cs">
       <DependentUpon>OnlinePlayerView.xaml</DependentUpon>
     </Compile>

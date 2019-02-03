@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
-  <Identity Name="90e96eb6-f4cd-4863-8176-00962a69d3b1" Publisher="CN=BCOMP" Version="1.0.0.0" />
+  <Identity Name="90e96eb6-f4cd-4863-8176-00962a69d3b1" Publisher="CN=BCOMP" Version="0.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="90e96eb6-f4cd-4863-8176-00962a69d3b1" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Anilibria</DisplayName>
-    <PublisherDisplayName>BCOMP</PublisherDisplayName>
+    <PublisherDisplayName>Emptyflow</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

@@ -33,7 +33,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ChangePlayback = ChangePlaybackHandler
 			};
 			DataContext = m_ViewModel;
-			OnlinePlayer.Source = MediaSource.CreateFromUri ( new Uri ( "https://x.anilibria.tv/videos/ts/8052/0001/playlist.m3u8" ) );
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
 			OnlinePlayer.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
 
@@ -51,10 +50,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private void OnlinePlayerView_Loaded ( object sender , RoutedEventArgs e ) {
 			Loaded -= OnlinePlayerView_Loaded;
-
-			//var assets = await Package.Current.InstalledLocation.GetFolderAsync ( "Assets" );
-			//var testVideo = await assets.GetFileAsync ( "test.mkv" );
-			//OnlinePlayer.Source = MediaSource.CreateFromStorageFile ( testVideo );
 
 			RunTimer ();
 		}
@@ -87,10 +82,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 					OnlinePlayer.MediaPlayer.PlaybackSession.Position = TimeSpan.FromSeconds ( 0 );
 					break;
 				case PlaybackState.Pause:
-					if ( OnlinePlayer.MediaPlayer.PlaybackSession.CanPause ) OnlinePlayer.MediaPlayer.Pause ();
+					if ( OnlinePlayer.MediaPlayer.PlaybackSession.CanPause ) {
+						RunShowPauseAnimation ();
+						OnlinePlayer.MediaPlayer.Pause ();
+					}
 					break;
 				case PlaybackState.Play:
-					OnlinePlayer.MediaPlayer.Play ();
+					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Paused ) RunHidePauseAnimation ();
+					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Play ();
 					break;
 				default: throw new NotSupportedException ( $"State {state} not supporting." );
 			}
@@ -109,16 +108,24 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			switch ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState ) {
 				case MediaPlaybackState.Playing:
-					var storyboard = Resources["ShowPause"] as Storyboard;
-					storyboard.Begin ();
+					RunShowPauseAnimation ();
 					OnlinePlayer.MediaPlayer.Pause ();
 					break;
 				case MediaPlaybackState.Paused:
-					var hideStoryboard = Resources["HidePause"] as Storyboard;
-					hideStoryboard.Begin ();
+					RunHidePauseAnimation ();
 					OnlinePlayer.MediaPlayer.Play ();
 					break;
 			}
+		}
+
+		private void RunHidePauseAnimation () {
+			var hideStoryboard = Resources["HidePause"] as Storyboard;
+			hideStoryboard.Begin ();
+		}
+
+		private void RunShowPauseAnimation () {
+			var storyboard = Resources["ShowPause"] as Storyboard;
+			storyboard.Begin ();
 		}
 
 		private void OnlinePlayer_DoubleTapped ( object sender , DoubleTappedRoutedEventArgs e ) {

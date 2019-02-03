@@ -15,7 +15,7 @@ namespace Anilibria.Pages.Releases {
 	/// <summary>
 	/// Release view model.
 	/// </summary>
-	public class ReleasesViewModel : ViewModel {
+	public class ReleasesViewModel : ViewModel, INavigation {
 
 		private bool m_IsMultipleSelect;
 
@@ -146,6 +146,21 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Start navigate to page.
+		/// </summary>
+		/// <param name="parameter">Parameter.</param>
+		public void NavigateTo ( object parameter ) {
+			
+		}
+
+		/// <summary>
+		/// End navigate to page.
+		/// </summary>
+		public void NavigateFrom () {
+			
+		}
+
+		/// <summary>
 		/// Collection.
 		/// </summary>
 		public IncrementalLoadingCollection<ReleaseModel> Collection
@@ -188,6 +203,15 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_SelectedReleases;
 			set => Set ( ref m_SelectedReleases , value );
+		}
+
+		/// <summary>
+		/// Change page handler.
+		/// </summary>
+		public Action<string , object> ChangePage
+		{
+			get;
+			set;
 		}
 
 		/// <summary>

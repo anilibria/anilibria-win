@@ -4,7 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:onlineplayer="using:Anilibria.Pages.OnlinePlayer"
+	xmlns:player="using:Anilibria.Pages.OnlinePlayer"
 	xmlns:releases="using:Anilibria.Pages.Releases"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	mc:Ignorable="d"
@@ -25,7 +25,8 @@
 						RelativePanel.AlignRightWithPanel="True"
 						RelativePanel.AlignLeftWithPanel="True"
 						HorizontalAlignment="Stretch"
-						ItemsSource="{Binding Items}">
+						ItemsSource="{Binding Items}"
+						SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 						<ListView.ItemTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -71,10 +72,16 @@
 					</Grid>
 				</RelativePanel>
 			</SplitView.Pane>
-			<!--<viewmodel:OnlinePlayerView></viewmodel:OnlinePlayerView>-->
-			<releases:ReleasesView
-				x:Name="Releases"
-			/>
+			<Grid>
+				<player:OnlinePlayerView
+					x:Name="Player"
+					Visibility="Collapsed"
+				/>
+				<releases:ReleasesView
+					x:Name="Releases"
+					Visibility="Collapsed"
+				/>
+			</Grid>
 		</SplitView>
 	</Grid>
 </Page>

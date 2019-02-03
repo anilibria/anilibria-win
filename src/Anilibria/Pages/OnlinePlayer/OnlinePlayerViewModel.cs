@@ -7,7 +7,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 	/// <summary>
 	/// View model.
 	/// </summary>
-	public class OnlinePlayerViewModel : ViewModel {
+	public class OnlinePlayerViewModel : ViewModel, INavigation {
 
 		private double m_Volume;
 
@@ -25,6 +25,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private TimeSpan m_Duration;
 
+		private Uri m_VideoSource;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -40,6 +42,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void CreateCommands () {
 			ChangeVolumeCommand = CreateCommand<double> ( ChangeVolume );
 			MuteCommand = CreateCommand ( Mute );
+			ShowSidebarCommand = CreateCommand ( ShowSidebarFromPage );
+		}
+
+		/// <summary>
+		/// Show sidebar from player page.
+		/// </summary>
+		private void ShowSidebarFromPage () {
+			ShowSidebar?.Invoke ();
 		}
 
 		/// <summary>
@@ -139,6 +149,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Video source.
+		/// </summary>
+		public Uri VideoSource
+		{
+			get => m_VideoSource;
+			set => Set ( ref m_VideoSource , value );
+		}
+
+		/// <summary>
 		/// Change volume handler.
 		/// </summary>
 		public Action<double> ChangeVolumeHandler
@@ -211,6 +230,43 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Start navigate to page.
+		/// </summary>
+		/// <param name="parameter">Parameter.</param>
+		public void NavigateTo ( object parameter ) {
+			if (VideoSource == null) {
+				VideoSource = new Uri ( "https://x.anilibria.tv/videos/ts/8052/0001/playlist.m3u8" );
+			} else {
+				ChangePlayback ( PlaybackState.Play );
+			}
+		}
+
+		/// <summary>
+		/// End navigate to page.
+		/// </summary>
+		public void NavigateFrom () {
+			ChangePlayback ( PlaybackState.Pause );
+		}
+
+		/// <summary>
+		/// Change page handler.
+		/// </summary>
+		public Action<string , object> ChangePage
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Show sidebar.
+		/// </summary>
+		public Action ShowSidebar
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Change volume.
 		/// </summary>
 		public ICommand ChangeVolumeCommand
@@ -223,6 +279,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Mute command.
 		/// </summary>
 		public ICommand MuteCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Show sidebar command.
+		/// </summary>
+		public ICommand ShowSidebarCommand
 		{
 			get;
 			set;
