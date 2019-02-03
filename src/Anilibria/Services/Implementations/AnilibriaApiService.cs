@@ -28,54 +28,56 @@ namespace Anilibria.Services.Implementations {
 
 		private const string m_SessionName = "PHPSESSID";
 
-		private static bool IsBase64String ( string value ) {
-			value = value.Trim ();
-			return ( value.Length % 4 == 0 ) && Regex.IsMatch ( value , @"^[a-zA-Z0-9\+/]*={0,3}$" , RegexOptions.None );
-		}
-
-		private string ConvertFromBase64 ( string content ) {
-			if ( !IsBase64String ( content ) ) return content;
-
-			var bytes = Convert.FromBase64String ( content );
-			return Encoding.UTF8.GetString ( bytes );
-		}
-
 		/// <summary>
 		/// Get page from releases.
 		/// </summary>
 		/// <param name="page">Page number.</param>
 		/// <param name="pageSize">Page size.</param>
 		/// <returns>Release's collection.</returns>
-		public async Task<IEnumerable<Release>> GetPage ( int page , int pageSize ) {
+		public async Task<IEnumerable<Release>> GetPage ( int page , int pageSize , string name = default ( string ) ) {
 			var cookieContainer = new CookieContainer ();
 			var handler = new HttpClientHandler { CookieContainer = cookieContainer };
 
-			var formContent = new FormUrlEncodedContent (
-				new[]
-				{
-					new KeyValuePair<string, string>("query", "list"),
-					new KeyValuePair<string, string>("page", page.ToString()),
-					new KeyValuePair<string, string>("perPage", pageSize.ToString()),
-				}
-			);
+			var parameters = new List<KeyValuePair<string , string>> {
+				new KeyValuePair<string , string> ( "query" , string.IsNullOrEmpty ( name ) ? "list" : "search" ),
+				new KeyValuePair<string , string> ( "page" , page.ToString () ),
+				new KeyValuePair<string , string> ( "perPage" , pageSize.ToString () )
+			};
+			if ( !string.IsNullOrEmpty ( name ) ) parameters.Add ( new KeyValuePair<string , string> ( "search" , name ) );
+
+			var formContent = new FormUrlEncodedContent ( parameters );
 			//cookieContainer.Add ( new Uri ( m_WebSiteUrl ) , new Cookie ( m_SessionName , "cookie_value" ) ); <-- user session
 			var httpClient = new HttpClient ( handler );
 			var result = await httpClient.PostAsync ( m_ApiReleasesUrl , formContent );
 			var content = await result.Content.ReadAsStringAsync ();
 
-			var releases = JsonConvert.DeserializeObject<ApiResponse<PagingList>> ( content );
+			IEnumerable<Release> releases = null;
+			if ( string.IsNullOrEmpty ( name ) ) {
+				var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList>> ( content );
+				if ( !responseModel.Status ) {
+					//TODO: handle error
+				}
 
-			if ( !releases.Status ) {
-				//TODO: handle error
+				releases = responseModel.Data.Items;
+			} else {
+				var responseModel = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<Release>>> ( content );
+				if ( !responseModel.Status ) {
+					//TODO: handle error
+				}
+
+				releases = responseModel.Data;
 			}
 
-			foreach ( var item in releases.Data.Items ) {
-				item.Type = FormatHtml ( item.Type );
-			}
+			foreach ( var item in releases ) item.Type = FormatHtml ( item.Type );
 
-			return releases.Data.Items;
+			return releases;
 		}
 
+		/// <summary>
+		/// Authentification by email and password.
+		/// </summary>
+		/// <param name="email">User email.</param>
+		/// <param name="password">User password.</param>
 		public async Task<bool> Authentification ( string email , string password ) {
 			var cookieContainer = new CookieContainer ();
 			var handler = new HttpClientHandler { CookieContainer = cookieContainer };

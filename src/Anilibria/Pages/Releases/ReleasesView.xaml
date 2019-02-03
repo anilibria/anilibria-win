@@ -544,10 +544,12 @@
 								<TextBox
 									Width="200"
 									Margin="4 0 4 4"
+									Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								/>
 								<Button
 									HorizontalAlignment="Stretch"
-									Margin="4 0 4 4">
+									Margin="4 0 4 4"
+									Command="{Binding FilterCommand}">
 									Фильтровать
 								</Button>
 							</StackPanel>
@@ -747,7 +749,8 @@
 							</TextBlock>
 							<Button
 								HorizontalAlignment="Center"
-								Grid.Column="1">
+								Grid.Column="1"
+								Command="{Binding OpenOnlineVideoCommand}">
 								Открыть в плеере
 							</Button>
 						</Grid>

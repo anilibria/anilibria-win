@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerViewModel.cs" />
     <Compile Include="Pages\OnlinePlayer\PlaybackState.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\ReleaseModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentModel.cs" />
     <Compile Include="Pages\Releases\ReleasesView.xaml.cs">

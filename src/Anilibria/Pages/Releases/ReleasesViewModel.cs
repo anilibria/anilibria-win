@@ -27,6 +27,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsShowReleaseCard;
 
+		private string m_FilterByName;
+
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
 		private readonly string[] m_FileSizes = { "B" , "KB" , "MB" , "GB" , "TB" };
@@ -45,7 +47,15 @@ namespace Anilibria.Pages.Releases {
 		private void CreateCommands () {
 			ShowSidebarCommand = CreateCommand ( ToggleSidebar );
 			HideReleaseCardCommand = CreateCommand ( HideReleaseCard );
+			FilterCommand = CreateCommand ( Filter );
+			OpenOnlineVideoCommand = CreateCommand ( OpenOnlineVideo );
 		}
+
+		private void OpenOnlineVideo () {
+			ChangePage ( "Player" , SelectedReleases.ToList () );
+		}
+
+		private void Filter () => RefreshReleases ();
 
 		private void HideReleaseCard () {
 			IsShowReleaseCard = false;
@@ -71,16 +81,14 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
-		/// Refresh groups.
+		/// Refresh releases.
 		/// </summary>
-		private void RefreshGroups () {
+		private void RefreshReleases () {
 			m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
 				PageSize = 20 ,
 				GetPageFunction = GetItemsPageAsync
 			};
 			RaisePropertyChanged ( () => Collection );
-
-			//RaiseSelectableCommands ();
 		}
 
 		/// <summary>
@@ -106,7 +114,7 @@ namespace Anilibria.Pages.Releases {
 		/// <returns>Items on current page.</returns>
 		private async Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize ) {
 			//TODO: network error handling
-			var releases = await m_AnilibriaApiService.GetPage ( page , pageSize );
+			var releases = await m_AnilibriaApiService.GetPage ( page , pageSize , string.IsNullOrEmpty ( FilterByName ) ? null : FilterByName );
 
 			return releases.Select (
 				a => new ReleaseModel {
@@ -118,7 +126,6 @@ namespace Anilibria.Pages.Releases {
 					Title = a.Names.FirstOrDefault () ,
 					Names = a.Names ,
 					Poster = m_AnilibriaApiService.GetUrl ( a.Poster.Replace ( "default" , a.Id.ToString () ) ) ,
-					//PosterFull = m_AnilibriaApiService.GetUrl ( a.PosterFull.Replace ( "default" , a.Id.ToString () ) ) ,
 					Rating = a.Favorite?.Rating ?? 0 ,
 					Series = a.Series ,
 					Status = a.Status ,
@@ -126,14 +133,22 @@ namespace Anilibria.Pages.Releases {
 					Voices = string.Join ( ", " , a.Voices ) ,
 					Year = a.Year ,
 					CountVideoOnline = a.Playlist?.Count () ?? 0 ,
-					Torrents = a.Torrents.Select (
+					Torrents = a?.Torrents?.Select (
 						torrent => new TorrentModel {
 							Completed = torrent.Completed ,
 							Quality = $"[{torrent.Quality}]" ,
 							Series = torrent.Series ,
 							Size = GetFileSize ( torrent.Size )
 						}
-					).ToList ()
+					)?.ToList () ?? Enumerable.Empty<TorrentModel> () ,
+					OnlineVideos = a.Playlist?.Select (
+						videoOnline => new OnlineVideoModel {
+							Order = videoOnline.Id ,
+							Title = videoOnline.Title ,
+							HDQuality = videoOnline.HD ,
+							SDQuality = videoOnline.SD
+						}
+					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
 				}
 			);
 		}
@@ -142,7 +157,7 @@ namespace Anilibria.Pages.Releases {
 		/// Initialize view model.
 		/// </summary>
 		public void Initialize () {
-			RefreshGroups ();
+			RefreshReleases ();
 		}
 
 		/// <summary>
@@ -150,14 +165,14 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
-			
+
 		}
 
 		/// <summary>
 		/// End navigate to page.
 		/// </summary>
 		public void NavigateFrom () {
-			
+
 		}
 
 		/// <summary>
@@ -194,6 +209,15 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_IsShowReleaseCard;
 			set => Set ( ref m_IsShowReleaseCard , value );
+		}
+
+		/// <summary>
+		/// Filter by name.
+		/// </summary>
+		public string FilterByName
+		{
+			get => m_FilterByName;
+			set => Set ( ref m_FilterByName , value );
 		}
 
 		/// <summary>
@@ -236,6 +260,24 @@ namespace Anilibria.Pages.Releases {
 		/// Hide release card command.
 		/// </summary>
 		public ICommand HideReleaseCardCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Filter releases list.
+		/// </summary>
+		public ICommand FilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open online video command.
+		/// </summary>
+		public ICommand OpenOnlineVideoCommand
 		{
 			get;
 			set;
