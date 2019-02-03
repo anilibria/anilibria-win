@@ -258,12 +258,6 @@
       <Version>12.0.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UWP.NavigationService\UWP.NavigationService.csproj">
-      <Project>{b52d4cd9-e842-47fe-bd30-f988b3a12877}</Project>
-      <Name>UWP.NavigationService</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
