@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using System.Collections.Generic;
 using Anilibria.Pages.OnlinePlayer;
 using Anilibria.Pages;
+using System.Linq;
 
 namespace Anilibria {
 
@@ -69,6 +70,9 @@ namespace Anilibria {
 			currentPage.Visibility = Visibility.Visible;
 			var currentNavigation = currentPage.DataContext as INavigation;
 			if ( currentNavigation != null ) currentNavigation.NavigateTo ( parameter );
+
+			var viewModel = DataContext as HomeViewModel;
+			viewModel.SelectedItem = viewModel.Items.First ( a => a.Page == page );
 
 			m_PreviousPage = page;
 			//hide sidebar after change page

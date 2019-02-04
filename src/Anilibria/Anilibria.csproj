@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerViewModel.cs" />
     <Compile Include="Pages\OnlinePlayer\PlaybackState.cs" />
+    <Compile Include="Pages\OnlinePlayer\VideoTimeFormatter.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\ReleaseModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentModel.cs" />
@@ -181,6 +182,8 @@
     <Content Include="Assets\Assets.txt" />
     <Content Include="Assets\Icons\filter.svg" />
     <Content Include="Assets\Icons\humburger.svg" />
+    <Content Include="Assets\Icons\playlist.svg" />
+    <Content Include="Assets\Icons\speaker.svg" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />

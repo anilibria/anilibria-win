@@ -52,6 +52,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void OpenOnlineVideo () {
+			IsShowReleaseCard = false;
 			ChangePage ( "Player" , SelectedReleases.ToList () );
 		}
 

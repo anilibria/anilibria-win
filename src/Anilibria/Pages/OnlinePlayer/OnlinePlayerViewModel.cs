@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Anilibria.MVVM;
+using Anilibria.Pages.Releases.PresentationClasses;
 
 namespace Anilibria.Pages.OnlinePlayer {
 
@@ -26,6 +29,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private TimeSpan m_Duration;
 
 		private Uri m_VideoSource;
+
+		private ReleaseModel m_SelectedRelease;
+
+		private IEnumerable<ReleaseModel> m_Releases;
 
 		/// <summary>
 		/// Constructor injection.
@@ -175,45 +182,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 			set;
 		}
 
-		private string FormattingMinutes ( int value ) {
-			if ( value == 0 ) return "";
-			if ( value == 1 ) return $"{value} минута";
-			if ( value >= 2 && value <= 4 ) return $"{value} минуты";
-
-			return $"{value} минут";
-		}
-
-		private string FormattingSeconds ( int value ) {
-			if ( value == 0 ) return "";
-			if ( value == 1 ) return $"{value} секунда";
-			if ( value >= 2 && value <= 4 ) return $"{value} секунды";
-
-			return $"{value} секунд";
-		}
-
-		private string FormattingHours ( int value ) {
-			if ( value == 0 ) return "";
-			if ( value == 1 ) return $"{value} час";
-			if ( value >= 2 && value <= 4 ) return $"{value} часа";
-
-			return $"{value} часов";
-		}
-
-		private string ConvertTimeSpanToText ( TimeSpan time ) {
-			if ( time.Hours > 0 ) {
-				return $"{FormattingHours ( time.Hours )} {FormattingMinutes ( time.Minutes )}";
-			}
-			else {
-				return $"{FormattingMinutes ( time.Minutes )} {FormattingSeconds ( time.Seconds )}";
-			}
-		}
-
 		/// <summary>
 		/// Refresh video position.
 		/// </summary>
 		/// <param name="timeSpan">Time span.</param>
 		public void RefreshPosition ( TimeSpan timeSpan ) {
-			DisplayPosition = ConvertTimeSpanToText ( timeSpan );
+			DisplayPosition = VideoTimeFormatter.ConvertTimeSpanToText ( timeSpan );
 			DisplayPositionPercent = $"({Math.Round ( timeSpan.TotalMilliseconds / m_Duration.TotalMilliseconds * 100 )}%)";
 		}
 
@@ -224,7 +198,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <param name="duration">Duration.</param>
 		public void MediaOpened ( bool success , TimeSpan? duration = default ( TimeSpan? ) ) {
 			if ( success ) {
-				DisplayDuration = ConvertTimeSpanToText ( duration.Value );
+				DisplayDuration = VideoTimeFormatter.ConvertTimeSpanToText ( duration.Value );
 				m_Duration = duration.Value;
 			}
 		}
@@ -234,18 +208,22 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
-			if (VideoSource == null) {
-				VideoSource = new Uri ( "https://x.anilibria.tv/videos/ts/8052/0001/playlist.m3u8" );
-			} else {
-				ChangePlayback ( PlaybackState.Play );
+			if ( parameter == null ) {
+				if ( VideoSource != null ) ChangePlayback ( PlaybackState.Play );
 			}
+			else {
+				Releases = parameter as IEnumerable<ReleaseModel>;
+				SelectedRelease = Releases.First ();
+				VideoSource = SelectedRelease.OnlineVideos.First ().HDQuality;
+			}
+
 		}
 
 		/// <summary>
 		/// End navigate to page.
 		/// </summary>
 		public void NavigateFrom () {
-			ChangePlayback ( PlaybackState.Pause );
+			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause );
 		}
 
 		/// <summary>
@@ -264,6 +242,24 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get;
 			set;
+		}
+
+		/// <summary>
+		/// Releases.
+		/// </summary>
+		public IEnumerable<ReleaseModel> Releases
+		{
+			get => m_Releases;
+			set => Set ( ref m_Releases , value );
+		}
+
+		/// <summary>
+		/// Selected release.
+		/// </summary>
+		public ReleaseModel SelectedRelease
+		{
+			get => m_SelectedRelease;
+			set => Set ( ref m_SelectedRelease , value );
 		}
 
 		/// <summary>

@@ -49,7 +49,7 @@
 			<Setter Property="VerticalAlignment" Value="Center" />
 			<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
 			<Setter Property="FontWeight" Value="Normal" />
-			<Setter Property="FontSize" Value="32" />
+			<Setter Property="FontSize" Value="42" />
 			<Setter Property="UseSystemFocusVisuals" Value="False" />
 			<Setter Property="Template">
 				<Setter.Value>
@@ -65,7 +65,7 @@
 									<VisualState x:Name="PointerOver">
 										<Storyboard>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="LightGray" />
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Gray" />
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
 												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
@@ -118,13 +118,16 @@
 	</Page.Resources>
 
 	<Grid>
-		<MediaPlayerElement
-			x:Name="OnlinePlayer"
-			Tapped="OnlinePlayer_Tapped"
-			DoubleTapped="OnlinePlayer_DoubleTapped"
-			Source="{Binding VideoSource, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MediaSourceConverter}}"
-			AutoPlay="True"
-		/>
+		<Grid
+			Background="Black">
+			<MediaPlayerElement
+				x:Name="OnlinePlayer"
+				Tapped="OnlinePlayer_Tapped"
+				DoubleTapped="OnlinePlayer_DoubleTapped"
+				Source="{Binding VideoSource, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MediaSourceConverter}}"
+				AutoPlay="True"
+			/>
+		</Grid>
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
@@ -145,6 +148,7 @@
 				<RelativePanel
 					HorizontalAlignment="Stretch">
 					<Button
+						x:Name="SidebarButton"
 						Style="{StaticResource IconsButtonStyle}"
 						Command="{Binding ShowSidebarCommand}">
 						<Image
@@ -153,60 +157,74 @@
 							Source="/Assets/Icons/humburger.svg"
 					/>
 					</Button>
+					<Button
+						x:Name="VolumeButton"
+						RelativePanel.AlignRightWithPanel="True"
+						Style="{StaticResource IconsButtonStyle}">
+						<Image
+							Width="{StaticResource IconSize}"
+							Height="{StaticResource IconSize}"
+							Source="/Assets/Icons/speaker.svg"
+						/>
+						<Button.Flyout>
+							<Flyout>
+								<StackPanel
+									x:Name="VolumeArea"
+									MinWidth="150">
+									<Button
+										Style="{StaticResource VolumeButton}"
+										Command="{Binding ChangeVolumeCommand}"
+										HorizontalAlignment="Stretch">
+										<Button.CommandParameter>
+											<x:Double>.1</x:Double>
+										</Button.CommandParameter>
+										<TextBlock>+</TextBlock>
+									</Button>
+									<Grid x:Name="VolumeText">
+										<TextBlock
+											Text="{Binding DisplayVolume}"
+											HorizontalAlignment="Center"
+											FontSize="36"
+										/>
+									</Grid>
+									<Button
+										Style="{StaticResource VolumeButton}"
+										Command="{Binding ChangeVolumeCommand}"
+										HorizontalAlignment="Stretch">
+										<Button.CommandParameter>
+											<x:Double>-.1</x:Double>
+										</Button.CommandParameter>
+										<TextBlock>-</TextBlock>
+									</Button>
+									<Button
+										Style="{StaticResource VolumeButton}"
+										Command="{Binding MuteCommand}"
+										HorizontalAlignment="Stretch">
+										<Image Source="/Assets/mute.svg" Width="36" Height="36" />
+									</Button>
+								</StackPanel>
+							</Flyout>
+						</Button.Flyout>
+					</Button>
+					<Button
+						x:Name="PlaylistButton"
+						RelativePanel.LeftOf="VolumeButton"
+						Style="{StaticResource IconsButtonStyle}">
+						<Image
+							Width="{StaticResource IconSize}"
+							Height="{StaticResource IconSize}"
+							Source="/Assets/Icons/playlist.svg"
+						/>
+						<Button.Flyout>
+							<MenuFlyout>
+								<MenuFlyoutItem
+									Text=""
+								/>
+							</MenuFlyout>
+						</Button.Flyout>
+					</Button>
 				</RelativePanel>
 			</Border>
-			<StackPanel
-				Visibility="Collapsed"
-				Grid.Row="0"
-				Grid.Column="0"
-				Background="LightGray"
-				PointerEntered="StackPanel_PointerEntered"
-				PointerExited="StackPanel_PointerExited"
-				Opacity="0"
-				x:Name="VolumeArea"
-				Width="100">
-				<Button
-					Style="{StaticResource VolumeButton}"
-					Command="{Binding ChangeVolumeCommand}"
-					HorizontalAlignment="Stretch">
-					<Button.CommandParameter>
-						<x:Double>.1</x:Double>
-					</Button.CommandParameter>
-					<TextBlock>+</TextBlock>
-				</Button>
-				<Grid x:Name="VolumeText">
-					<TextBlock
-						Text="{Binding DisplayVolume}"
-						HorizontalAlignment="Center"
-						FontSize="30"
-						Foreground="Black">
-						<TextBlock.RenderTransform>
-							<TranslateTransform X="1" Y="1" />
-						</TextBlock.RenderTransform>
-					</TextBlock>
-					<TextBlock
-						Text="{Binding DisplayVolume}"
-						HorizontalAlignment="Center"
-						FontSize="30"
-						Foreground="White"
-					/>
-				</Grid>
-				<Button
-					Style="{StaticResource VolumeButton}"
-					Command="{Binding ChangeVolumeCommand}"
-					HorizontalAlignment="Stretch">
-					<Button.CommandParameter>
-						<x:Double>-.1</x:Double>
-					</Button.CommandParameter>
-					<TextBlock>-</TextBlock>
-				</Button>
-				<Button
-					Style="{StaticResource VolumeButton}"
-					Command="{Binding MuteCommand}"
-					HorizontalAlignment="Stretch">
-					<Image Source="ms-appx:///Assets/mute.svg" Width="36" Height="36" />
-				</Button>
-			</StackPanel>
 			<StackPanel
 				Grid.Row="0"
 				Grid.Column="1"
