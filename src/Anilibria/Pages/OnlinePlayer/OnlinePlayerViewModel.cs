@@ -34,6 +34,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private IEnumerable<ReleaseModel> m_Releases;
 
+		private OnlineVideoModel m_SelectedOnlineVideo;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -165,6 +167,20 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Selected video.
+		/// </summary>
+		public OnlineVideoModel SelectedOnlineVideo
+		{
+			get => m_SelectedOnlineVideo;
+			set
+			{
+				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
+
+				VideoSource = m_SelectedOnlineVideo.HDQuality != null ? m_SelectedOnlineVideo.HDQuality : m_SelectedOnlineVideo.SDQuality;
+			}
+		}
+
+		/// <summary>
 		/// Change volume handler.
 		/// </summary>
 		public Action<double> ChangeVolumeHandler
@@ -214,7 +230,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			else {
 				Releases = parameter as IEnumerable<ReleaseModel>;
 				SelectedRelease = Releases.First ();
-				VideoSource = SelectedRelease.OnlineVideos.First ().HDQuality;
+				SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
 			}
 
 		}

@@ -216,11 +216,26 @@
 							Source="/Assets/Icons/playlist.svg"
 						/>
 						<Button.Flyout>
-							<MenuFlyout>
-								<MenuFlyoutItem
-									Text=""
-								/>
-							</MenuFlyout>
+							<Flyout>
+								<StackPanel Orientation="Vertical">
+									<StackPanel
+										Orientation="Horizontal">
+										<TextBlock
+											VerticalAlignment="Center"
+											Margin="0 0 4 0"
+											FontSize="16">
+											Выбор видео
+										</TextBlock>
+										<ComboBox
+											FontSize="16"
+											ItemsSource="{Binding SelectedRelease.OnlineVideos}"
+											DisplayMemberPath="Title"
+											Width="160"
+											SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										/>
+									</StackPanel>
+								</StackPanel>
+							</Flyout>
 						</Button.Flyout>
 					</Button>
 				</RelativePanel>
