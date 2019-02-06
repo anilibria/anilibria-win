@@ -180,6 +180,7 @@
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\Icons\slider.svg" />
     <Content Include="Assets\Icons\filter.svg" />
     <Content Include="Assets\Icons\humburger.svg" />
     <Content Include="Assets\Icons\playlist.svg" />

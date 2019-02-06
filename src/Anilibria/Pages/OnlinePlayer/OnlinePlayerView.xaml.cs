@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
-using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -30,7 +28,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			InitializeComponent ();
 			m_ViewModel = new OnlinePlayerViewModel {
 				ChangeVolumeHandler = ChangeVolumeHandler ,
-				ChangePlayback = ChangePlaybackHandler
+				ChangePlayback = ChangePlaybackHandler ,
+				ChangePosition = ChangePosition
 			};
 			DataContext = m_ViewModel;
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
@@ -95,6 +94,17 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
+		/// <summary>
+		/// Change position.
+		/// </summary>
+		/// <param name="position"></param>
+		private void ChangePosition ( TimeSpan position ) {
+			var playbackState = OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState;
+			if ( playbackState == MediaPlaybackState.Playing || playbackState == MediaPlaybackState.Paused ) {
+				OnlinePlayer.MediaPlayer.PlaybackSession.Position = position;
+			}
+		}
+
 		private void MediaPlayer_MediaFailed ( MediaPlayer sender , MediaPlayerFailedEventArgs args ) => m_MediaOpened = false;
 		private void MediaPlayer_MediaOpened ( MediaPlayer sender , object args ) => m_MediaOpened = true;
 		private void ChangeVolumeHandler ( double value ) => OnlinePlayer.MediaPlayer.Volume = value;
@@ -140,8 +150,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
-		private void StackPanel_PointerEntered ( object sender , PointerRoutedEventArgs e ) => VolumeArea.Opacity = 1;
-		private void StackPanel_PointerExited ( object sender , PointerRoutedEventArgs e ) => VolumeArea.Opacity = 0;
+		private async void Slider_ManipulationCompleted ( object sender , ManipulationCompletedRoutedEventArgs e ) {
+			await Task.Delay ( 100 );
+			m_ViewModel.ChangePosition?.Invoke ( TimeSpan.FromSeconds ( Slider.Value ) );
+		}
+
+		private void Slider_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			m_ViewModel.ChangePosition?.Invoke ( TimeSpan.FromSeconds ( Slider.Value ) );
+		}
 
 	}
 

@@ -238,6 +238,31 @@
 							</Flyout>
 						</Button.Flyout>
 					</Button>
+					<Button
+						x:Name="SliderButton"
+						RelativePanel.LeftOf="PlaylistButton"
+						Style="{StaticResource IconsButtonStyle}">
+						<Image
+							Width="{StaticResource IconSize}"
+							Height="{StaticResource IconSize}"
+							Source="/Assets/Icons/slider.svg"
+						/>
+						<Button.Flyout>
+							<Flyout>
+								<StackPanel>
+									<Slider
+										x:Name="Slider"
+										Minimum="0"
+										Maximum="{Binding DurationSecond}"
+										Value="{Binding Position}"
+										ManipulationCompleted="Slider_ManipulationCompleted"
+										Tapped="Slider_Tapped"
+										ManipulationMode="All"
+									/>
+								</StackPanel>
+							</Flyout>
+						</Button.Flyout>
+					</Button>
 				</RelativePanel>
 			</Border>
 			<StackPanel

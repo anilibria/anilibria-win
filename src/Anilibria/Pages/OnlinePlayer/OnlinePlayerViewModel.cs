@@ -36,6 +36,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private OnlineVideoModel m_SelectedOnlineVideo;
 
+		private double m_DurationSecond;
+
+		private double m_Position;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -97,6 +101,54 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void SetPercentDisplayVolume ( double value ) => DisplayVolume = ( (int) ( value * 100 ) ).ToString () + "%";
 
 		/// <summary>
+		/// Refresh video position.
+		/// </summary>
+		/// <param name="timeSpan">Time span.</param>
+		public void RefreshPosition ( TimeSpan timeSpan ) {
+			DisplayPosition = VideoTimeFormatter.ConvertTimeSpanToText ( timeSpan );
+
+			Position = timeSpan.TotalSeconds;
+
+			DisplayPositionPercent = $"({Math.Round ( timeSpan.TotalMilliseconds / m_Duration.TotalMilliseconds * 100 )}%)";
+		}
+
+		/// <summary>
+		/// Media opened.
+		/// </summary>
+		/// <param name="success">Success media opened.</param>
+		/// <param name="duration">Duration.</param>
+		public void MediaOpened ( bool success , TimeSpan? duration = default ( TimeSpan? ) ) {
+			if ( success ) {
+				DisplayDuration = VideoTimeFormatter.ConvertTimeSpanToText ( duration.Value );
+				m_Duration = duration.Value;
+				DurationSecond = duration.Value.TotalSeconds;
+			}
+		}
+
+		/// <summary>
+		/// Start navigate to page.
+		/// </summary>
+		/// <param name="parameter">Parameter.</param>
+		public void NavigateTo ( object parameter ) {
+			if ( parameter == null ) {
+				if ( VideoSource != null ) ChangePlayback ( PlaybackState.Play );
+			}
+			else {
+				Releases = parameter as IEnumerable<ReleaseModel>;
+				SelectedRelease = Releases.First ();
+				SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
+			}
+
+		}
+
+		/// <summary>
+		/// End navigate to page.
+		/// </summary>
+		public void NavigateFrom () {
+			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause );
+		}
+
+		/// <summary>
 		/// Volume.
 		/// </summary>
 		public double Volume
@@ -128,6 +180,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get => m_DisplayPosition;
 			set => Set ( ref m_DisplayPosition , value );
+		}
+
+		/// <summary>
+		/// Position.
+		/// </summary>
+		public double Position
+		{
+			get => m_Position;
+			set => Set ( ref m_Position , value );
 		}
 
 		/// <summary>
@@ -167,6 +228,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Duration.
+		/// </summary>
+		public double DurationSecond
+		{
+			get => m_DurationSecond;
+			set => Set ( ref m_DurationSecond , value );
+		}
+
+		/// <summary>
 		/// Selected video.
 		/// </summary>
 		public OnlineVideoModel SelectedOnlineVideo
@@ -199,47 +269,21 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
-		/// Refresh video position.
+		/// Releases.
 		/// </summary>
-		/// <param name="timeSpan">Time span.</param>
-		public void RefreshPosition ( TimeSpan timeSpan ) {
-			DisplayPosition = VideoTimeFormatter.ConvertTimeSpanToText ( timeSpan );
-			DisplayPositionPercent = $"({Math.Round ( timeSpan.TotalMilliseconds / m_Duration.TotalMilliseconds * 100 )}%)";
+		public IEnumerable<ReleaseModel> Releases
+		{
+			get => m_Releases;
+			set => Set ( ref m_Releases , value );
 		}
 
 		/// <summary>
-		/// Media opened.
+		/// Selected release.
 		/// </summary>
-		/// <param name="success">Success media opened.</param>
-		/// <param name="duration">Duration.</param>
-		public void MediaOpened ( bool success , TimeSpan? duration = default ( TimeSpan? ) ) {
-			if ( success ) {
-				DisplayDuration = VideoTimeFormatter.ConvertTimeSpanToText ( duration.Value );
-				m_Duration = duration.Value;
-			}
-		}
-
-		/// <summary>
-		/// Start navigate to page.
-		/// </summary>
-		/// <param name="parameter">Parameter.</param>
-		public void NavigateTo ( object parameter ) {
-			if ( parameter == null ) {
-				if ( VideoSource != null ) ChangePlayback ( PlaybackState.Play );
-			}
-			else {
-				Releases = parameter as IEnumerable<ReleaseModel>;
-				SelectedRelease = Releases.First ();
-				SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
-			}
-
-		}
-
-		/// <summary>
-		/// End navigate to page.
-		/// </summary>
-		public void NavigateFrom () {
-			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause );
+		public ReleaseModel SelectedRelease
+		{
+			get => m_SelectedRelease;
+			set => Set ( ref m_SelectedRelease , value );
 		}
 
 		/// <summary>
@@ -261,21 +305,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
-		/// Releases.
+		/// Change position.
 		/// </summary>
-		public IEnumerable<ReleaseModel> Releases
+		public Action<TimeSpan> ChangePosition
 		{
-			get => m_Releases;
-			set => Set ( ref m_Releases , value );
-		}
-
-		/// <summary>
-		/// Selected release.
-		/// </summary>
-		public ReleaseModel SelectedRelease
-		{
-			get => m_SelectedRelease;
-			set => Set ( ref m_SelectedRelease , value );
+			get;
+			set;
 		}
 
 		/// <summary>
