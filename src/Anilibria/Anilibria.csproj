@@ -177,9 +177,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\anilibriaicon.png" />
+    <Content Include="Assets\anilibriaiconbig.png" />
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\Icons\settings.svg" />
     <Content Include="Assets\Icons\slider.svg" />
     <Content Include="Assets\Icons\filter.svg" />
     <Content Include="Assets\Icons\humburger.svg" />
