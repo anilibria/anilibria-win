@@ -116,6 +116,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( m_TapCount > 1 ) return;
 
+			if ( ControlPanel.Visibility == Visibility.Visible ) ControlPanel.Visibility = Visibility.Collapsed;
+
 			switch ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState ) {
 				case MediaPlaybackState.Playing:
 					RunShowPauseAnimation ();
@@ -159,6 +161,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_ViewModel.ChangePosition?.Invoke ( TimeSpan.FromSeconds ( Slider.Value ) );
 		}
 
+		private void OnlinePlayer_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
+			if ( ControlPanel.Visibility == Visibility.Collapsed ) {
+				ControlPanel.Visibility = Visibility.Visible;
+			}
+			else {
+				ControlPanel.Visibility = Visibility.Collapsed;
+			}
+		}
+
 	}
+
 
 }

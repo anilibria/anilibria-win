@@ -317,6 +317,7 @@
 				x:Name="OnlinePlayer"
 				Tapped="OnlinePlayer_Tapped"
 				DoubleTapped="OnlinePlayer_DoubleTapped"
+				RightTapped="OnlinePlayer_RightTapped"
 				Source="{Binding VideoSource, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MediaSourceConverter}}"
 				AutoPlay="True"
 			/>
@@ -333,11 +334,13 @@
 				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
 			<Border
+				x:Name="ControlPanel"
 				Grid.Row="0"
 				Grid.ColumnSpan="3"
 				Background="#b32121"
 				BorderBrush="#881919"
-				BorderThickness="0 0 0 2">
+				BorderThickness="0 0 0 2"
+				Visibility="Collapsed">
 				<RelativePanel
 					HorizontalAlignment="Stretch">
 					<Button
@@ -471,7 +474,9 @@
 						<Button.Flyout>
 							<Flyout>
 								<StackPanel>
-									
+									<StackPanel Orientation="Horizontal">
+										
+									</StackPanel>
 								</StackPanel>
 							</Flyout>
 						</Button.Flyout>
