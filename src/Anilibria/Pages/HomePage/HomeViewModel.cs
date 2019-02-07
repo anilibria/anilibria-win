@@ -43,7 +43,7 @@ namespace Anilibria.Pages.HomePage {
 
 		public void Initialize () {
 			var version = Package.Current.Id.Version;
-			Version = $"{version.Major}.{version.Minor}.{version.Revision}";
+			Version = $"{version.Major}.{version.Minor}.{version.Build}";
 
 			SelectedItem = Items.First ();
 
