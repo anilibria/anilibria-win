@@ -34,11 +34,17 @@ namespace Anilibria.Pages.OnlinePlayer {
 			DataContext = m_ViewModel;
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
 			OnlinePlayer.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+			OnlinePlayer.MediaPlayer.SourceChanged += MediaPlayer_SourceChanged;
 
 			RunTimer ();
 
 			Loaded += OnlinePlayerView_Loaded;
 			Unloaded += OnlinePlayerView_Unloaded;
+		}
+
+		private void MediaPlayer_SourceChanged ( MediaPlayer sender , object args ) {
+			m_Duration = TimeSpan.FromSeconds ( 0 );
+			m_MediaOpened = false;
 		}
 
 		private void OnlinePlayerView_Unloaded ( object sender , RoutedEventArgs e ) {
@@ -56,7 +62,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void RunTimer () {
 			m_DispatherTimer = new DispatcherTimer ();
 			m_DispatherTimer.Tick += TimerTick;
-			m_DispatherTimer.Interval = new TimeSpan ( 200 );
+			m_DispatherTimer.Interval = new TimeSpan ( 50 );
 			m_DispatherTimer.Start ();
 		}
 
@@ -65,6 +71,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
 				m_ViewModel.MediaOpened ( true , m_Duration );
 			}
+
 			if ( m_MediaOpened ) {
 				m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
 			}

@@ -474,8 +474,10 @@
 						<Button.Flyout>
 							<Flyout>
 								<StackPanel>
+									<TextBlock>Качество</TextBlock>
 									<StackPanel Orientation="Horizontal">
-										
+										<ToggleButton IsChecked="{Binding IsHD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">720p</ToggleButton>
+										<ToggleButton IsChecked="{Binding IsSD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">480p</ToggleButton>
 									</StackPanel>
 								</StackPanel>
 							</Flyout>

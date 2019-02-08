@@ -40,10 +40,18 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private double m_Position;
 
+		private bool m_IsHD;
+
+		private bool m_IsSD;
+
+		private double m_RestorePosition = 0;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
 		public OnlinePlayerViewModel () {
+
+			m_IsHD = true;
 
 			CreateCommands ();
 			Volume = 1;
@@ -94,11 +102,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 			Volume = newVolume;
 		}
 
-		/// <summary>
-		/// Set display volume.
-		/// </summary>
-		/// <param name="value">Value.</param>
 		private void SetPercentDisplayVolume ( double value ) => DisplayVolume = ( (int) ( value * 100 ) ).ToString () + "%";
+
+		private void ChangeVideoSource () => VideoSource = IsHD ? m_SelectedOnlineVideo.HDQuality : m_SelectedOnlineVideo.SDQuality;
 
 		/// <summary>
 		/// Refresh video position.
@@ -122,6 +128,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 				DisplayDuration = VideoTimeFormatter.ConvertTimeSpanToText ( duration.Value );
 				m_Duration = duration.Value;
 				DurationSecond = duration.Value.TotalSeconds;
+
+				if ( m_RestorePosition > 0 ) {
+					var lastPosition = TimeSpan.FromSeconds ( m_RestorePosition );
+					m_RestorePosition = 0;
+					ChangePosition ( lastPosition );
+				}
 			}
 		}
 
@@ -201,6 +213,40 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Is HD quality.
+		/// </summary>
+		public bool IsHD
+		{
+			get => m_IsHD;
+			set
+			{
+				if ( !Set ( ref m_IsHD , value ) ) return;
+
+				IsSD = !value;
+
+				m_RestorePosition = Position;
+				ChangeVideoSource ();
+			}
+		}
+
+		/// <summary>
+		/// Is SD quality.
+		/// </summary>
+		public bool IsSD
+		{
+			get => m_IsSD;
+			set
+			{
+				if ( !Set ( ref m_IsSD , value ) ) return;
+
+				IsHD = !value;
+
+				m_RestorePosition = Position;
+				ChangeVideoSource ();
+			}
+		}
+
+		/// <summary>
 		/// Display volume.
 		/// </summary>
 		public string DisplayVolume
@@ -246,7 +292,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
-				VideoSource = m_SelectedOnlineVideo.HDQuality != null ? m_SelectedOnlineVideo.HDQuality : m_SelectedOnlineVideo.SDQuality;
+				ChangeVideoSource ();
 			}
 		}
 
