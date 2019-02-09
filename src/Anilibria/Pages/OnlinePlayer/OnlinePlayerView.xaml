@@ -22,7 +22,7 @@
 			</DoubleAnimationUsingKeyFrames>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PauseIcon">
 				<EasingDoubleKeyFrame KeyTime="0" Value="0" />
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value=".6" />
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value=".8" />
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Name="HidePause">
@@ -35,7 +35,7 @@
 				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
 			</DoubleAnimationUsingKeyFrames>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PauseIcon">
-				<EasingDoubleKeyFrame KeyTime="0" Value=".6" />
+				<EasingDoubleKeyFrame KeyTime="0" Value=".8" />
 				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0" />
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
@@ -351,8 +351,28 @@
 							Width="{StaticResource IconSize}"
 							Height="{StaticResource IconSize}"
 							Source="/Assets/Icons/humburger.svg"
-					/>
+						/>
 					</Button>
+					<TextBlock
+						x:Name="CurrentVideoPositionPanel"
+						RelativePanel.RightOf="SidebarButton"
+						FontSize="16"
+						Foreground="White"
+						VerticalAlignment="Center"
+						Margin="6 12 0 0">
+						<Run
+							Text="{Binding DisplayPosition}"
+						/>
+						<Run
+							Text="{Binding DisplayPositionPercent}"
+						/>
+						<Run
+							Text="/"
+						/>
+						<Run
+							Text="{Binding DisplayDuration}"
+						/>
+					</TextBlock>
 					<Button
 						x:Name="VolumeButton"
 						RelativePanel.LeftOf="SettingsButton"
@@ -485,28 +505,6 @@
 					</Button>
 				</RelativePanel>
 			</Border>
-			<StackPanel
-				Grid.Row="0"
-				Grid.Column="1"
-				Grid.ColumnSpan="2"
-				Orientation="Vertical">
-				<Grid HorizontalAlignment="Right">
-					<Rectangle
-						Fill="LightGray"
-						Opacity=".4">
-					</Rectangle>
-					<TextBlock
-						Visibility="Collapsed"
-						x:Name="TitleLabel"
-						FontSize="30"
-						MaxLines="2"
-						TextWrapping="Wrap"
-						TextTrimming="CharacterEllipsis"
-						Foreground="LightGray">
-						(Восхождение героя щита)Tate no Yuusha no Nariagari
-					</TextBlock>
-				</Grid>
-			</StackPanel>
 			<Grid
 				Grid.RowSpan="3"
 				Grid.ColumnSpan="3"
@@ -534,31 +532,78 @@
 				</Viewbox>
 			</Grid>
 			<StackPanel
+				x:Name="CurrentReleaseInfo"
+				Visibility="Collapsed"
 				Grid.Row="2"
 				Grid.Column="2">
-				<Grid HorizontalAlignment="Right">
-					<Rectangle
-						Fill="LightGray"
-						Opacity=".4"
-					/>
-					<StackPanel Margin="2 0 2 0">
-						<TextBlock
-							x:Name="CurrentPositionLabel"
-							FontSize="30"
-							Foreground="White"
-							HorizontalAlignment="Right">
-							<Run Text="{Binding DisplayPosition}"></Run>
-							<Run Text="{Binding DisplayPositionPercent}"></Run>
-						</TextBlock>
-						<TextBlock
-							x:Name="DurationLabel"
-							FontSize="30"
-							Foreground="White"
-							HorizontalAlignment="Right"
-							Text="{Binding DisplayDuration}"
+				<Border
+					BorderBrush="#881919"
+					BorderThickness="2"
+					HorizontalAlignment="Right">
+					<Grid>
+						<Rectangle
+							Fill="White"
 						/>
-					</StackPanel>
-				</Grid>
+						<StackPanel Margin="2 0 2 0" Orientation="Horizontal">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition />
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+								<StackPanel
+									Grid.Row="0"
+									Orientation="Vertical">
+									<TextBlock
+										x:Name="CurrentReleaseTitle"
+										FontSize="20"
+										Foreground="#b32121"
+										HorizontalAlignment="Right"
+										TextWrapping="WrapWholeWords"
+										TextTrimming="CharacterEllipsis"
+										MaxLines="5"
+										Text="{Binding SelectedRelease.Title}">
+									</TextBlock>
+									<TextBlock
+										x:Name="CurrentVideoTitle"
+										FontSize="20"
+										Foreground="Black"
+										TextTrimming="CharacterEllipsis"
+										HorizontalAlignment="Right"
+										Text="{Binding SelectedOnlineVideo.Title}">
+									</TextBlock>
+								</StackPanel>
+								<StackPanel
+									Grid.Row="1"
+									Orientation="Vertical">
+									<TextBlock
+										x:Name="CurrentVideoPosition"
+										FontSize="20"
+										Foreground="Black"
+										HorizontalAlignment="Right"
+										VerticalAlignment="Bottom">
+										<Run Text="{Binding DisplayPosition}"></Run>
+										<Run Text="{Binding DisplayPositionPercent}"></Run>
+									</TextBlock>
+									<TextBlock
+										x:Name="CurrentVideoDuration"
+										FontSize="20"
+										Foreground="Black"
+										VerticalAlignment="Bottom"
+										HorizontalAlignment="Right"
+										Text="{Binding DisplayDuration}"
+									/>
+								</StackPanel>
+							</Grid>
+							<Image
+								x:Name="PosterImage"
+								Margin="3 3 1 3"
+								Source="{Binding SelectedRelease.Poster}"
+								Stretch="Uniform"
+								Height="200"
+							/>
+						</StackPanel>
+					</Grid>
+				</Border>
 			</StackPanel>
 		</Grid>
 		<VisualStateManager.VisualStateGroups>
@@ -570,9 +615,10 @@
 					<VisualState.Setters>
 						<Setter Target="PauseIconViewbox.Width" Value="245" />
 						<Setter Target="PauseIconViewbox.Height" Value="245" />
-						<Setter Target="TitleLabel.FontSize" Value="30" />
-						<Setter Target="CurrentPositionLabel.FontSize" Value="30" />
-						<Setter Target="DurationLabel.FontSize" Value="30" />
+						<Setter Target="CurrentReleaseTitle.FontSize" Value="20" />
+						<Setter Target="CurrentVideoTitle.FontSize" Value="20" />
+						<Setter Target="CurrentVideoPosition.FontSize" Value="20" />
+						<Setter Target="CurrentVideoDuration.FontSize" Value="20" />
 					</VisualState.Setters>
 				</VisualState>
 				<VisualState x:Name="Wide">
@@ -582,9 +628,10 @@
 					<VisualState.Setters>
 						<Setter Target="PauseIconViewbox.Width" Value="200"/>
 						<Setter Target="PauseIconViewbox.Height" Value="200"/>
-						<Setter Target="TitleLabel.FontSize" Value="24" />
-						<Setter Target="CurrentPositionLabel.FontSize" Value="24" />
-						<Setter Target="DurationLabel.FontSize" Value="24" />
+						<Setter Target="CurrentReleaseTitle.FontSize" Value="16" />
+						<Setter Target="CurrentVideoTitle.FontSize" Value="16" />
+						<Setter Target="CurrentVideoPosition.FontSize" Value="16" />
+						<Setter Target="CurrentVideoDuration.FontSize" Value="16" />
 					</VisualState.Setters>
 				</VisualState>
 				<VisualState x:Name="Square">
@@ -594,9 +641,11 @@
 					<VisualState.Setters>
 						<Setter Target="PauseIconViewbox.Width" Value="100"/>
 						<Setter Target="PauseIconViewbox.Height" Value="100"/>
-						<Setter Target="TitleLabel.FontSize" Value="18" />
-						<Setter Target="CurrentPositionLabel.FontSize" Value="18" />
-						<Setter Target="DurationLabel.FontSize" Value="18" />
+						<Setter Target="CurrentReleaseTitle.FontSize" Value="14" />
+						<Setter Target="CurrentVideoTitle.FontSize" Value="14" />
+						<Setter Target="CurrentVideoPosition.FontSize" Value="14" />
+						<Setter Target="CurrentVideoDuration.FontSize" Value="14" />
+						<Setter Target="PosterImage.Height" Value="160" />
 					</VisualState.Setters>
 				</VisualState>
 				<VisualState x:Name="Snapped">
@@ -606,9 +655,11 @@
 					<VisualState.Setters>
 						<Setter Target="PauseIconViewbox.Width" Value="50"/>
 						<Setter Target="PauseIconViewbox.Height" Value="50"/>
-						<Setter Target="TitleLabel.FontSize" Value="14" />
-						<Setter Target="CurrentPositionLabel.FontSize" Value="14" />
-						<Setter Target="DurationLabel.FontSize" Value="14" />
+						<Setter Target="CurrentReleaseTitle.FontSize" Value="12" />
+						<Setter Target="CurrentVideoTitle.FontSize" Value="12" />
+						<Setter Target="CurrentVideoPosition.FontSize" Value="12" />
+						<Setter Target="CurrentVideoDuration.FontSize" Value="12" />
+						<Setter Target="PosterImage.Height" Value="140" />
 					</VisualState.Setters>
 				</VisualState>
 			</VisualStateGroup>

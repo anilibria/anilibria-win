@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Anilibria.Pages.OnlinePlayer {
 
@@ -9,24 +10,33 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private static string FormattingMinutes ( int value ) {
 			if ( value == 0 ) return "";
-			if ( value == 1 ) return $"{value} минута";
-			if ( value >= 2 && value <= 4 ) return $"{value} минуты";
+
+			var lastDigit = Convert.ToInt32 ( value.ToString ().Last ().ToString() );
+
+			if ( lastDigit == 1 ) return $"{value} минута";
+			if ( lastDigit >= 2 && lastDigit <= 4 ) return $"{value} минуты";
 
 			return $"{value} минут";
 		}
 
 		private static string FormattingSeconds ( int value ) {
 			if ( value == 0 ) return "";
-			if ( value == 1 ) return $"{value} секунда";
-			if ( value >= 2 && value <= 4 ) return $"{value} секунды";
+
+			var lastDigit = Convert.ToInt32 ( value.ToString ().Last ().ToString () );
+
+			if ( lastDigit == 1 ) return $"{value} секунда";
+			if ( lastDigit >= 2 && lastDigit <= 4 ) return $"{value} секунды";
 
 			return $"{value} секунд";
 		}
 
 		private static string FormattingHours ( int value ) {
 			if ( value == 0 ) return "";
-			if ( value == 1 ) return $"{value} час";
-			if ( value >= 2 && value <= 4 ) return $"{value} часа";
+
+			var lastDigit = Convert.ToInt32 ( value.ToString ().Last ().ToString () );
+
+			if ( lastDigit == 1 ) return $"{value} час";
+			if ( lastDigit >= 2 && lastDigit <= 4 ) return $"{value} часа";
 
 			return $"{value} часов";
 		}

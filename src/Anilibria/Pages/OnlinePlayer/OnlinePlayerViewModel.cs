@@ -143,7 +143,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
 			if ( parameter == null ) {
-				if ( VideoSource != null ) ChangePlayback ( PlaybackState.Play );
+				if ( VideoSource != null ) ChangePlayback ( PlaybackState.Play , false );
 			}
 			else {
 				Releases = parameter as IEnumerable<ReleaseModel>;
@@ -157,7 +157,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// End navigate to page.
 		/// </summary>
 		public void NavigateFrom () {
-			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause );
+			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause , false );
 		}
 
 		/// <summary>
@@ -308,7 +308,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change playback state (pause, play or stop).
 		/// </summary>
-		public Action<PlaybackState> ChangePlayback
+		public Action<PlaybackState , bool> ChangePlayback
 		{
 			get;
 			set;

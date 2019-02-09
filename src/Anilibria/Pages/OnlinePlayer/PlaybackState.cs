@@ -4,6 +4,7 @@
 	/// Playback state.
 	/// </summary>
 	public enum PlaybackState {
+
 		Stop = 0,
 
 		Pause = 1,

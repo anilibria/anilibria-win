@@ -75,7 +75,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( m_DispatherTimer.IsEnabled ) m_DispatherTimer.Stop ();
 		}
 
-		private void ChangePlaybackHandler ( PlaybackState state ) {
+		private void ChangePlaybackHandler ( PlaybackState state , bool needAnimation = true ) {
 			switch ( state ) {
 				case PlaybackState.Stop:
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Pause ();
@@ -83,13 +83,27 @@ namespace Anilibria.Pages.OnlinePlayer {
 					break;
 				case PlaybackState.Pause:
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.CanPause ) {
-						RunShowPauseAnimation ();
+						if ( needAnimation ) {
+							RunShowPauseAnimation ();
+						}
+						else {
+							PauseIcon.Opacity = .8;
+						}
 						OnlinePlayer.MediaPlayer.Pause ();
+						CurrentReleaseInfo.Visibility = Visibility.Visible;
 					}
 					break;
 				case PlaybackState.Play:
-					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Paused ) RunHidePauseAnimation ();
+					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Paused ) {
+						if ( needAnimation ) {
+							RunHidePauseAnimation ();
+						}
+						else {
+							PauseIcon.Opacity = 0;
+						}
+					}
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Play ();
+					CurrentReleaseInfo.Visibility = Visibility.Collapsed;
 					break;
 				default: throw new NotSupportedException ( $"State {state} not supporting." );
 			}
@@ -114,6 +128,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				() => {
 					m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
 					m_ViewModel.MediaOpened ( true , m_Duration );
+					PauseIcon.Opacity = 0;
 				}
 			);
 		}
@@ -130,12 +145,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			switch ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState ) {
 				case MediaPlaybackState.Playing:
-					RunShowPauseAnimation ();
-					OnlinePlayer.MediaPlayer.Pause ();
+					ChangePlaybackHandler ( PlaybackState.Pause , needAnimation: true );
 					break;
 				case MediaPlaybackState.Paused:
-					RunHidePauseAnimation ();
-					OnlinePlayer.MediaPlayer.Play ();
+					ChangePlaybackHandler ( PlaybackState.Play , needAnimation: true );
 					break;
 			}
 		}
