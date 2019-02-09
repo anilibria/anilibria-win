@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -67,14 +68,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void TimerTick ( object sender , object e ) {
-			if ( m_MediaOpened && m_Duration.TotalMilliseconds == 0 && OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration.TotalMilliseconds > 0 ) {
-				m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
-				m_ViewModel.MediaOpened ( true , m_Duration );
-			}
-
-			if ( m_MediaOpened ) {
-				m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
-			}
+			if ( m_MediaOpened ) m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
 		}
 
 		private void StopTimer () {
@@ -113,7 +107,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void MediaPlayer_MediaFailed ( MediaPlayer sender , MediaPlayerFailedEventArgs args ) => m_MediaOpened = false;
-		private void MediaPlayer_MediaOpened ( MediaPlayer sender , object args ) => m_MediaOpened = true;
+		private async void MediaPlayer_MediaOpened ( MediaPlayer sender , object args ) {
+			m_MediaOpened = true;
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
+					m_ViewModel.MediaOpened ( true , m_Duration );
+				}
+			);
+		}
 		private void ChangeVolumeHandler ( double value ) => OnlinePlayer.MediaPlayer.Volume = value;
 
 		private async void OnlinePlayer_Tapped ( object sender , TappedRoutedEventArgs e ) {
