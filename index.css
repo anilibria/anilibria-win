@@ -1,0 +1,30 @@
+body {
+	background-color: #D3D3D3;
+}
+.page-container {
+	margin: auto;
+	width: 50%;
+	border: 3px solid #b32121;
+	padding: 10px;
+	background-color: white;
+}
+
+.main-header {
+	font-weight: bold;
+	font-size: 28px;
+	text-align: center;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.block-header .block-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.block-header .block-bold {
+	font-weight: bold;
+	font-size: 20px;
+	text-align: center;
+	margin: 4px;
+}
