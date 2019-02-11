@@ -6,9 +6,11 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:player="using:Anilibria.Pages.OnlinePlayer"
 	xmlns:releases="using:Anilibria.Pages.Releases"
+	xmlns:authorize="using:Anilibria.Pages.AuthorizePage"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	mc:Ignorable="d"
-	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}">
+	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
+	Loaded="Page_Loaded">
 
 	<Grid>
 		<SplitView
@@ -20,8 +22,55 @@
 					Background="#D3D3D3"
 					BorderBrush="#881919"
 					BorderThickness="0 0 2 0">
-					<ListView
+					<Grid
+						x:Name="UserInfo"
 						RelativePanel.AlignTopWithPanel="True"
+						RelativePanel.AlignRightWithPanel="True"
+						RelativePanel.AlignLeftWithPanel="True"
+						Visibility="{Binding IsAuthorized}"
+						Margin="2 4 2 4"
+						HorizontalAlignment="Stretch">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<Ellipse
+							Width="40"
+							Height="40"
+							Grid.Column="0">
+							<Ellipse.Fill>
+								<ImageBrush
+									ImageSource="{Binding UserModel.ImageUrl}"
+									Stretch="Uniform"
+								/>
+							</Ellipse.Fill>
+						</Ellipse>
+						<TextBlock
+							Grid.Column="1"
+							Margin="8 0 0 0"
+							VerticalAlignment="Center"
+							TextAlignment="Center"
+							Text="{Binding UserModel.Login}"
+							TextTrimming="CharacterEllipsis"
+							TextWrapping="Wrap"
+							MaxLines="2"
+						/>
+						<Grid
+							Grid.Column="2"
+							Tapped="Grid_Tapped"
+							Width="40"
+							Height="40">
+							<Image
+								Source="/Assets/Icons/logout.svg"
+								Stretch="Uniform"
+								Width="30"
+								Height="30"
+							/>
+						</Grid>
+					</Grid>
+					<ListView
+						RelativePanel.Below="UserInfo"
 						RelativePanel.AlignRightWithPanel="True"
 						RelativePanel.AlignLeftWithPanel="True"
 						HorizontalAlignment="Stretch"
@@ -79,6 +128,10 @@
 				/>
 				<releases:ReleasesView
 					x:Name="Releases"
+					Visibility="Collapsed"
+				/>
+				<authorize:AuthorizeView
+					x:Name="Authorize"
 					Visibility="Collapsed"
 				/>
 			</Grid>

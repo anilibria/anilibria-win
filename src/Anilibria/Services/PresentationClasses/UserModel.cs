@@ -1,43 +1,43 @@
 ﻿using System;
 
-namespace Anilibria.Pages.HomePage.PresentationClasses {
+namespace Anilibria.Services.PresentationClasses {
 
 	/// <summary>
-	/// Split view item.
+	/// User model.
 	/// </summary>
-	public class SplitViewItem {
+	public class UserModel {
 
 		/// <summary>
-		/// Name.
+		/// Identifier.
 		/// </summary>
-		public string Name
+		public long Id
 		{
 			get;
 			set;
 		}
 
 		/// <summary>
-		/// Page.
+		/// Login.
 		/// </summary>
-		public string Page
+		public string Login
 		{
 			get;
 			set;
 		}
 
 		/// <summary>
-		/// Icon.
+		/// Path to user avatar image.
 		/// </summary>
-		public string Icon
+		public string Avatar
 		{
 			get;
 			set;
 		}
 
 		/// <summary>
-		/// Is visible.
+		/// Image url.
 		/// </summary>
-		public Func<bool> IsVisible
+		public Uri ImageUrl
 		{
 			get;
 			set;

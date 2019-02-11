@@ -20,6 +20,31 @@ namespace Anilibria.Services {
 		Task<IEnumerable<Release>> GetPage ( int page , int pageSize , string name = default ( string ) );
 
 		/// <summary>
+		/// Authentification.
+		/// </summary>
+		/// <param name="email">Email.</param>
+		/// <param name="password">Password.</param>
+		/// <returns>Authorization result.</returns>
+		Task<bool> Authentification ( string email , string password );
+
+		/// <summary>
+		/// Logout.
+		/// </summary>
+		/// <returns></returns>
+		Task Logout ();
+
+		/// <summary>
+		/// Get user data.
+		/// </summary>
+		/// <returns>Information about user profile.</returns>
+		Task<UserModel> GetUserData ();
+
+		/// <summary>
+		/// Get mark that user is authorized or not.
+		/// </summary>
+		bool IsAuthorized ();
+
+		/// <summary>
 		/// Get url.
 		/// </summary>
 		/// <param name="relativeUrl">Relative url.</param>

@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.HomePage.PresentationClasses;
+using Anilibria.Services;
+using Anilibria.Services.Exceptions;
+using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;
 
 namespace Anilibria.Pages.HomePage {
@@ -17,36 +22,129 @@ namespace Anilibria.Pages.HomePage {
 
 		const string PlayerPage = "Player";
 
-		private ObservableCollection<SplitViewItem> m_Items = new ObservableCollection<SplitViewItem> (
-			new List<SplitViewItem> {
-				new SplitViewItem {
-					Name = "Каталог релизов",
-					Page = ReleasesPage,
-					Icon = "\xF168"
-				},
-				new SplitViewItem {
-					Name = "Видео плеер",
-					Page = PlayerPage,
-					Icon = "\xE714"
-				},
-				new SplitViewItem {
-					Name = "Менеджер загрузок",
-					Page = "Torrents",
-					Icon = "\xE896"
-				}
-			}
-		);
+		const string AuthorizePage = "Authorize";
+
+		private readonly IAnilibriaApiService m_AnilibriaApiService;
+
+		private IEnumerable<SplitViewItem> m_MenuItems;
+
+		private ObservableCollection<SplitViewItem> m_Items;
 
 		private string m_Version = "";
 
 		private SplitViewItem m_SelectedItem;
 
-		public void Initialize () {
+		private UserModel m_UserModel;
+
+		private bool m_IsAuthorized;
+
+		public HomeViewModel ( IAnilibriaApiService anilibriaApiService ) {
+			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+
 			var version = Package.Current.Id.Version;
 			Version = $"{version.Major}.{version.Minor}.{version.Build}";
 
+			m_MenuItems = new List<SplitViewItem> {
+				new SplitViewItem {
+					Name = "Каталог релизов",
+					Page = ReleasesPage,
+					Icon = "\xF168",
+					IsVisible = StubMenuIsVisible
+				},
+				new SplitViewItem {
+					Name = "Видеоплеер",
+					Page = PlayerPage,
+					Icon = "\xE714",
+					IsVisible = StubMenuIsVisible
+				},
+				new SplitViewItem {
+					Name = "Войти",
+					Page = AuthorizePage,
+					Icon = "\xE77B",
+					IsVisible = AuthorizeOptionIsVisible
+				}
+				/*,
+				new SplitViewItem {
+					Name = "Менеджер загрузок",
+					Page = "Torrents",
+					Icon = "\xE896"
+				}*/
+			};
+			RefreshOptions ();
+
+			CreateCommands ();
+		}
+
+		private void CreateCommands () {
+			SignoutCommand = CreateCommand ( Signout );
+		}
+
+		private async void Signout () {
+			await m_AnilibriaApiService.Logout ();
+			RefreshOptions ();
+			UserModel = null;
+		}
+
+		public async Task Initialize () {
 			SelectedItem = Items.First ();
 
+			await ChangeUserSession ();
+		}
+
+		private bool AuthorizeOptionIsVisible () {
+			return !m_AnilibriaApiService.IsAuthorized ();
+		}
+
+		private bool StubMenuIsVisible () => true;
+
+		/// <summary>
+		/// Refresh options.
+		/// </summary>
+		public void RefreshOptions () {
+			var selectedItem = SelectedItem;
+			Items = new ObservableCollection<SplitViewItem> ( m_MenuItems.Where ( a => a.IsVisible () ) );
+
+			if ( selectedItem != null ) SelectedItem = Items.FirstOrDefault ( a => a.Page == selectedItem.Page );
+		}
+
+		/// <summary>
+		/// Change user session.
+		/// </summary>
+		public async Task ChangeUserSession () {
+			try {
+				if ( m_AnilibriaApiService.IsAuthorized () ) {
+					var model = await m_AnilibriaApiService.GetUserData ();
+					model.ImageUrl = m_AnilibriaApiService.GetUrl ( model.Avatar );
+					UserModel = model;
+				}
+			}
+			catch ( AuthorizeDeletedException ) {
+				RefreshOptions ();
+				UserModel = null;
+			}
+		}
+
+		/// <summary>
+		/// User model.
+		/// </summary>
+		public UserModel UserModel
+		{
+			get => m_UserModel;
+			set
+			{
+				if ( !Set ( ref m_UserModel , value ) ) return;
+
+				IsAuthorized = m_UserModel != null;
+			}
+		}
+
+		/// <summary>
+		/// Is authorized.
+		/// </summary>
+		public bool IsAuthorized
+		{
+			get => m_IsAuthorized;
+			set => Set ( ref m_IsAuthorized , value );
 		}
 
 		/// <summary>
@@ -68,7 +166,7 @@ namespace Anilibria.Pages.HomePage {
 			{
 				if ( !Set ( ref m_SelectedItem , value ) ) return;
 
-				ChangePage?.Invoke ( m_SelectedItem.Page , null );
+				if ( m_SelectedItem != null ) ChangePage?.Invoke ( m_SelectedItem.Page , null );
 			}
 		}
 
@@ -84,7 +182,16 @@ namespace Anilibria.Pages.HomePage {
 		/// <summary>
 		/// Change page handler.
 		/// </summary>
-		public Action<string, object> ChangePage
+		public Action<string , object> ChangePage
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Signout command.
+		/// </summary>
+		public ICommand SignoutCommand
 		{
 			get;
 			set;

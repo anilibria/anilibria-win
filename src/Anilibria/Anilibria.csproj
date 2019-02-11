@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Anilibria</RootNamespace>
     <AssemblyName>Anilibria</AssemblyName>
-    <DefaultLanguage>ru-RU</DefaultLanguage>
+    <DefaultLanguage>ru</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
@@ -24,6 +24,7 @@
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
+    <PackageCertificateThumbprint>C3E02717F7656E162442A8AAD6D9A54EF0DF51DD</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -129,6 +130,10 @@
     <Compile Include="Controls\BindableGridControl.cs" />
     <Compile Include="Converters\MediaSourceConverter.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
+    <Compile Include="Pages\AuthorizePage\AuthorizeView.xaml.cs">
+      <DependentUpon>AuthorizeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AuthorizePage\AuthorizeViewModel.cs" />
     <Compile Include="Pages\HomePage\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -156,10 +161,13 @@
     </Compile>
     <Compile Include="Pages\Releases\ReleasesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Exceptions\AuthorizeDeletedException.cs" />
     <Compile Include="Services\IAnilibriaApiService.cs" />
     <Compile Include="Services\Implementations\AnilibriaApiService.cs" />
+    <Compile Include="Services\Implementations\ApiService.cs" />
     <Compile Include="Services\PresentationClasses\ApiResponse.cs" />
     <Compile Include="Services\PresentationClasses\ApiResponseError.cs" />
+    <Compile Include="Services\PresentationClasses\AuthorizationModel.cs" />
     <Compile Include="Services\PresentationClasses\BlockedInfo.cs" />
     <Compile Include="Services\PresentationClasses\Favorite.cs" />
     <Compile Include="Services\PresentationClasses\PagingInfo.cs" />
@@ -168,6 +176,7 @@
     <Compile Include="Services\PresentationClasses\Release.cs" />
     <Compile Include="Services\PresentationClasses\StatusType.cs" />
     <Compile Include="Services\PresentationClasses\TorrentItem.cs" />
+    <Compile Include="Services\PresentationClasses\UserModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -181,6 +190,7 @@
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\Icons\logout.svg" />
     <Content Include="Assets\Icons\settings.svg" />
     <Content Include="Assets\Icons\slider.svg" />
     <Content Include="Assets\Icons\filter.svg" />
@@ -241,6 +251,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Pages\AuthorizePage\AuthorizeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\HomePage\HomeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

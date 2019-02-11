@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using Anilibria.Pages.OnlinePlayer;
 using Anilibria.Pages;
 using System.Linq;
+using Anilibria.Services.Implementations;
+using Anilibria.Pages.AuthorizePage;
+using Windows.UI.Xaml.Input;
 
 namespace Anilibria {
 
@@ -23,18 +26,28 @@ namespace Anilibria {
 
 			m_Pages.Add ( "Releases" , Releases );
 			m_Pages.Add ( "Player" , Player );
+			m_Pages.Add ( "Authorize" , Authorize );
 
 			CreateViewModels ();
 		}
 
 		private void CreateViewModels () {
-			var viewmodel = new HomeViewModel ();
+			var viewmodel = new HomeViewModel ( ApiService.Current () );
 			viewmodel.ChangePage = ChangePage;
 			DataContext = viewmodel;
-			viewmodel.Initialize ();
 
 			CreateReleasesViewModel ();
 			CreatePlayerViewModel ();
+			CreateAuthorizeViewModel ( viewmodel );
+		}
+
+		private void CreateAuthorizeViewModel ( HomeViewModel homeViewModel) {
+			var viewModel = Authorize.DataContext as AuthorizeViewModel;
+			viewModel.ChangePage = ChangePage;
+			viewModel.ShowSidebar = ShowSidebar;
+			var releases = Releases.DataContext as ReleasesViewModel;
+			viewModel.RefreshOptions = homeViewModel.RefreshOptions;
+			viewModel.ChangeUserSession = homeViewModel.ChangeUserSession;
 		}
 
 		private void CreatePlayerViewModel () {
@@ -79,6 +92,15 @@ namespace Anilibria {
 			Sidebar.IsPaneOpen = false;
 		}
 
+		private async void Page_Loaded ( object sender , RoutedEventArgs e ) {
+			var viewModel = DataContext as HomeViewModel;
+			await viewModel.Initialize ();
+		}
+
+		private void Grid_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			var viewModel = DataContext as HomeViewModel;
+			viewModel.SignoutCommand.Execute ( null );
+		}
 	}
 
 }

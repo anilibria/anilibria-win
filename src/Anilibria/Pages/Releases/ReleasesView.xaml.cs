@@ -12,7 +12,7 @@ namespace Anilibria.Pages.Releases {
 		public ReleasesView () {
 			InitializeComponent ();
 
-			DataContext = new ReleasesViewModel ( new AnilibriaApiService () );
+			DataContext = new ReleasesViewModel ( ApiService.Current () );
 		}
 
 		private void UserControl_Loaded ( object sender , RoutedEventArgs e ) {
