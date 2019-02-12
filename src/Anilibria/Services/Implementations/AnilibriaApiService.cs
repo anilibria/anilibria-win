@@ -17,9 +17,9 @@ namespace Anilibria.Services.Implementations {
 	/// </summary>
 	public class AnilibriaApiService : IAnilibriaApiService {
 
-		private const string m_WebSiteUrl = "https://test.anilibria.tv";
+		private const string m_WebSiteUrl = "https://new.anilibria.tv";
 
-		private const string m_ContentWebSiteUrl = "https://dev.anilibria.tv";
+		private const string m_ContentWebSiteUrl = "https://new.anilibria.tv"; //"https://dev.anilibria.tv";
 
 		private const string m_ImageUploadUrl = m_WebSiteUrl + "/upload/release/";
 
@@ -114,6 +114,8 @@ namespace Anilibria.Services.Implementations {
 
 			var model = JsonConvert.DeserializeObject<AuthorizationModel> ( content );
 
+			if ( model.Err != "ok" ) return false;
+
 			var cookies = m_HttpHandler.CookieContainer.GetCookies ( new Uri ( m_WebSiteUrl ) ).Cast<Cookie> ();
 			var sessionCookie = cookies.FirstOrDefault ( a => a.Name == m_SessionName );
 
@@ -143,10 +145,6 @@ namespace Anilibria.Services.Implementations {
 			var content = await result.Content.ReadAsStringAsync ();
 
 			var userModel = JsonConvert.DeserializeObject<ApiResponse<UserModel>> ( content );
-
-			if ( !userModel.Status ) {
-
-			}
 
 			return userModel.Data;
 		}

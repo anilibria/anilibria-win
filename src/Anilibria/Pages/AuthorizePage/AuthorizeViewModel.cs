@@ -15,6 +15,8 @@ namespace Anilibria.Pages.AuthorizePage {
 
 		private string m_Password;
 
+		private string m_ErrorMessage;
+
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
 		/// <summary>
@@ -38,6 +40,7 @@ namespace Anilibria.Pages.AuthorizePage {
 		}
 
 		private async void Signin () {
+			ErrorMessage = "";
 			var result = await m_AnilibriaApiService.Authentification ( Email , Password );
 			if ( result ) {
 				ChangePage ( "Releases" , null );
@@ -45,7 +48,7 @@ namespace Anilibria.Pages.AuthorizePage {
 				await ChangeUserSession ();
 			}
 			else {
-				//TODO: show error on page
+				ErrorMessage = "Не удалось авторизоваться";
 			}
 		}
 
@@ -87,6 +90,15 @@ namespace Anilibria.Pages.AuthorizePage {
 
 				RaiseCommands ();
 			}
+		}
+
+		/// <summary>
+		/// Error message.
+		/// </summary>
+		public string ErrorMessage
+		{
+			get => m_ErrorMessage;
+			set => Set ( ref m_ErrorMessage , value );
 		}
 
 		/// <summary>

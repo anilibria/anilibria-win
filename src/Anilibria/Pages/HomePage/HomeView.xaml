@@ -49,8 +49,8 @@
 						<TextBlock
 							Grid.Column="1"
 							Margin="8 0 0 0"
-							VerticalAlignment="Center"
 							TextAlignment="Center"
+							VerticalAlignment="Center"
 							Text="{Binding UserModel.Login}"
 							TextTrimming="CharacterEllipsis"
 							TextWrapping="Wrap"

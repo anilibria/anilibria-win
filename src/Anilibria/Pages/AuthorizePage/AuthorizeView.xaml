@@ -49,6 +49,7 @@
 			</TextBlock>
 			<TextBox
 				Margin="4"
+				IsSpellCheckEnabled="False"
 				Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 			/>
 			<TextBlock
@@ -59,12 +60,27 @@
 				Margin="4"
 				Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 			/>
-			<Button
-				Margin="4"
-				Command="{Binding SigninCommand}"
-				HorizontalAlignment="Right">
-				Войти
-			</Button>
+			<Grid
+				Margin="4 0 4 0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<TextBlock
+					Grid.Column="0"
+					Text="{Binding ErrorMessage}"
+					TextAlignment="Center"
+					Foreground="#881919"
+					VerticalAlignment="Center"
+				/>
+				<Button
+					Grid.Column="1"
+					Margin="4"
+					Command="{Binding SigninCommand}"
+					HorizontalAlignment="Right">
+					Войти
+				</Button>
+			</Grid>
 		</StackPanel>
 	</Grid>
 </UserControl>
