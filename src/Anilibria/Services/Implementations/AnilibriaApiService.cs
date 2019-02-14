@@ -17,9 +17,7 @@ namespace Anilibria.Services.Implementations {
 	/// </summary>
 	public class AnilibriaApiService : IAnilibriaApiService {
 
-		private const string m_WebSiteUrl = "https://new.anilibria.tv";
-
-		private const string m_ContentWebSiteUrl = "https://new.anilibria.tv"; //"https://dev.anilibria.tv";
+		private const string m_WebSiteUrl = "https://www.anilibria.tv";
 
 		private const string m_ImageUploadUrl = m_WebSiteUrl + "/upload/release/";
 
@@ -74,7 +72,7 @@ namespace Anilibria.Services.Implementations {
 
 			IEnumerable<Release> releases = null;
 			if ( string.IsNullOrEmpty ( name ) ) {
-				var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList>> ( content );
+				var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList<Release>>> ( content );
 				if ( !responseModel.Status ) {
 					//TODO: handle error
 				}
@@ -93,6 +91,34 @@ namespace Anilibria.Services.Implementations {
 			foreach ( var item in releases ) item.Type = HtmlEntity.DeEntitize ( item.Type ); //Type can be contains html special characters
 
 			return releases;
+		}
+
+		/// <summary>
+		/// Get youtube videos.
+		/// </summary>
+		/// <param name="page">Page number.</param>
+		/// <param name="pageSize">Page size.</param>
+		/// <returns>Youtube videos.</returns>
+		public async Task<IEnumerable<YoutubeModel>> GetYoutubeVideosPage ( int page , int pageSize ) {
+			var parameters = new List<KeyValuePair<string , string>> {
+				new KeyValuePair<string , string> ( "query" , "youtube" ),
+				new KeyValuePair<string , string> ( "page" , page.ToString () ),
+				new KeyValuePair<string , string> ( "perPage" , pageSize.ToString () )
+			};
+
+			var formContent = new FormUrlEncodedContent ( parameters );
+			var httpClient = new HttpClient ();
+			var result = await httpClient.PostAsync ( m_ApiIndexUrl , formContent );
+			var content = await result.Content.ReadAsStringAsync ();
+
+			var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList<YoutubeModel>>> ( content );
+			if ( !responseModel.Status ) {
+				//TODO: handle error
+			}
+
+			foreach ( var item in responseModel.Data.Items ) item.Title = HtmlEntity.DeEntitize ( item.Title ); //Type can be contains html special characters
+
+			return responseModel.Data.Items;
 		}
 
 		/// <summary>
@@ -160,7 +186,7 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <param name="relativeUrl">Relative url.</param>
 		/// <returns>Full url.</returns>
-		public Uri GetUrl ( string relativeUrl ) => new Uri ( m_ContentWebSiteUrl + relativeUrl );
+		public Uri GetUrl ( string relativeUrl ) => new Uri ( m_WebSiteUrl + relativeUrl );
 
 		private void CheckSession () {
 			var cookies = m_HttpHandler.CookieContainer.GetCookies ( new Uri ( m_WebSiteUrl ) ).Cast<Cookie> ();

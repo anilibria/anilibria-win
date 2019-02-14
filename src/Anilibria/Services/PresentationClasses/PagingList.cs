@@ -5,12 +5,12 @@ namespace Anilibria.Services.PresentationClasses {
 	/// <summary>
 	/// Paging list.
 	/// </summary>
-	public class PagingList {
+	public class PagingList<T> {
 
 		/// <summary>
 		/// Items.
 		/// </summary>
-		public IEnumerable<Release> Items
+		public IEnumerable<T> Items
 		{
 			get;
 			set;

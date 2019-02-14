@@ -9,6 +9,7 @@ using System.Linq;
 using Anilibria.Services.Implementations;
 using Anilibria.Pages.AuthorizePage;
 using Windows.UI.Xaml.Input;
+using Anilibria.Pages.Youtube;
 
 namespace Anilibria {
 
@@ -27,6 +28,7 @@ namespace Anilibria {
 			m_Pages.Add ( "Releases" , Releases );
 			m_Pages.Add ( "Player" , Player );
 			m_Pages.Add ( "Authorize" , Authorize );
+			m_Pages.Add ( "Youtube" , Youtube );
 
 			CreateViewModels ();
 		}
@@ -39,6 +41,12 @@ namespace Anilibria {
 			CreateReleasesViewModel ();
 			CreatePlayerViewModel ();
 			CreateAuthorizeViewModel ( viewmodel );
+			CreateYoutubeViewModel ();
+		}
+
+		private void CreateYoutubeViewModel () {
+			var viewModel = Youtube.DataContext as YoutubeViewModel;
+			viewModel.ShowSidebar = ShowSidebar;
 		}
 
 		private void CreateAuthorizeViewModel ( HomeViewModel homeViewModel) {

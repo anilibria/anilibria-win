@@ -7,6 +7,7 @@
 	xmlns:player="using:Anilibria.Pages.OnlinePlayer"
 	xmlns:releases="using:Anilibria.Pages.Releases"
 	xmlns:authorize="using:Anilibria.Pages.AuthorizePage"
+	xmlns:youtube="using:Anilibria.Pages.Youtube"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
@@ -132,6 +133,10 @@
 				/>
 				<authorize:AuthorizeView
 					x:Name="Authorize"
+					Visibility="Collapsed"
+				/>
+				<youtube:YoutubeView
+					x:Name="Youtube"
 					Visibility="Collapsed"
 				/>
 			</Grid>

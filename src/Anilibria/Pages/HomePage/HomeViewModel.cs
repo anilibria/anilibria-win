@@ -24,6 +24,8 @@ namespace Anilibria.Pages.HomePage {
 
 		const string AuthorizePage = "Authorize";
 
+		const string YoutubePage = "Youtube";
+
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
 		private IEnumerable<SplitViewItem> m_MenuItems;
@@ -55,6 +57,12 @@ namespace Anilibria.Pages.HomePage {
 					Name = "Видеоплеер",
 					Page = PlayerPage,
 					Icon = "\xE714",
+					IsVisible = StubMenuIsVisible
+				},
+				new SplitViewItem {
+					Name = "Yotube",
+					Page = YoutubePage,
+					Icon = "\xE786",
 					IsVisible = StubMenuIsVisible
 				},
 				new SplitViewItem {

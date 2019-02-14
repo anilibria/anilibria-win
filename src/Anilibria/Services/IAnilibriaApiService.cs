@@ -20,6 +20,14 @@ namespace Anilibria.Services {
 		Task<IEnumerable<Release>> GetPage ( int page , int pageSize , string name = default ( string ) );
 
 		/// <summary>
+		/// Get youtube videos.
+		/// </summary>
+		/// <param name="page">Page number.</param>
+		/// <param name="pageSize">Page size.</param>
+		/// <returns>Youtube videos.</returns>
+		Task<IEnumerable<YoutubeModel>> GetYoutubeVideosPage ( int page , int pageSize );
+
+		/// <summary>
 		/// Authentification.
 		/// </summary>
 		/// <param name="email">Email.</param>
