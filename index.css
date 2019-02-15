@@ -17,14 +17,20 @@ body {
 	margin-bottom: 20px;
 }
 
-.block-header .block-text {
-	display: flex;
-	flex-direction: column;
-}
-
 .block-header .block-bold {
 	font-weight: bold;
 	font-size: 20px;
 	text-align: center;
-	margin: 4px;
+	color: #a01e1e;
+	margin: 8px;
+}
+
+.block-header .block-bold p {
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.certificate-gif-container {
+	display: flex;
+	justify-content: center;
 }
