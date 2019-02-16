@@ -169,13 +169,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Exceptions\AuthorizeDeletedException.cs" />
     <Compile Include="Services\IAnilibriaApiService.cs" />
+    <Compile Include="Services\ILocalDatabasePath.cs" />
     <Compile Include="Services\Implementations\AnilibriaApiService.cs" />
     <Compile Include="Services\Implementations\ApiService.cs" />
+    <Compile Include="Services\Implementations\LiteDbEntityCollection.cs" />
+    <Compile Include="Services\Implementations\LiteDbLocalPath.cs" />
+    <Compile Include="Services\Implementations\StorageService.cs" />
+    <Compile Include="Services\Implementations\SynchronizeService.cs" />
+    <Compile Include="Services\Implementations\SyncService.cs" />
+    <Compile Include="Services\ISynchronizationService.cs" />
     <Compile Include="Services\PresentationClasses\ApiResponse.cs" />
     <Compile Include="Services\PresentationClasses\ApiResponseError.cs" />
     <Compile Include="Services\PresentationClasses\AuthorizationModel.cs" />
     <Compile Include="Services\PresentationClasses\BlockedInfo.cs" />
     <Compile Include="Services\PresentationClasses\Favorite.cs" />
+    <Compile Include="Services\PresentationClasses\FavoriteModel.cs" />
     <Compile Include="Services\PresentationClasses\PagingInfo.cs" />
     <Compile Include="Services\PresentationClasses\PagingList.cs" />
     <Compile Include="Services\PresentationClasses\PlaylistItem.cs" />
@@ -184,6 +192,13 @@
     <Compile Include="Services\PresentationClasses\TorrentItem.cs" />
     <Compile Include="Services\PresentationClasses\UserModel.cs" />
     <Compile Include="Services\PresentationClasses\YoutubeModel.cs" />
+    <Compile Include="Storage\Entities\LocalFavoriteEntity.cs" />
+    <Compile Include="Storage\IEnitityCollection.cs" />
+    <Compile Include="Storage\Implementations\DataContext.cs" />
+    <Compile Include="Storage\Entities\ReleaseEntity.cs" />
+    <Compile Include="Storage\Entities\UserFavoriteEntity.cs" />
+    <Compile Include="Storage\Entities\YoutubeEntity.cs" />
+    <Compile Include="Storage\IDataContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -198,6 +213,7 @@
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
     <Content Include="Assets\Icons\logout.svg" />
+    <Content Include="Assets\Icons\menu.svg" />
     <Content Include="Assets\Icons\settings.svg" />
     <Content Include="Assets\Icons\slider.svg" />
     <Content Include="Assets\Icons\filter.svg" />
@@ -282,6 +298,9 @@
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.8.14</Version>
+    </PackageReference>
+    <PackageReference Include="LiteDB">
+      <Version>4.1.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.3</Version>

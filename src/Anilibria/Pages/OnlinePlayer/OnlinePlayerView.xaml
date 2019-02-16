@@ -470,11 +470,11 @@
 										x:Name="Slider"
 										Style="{StaticResource IconSliderStyle}"
 										Minimum="0"
-										Maximum="{Binding DurationSecond}"
+										Maximum="{Binding DurationSecond, UpdateSourceTrigger=PropertyChanged}"
 										Width="200"
 										Margin="0 8 0 0"
-										Value="{Binding Position}"
 										ManipulationCompleted="Slider_ManipulationCompleted"
+										ManipulationStarting="Slider_ManipulationStarting"
 										Tapped="Slider_Tapped"
 										ManipulationMode="All"
 									/>

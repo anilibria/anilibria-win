@@ -34,7 +34,7 @@ namespace Anilibria {
 		}
 
 		private void CreateViewModels () {
-			var viewmodel = new HomeViewModel ( ApiService.Current () );
+			var viewmodel = new HomeViewModel ( ApiService.Current () , SyncService.Current () );
 			viewmodel.ChangePage = ChangePage;
 			DataContext = viewmodel;
 
@@ -49,7 +49,7 @@ namespace Anilibria {
 			viewModel.ShowSidebar = ShowSidebar;
 		}
 
-		private void CreateAuthorizeViewModel ( HomeViewModel homeViewModel) {
+		private void CreateAuthorizeViewModel ( HomeViewModel homeViewModel ) {
 			var viewModel = Authorize.DataContext as AuthorizeViewModel;
 			viewModel.ChangePage = ChangePage;
 			viewModel.ShowSidebar = ShowSidebar;

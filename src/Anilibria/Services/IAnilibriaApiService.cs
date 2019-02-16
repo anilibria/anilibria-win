@@ -28,6 +28,12 @@ namespace Anilibria.Services {
 		Task<IEnumerable<YoutubeModel>> GetYoutubeVideosPage ( int page , int pageSize );
 
 		/// <summary>
+		/// Get user favorites.
+		/// </summary>
+		/// <returns>Favorites releases collection.</returns>
+		Task<IEnumerable<long>> GetUserFavorites ();
+
+		/// <summary>
 		/// Authentification.
 		/// </summary>
 		/// <param name="email">Email.</param>
@@ -46,6 +52,16 @@ namespace Anilibria.Services {
 		/// </summary>
 		/// <returns>Information about user profile.</returns>
 		Task<UserModel> GetUserData ();
+
+		/// <summary>
+		/// Add to user favorites.
+		/// </summary>
+		Task AddUserFavorites ( long id );
+
+		/// <summary>
+		/// Remove from user favorites.
+		/// </summary>
+		Task RemoveUserFavorites ( long id );
 
 		/// <summary>
 		/// Get mark that user is authorized or not.

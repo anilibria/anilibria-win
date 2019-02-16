@@ -49,6 +49,28 @@ namespace Anilibria.Pages.Releases {
 			HideReleaseCardCommand = CreateCommand ( HideReleaseCard );
 			FilterCommand = CreateCommand ( Filter );
 			OpenOnlineVideoCommand = CreateCommand ( OpenOnlineVideo );
+			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => SelectedReleases.Count > 0 );
+			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => SelectedReleases.Count > 0 );
+		}
+
+		private async void RemoveFromFavorites () {
+			var ids = SelectedReleases.Select ( a => a.Id ).ToList ();
+
+			var tasks = ids.Select ( a => m_AnilibriaApiService.RemoveUserFavorites ( a ) );
+
+			await Task.WhenAll ( tasks );
+
+			//TODO: synchronize favorites
+		}
+
+		private async void AddToFavorites () {
+			var ids = SelectedReleases.Select ( a => a.Id ).ToList ();
+
+			var tasks = ids.Select ( a => m_AnilibriaApiService.AddUserFavorites ( a ) );
+
+			await Task.WhenAll ( tasks );
+
+			//TODO: synchronize favorites
 		}
 
 		private void OpenOnlineVideo () {
@@ -279,6 +301,24 @@ namespace Anilibria.Pages.Releases {
 		/// Open online video command.
 		/// </summary>
 		public ICommand OpenOnlineVideoCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add to favorites command.
+		/// </summary>
+		public ICommand AddToFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove from favorites command.
+		/// </summary>
+		public ICommand RemoveFromFavoritesCommand
 		{
 			get;
 			set;

@@ -518,6 +518,8 @@
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<Button
+					x:Name="SidebarButton"
+					RelativePanel.AlignLeftWithPanel="True"
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowSidebarCommand}">
 					<Image
@@ -525,6 +527,25 @@
 						Height="{StaticResource IconSize}"
 						Source="/Assets/Icons/humburger.svg"
 					/>
+				</Button>
+				<Button
+					RelativePanel.RightOf="SidebarButton"
+					Style="{StaticResource IconsButtonStyle}">
+					<Image
+						Width="{StaticResource IconSize}"
+						Height="{StaticResource IconSize}"
+						Source="/Assets/Icons/menu.svg"
+					/>
+					<Button.Flyout>
+						<MenuFlyout>
+							<MenuFlyoutItem
+								Text="Добавить в избранное"
+							/>
+							<MenuFlyoutItem
+								Text="Удалить из избранного"
+							/>
+						</MenuFlyout>
+					</Button.Flyout>
 				</Button>
 				<Button
 					RelativePanel.AlignRightWithPanel="True"

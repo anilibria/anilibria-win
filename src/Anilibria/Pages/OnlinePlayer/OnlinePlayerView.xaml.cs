@@ -25,6 +25,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private TimeSpan m_Duration = new TimeSpan ();
 
+		private bool m_BlockedTrackSlider = false;
+
 		public OnlinePlayerView () {
 			InitializeComponent ();
 			m_ViewModel = new OnlinePlayerViewModel {
@@ -63,12 +65,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void RunTimer () {
 			m_DispatherTimer = new DispatcherTimer ();
 			m_DispatherTimer.Tick += TimerTick;
-			m_DispatherTimer.Interval = new TimeSpan ( 50 );
+			m_DispatherTimer.Interval = new TimeSpan ( 300 );
 			m_DispatherTimer.Start ();
 		}
 
 		private void TimerTick ( object sender , object e ) {
-			if ( m_MediaOpened ) m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
+			if ( m_MediaOpened ) {
+				m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
+				if (!m_BlockedTrackSlider) Slider.Value = OnlinePlayer.MediaPlayer.PlaybackSession.Position.TotalSeconds;
+			}
 		}
 
 		private void StopTimer () {
@@ -177,11 +182,18 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private async void Slider_ManipulationCompleted ( object sender , ManipulationCompletedRoutedEventArgs e ) {
 			await Task.Delay ( 100 );
-			m_ViewModel.ChangePosition?.Invoke ( TimeSpan.FromSeconds ( Slider.Value ) );
+			ChangePosition ( TimeSpan.FromSeconds ( Slider.Value ) );
+			m_ViewModel.RefreshPosition ( TimeSpan.FromSeconds ( Slider.Value ) );
+			m_BlockedTrackSlider = false;
 		}
 
 		private void Slider_Tapped ( object sender , TappedRoutedEventArgs e ) {
-			m_ViewModel.ChangePosition?.Invoke ( TimeSpan.FromSeconds ( Slider.Value ) );
+			m_BlockedTrackSlider = true;
+
+			ChangePosition ( TimeSpan.FromSeconds ( Slider.Value ) );
+			m_ViewModel.RefreshPosition ( TimeSpan.FromSeconds ( Slider.Value ) );
+
+			m_BlockedTrackSlider = false;
 		}
 
 		private void OnlinePlayer_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
@@ -193,6 +205,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
+		private void Slider_ManipulationStarting ( object sender , ManipulationStartingRoutedEventArgs e ) {
+			m_BlockedTrackSlider = true;
+		}
 	}
 
 

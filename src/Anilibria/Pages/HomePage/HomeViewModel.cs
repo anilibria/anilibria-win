@@ -27,6 +27,8 @@ namespace Anilibria.Pages.HomePage {
 		const string YoutubePage = "Youtube";
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
+		
+		private readonly ISynchronizationService m_SynchronizationService;
 
 		private IEnumerable<SplitViewItem> m_MenuItems;
 
@@ -40,8 +42,9 @@ namespace Anilibria.Pages.HomePage {
 
 		private bool m_IsAuthorized;
 
-		public HomeViewModel ( IAnilibriaApiService anilibriaApiService ) {
+		public HomeViewModel ( IAnilibriaApiService anilibriaApiService, ISynchronizationService synchronizationService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+			m_SynchronizationService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
 
 			var version = Package.Current.Id.Version;
 			Version = $"{version.Major}.{version.Minor}.{version.Build}";
@@ -123,6 +126,9 @@ namespace Anilibria.Pages.HomePage {
 				if ( m_AnilibriaApiService.IsAuthorized () ) {
 					var model = await m_AnilibriaApiService.GetUserData ();
 					model.ImageUrl = m_AnilibriaApiService.GetUrl ( model.Avatar );
+
+					await m_SynchronizationService.SynchronizeFavorites ();
+
 					UserModel = model;
 				}
 			}

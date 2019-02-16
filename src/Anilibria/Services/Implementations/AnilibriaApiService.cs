@@ -221,6 +221,66 @@ namespace Anilibria.Services.Implementations {
 			SetSession ( null );
 		}
 
+		/// <summary>
+		/// Get user favorites.
+		/// </summary>
+		/// <returns>Favorites releases collection.</returns>
+		public async Task<IEnumerable<long>> GetUserFavorites () {
+			var parameters = new List<KeyValuePair<string , string>> {
+				new KeyValuePair<string , string> ( "query" , "favorites" ),
+				new KeyValuePair<string , string> ( "filter" , "id" ),
+				new KeyValuePair<string , string> ( "page" , "1" ),
+				new KeyValuePair<string , string> ( "perPage" , "1000" ) // I guess it enough :)
+			};
+
+			var formContent = new FormUrlEncodedContent ( parameters );
+			var result = await m_HttpClient.PostAsync ( m_ApiIndexUrl , formContent );
+			var content = await result.Content.ReadAsStringAsync ();
+
+			var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList<FavoriteModel>>> ( content );
+			if ( !responseModel.Status ) {
+				//TODO: handle error
+			}
+
+			return responseModel.Data.Items?.Select ( a => a.Id ).ToList () ?? Enumerable.Empty<long> ();
+		}
+
+		/// <summary>
+		/// Add to user favorites.
+		/// </summary>
+		public async Task AddUserFavorites ( long id ) {
+			await PerformActionFavorite ( id , "add" );
+		}
+
+		/// <summary>
+		/// Delete from user favorites.
+		/// </summary>
+		public async Task RemoveUserFavorites ( long id ) {
+			await PerformActionFavorite ( id , "delete" );
+		}
+
+		/// <summary>
+		/// Perform action on favorite.
+		/// </summary>
+		/// <param name="id">Identifier.</param>
+		/// <param name="action">Action.</param>
+		private async Task PerformActionFavorite ( long id , string action ) {
+			var parameters = new List<KeyValuePair<string , string>> {
+				new KeyValuePair<string , string> ( "query" , "favorites" ),
+				new KeyValuePair<string , string> ( "id" , id.ToString() ),
+				new KeyValuePair<string , string> ( "action" , action )
+			};
+
+			var formContent = new FormUrlEncodedContent ( parameters );
+			var result = await m_HttpClient.PostAsync ( m_ApiIndexUrl , formContent );
+			var content = await result.Content.ReadAsStringAsync ();
+
+			var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList<FavoriteModel>>> ( content );
+			if ( !responseModel.Status ) {
+				//TODO: handle error
+			}
+		}
+
 	}
 
 }
