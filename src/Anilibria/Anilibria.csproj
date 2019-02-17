@@ -212,6 +212,7 @@
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\Icons\favorite.svg" />
     <Content Include="Assets\Icons\logout.svg" />
     <Content Include="Assets\Icons\menu.svg" />
     <Content Include="Assets\Icons\settings.svg" />

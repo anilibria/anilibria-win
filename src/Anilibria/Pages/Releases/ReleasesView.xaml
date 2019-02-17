@@ -123,6 +123,7 @@
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
 						<Grid Grid.Column="0" VerticalAlignment="Center">
@@ -130,6 +131,13 @@
 						</Grid>
 						<Grid Grid.Column="1" VerticalAlignment="Top">
 							<TextBlock Height="20" Margin="4 0 0 0" FontSize="16" Text="{Binding Rating}" />
+						</Grid>
+						<Grid
+							Grid.Column="2"
+							VerticalAlignment="Center"
+							Visibility="{Binding AddToFavorite}"
+							Margin="4 0 0 2">
+							<TextBlock Height="20" FontFamily="Segoe MDL2 Assets" FontSize="18">&#xE734;</TextBlock>
 						</Grid>
 					</Grid>
 				</Grid>
@@ -529,25 +537,29 @@
 					/>
 				</Button>
 				<Button
-					RelativePanel.RightOf="SidebarButton"
-					Style="{StaticResource IconsButtonStyle}">
+					RelativePanel.LeftOf="FilterButton"
+					Style="{StaticResource IconsButtonStyle}"
+					ToolTipService.ToolTip="Чтобы добавить в избранное необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
 					<Image
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/menu.svg"
+						Source="/Assets/Icons/favorite.svg"
 					/>
 					<Button.Flyout>
 						<MenuFlyout>
 							<MenuFlyoutItem
 								Text="Добавить в избранное"
+								Command="{Binding AddToFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
 								Text="Удалить из избранного"
+								Command="{Binding RemoveFromFavoritesCommand}"
 							/>
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>
 				<Button
+					x:Name="FilterButton"
 					RelativePanel.AlignRightWithPanel="True"
 					Style="{StaticResource IconsButtonStyle}">
 					<Image

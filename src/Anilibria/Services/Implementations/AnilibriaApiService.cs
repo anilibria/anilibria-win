@@ -37,6 +37,8 @@ namespace Anilibria.Services.Implementations {
 
 		private string m_SessionId = null;
 
+		private UserModel m_UserModel = null;
+
 
 		public AnilibriaApiService () {
 			m_HttpHandler = new HttpClientHandler { CookieContainer = new CookieContainer () };
@@ -172,7 +174,9 @@ namespace Anilibria.Services.Implementations {
 
 			var userModel = JsonConvert.DeserializeObject<ApiResponse<UserModel>> ( content );
 
-			return userModel.Data;
+			m_UserModel = userModel.Data;
+
+			return m_UserModel;
 		}
 
 		/// <summary>
@@ -203,6 +207,7 @@ namespace Anilibria.Services.Implementations {
 			var settings = ApplicationData.Current.LocalSettings;
 			settings.Values[SessionIdName] = sessionId;
 			m_SessionId = sessionId;
+			if ( sessionId == null ) m_UserModel = null;
 		}
 
 		/// <summary>
@@ -280,6 +285,11 @@ namespace Anilibria.Services.Implementations {
 				//TODO: handle error
 			}
 		}
+
+		/// <summary>
+		/// Get user model.
+		/// </summary>
+		public UserModel GetUserModel () => m_UserModel;
 
 	}
 

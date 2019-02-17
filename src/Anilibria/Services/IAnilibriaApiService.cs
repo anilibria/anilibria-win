@@ -75,6 +75,11 @@ namespace Anilibria.Services {
 		/// <returns>Full url.</returns>
 		Uri GetUrl ( string relativeUrl );
 
+		/// <summary>
+		/// User model.
+		/// </summary>
+		UserModel GetUserModel ();
+
 	}
 
 }

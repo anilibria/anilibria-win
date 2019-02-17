@@ -208,7 +208,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void Slider_ManipulationStarting ( object sender , ManipulationStartingRoutedEventArgs e ) {
 			m_BlockedTrackSlider = true;
 		}
-	}
 
+	}
 
 }

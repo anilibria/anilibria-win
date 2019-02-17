@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Anilibria.MVVM;
 
 namespace Anilibria.Pages.Releases.PresentationClasses {
 
 	/// <summary>
 	/// Release model.
 	/// </summary>
-	public class ReleaseModel {
+	public class ReleaseModel : ViewModel {
+
+		private bool m_AddToFavorite;
 
 		/// <summary>
 		/// Identifier.
@@ -76,8 +79,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		/// </summary>
 		public bool AddToFavorite
 		{
-			get;
-			set;
+			get => m_AddToFavorite;
+			set => Set ( ref m_AddToFavorite , value );
 		}
 
 		/// <summary>

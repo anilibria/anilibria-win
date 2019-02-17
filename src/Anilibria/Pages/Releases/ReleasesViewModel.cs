@@ -9,6 +9,8 @@ using Anilibria.Collections;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
+using Anilibria.Storage;
+using Anilibria.Storage.Entities;
 
 namespace Anilibria.Pages.Releases {
 
@@ -31,14 +33,22 @@ namespace Anilibria.Pages.Releases {
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
+		private readonly IDataContext m_DataContext;
+
+		private readonly ISynchronizationService m_SynchronizeService;
+
 		private readonly string[] m_FileSizes = { "B" , "KB" , "MB" , "GB" , "TB" };
+
+		private IEnumerable<long> m_Favorites = Enumerable.Empty<long> ();
 
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria Api Service.</param>
-		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService ) {
+		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
+			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
 
 			CreateCommands ();
 			RefreshSelectedReleases ();
@@ -49,9 +59,30 @@ namespace Anilibria.Pages.Releases {
 			HideReleaseCardCommand = CreateCommand ( HideReleaseCard );
 			FilterCommand = CreateCommand ( Filter );
 			OpenOnlineVideoCommand = CreateCommand ( OpenOnlineVideo );
-			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => SelectedReleases.Count > 0 );
-			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => SelectedReleases.Count > 0 );
+			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 		}
+
+		private async Task RefreshFavorites () {
+			var favorites = new List<long> ();
+			if ( m_AnilibriaApiService.IsAuthorized () ) {
+				await m_SynchronizeService.SynchronizeFavorites ();
+
+				var userFavoritesCollection = m_DataContext.GetCollection<UserFavoriteEntity> ();
+				var userModel = m_AnilibriaApiService.GetUserModel ();
+				if ( userModel != null ) {
+					var userFavorite = userFavoritesCollection.FirstOrDefault ( a => a.Id == userModel.Id );
+					if ( userFavorite != null ) favorites.AddRange ( userFavorite.Releases );
+				}
+			}
+
+			//TODO: Add local favorites
+
+			m_Favorites = favorites;
+			foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+		}
+
+		public async Task SynchronizeFavorites () => await RefreshFavorites ();
 
 		private async void RemoveFromFavorites () {
 			var ids = SelectedReleases.Select ( a => a.Id ).ToList ();
@@ -60,7 +91,9 @@ namespace Anilibria.Pages.Releases {
 
 			await Task.WhenAll ( tasks );
 
-			//TODO: synchronize favorites
+			await RefreshFavorites ();
+
+			RefreshSelectedReleases ();
 		}
 
 		private async void AddToFavorites () {
@@ -70,7 +103,9 @@ namespace Anilibria.Pages.Releases {
 
 			await Task.WhenAll ( tasks );
 
-			//TODO: synchronize favorites
+			await RefreshFavorites ();
+
+			RefreshSelectedReleases ();
 		}
 
 		private void OpenOnlineVideo () {
@@ -90,6 +125,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RefreshSelectedReleases () {
+			RaiseCommands ();
+
 			SelectedReleases = new ObservableCollection<ReleaseModel> ();
 			SelectedReleases.CollectionChanged += SelectedReleasesChanged;
 		}
@@ -142,7 +179,7 @@ namespace Anilibria.Pages.Releases {
 			return releases.Select (
 				a => new ReleaseModel {
 					Id = a.Id ,
-					AddToFavorite = a.Favorite?.Added ?? false ,
+					AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
 					Code = a.Code ,
 					Description = a.Description ,
 					Genres = string.Join ( ", " , a.Genres ) ,

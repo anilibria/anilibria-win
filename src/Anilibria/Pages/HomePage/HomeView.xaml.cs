@@ -34,11 +34,11 @@ namespace Anilibria {
 		}
 
 		private void CreateViewModels () {
-			var viewmodel = new HomeViewModel ( ApiService.Current () , SyncService.Current () );
+			var viewmodel = new HomeViewModel ( ApiService.Current () );
 			viewmodel.ChangePage = ChangePage;
 			DataContext = viewmodel;
 
-			CreateReleasesViewModel ();
+			CreateReleasesViewModel ( viewmodel );
 			CreatePlayerViewModel ();
 			CreateAuthorizeViewModel ( viewmodel );
 			CreateYoutubeViewModel ();
@@ -64,10 +64,12 @@ namespace Anilibria {
 			viewModel.ChangePage = ChangePage;
 		}
 
-		private void CreateReleasesViewModel () {
+		private void CreateReleasesViewModel ( HomeViewModel homeViewModel ) {
 			var releasesViewModel = Releases.DataContext as ReleasesViewModel;
 			releasesViewModel.ShowSidebar = ShowSidebar;
 			releasesViewModel.ChangePage = ChangePage;
+
+			homeViewModel.RefreshFavorites = releasesViewModel.SynchronizeFavorites;
 		}
 
 		private void ShowSidebar () {

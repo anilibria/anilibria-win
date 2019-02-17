@@ -28,8 +28,6 @@ namespace Anilibria.Pages.HomePage {
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 		
-		private readonly ISynchronizationService m_SynchronizationService;
-
 		private IEnumerable<SplitViewItem> m_MenuItems;
 
 		private ObservableCollection<SplitViewItem> m_Items;
@@ -42,9 +40,8 @@ namespace Anilibria.Pages.HomePage {
 
 		private bool m_IsAuthorized;
 
-		public HomeViewModel ( IAnilibriaApiService anilibriaApiService, ISynchronizationService synchronizationService ) {
+		public HomeViewModel ( IAnilibriaApiService anilibriaApiService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
-			m_SynchronizationService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
 
 			var version = Package.Current.Id.Version;
 			Version = $"{version.Major}.{version.Minor}.{version.Build}";
@@ -94,6 +91,7 @@ namespace Anilibria.Pages.HomePage {
 			await m_AnilibriaApiService.Logout ();
 			RefreshOptions ();
 			UserModel = null;
+			await RefreshFavorites?.Invoke ();
 		}
 
 		public async Task Initialize () {
@@ -127,7 +125,7 @@ namespace Anilibria.Pages.HomePage {
 					var model = await m_AnilibriaApiService.GetUserData ();
 					model.ImageUrl = m_AnilibriaApiService.GetUrl ( model.Avatar );
 
-					await m_SynchronizationService.SynchronizeFavorites ();
+					await RefreshFavorites?.Invoke ();
 
 					UserModel = model;
 				}
@@ -202,6 +200,15 @@ namespace Anilibria.Pages.HomePage {
 			set;
 		}
 
+		/// <summary>
+		/// Refresh favorites.
+		/// </summary>
+		public Func<Task> RefreshFavorites
+		{
+			get;
+			set;
+		}
+		
 		/// <summary>
 		/// Signout command.
 		/// </summary>
