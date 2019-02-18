@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -290,6 +291,22 @@ namespace Anilibria.Services.Implementations {
 		/// Get user model.
 		/// </summary>
 		public UserModel GetUserModel () => m_UserModel;
+
+		/// <summary>
+		/// Download torrent.
+		/// </summary>
+		/// <param name="torrentUri">Torrent uri.</param>
+		/// <returns>Torrent path.</returns>
+		public async Task<StorageFile> DownloadTorrent ( string torrentUri ) {
+			var storageFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( "release.torrent" , CreationCollisionOption.GenerateUniqueName );
+			var byteArray = await m_HttpClient.GetByteArrayAsync ( m_WebSiteUrl + torrentUri );
+
+			using ( Stream stream = await storageFile.OpenStreamForWriteAsync () ) {
+				stream.Write ( byteArray , 0 , byteArray.Length );
+			}
+
+			return storageFile;
+		}
 
 	}
 

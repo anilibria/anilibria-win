@@ -11,7 +11,8 @@
 	d:DesignHeight="300"
 	d:DesignWidth="400"
 	d:DataContext="{d:DesignInstance viewmodel:ReleasesViewModel}"
-	Loaded="UserControl_Loaded">
+	Loaded="UserControl_Loaded"
+	x:Name="ReleasesContainer">
 
 	<UserControl.Resources>
 		<DataTemplate x:Key="ReleaseItemTemplate">
@@ -840,7 +841,12 @@
 												Text="{Binding Completed}"
 											/>
 										</TextBlock>
-										<Button Grid.Column="2" Margin="0 1 0 1">Скачать</Button>
+										<Button
+											Grid.Column="2" Margin="0 1 0 1"
+											Command="{Binding DataContext.OpenTorrentCommand, ElementName=ReleasesContainer}"
+											CommandParameter="{Binding Url}">
+											Скачать
+										</Button>
 									</Grid>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>

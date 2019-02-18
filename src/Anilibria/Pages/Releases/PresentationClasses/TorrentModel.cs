@@ -41,6 +41,15 @@
 			set;
 		}
 
+		/// <summary>
+		/// Torrent File URL.
+		/// </summary>
+		public string Url
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

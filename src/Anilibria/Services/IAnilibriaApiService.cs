@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Anilibria.Services.PresentationClasses;
+using Windows.Storage;
 
 namespace Anilibria.Services {
 
@@ -79,6 +80,13 @@ namespace Anilibria.Services {
 		/// User model.
 		/// </summary>
 		UserModel GetUserModel ();
+
+		/// <summary>
+		/// Download torrent.
+		/// </summary>
+		/// <param name="torrentUri">Torrent uri.</param>
+		/// <returns>Torrent path.</returns>
+		Task<StorageFile> DownloadTorrent (string torrentUri);
 
 	}
 

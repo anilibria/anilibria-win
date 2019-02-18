@@ -11,6 +11,7 @@ using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Windows.System;
 
 namespace Anilibria.Pages.Releases {
 
@@ -61,6 +62,12 @@ namespace Anilibria.Pages.Releases {
 			OpenOnlineVideoCommand = CreateCommand ( OpenOnlineVideo );
 			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			OpenTorrentCommand = CreateCommand<string> ( OpenTorrent );
+		}
+
+		public async void OpenTorrent ( string torrent ) {
+			var file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
+			await Launcher.LaunchFileAsync ( file );
 		}
 
 		private async Task RefreshFavorites () {
@@ -198,7 +205,8 @@ namespace Anilibria.Pages.Releases {
 							Completed = torrent.Completed ,
 							Quality = $"[{torrent.Quality}]" ,
 							Series = torrent.Series ,
-							Size = GetFileSize ( torrent.Size )
+							Size = GetFileSize ( torrent.Size ) ,
+							Url = torrent.Url
 						}
 					)?.ToList () ?? Enumerable.Empty<TorrentModel> () ,
 					OnlineVideos = a.Playlist?.Select (
@@ -356,6 +364,15 @@ namespace Anilibria.Pages.Releases {
 		/// Remove from favorites command.
 		/// </summary>
 		public ICommand RemoveFromFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open torrent.
+		/// </summary>
+		public ICommand OpenTorrentCommand
 		{
 			get;
 			set;
