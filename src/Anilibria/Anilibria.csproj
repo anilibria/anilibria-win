@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
+    <Compile Include="Controls\PointingGridControl.cs" />
     <Compile Include="Converters\MediaSourceConverter.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
     <Compile Include="Pages\AuthorizePage\AuthorizeView.xaml.cs">
@@ -212,9 +213,12 @@
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\Icons\close.svg" />
     <Content Include="Assets\Icons\favorite.svg" />
+    <Content Include="Assets\Icons\favoriteblack.svg" />
     <Content Include="Assets\Icons\logout.svg" />
     <Content Include="Assets\Icons\menu.svg" />
+    <Content Include="Assets\Icons\removefavorite.svg" />
     <Content Include="Assets\Icons\settings.svg" />
     <Content Include="Assets\Icons\slider.svg" />
     <Content Include="Assets\Icons\filter.svg" />
