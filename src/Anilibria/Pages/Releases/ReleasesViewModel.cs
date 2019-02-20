@@ -42,6 +42,8 @@ namespace Anilibria.Pages.Releases {
 
 		private IEnumerable<long> m_Favorites = Enumerable.Empty<long> ();
 
+		private bool m_OpenedReleaseInFavorite;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -63,6 +65,24 @@ namespace Anilibria.Pages.Releases {
 			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			OpenTorrentCommand = CreateCommand<string> ( OpenTorrent );
+			AddCardFavoriteCommand = CreateCommand ( AddCardFavorite );
+			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite );
+		}
+
+		private void RefreshCardFavorite () => OpenedReleaseInFavorite = m_Favorites.Any ( a => a == OpenedRelease.Id );
+
+		private async void RemoveCardFavorite () {
+			await m_AnilibriaApiService.RemoveUserFavorites ( OpenedRelease.Id );
+
+			await RefreshFavorites ();
+			RefreshCardFavorite ();
+		}
+
+		private async void AddCardFavorite () {
+			await m_AnilibriaApiService.AddUserFavorites ( OpenedRelease.Id );
+
+			await RefreshFavorites ();
+			RefreshCardFavorite ();
 		}
 
 		public async void OpenTorrent ( string torrent ) {
@@ -267,7 +287,21 @@ namespace Anilibria.Pages.Releases {
 		public ReleaseModel OpenedRelease
 		{
 			get => m_OpenedRelease;
-			set => Set ( ref m_OpenedRelease , value );
+			set
+			{
+				if ( !Set ( ref m_OpenedRelease , value ) ) return;
+
+				RefreshCardFavorite ();
+			}
+		}
+
+		/// <summary>
+		/// Opened release in favorite.
+		/// </summary>
+		public bool OpenedReleaseInFavorite
+		{
+			get => m_OpenedReleaseInFavorite;
+			set => Set ( ref m_OpenedReleaseInFavorite , value );
 		}
 
 		/// <summary>
@@ -328,6 +362,24 @@ namespace Anilibria.Pages.Releases {
 		/// Hide release card command.
 		/// </summary>
 		public ICommand HideReleaseCardCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add favorite from release card.
+		/// </summary>
+		public ICommand RemoveCardFavoriteCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove favorite from release card.
+		/// </summary>
+		public ICommand AddCardFavoriteCommand
 		{
 			get;
 			set;

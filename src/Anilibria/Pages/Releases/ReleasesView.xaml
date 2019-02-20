@@ -761,28 +761,33 @@
 									Height="24"
 								/>
 							</controls:PointingGridControl>
-							<!--<Grid
+							<controls:PointingGridControl
 								Width="24"
 								Height="24"
-								Margin="4 2 1 1">
+								Margin="4 2 1 1"
+								Visibility="{Binding OpenedReleaseInFavorite, Converter={StaticResource InverseBoolConverter}}"
+								Tapped="PointingGridControl_Tapped">
 								<Image
 									Source="/Assets/Icons/favoriteblack.svg"
 									Stretch="Uniform"
 									Width="24"
 									Height="24"
 								/>
-							</Grid>
-							<Grid
+							</controls:PointingGridControl>
+							<controls:PointingGridControl
 								Width="24"
 								Height="24"
-								Margin="4 2 1 1">
+								Margin="4 2 1 1"
+								x:Name="RemoveFavoriteButton"
+								Visibility="{Binding OpenedReleaseInFavorite}"
+								Tapped="RemoveFavoriteButton_Tapped">
 								<Image
 									Source="/Assets/Icons/removefavorite.svg"
 									Stretch="Uniform"
 									Width="24"
 									Height="24"
 								/>
-							</Grid>-->
+							</controls:PointingGridControl>
 						</StackPanel>
 					</StackPanel>
 				</Grid>

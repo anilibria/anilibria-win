@@ -130,6 +130,7 @@
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
     <Compile Include="Controls\PointingGridControl.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\MediaSourceConverter.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
     <Compile Include="Pages\AuthorizePage\AuthorizeView.xaml.cs">

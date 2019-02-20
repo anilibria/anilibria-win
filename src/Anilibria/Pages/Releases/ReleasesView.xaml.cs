@@ -37,6 +37,17 @@ namespace Anilibria.Pages.Releases {
 			dataContext.HideReleaseCardCommand.Execute ( null );
 		}
 
+		private void PointingGridControl_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			dataContext.AddCardFavoriteCommand.Execute ( null );
+
+		}
+
+		private void RemoveFavoriteButton_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			dataContext.RemoveCardFavoriteCommand.Execute ( null );
+		}
+
 	}
 
 }
