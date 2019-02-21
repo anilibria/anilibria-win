@@ -44,6 +44,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_OpenedReleaseInFavorite;
 
+		private bool m_IsAuthorized;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -107,6 +109,8 @@ namespace Anilibria.Pages.Releases {
 
 			m_Favorites = favorites;
 			foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+
+			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
 		}
 
 		public async Task SynchronizeFavorites () => await RefreshFavorites ();
@@ -293,6 +297,15 @@ namespace Anilibria.Pages.Releases {
 
 				RefreshCardFavorite ();
 			}
+		}
+
+		/// <summary>
+		/// Is authorized.
+		/// </summary>
+		public bool IsAuthorized
+		{
+			get => m_IsAuthorized;
+			set => Set ( ref m_IsAuthorized , value );
 		}
 
 		/// <summary>
