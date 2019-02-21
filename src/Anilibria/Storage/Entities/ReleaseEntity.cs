@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Anilibria.Storage.Entities {
 
@@ -10,6 +7,24 @@ namespace Anilibria.Storage.Entities {
 	/// Release entity.
 	/// </summary>
 	public class ReleaseEntity {
+
+		/// <summary>
+		/// Identifier.
+		/// </summary>
+		public long Id
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Code.
+		/// </summary>
+		public string Code
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Main name.
@@ -24,6 +39,132 @@ namespace Anilibria.Storage.Entities {
 		/// Names.
 		/// </summary>
 		public IEnumerable<string> Names
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Series.
+		/// </summary>
+		public string Series
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Poster for list.
+		/// </summary>
+		public string Poster
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Rating.
+		/// </summary>
+		public long Rating
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// URL for external web player.
+		/// </summary>
+		public Uri Moon
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Status.
+		/// </summary>
+		public string Status
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Type (eg ТВ (∞ эп.), 25 мин.).
+		/// </summary>
+		public string Type
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Genres.
+		/// </summary>
+		public IEnumerable<string> Genres
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Voices.
+		/// </summary>
+		public IEnumerable<string> Voices
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Year.
+		/// </summary>
+		public string Year
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Description.
+		/// </summary>
+		public string Description
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Sign of blocking.
+		/// </summary>
+		public bool Blocked
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Blocked reason.
+		/// </summary>
+		public string BlockedReason
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Playlist.
+		/// </summary>
+		public IEnumerable<PlaylistItemEntity> Playlist
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Torrents.
+		/// </summary>
+		public IEnumerable<TorrentItemEntity> Torrents
 		{
 			get;
 			set;

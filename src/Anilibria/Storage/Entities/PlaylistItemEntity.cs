@@ -1,0 +1,48 @@
+﻿using System;
+
+namespace Anilibria.Storage.Entities {
+
+	/// <summary>
+	/// Playlist item entity.
+	/// </summary>
+	public class PlaylistItemEntity {
+
+		/// <summary>
+		/// Number video.
+		/// </summary>
+		public int Id
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Title.
+		/// </summary>
+		public string Title
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Video in SD quality.
+		/// </summary>
+		public Uri SD
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Video in HD quality.
+		/// </summary>
+		public Uri HD
+		{
+			get;
+			set;
+		}
+
+	}
+
+}
