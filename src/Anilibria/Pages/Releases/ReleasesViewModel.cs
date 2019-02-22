@@ -90,11 +90,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		public async void OpenTorrent ( string torrent ) {
-			Debug.WriteLine ( "Local Path: " + ApplicationData.Current.LocalFolder.Path );
-			await m_SynchronizeService.SynchronizeReleases ();
-
-			//var file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
-			//await Launcher.LaunchFileAsync ( file );
+			var file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
+			await Launcher.LaunchFileAsync ( file );
 		}
 
 		private async Task RefreshFavorites () {
