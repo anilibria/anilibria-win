@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Anilibria.Services.PresentationClasses;
@@ -76,6 +77,7 @@ namespace Anilibria.Services.Implementations {
 				Series = release.Series ,
 				Year = release.Year ,
 				Voices = release.Voices.ToArray () ,
+				Timestamp = release.Last ,
 				Playlist = release.Playlist?
 					.Select (
 						a => new PlaylistItemEntity {
@@ -104,57 +106,98 @@ namespace Anilibria.Services.Implementations {
 			};
 		}
 
-		private void UpdateCachedRelease ( Release release , ReleaseEntity releaseEntity ) {
+		private void UpdateCachedRelease ( Release release , ReleaseEntity releaseEntity , ChangesEntity changesEntity ) {
 			var blocked = release.BlockedInfo?.Blocked ?? false;
 			var blockedReason = release.BlockedInfo?.Reason ?? "";
 
-			if ( blocked && !releaseEntity.Blocked) {
+			if ( blocked && !releaseEntity.Blocked ) {
 				//TODO: blocked changes!!!!
 			}
 			releaseEntity.Blocked = blocked;
 			releaseEntity.BlockedReason = blockedReason;
 
-			releaseEntity.Description = release.Description;
+			if ( releaseEntity.Description != release.Description ) releaseEntity.Description = release.Description;
+			if ( releaseEntity.Type != release.Type ) releaseEntity.Type = release.Type;
+			if ( releaseEntity.Status != release.Status ) releaseEntity.Status = release.Status;
+			if ( releaseEntity.Series != release.Series ) releaseEntity.Series = release.Series;
 			releaseEntity.Rating = release.Favorite?.Rating ?? 0;
-			releaseEntity.Type = release.Type;
 			releaseEntity.Title = release.Names?.FirstOrDefault () ?? "";
 			releaseEntity.Names = release.Names.ToList ();
-			releaseEntity.Status = release.Status;
 			releaseEntity.Voices = release.Voices.ToList ();
-			releaseEntity.Series = release.Series;
 
-			if (releaseEntity.Playlist.Count() != release.Playlist.Count()) {
-				//TODO: Playlist changed!!!!
+			if ( releaseEntity.Playlist.Count () != release.Playlist.Count () ) {
+				if ( !changesEntity.NewOnlineSeries.ContainsKey ( release.Id ) ) changesEntity.NewOnlineSeries.Add ( release.Id , release.Playlist.Count () );
+
+				releaseEntity.Playlist = release.Playlist
+					.Select (
+						a =>
+							new PlaylistItemEntity {
+								Id = a.Id ,
+								HD = a.HD ,
+								SD = a.SD ,
+								Title = a.Title
+							}
+						)
+					.ToList ();
 			}
-			//TODO: need extra check for torrents on field Series!!!!
-			if ( releaseEntity.Torrents.Count () != release.Torrents.Count () ) {
+			var oldSeries = releaseEntity.Torrents.Select ( a => a.Series ).ToList ();
+			var newSeries = release.Torrents.Select ( a => a.Series ).ToList ();
+			if ( releaseEntity.Torrents.Count () != release.Torrents.Count () || !oldSeries.SequenceEqual ( newSeries ) ) {
+				if ( !changesEntity.NewTorrentSeries.ContainsKey ( release.Id ) ) changesEntity.NewTorrentSeries.Add ( release.Id , release.Playlist.Count () );
 				//TODO: Torrents changed!!!!
 			}
 		}
 
 		public async Task SynchronizeReleases () {
 			try {
-				var releases = await m_AnilibriaApiService.GetPage ( 1 , 9000 );
+				var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
 
 				var collection = m_DataContext.GetCollection<ReleaseEntity> ();
+				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
+				var changes = GetChanges ( changesCollection );
 
 				var cacheReleases = collection.Find ( a => true );
 
+				var addReleases = new List<ReleaseEntity> ();
+				var updatedReleases = new List<ReleaseEntity> ();
+
+				var cacheReleasesDictionary = cacheReleases.ToDictionary ( a => a.Id );
+
+				var index = 1;
 				foreach ( var release in releases ) {
-					var cacheRelease = cacheReleases.FirstOrDefault ( a => a.Id == release.Id );
+					cacheReleasesDictionary.TryGetValue ( release.Id , out var cacheRelease );
 
 					if ( cacheRelease == null ) {
-						collection.Add ( MapToRelease ( release ) );
+						addReleases.Add ( MapToRelease ( release ) );
 					}
 					else {
-						UpdateCachedRelease ( release , cacheRelease );
+						UpdateCachedRelease ( release , cacheRelease , changes );
+						updatedReleases.Add ( cacheRelease );
 					}
+					index++;
 				}
+				if ( addReleases.Any () ) collection.AddRange ( addReleases );
+				if ( updatedReleases.Any () ) collection.Update ( updatedReleases );
+				changesCollection.Update ( changes );
 			}
 			catch {
 				//TODO: Added logging
 			}
 
+		}
+
+		private ChangesEntity GetChanges ( IEntityCollection<ChangesEntity> changesCollection ) {
+			var changes = changesCollection.FirstOrDefault ();
+			if ( changes == null ) {
+				changes = new ChangesEntity {
+					NewOnlineSeries = new Dictionary<long , int> () ,
+					NewReleases = new List<long> () ,
+					NewTorrentSeries = new Dictionary<long , int> ()
+				};
+				changesCollection.Add ( changes );
+			}
+
+			return changes;
 		}
 
 		public Task SynchronizeYoutubes () {

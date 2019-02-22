@@ -54,6 +54,12 @@ namespace Anilibria.Storage {
 		void Update ( T entity );
 
 		/// <summary>
+		/// Update collection existing entities.
+		/// </summary>
+		/// <param name="entities">Entit's colection that need update.</param>
+		void Update ( IEnumerable<T> entities );
+
+		/// <summary>
 		/// Get first entity or default type value.
 		/// </summary>
 		/// <typeparam name="T">Type of entity.</typeparam>

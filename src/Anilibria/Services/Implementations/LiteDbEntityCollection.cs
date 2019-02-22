@@ -88,6 +88,14 @@ namespace Anilibria.Services.Implementations {
 		}
 
 		/// <summary>
+		/// Update collection existing entities.
+		/// </summary>
+		/// <param name="entities">Entit's colection that need update.</param>
+		public void Update ( IEnumerable<T> entities ) {
+			m_Collection.Update ( entities );
+		}
+
+		/// <summary>
 		/// Get first entity or default type value.
 		/// </summary>
 		/// <typeparam name="T">Type of entity.</typeparam>

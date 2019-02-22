@@ -126,6 +126,15 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
+		/// Timestamp.
+		/// </summary>
+		public string Timestamp
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Description.
 		/// </summary>
 		public string Description

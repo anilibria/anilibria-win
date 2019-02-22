@@ -194,6 +194,7 @@
     <Compile Include="Services\PresentationClasses\TorrentItem.cs" />
     <Compile Include="Services\PresentationClasses\UserModel.cs" />
     <Compile Include="Services\PresentationClasses\YoutubeModel.cs" />
+    <Compile Include="Storage\Entities\ChangesEntity.cs" />
     <Compile Include="Storage\Entities\LocalFavoriteEntity.cs" />
     <Compile Include="Storage\Entities\PlaylistItemEntity.cs" />
     <Compile Include="Storage\Entities\TorrentItemEntity.cs" />
