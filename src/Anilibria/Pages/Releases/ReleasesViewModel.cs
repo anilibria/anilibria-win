@@ -66,11 +66,54 @@ namespace Anilibria.Pages.Releases {
 			HideReleaseCardCommand = CreateCommand ( HideReleaseCard );
 			FilterCommand = CreateCommand ( Filter );
 			OpenOnlineVideoCommand = CreateCommand ( OpenOnlineVideo );
-			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
-			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && SelectedReleases.Count > 0 );
+			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && SelectedReleases.Count > 0 );
 			OpenTorrentCommand = CreateCommand<string> ( OpenTorrent );
 			AddCardFavoriteCommand = CreateCommand ( AddCardFavorite );
-			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite );
+			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			AddToLocalFavoritesCommand = CreateCommand ( AddToLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			RemoveFromLocalFavoritesCommand = CreateCommand ( RemoveFromLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+		}
+
+		private LocalFavoriteEntity GetLocalFavorites ( IEntityCollection<LocalFavoriteEntity> collection ) {
+			var favorites = collection.FirstOrDefault ();
+
+			if ( favorites == null ) {
+				favorites = new LocalFavoriteEntity {
+					Releases = new List<long> ()
+				};
+				collection.Add ( favorites );
+			}
+
+			return favorites;
+		}
+
+		private async void RemoveFromLocalFavorites () {
+			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
+			var favorites = GetLocalFavorites ( collection );
+
+			foreach ( var id in SelectedReleases.Select ( a => a.Id ) ) favorites.Releases.Remove ( id );
+
+			favorites.Releases = favorites.Releases.Distinct ().ToList ();
+			collection.Update ( favorites );
+
+			await RefreshFavorites ();
+
+			RefreshSelectedReleases ();
+		}
+
+		private async void AddToLocalFavorites () {
+			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
+			var favorites = GetLocalFavorites ( collection );
+
+			foreach ( var id in SelectedReleases.Select ( a => a.Id ) ) favorites.Releases.Add ( id );
+
+			favorites.Releases = favorites.Releases.Distinct ().ToList ();
+			collection.Update ( favorites );
+
+			await RefreshFavorites ();
+
+			RefreshSelectedReleases ();
 		}
 
 		private void RefreshCardFavorite () => OpenedReleaseInFavorite = m_Favorites.Any ( a => a == OpenedRelease.Id );
@@ -107,9 +150,10 @@ namespace Anilibria.Pages.Releases {
 				}
 			}
 
-			//TODO: Add local favorites
+			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
+			var localFavorites = GetLocalFavorites ( collection );
 
-			m_Favorites = favorites;
+			m_Favorites = favorites.Concat ( localFavorites.Releases );
 			foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
 
 			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
@@ -431,6 +475,24 @@ namespace Anilibria.Pages.Releases {
 		/// Remove from favorites command.
 		/// </summary>
 		public ICommand RemoveFromFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add to favorites command.
+		/// </summary>
+		public ICommand AddToLocalFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove from favorites command.
+		/// </summary>
+		public ICommand RemoveFromLocalFavoritesCommand
 		{
 			get;
 			set;

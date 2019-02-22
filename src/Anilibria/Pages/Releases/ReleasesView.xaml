@@ -556,6 +556,14 @@
 								Text="Удалить из избранного"
 								Command="{Binding RemoveFromFavoritesCommand}"
 							/>
+							<MenuFlyoutItem
+								Text="Добавить в локальное избранное"
+								Command="{Binding AddToLocalFavoritesCommand}"
+							/>
+							<MenuFlyoutItem
+								Text="Удалить из локального избранного"
+								Command="{Binding RemoveFromLocalFavoritesCommand}"
+							/>
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>

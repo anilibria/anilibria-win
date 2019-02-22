@@ -8,9 +8,18 @@ namespace Anilibria.Storage.Entities {
 	public class LocalFavoriteEntity {
 
 		/// <summary>
+		/// Identifier.
+		/// </summary>
+		public int Id
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Releases.
 		/// </summary>
-		public IEnumerable<long> Releases
+		public ICollection<long> Releases
 		{
 			get;
 			set;
