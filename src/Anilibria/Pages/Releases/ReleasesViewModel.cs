@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +11,6 @@ using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
-using Windows.Storage;
 using Windows.System;
 
 namespace Anilibria.Pages.Releases {
