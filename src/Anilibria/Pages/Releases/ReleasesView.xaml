@@ -28,9 +28,12 @@
 				</Grid.RowDefinitions>
 
 				<Image
+					x:Name="Image"
 					Height="300"
 					Stretch="Uniform"
-					Source="{Binding Poster}"
+					Tag="{Binding Id}"
+					converters:CacheImageConverter.ImageGroup="Poster"
+					converters:CacheImageConverter.ImagePath="{Binding Poster}"
 					Grid.Row="0"
 					Grid.Column="0"
 				/>
