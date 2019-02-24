@@ -146,14 +146,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( m_TapCount > 1 ) return;
 
-			if ( ControlPanel.Visibility == Visibility.Visible ) ControlPanel.Visibility = Visibility.Collapsed;
-
 			switch ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState ) {
 				case MediaPlaybackState.Playing:
 					ChangePlaybackHandler ( PlaybackState.Pause , needAnimation: true );
+					if ( ControlPanel.Visibility != Visibility.Visible ) ControlPanel.Visibility = Visibility.Visible;
 					break;
 				case MediaPlaybackState.Paused:
 					ChangePlaybackHandler ( PlaybackState.Play , needAnimation: true );
+					if ( ControlPanel.Visibility == Visibility.Visible ) ControlPanel.Visibility = Visibility.Collapsed;
 					break;
 			}
 		}
