@@ -48,6 +48,10 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsAuthorized;
 
+		private Uri m_CommentsUri;
+
+		private bool m_IsShowComments;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -73,6 +77,18 @@ namespace Anilibria.Pages.Releases {
 			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			AddToLocalFavoritesCommand = CreateCommand ( AddToLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			RemoveFromLocalFavoritesCommand = CreateCommand ( RemoveFromLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			ShowCommentsCommand = CreateCommand ( ShowComments );
+			CloseCommentsCommand = CreateCommand ( CloseComments );
+		}
+
+		private void CloseComments () {
+			IsShowComments = false;
+		}
+
+		private void ShowComments () {
+			var uri = new Uri ( $"https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/{OpenedRelease.Code}.html" );
+			CommentsUri = uri;
+			IsShowComments = true;
 		}
 
 		private LocalFavoriteEntity GetLocalFavorites ( IEntityCollection<LocalFavoriteEntity> collection ) {
@@ -363,6 +379,24 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Comment uri.
+		/// </summary>
+		public Uri CommentsUri
+		{
+			get => m_CommentsUri;
+			set => Set ( ref m_CommentsUri , value );
+		}
+
+		/// <summary>
+		/// Is show comments.
+		/// </summary>
+		public bool IsShowComments
+		{
+			get => m_IsShowComments;
+			set => Set ( ref m_IsShowComments , value );
+		}
+
+		/// <summary>
 		/// Is authorized.
 		/// </summary>
 		public bool IsAuthorized
@@ -386,7 +420,12 @@ namespace Anilibria.Pages.Releases {
 		public bool IsShowReleaseCard
 		{
 			get => m_IsShowReleaseCard;
-			set => Set ( ref m_IsShowReleaseCard , value );
+			set
+			{
+				if ( !Set ( ref m_IsShowReleaseCard , value ) ) return;
+
+				if ( !value ) IsShowComments = false;
+			}
 		}
 
 		/// <summary>
@@ -519,6 +558,24 @@ namespace Anilibria.Pages.Releases {
 		/// Open torrent.
 		/// </summary>
 		public ICommand OpenTorrentCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Show comments.
+		/// </summary>
+		public ICommand ShowCommentsCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Close comments commands.
+		/// </summary>
+		public ICommand CloseCommentsCommand
 		{
 			get;
 			set;

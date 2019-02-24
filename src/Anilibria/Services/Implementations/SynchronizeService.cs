@@ -149,7 +149,8 @@ namespace Anilibria.Services.Implementations {
 			var torrentSeries = releaseEntity.Torrents.Select ( oldTorrent => (oldTorretnSerie: oldTorrent, newTorrentSerie: release.Torrents.FirstOrDefault ( newTorrent => newTorrent.Id == oldTorrent.Id )) ).ToList ();
 
 			foreach ( var (oldTorretnSerie, newTorrentSerie) in torrentSeries ) {
-				if ( oldTorretnSerie.Series != newTorrentSerie.Series.TrimEnd () ) {
+				if ( newTorrentSerie == null ) continue;
+				if ( oldTorretnSerie.Series != newTorrentSerie.Series?.TrimEnd () ) {
 					if ( !changesEntity.NewTorrentSeries.ContainsKey ( release.Id ) ) changesEntity.NewTorrentSeries.Add ( release.Id , new Dictionary<long , string> () );
 					if ( !changesEntity.NewTorrentSeries[release.Id].ContainsKey ( oldTorretnSerie.Id ) ) changesEntity.NewTorrentSeries[release.Id].Add ( oldTorretnSerie.Id , oldTorretnSerie.Series );
 				}
@@ -187,7 +188,6 @@ namespace Anilibria.Services.Implementations {
 
 				var cacheReleasesDictionary = cacheReleases.ToDictionary ( a => a.Id );
 
-				var index = 1;
 				foreach ( var release in releases ) {
 					cacheReleasesDictionary.TryGetValue ( release.Id , out var cacheRelease );
 
@@ -198,7 +198,6 @@ namespace Anilibria.Services.Implementations {
 						UpdateCachedRelease ( release , cacheRelease , changes );
 						updatedReleases.Add ( cacheRelease );
 					}
-					index++;
 				}
 				if ( addReleases.Any () ) collection.AddRange ( addReleases );
 				if ( updatedReleases.Any () ) collection.Update ( updatedReleases );

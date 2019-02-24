@@ -218,6 +218,7 @@
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\Icons\chat.svg" />
     <Content Include="Assets\Icons\close.svg" />
     <Content Include="Assets\Icons\favorite.svg" />
     <Content Include="Assets\Icons\favoriteblack.svg" />

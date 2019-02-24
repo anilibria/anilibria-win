@@ -48,6 +48,10 @@ namespace Anilibria.Pages.Releases {
 			dataContext.RemoveCardFavoriteCommand.Execute ( null );
 		}
 
+		private void ShowComments_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			dataContext.ShowCommentsCommand.Execute ( null );
+		}
 	}
 
 }

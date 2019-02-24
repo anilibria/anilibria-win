@@ -514,7 +514,7 @@
 			</Setter>
 		</Style>
 	</UserControl.Resources>
-	
+
 	<Grid
 		Background="#D3D3D3">
 		<Grid.RowDefinitions>
@@ -661,7 +661,7 @@
 						TextWrapping="Wrap"
 						TextAlignment="Center"
 						HorizontalAlignment="Center">
-						
+
 					</TextBlock>
 					<Border
 						BorderBrush="#d3d3d3"
@@ -755,7 +755,9 @@
 								Stretch="Uniform"
 								Height="450"
 								HorizontalAlignment="Center"
-								Source="{Binding OpenedRelease.Poster}"
+								Tag="{Binding OpenedRelease.Id}"
+								converters:CacheImageConverter.ImageGroup="Poster"
+								converters:CacheImageConverter.ImagePath="{Binding OpenedRelease.Poster}"
 							/>
 						</Border>
 						<StackPanel Orientation="Vertical">
@@ -803,6 +805,20 @@
 									/>
 								</controls:PointingGridControl>
 							</Grid>
+							<controls:PointingGridControl
+									Width="24"
+									Height="24"
+									Margin="4 2 1 1"
+									x:Name="ShowComments"
+									Tapped="ShowComments_Tapped"
+									ToolTipService.ToolTip="Открыть коментарии">
+								<Image
+										Source="/Assets/Icons/chat.svg"
+										Stretch="Uniform"
+										Width="24"
+										Height="24"
+									/>
+							</controls:PointingGridControl>
 						</StackPanel>
 					</StackPanel>
 				</Grid>
@@ -810,7 +826,8 @@
 					Grid.Row="1"
 					Grid.ColumnSpan="2"
 					Padding="4"
-					Margin="0 0 0 10">
+					Margin="0 0 0 10"
+					Visibility="{Binding IsShowComments, Converter={StaticResource InverseBoolConverter}}">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="0.4*" />
 						<ColumnDefinition Width="Auto" />
@@ -910,6 +927,23 @@
 						</ItemsControl>
 					</StackPanel>
 				</Grid>
+				<Grid
+					Grid.Row="1"
+					Grid.ColumnSpan="2"
+					Visibility="{Binding IsShowComments}"
+					Margin="4">
+					<Button
+						HorizontalAlignment="Center"
+						Command="{Binding CloseCommentsCommand}">
+						Скрыть Комментарии
+					</Button>
+				</Grid>
+				<WebView
+					Grid.ColumnSpan="2"
+					Grid.RowSpan="1"
+					Visibility="{Binding IsShowComments}"
+					Source="{Binding CommentsUri}"
+				/>
 			</Grid>
 		</Border>
 	</Grid>
