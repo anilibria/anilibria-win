@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Anilibria.Services.Implementations;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -33,8 +36,10 @@ namespace Anilibria {
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="e">Details about the launch request and process.</param>
-		protected override void OnLaunched ( LaunchActivatedEventArgs e ) {
-			Frame rootFrame = Window.Current.Content as Frame;
+		protected override async void OnLaunched ( LaunchActivatedEventArgs e ) {
+			await PopulateFirstStartReleases ();
+
+			var rootFrame = Window.Current.Content as Frame;
 
 			if ( rootFrame == null ) {
 				rootFrame = new Frame ();
@@ -52,6 +57,10 @@ namespace Anilibria {
 				if ( rootFrame.Content == null ) rootFrame.Navigate ( typeof ( HomeView ) , e.Arguments );
 				Window.Current.Activate ();
 			}
+		}
+
+		private async Task PopulateFirstStartReleases () {
+			await new SynchronizeService ( ApiService.Current () , StorageService.Current () ).SynchronizeReleases ();
 		}
 
 		/// <summary>

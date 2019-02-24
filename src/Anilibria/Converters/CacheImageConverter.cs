@@ -2,10 +2,8 @@
 using System.IO;
 using System.Net.Http;
 using Anilibria.Services.Implementations;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Anilibria.Converters {

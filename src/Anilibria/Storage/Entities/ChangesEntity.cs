@@ -35,9 +35,18 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
-		/// New torrent series.
+		/// New torrens.
 		/// </summary>
-		public IDictionary<long , int> NewTorrentSeries
+		public IDictionary<long , int> NewTorrents
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// New torren series.
+		/// </summary>
+		public IDictionary<long , IDictionary<long , string>> NewTorrentSeries
 		{
 			get;
 			set;

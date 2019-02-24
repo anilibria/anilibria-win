@@ -119,33 +119,57 @@ namespace Anilibria.Services.Implementations {
 			if ( releaseEntity.Description != release.Description ) releaseEntity.Description = release.Description;
 			if ( releaseEntity.Type != release.Type ) releaseEntity.Type = release.Type;
 			if ( releaseEntity.Status != release.Status ) releaseEntity.Status = release.Status;
-			if ( releaseEntity.Series != release.Series ) releaseEntity.Series = release.Series;
+			if ( releaseEntity.Series != release.Series?.TrimEnd () ) releaseEntity.Series = release.Series;
 			releaseEntity.Rating = release.Favorite?.Rating ?? 0;
 			releaseEntity.Title = release.Names?.FirstOrDefault () ?? "";
 			releaseEntity.Names = release.Names.ToList ();
 			releaseEntity.Voices = release.Voices.ToList ();
+			releaseEntity.Timestamp = release.Last;
 
 			if ( releaseEntity.Playlist.Count () != release.Playlist.Count () ) {
-				if ( !changesEntity.NewOnlineSeries.ContainsKey ( release.Id ) ) changesEntity.NewOnlineSeries.Add ( release.Id , release.Playlist.Count () );
+				if ( !changesEntity.NewOnlineSeries.ContainsKey ( release.Id ) ) changesEntity.NewOnlineSeries.Add ( release.Id , releaseEntity.Playlist.Count () );
+			}
 
-				releaseEntity.Playlist = release.Playlist
-					.Select (
-						a =>
-							new PlaylistItemEntity {
-								Id = a.Id ,
-								HD = a.HD ,
-								SD = a.SD ,
-								Title = a.Title
-							}
-						)
-					.ToList ();
+			releaseEntity.Playlist = release.Playlist
+				.Select (
+					a =>
+						new PlaylistItemEntity {
+							Id = a.Id ,
+							HD = a.HD ,
+							SD = a.SD ,
+							Title = a.Title
+						}
+					)
+				.ToList ();
+
+			if ( releaseEntity.Torrents.Count () != release.Torrents.Count () ) {
+				if ( !changesEntity.NewTorrents.ContainsKey ( release.Id ) ) changesEntity.NewTorrents.Add ( release.Id , releaseEntity.Torrents.Count () );
 			}
-			var oldSeries = releaseEntity.Torrents.Select ( a => a.Series ).ToList ();
-			var newSeries = release.Torrents.Select ( a => a.Series ).ToList ();
-			if ( releaseEntity.Torrents.Count () != release.Torrents.Count () || !oldSeries.SequenceEqual ( newSeries ) ) {
-				if ( !changesEntity.NewTorrentSeries.ContainsKey ( release.Id ) ) changesEntity.NewTorrentSeries.Add ( release.Id , release.Playlist.Count () );
-				//TODO: Torrents changed!!!!
+
+			var torrentSeries = releaseEntity.Torrents.Select ( oldTorrent => (oldTorretnSerie: oldTorrent, newTorrentSerie: release.Torrents.FirstOrDefault ( newTorrent => newTorrent.Id == oldTorrent.Id )) ).ToList ();
+
+			foreach ( var (oldTorretnSerie, newTorrentSerie) in torrentSeries ) {
+				if ( oldTorretnSerie.Series != newTorrentSerie.Series.TrimEnd () ) {
+					if ( !changesEntity.NewTorrentSeries.ContainsKey ( release.Id ) ) changesEntity.NewTorrentSeries.Add ( release.Id , new Dictionary<long , string> () );
+					if ( !changesEntity.NewTorrentSeries[release.Id].ContainsKey ( oldTorretnSerie.Id ) ) changesEntity.NewTorrentSeries[release.Id].Add ( oldTorretnSerie.Id , oldTorretnSerie.Series );
+				}
 			}
+
+			releaseEntity.Torrents = release.Torrents
+				.Select (
+					a => new TorrentItemEntity {
+						Id = a.Id ,
+						Completed = a.Completed ,
+						Hash = a.Hash ,
+						Leechers = a.Leechers ,
+						Quality = a.Quality ,
+						Seeders = a.Seeders ,
+						Series = a.Series ,
+						Size = a.Size ,
+						Url = a.Url
+					}
+				)
+				.ToList ();
 		}
 
 		public async Task SynchronizeReleases () {
@@ -192,7 +216,8 @@ namespace Anilibria.Services.Implementations {
 				changes = new ChangesEntity {
 					NewOnlineSeries = new Dictionary<long , int> () ,
 					NewReleases = new List<long> () ,
-					NewTorrentSeries = new Dictionary<long , int> ()
+					NewTorrents = new Dictionary<long , int> () ,
+					NewTorrentSeries = new Dictionary<long , IDictionary<long , string>> ()
 				};
 				changesCollection.Add ( changes );
 			}

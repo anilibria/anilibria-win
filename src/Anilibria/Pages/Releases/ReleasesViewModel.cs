@@ -22,6 +22,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsMultipleSelect;
 
+		private IEnumerable<ReleaseEntity> m_AllReleases;
+
 		private IncrementalLoadingCollection<ReleaseModel> m_Collection;
 
 		private ObservableCollection<ReleaseModel> m_SelectedReleases;
@@ -215,10 +217,20 @@ namespace Anilibria.Pages.Releases {
 			}
 		}
 
+		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode () {
+			var context = m_DataContext.GetCollection<ReleaseEntity> ();
+
+			return context
+				.Find ( a => true )
+				.ToList ();
+		}
+
 		/// <summary>
 		/// Refresh releases.
 		/// </summary>
 		private void RefreshReleases () {
+			m_AllReleases = GetReleasesByCurrentMode ();
+
 			m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
 				PageSize = 20 ,
 				GetPageFunction = GetItemsPageAsync
@@ -247,11 +259,16 @@ namespace Anilibria.Pages.Releases {
 		/// <param name="page">Page.</param>
 		/// <param name="pageSize">Page size.</param>
 		/// <returns>Items on current page.</returns>
-		private async Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize ) {
-			//TODO: network error handling
-			var releases = await m_AnilibriaApiService.GetPage ( page , pageSize , string.IsNullOrEmpty ( FilterByName ) ? null : FilterByName );
+		private Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize ) {
+			var releases = m_AllReleases;
+			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => a.Names.Any ( name => name.Contains ( FilterByName ) ) );
 
-			return releases.Select (
+			releases = releases.OrderByDescending ( a => a.Timestamp );
+
+			var result = releases
+				.Skip ( ( page - 1 ) * pageSize )
+				.Take ( pageSize )
+				.Select (
 				a => new ReleaseModel {
 					Id = a.Id ,
 					AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
@@ -260,8 +277,8 @@ namespace Anilibria.Pages.Releases {
 					Genres = string.Join ( ", " , a.Genres ) ,
 					Title = a.Names.FirstOrDefault () ,
 					Names = a.Names ,
-					Poster = m_AnilibriaApiService.GetUrl ( a.Poster.Replace ( "default" , a.Id.ToString () ) ) ,
-					Rating = a.Favorite?.Rating ?? 0 ,
+					Poster = m_AnilibriaApiService.GetUrl ( a.Poster ) ,
+					Rating = a.Rating ,
 					Series = a.Series ,
 					Status = a.Status ,
 					Type = a.Type ,
@@ -287,6 +304,8 @@ namespace Anilibria.Pages.Releases {
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
 				}
 			);
+
+			return Task.FromResult ( result );
 		}
 
 		/// <summary>
