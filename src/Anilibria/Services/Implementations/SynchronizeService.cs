@@ -125,6 +125,11 @@ namespace Anilibria.Services.Implementations {
 			releaseEntity.Names = release.Names.ToList ();
 			releaseEntity.Voices = release.Voices.ToList ();
 			releaseEntity.Timestamp = release.Last;
+			if ( releaseEntity.Poster != release.Poster ) {
+				releaseEntity.Poster = release.Poster;
+				//invalidate poster's cache
+				if ( m_DataContext.IsFileExists ( "Poster" , release.Id ) ) m_DataContext.DeleteFile ( "Poster" , release.Id );
+			}
 
 			if ( releaseEntity.Playlist.Count () != release.Playlist.Count () ) {
 				if ( !changesEntity.NewOnlineSeries.ContainsKey ( release.Id ) ) changesEntity.NewOnlineSeries.Add ( release.Id , releaseEntity.Playlist.Count () );

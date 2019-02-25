@@ -744,8 +744,10 @@
 					Grid.Column="1"
 					Margin="0 16 6 0"
 					HorizontalAlignment="Stretch">
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Top"
-								HorizontalAlignment="Center">
+					<StackPanel
+						Orientation="Horizontal"
+						VerticalAlignment="Top"
+						HorizontalAlignment="Center">
 						<Border
 							BorderBrush="#d3d3d3"
 							BorderThickness="4"

@@ -515,21 +515,26 @@
 				<Grid.RenderTransform>
 					<CompositeTransform></CompositeTransform>
 				</Grid.RenderTransform>
-				<Viewbox
-					x:Name="PauseIconViewbox"
-					Width="245"
-					Height="245"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-					IsHitTestVisible="False">
-					<PathIcon
-						Foreground="White"
-						IsHitTestVisible="False"
-						Data="M231.6,516.278c0,10.658-8.641,19.3-19.3,19.3H106.15c-10.659,0-19.3-8.641-19.3-19.3V19.3
-						c0-10.659,8.641-19.3,19.3-19.3h106.15c10.659,0,19.3,8.641,19.3,19.3V516.278z M448.728,516.278c0,10.658-8.641,19.3-19.3,19.3h-106.15c-10.659,0-19.3-8.641-19.3-19.3V19.3
-						c0-10.659,8.641-19.3,19.3-19.3h106.15c10.659,0,19.3,8.641,19.3,19.3V516.278z"
-					/>
-				</Viewbox>
+				<Grid>
+					<Ellipse
+						x:Name="PauseIconBackground"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Fill="LightGray"
+						Height="260"
+						Width="260"
+						IsHitTestVisible="False">
+					</Ellipse>
+					<Image
+						x:Name="PauseIconViewbox"
+						Source="/Assets/Icons/pause.svg"
+						Width="245"
+						Height="245"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						IsHitTestVisible="False">
+					</Image>
+				</Grid>
 			</Grid>
 			<StackPanel
 				x:Name="CurrentReleaseInfo"
@@ -613,6 +618,8 @@
 						<AdaptiveTrigger MinWindowWidth="1800" MinWindowHeight="1200" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
+						<Setter Target="PauseIconBackground.Width" Value="300" />
+						<Setter Target="PauseIconBackground.Height" Value="300" />
 						<Setter Target="PauseIconViewbox.Width" Value="245" />
 						<Setter Target="PauseIconViewbox.Height" Value="245" />
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="20" />
@@ -626,6 +633,8 @@
 						<AdaptiveTrigger MinWindowWidth="1400" MinWindowHeight="720" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
+						<Setter Target="PauseIconBackground.Width" Value="285" />
+						<Setter Target="PauseIconBackground.Height" Value="285" />
 						<Setter Target="PauseIconViewbox.Width" Value="200"/>
 						<Setter Target="PauseIconViewbox.Height" Value="200"/>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="16" />
@@ -639,6 +648,8 @@
 						<AdaptiveTrigger MinWindowWidth="720" MinWindowHeight="440" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
+						<Setter Target="PauseIconBackground.Width" Value="145" />
+						<Setter Target="PauseIconBackground.Height" Value="145" />
 						<Setter Target="PauseIconViewbox.Width" Value="100"/>
 						<Setter Target="PauseIconViewbox.Height" Value="100"/>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="14" />
@@ -653,6 +664,8 @@
 						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
+						<Setter Target="PauseIconBackground.Width" Value="75" />
+						<Setter Target="PauseIconBackground.Height" Value="75" />
 						<Setter Target="PauseIconViewbox.Width" Value="50"/>
 						<Setter Target="PauseIconViewbox.Height" Value="50"/>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="12" />
