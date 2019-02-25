@@ -359,12 +359,13 @@
 						FontSize="16"
 						Foreground="White"
 						VerticalAlignment="Center"
-						Margin="6 12 0 0">
-						<Run
-							Text="{Binding DisplayPosition}"
-						/>
+						Margin="6 12 0 0"
+						Visibility="{Binding IsMediaOpened}">
 						<Run
 							Text="{Binding DisplayPositionPercent}"
+						/>
+						<Run
+							Text="{Binding DisplayPosition}"
 						/>
 						<Run
 							Text="/"

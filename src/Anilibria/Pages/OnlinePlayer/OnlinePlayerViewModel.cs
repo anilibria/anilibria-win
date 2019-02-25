@@ -46,6 +46,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private double m_RestorePosition = 0;
 
+		private bool m_IsMediaOpened;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -119,22 +121,36 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Media ended handler.
+		/// </summary>
+		public void MediaEnded () {
+			IsMediaOpened = false;
+			var currentIndex = SelectedRelease.OnlineVideos.ToList ().IndexOf ( SelectedOnlineVideo );
+
+			if ( currentIndex > 0 ) SelectedOnlineVideo = SelectedRelease.OnlineVideos.ElementAt ( currentIndex - 1 );
+		}
+
+		/// <summary>
+		/// Media closed handler.
+		/// </summary>
+		public void MediaClosed () => IsMediaOpened = false;
+
+		/// <summary>
 		/// Media opened.
 		/// </summary>
 		/// <param name="success">Success media opened.</param>
 		/// <param name="duration">Duration.</param>
-		public void MediaOpened ( bool success , TimeSpan? duration = default ( TimeSpan? ) ) {
-			if ( success ) {
-				DisplayDuration = VideoTimeFormatter.ConvertTimeSpanToText ( duration.Value );
-				m_Duration = duration.Value;
-				DurationSecond = duration.Value.TotalSeconds;
+		public void MediaOpened ( TimeSpan? duration = default ( TimeSpan? ) ) {
+			DisplayDuration = VideoTimeFormatter.ConvertTimeSpanToText ( duration.Value );
+			m_Duration = duration.Value;
+			DurationSecond = duration.Value.TotalSeconds;
 
-				if ( m_RestorePosition > 0 ) {
-					var lastPosition = TimeSpan.FromSeconds ( m_RestorePosition );
-					m_RestorePosition = 0;
-					ChangePosition ( lastPosition );
-				}
+			if ( m_RestorePosition > 0 ) {
+				var lastPosition = TimeSpan.FromSeconds ( m_RestorePosition );
+				m_RestorePosition = 0;
+				ChangePosition ( lastPosition );
 			}
+			IsMediaOpened = true;
 		}
 
 		/// <summary>
@@ -158,6 +174,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// </summary>
 		public void NavigateFrom () {
 			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause , false );
+		}
+
+		/// <summary>
+		/// Media opened.
+		/// </summary>
+		public bool IsMediaOpened
+		{
+			get => m_IsMediaOpened;
+			set => Set ( ref m_IsMediaOpened , value );
 		}
 
 		/// <summary>

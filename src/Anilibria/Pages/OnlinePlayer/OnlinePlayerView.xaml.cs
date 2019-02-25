@@ -37,6 +37,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			DataContext = m_ViewModel;
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
 			OnlinePlayer.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+			OnlinePlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
 			OnlinePlayer.MediaPlayer.SourceChanged += MediaPlayer_SourceChanged;
 
 			RunTimer ();
@@ -45,9 +46,24 @@ namespace Anilibria.Pages.OnlinePlayer {
 			Unloaded += OnlinePlayerView_Unloaded;
 		}
 
-		private void MediaPlayer_SourceChanged ( MediaPlayer sender , object args ) {
+		private async void MediaPlayer_MediaEnded ( MediaPlayer sender , object args ) {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_ViewModel.MediaEnded ();
+				}
+			);
+		}
+
+		private async void MediaPlayer_SourceChanged ( MediaPlayer sender , object args ) {
 			m_Duration = TimeSpan.FromSeconds ( 0 );
 			m_MediaOpened = false;
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_ViewModel.MediaClosed ();
+				}
+			);
 		}
 
 		private void OnlinePlayerView_Unloaded ( object sender , RoutedEventArgs e ) {
@@ -72,7 +88,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void TimerTick ( object sender , object e ) {
 			if ( m_MediaOpened ) {
 				m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
-				if (!m_BlockedTrackSlider) Slider.Value = OnlinePlayer.MediaPlayer.PlaybackSession.Position.TotalSeconds;
+				if ( !m_BlockedTrackSlider ) Slider.Value = OnlinePlayer.MediaPlayer.PlaybackSession.Position.TotalSeconds;
 			}
 		}
 
@@ -126,13 +142,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void MediaPlayer_MediaFailed ( MediaPlayer sender , MediaPlayerFailedEventArgs args ) => m_MediaOpened = false;
+
 		private async void MediaPlayer_MediaOpened ( MediaPlayer sender , object args ) {
 			m_MediaOpened = true;
 			await Dispatcher.RunAsync (
 				CoreDispatcherPriority.Normal ,
 				() => {
 					m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
-					m_ViewModel.MediaOpened ( true , m_Duration );
+					m_ViewModel.MediaOpened ( m_Duration );
 					PauseIcon.Opacity = 0;
 				}
 			);
