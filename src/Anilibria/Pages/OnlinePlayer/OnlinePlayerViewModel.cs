@@ -48,6 +48,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsMediaOpened;
 
+		private bool m_IsBuffering;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -118,6 +120,20 @@ namespace Anilibria.Pages.OnlinePlayer {
 			Position = timeSpan.TotalSeconds;
 
 			DisplayPositionPercent = $"({Math.Round ( timeSpan.TotalMilliseconds / m_Duration.TotalMilliseconds * 100 )}%)";
+		}
+
+		/// <summary>
+		/// Buffering start.
+		/// </summary>
+		public void BufferingStart () {
+			IsBuffering = true;
+		}
+
+		/// <summary>
+		/// Buffering end.
+		/// </summary>
+		public void BufferingEnd () {
+			IsBuffering = false;
 		}
 
 		/// <summary>
@@ -199,6 +215,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 				ChangeVolumeHandler?.Invoke ( value );
 			}
+		}
+
+		/// <summary>
+		/// Is buffering.
+		/// </summary>
+		public bool IsBuffering
+		{
+			get => m_IsBuffering;
+			set => Set ( ref m_IsBuffering , value );
 		}
 
 		/// <summary>

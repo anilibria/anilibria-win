@@ -39,11 +39,31 @@ namespace Anilibria.Pages.OnlinePlayer {
 			OnlinePlayer.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
 			OnlinePlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
 			OnlinePlayer.MediaPlayer.SourceChanged += MediaPlayer_SourceChanged;
+			OnlinePlayer.MediaPlayer.BufferingStarted += MediaPlayer_BufferingStarted;
+			OnlinePlayer.MediaPlayer.BufferingEnded += MediaPlayer_BufferingEnded;
 
 			RunTimer ();
 
 			Loaded += OnlinePlayerView_Loaded;
 			Unloaded += OnlinePlayerView_Unloaded;
+		}
+
+		private async void MediaPlayer_BufferingEnded ( MediaPlayer sender , object args ) {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_ViewModel.BufferingEnd ();
+				}
+			);
+		}
+
+		private async void MediaPlayer_BufferingStarted ( MediaPlayer sender , object args ) {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_ViewModel.BufferingStart ();
+				}
+			);
 		}
 
 		private async void MediaPlayer_MediaEnded ( MediaPlayer sender , object args ) {
@@ -165,6 +185,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			switch ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState ) {
 				case MediaPlaybackState.Playing:
+					if ( ControlPanel.Visibility == Visibility.Visible ) {
+						ControlPanel.Visibility = Visibility.Collapsed;
+						return;
+					}
 					ChangePlaybackHandler ( PlaybackState.Pause , needAnimation: true );
 					if ( ControlPanel.Visibility != Visibility.Visible ) ControlPanel.Visibility = Visibility.Visible;
 					break;

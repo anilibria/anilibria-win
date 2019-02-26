@@ -333,13 +333,22 @@
 				<ColumnDefinition />
 				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
+			<StackPanel
+				Grid.Row="0"
+				Grid.Column="0"
+				Background="Black"
+				VerticalAlignment="Top"
+				Visibility="{Binding IsBuffering}">
+				<TextBlock
+					Foreground="White">Буферизация....</TextBlock>
+			</StackPanel>
 			<Border
 				x:Name="ControlPanel"
-				Grid.Row="0"
+				Grid.Row="2"
 				Grid.ColumnSpan="3"
 				Background="#b32121"
 				BorderBrush="#881919"
-				BorderThickness="0 0 0 2"
+				BorderThickness="0 2 0 0"
 				Visibility="Collapsed">
 				<RelativePanel
 					HorizontalAlignment="Stretch">
@@ -540,7 +549,7 @@
 			<StackPanel
 				x:Name="CurrentReleaseInfo"
 				Visibility="Collapsed"
-				Grid.Row="2"
+				Grid.Row="0"
 				Grid.Column="2">
 				<Border
 					BorderBrush="#881919"
