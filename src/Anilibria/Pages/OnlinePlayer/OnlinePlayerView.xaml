@@ -310,7 +310,7 @@
 		</Style>
 	</Page.Resources>
 
-	<Grid>
+	<Grid PointerMoved="Grid_PointerMoved">
 		<Grid
 			Background="Black">
 			<MediaPlayerElement

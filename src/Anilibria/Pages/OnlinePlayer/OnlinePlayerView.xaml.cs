@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
 using Windows.Media.Playback;
 using Windows.UI.Core;
+using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,6 +28,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private TimeSpan m_Duration = new TimeSpan ();
 
 		private bool m_BlockedTrackSlider = false;
+
+		private double m_MouseX = 0;
+
+		private double m_MouseY = 0;
+
+		private double m_PreviousX = 0;
+
+		private double m_PreviousY = 0;
+
+		private int m_LastActivityTime = 0;
 
 		public OnlinePlayerView () {
 			InitializeComponent ();
@@ -105,10 +117,37 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_DispatherTimer.Start ();
 		}
 
+		private void Grid_PointerMoved ( object sender , PointerRoutedEventArgs e ) {
+			if ( e.Pointer.PointerDeviceType == PointerDeviceType.Mouse ) {
+				PointerPoint ptrPt = e.GetCurrentPoint ( this );
+				m_MouseX = ptrPt.Position.X;
+				m_MouseY = ptrPt.Position.Y;
+			}
+		}
+
+		private void MouseHidingTracker () {
+			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing ) {
+				m_LastActivityTime++;
+				if ( !( m_PreviousX == m_MouseX && m_PreviousY == m_MouseY ) ) {
+					Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 0 );
+					m_LastActivityTime = 0;
+					m_PreviousX = m_MouseX;
+					m_PreviousY = m_MouseY;
+				}
+
+				if (m_LastActivityTime == 100) {
+					m_LastActivityTime = 0;
+					Window.Current.CoreWindow.PointerCursor = null;
+				}
+			}
+		}
+
 		private void TimerTick ( object sender , object e ) {
 			if ( m_MediaOpened ) {
 				m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
 				if ( !m_BlockedTrackSlider ) Slider.Value = OnlinePlayer.MediaPlayer.PlaybackSession.Position.TotalSeconds;
+
+				MouseHidingTracker ();
 			}
 		}
 
