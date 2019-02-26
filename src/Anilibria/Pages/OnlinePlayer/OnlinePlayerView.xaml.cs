@@ -126,7 +126,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void MouseHidingTracker () {
-			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing ) {
+			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && ControlPanel.Visibility == Visibility.Collapsed ) {
 				m_LastActivityTime++;
 				if ( !( m_PreviousX == m_MouseX && m_PreviousY == m_MouseY ) ) {
 					Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 0 );
