@@ -465,6 +465,17 @@
 						</Button.Flyout>
 					</Button>
 					<Button
+						x:Name="CastToDevice"
+						RelativePanel.LeftOf="SliderButton"
+						Style="{StaticResource IconsButtonStyle}"
+						Click="CastToDevice_Click">
+						<Image
+							Width="{StaticResource IconSize}"
+							Height="{StaticResource IconSize}"
+							Source="/Assets/Icons/cast.svg"
+						/>
+					</Button>
+					<Button
 						x:Name="SliderButton"
 						RelativePanel.LeftOf="PlaylistButton"
 						Style="{StaticResource IconsButtonStyle}">

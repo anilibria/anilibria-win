@@ -95,7 +95,7 @@ namespace Anilibria {
 			if ( currentNavigation != null ) currentNavigation.NavigateTo ( parameter );
 
 			var viewModel = DataContext as HomeViewModel;
-			viewModel.SelectedItem = viewModel.Items.First ( a => a.Page == page );
+			viewModel.ChangeSelectedItem ( viewModel.Items.First ( a => a.Page == page ) );
 
 			m_PreviousPage = page;
 			//hide sidebar after change page

@@ -106,6 +106,11 @@ namespace Anilibria.Pages.HomePage {
 
 		private bool StubMenuIsVisible () => true;
 
+		public void ChangeSelectedItem ( SplitViewItem splitViewItem) {
+			m_SelectedItem = splitViewItem;
+			RaisePropertyChanged ( () => SelectedItem );
+		}
+
 		/// <summary>
 		/// Refresh options.
 		/// </summary>

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Anilibria.Services.Implementations;
 using Windows.Devices.Input;
+using Windows.Foundation;
+using Windows.Media.Casting;
 using Windows.Media.Playback;
 using Windows.UI.Core;
 using Windows.UI.Input;
@@ -8,6 +11,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace Anilibria.Pages.OnlinePlayer {
@@ -39,9 +43,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private int m_LastActivityTime = 0;
 
+		CastingDevicePicker castingPicker;
+
 		public OnlinePlayerView () {
 			InitializeComponent ();
-			m_ViewModel = new OnlinePlayerViewModel {
+			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () ) {
 				ChangeVolumeHandler = ChangeVolumeHandler ,
 				ChangePlayback = ChangePlaybackHandler ,
 				ChangePosition = ChangePosition
@@ -58,6 +64,25 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			Loaded += OnlinePlayerView_Loaded;
 			Unloaded += OnlinePlayerView_Unloaded;
+
+			castingPicker = new CastingDevicePicker ();
+			castingPicker.Filter.SupportsVideo = true;
+			castingPicker.CastingDeviceSelected += CastingPicker_CastingDeviceSelected;
+		}
+
+		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				async () => {
+					var connection = args.SelectedCastingDevice.CreateCastingConnection ();
+
+					//Hook up the casting events
+					//connection.ErrorOccurred += Connection_ErrorOccurred;
+					//connection.StateChanged += Connection_StateChanged;
+
+					await connection.RequestStartCastingAsync ( OnlinePlayer.MediaPlayer.GetAsCastingSource () );
+				}
+			);
 		}
 
 		private async void MediaPlayer_BufferingEnded ( MediaPlayer sender , object args ) {
@@ -135,7 +160,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					m_PreviousY = m_MouseY;
 				}
 
-				if (m_LastActivityTime == 100) {
+				if ( m_LastActivityTime == 100 ) {
 					m_LastActivityTime = 0;
 					Window.Current.CoreWindow.PointerCursor = null;
 				}
@@ -289,6 +314,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_BlockedTrackSlider = true;
 		}
 
+		private void CastToDevice_Click ( object sender , RoutedEventArgs e ) {
+			var transform = CastToDevice.TransformToVisual ( Window.Current.Content as UIElement );
+			var pt = transform.TransformPoint ( new Point ( 0 , 0 ) );
+
+			castingPicker.Show ( new Rect ( pt.X , pt.Y , CastToDevice.ActualWidth , CastToDevice.ActualHeight ) , Windows.UI.Popups.Placement.Above );
+		}
 	}
 
 }

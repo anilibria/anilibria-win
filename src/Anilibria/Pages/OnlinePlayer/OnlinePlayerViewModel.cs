@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
+using Anilibria.Services;
 
 namespace Anilibria.Pages.OnlinePlayer {
 
@@ -40,6 +41,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private double m_Position;
 
+		private IAnalyticsService m_AnalyticsService;
+
 		private bool m_IsHD;
 
 		private bool m_IsSD;
@@ -53,12 +56,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
-		public OnlinePlayerViewModel () {
-
+		/// <param name="analyticsService">Analytics service.</param>
+		public OnlinePlayerViewModel ( IAnalyticsService analyticsService ) {
+			m_AnalyticsService = analyticsService;
 			m_IsHD = true;
 
 			CreateCommands ();
-			Volume = 1;
+			Volume = .8;
 		}
 
 		/// <summary>
@@ -108,7 +112,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private void SetPercentDisplayVolume ( double value ) => DisplayVolume = ( (int) ( value * 100 ) ).ToString () + "%";
 
-		private void ChangeVideoSource () => VideoSource = IsHD ? m_SelectedOnlineVideo.HDQuality : m_SelectedOnlineVideo.SDQuality;
+		private void ChangeVideoSource () {
+			if ( m_SelectedOnlineVideo == null ) return;
+
+			VideoSource = IsHD ? m_SelectedOnlineVideo.HDQuality : m_SelectedOnlineVideo.SDQuality;
+		}
 
 		/// <summary>
 		/// Refresh video position.
@@ -179,10 +187,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			else {
 				Releases = parameter as IEnumerable<ReleaseModel>;
-				SelectedRelease = Releases.First ();
-				SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
+				m_SelectedRelease = Releases.First ();
+				m_SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
+				RaisePropertyChanged ( () => SelectedOnlineVideo );
+				ChangeVideoSource ();
+				RaisePropertyChanged ( () => SelectedRelease );
 			}
 
+			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
 		}
 
 		/// <summary>

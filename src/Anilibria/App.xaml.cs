@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Navigation;
 #if !DEBUG
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 #endif
 
 namespace Anilibria {
@@ -27,7 +28,7 @@ namespace Anilibria {
 			InitializeComponent ();
 			Suspending += OnSuspending;
 #if !DEBUG
-			AppCenter.Start ( "b5d6d7ce-3983-46f3-8e94-39eda3d39091" , typeof ( Analytics ) );
+			AppCenter.Start ( AnalyticsService.TrackKey , typeof ( Analytics ) , typeof ( Crashes ) );
 #endif
 		}
 
