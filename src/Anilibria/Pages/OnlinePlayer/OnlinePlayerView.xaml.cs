@@ -5,6 +5,7 @@ using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Media.Casting;
 using Windows.Media.Playback;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
@@ -68,6 +69,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 			castingPicker = new CastingDevicePicker ();
 			castingPicker.Filter.SupportsVideo = true;
 			castingPicker.CastingDeviceSelected += CastingPicker_CastingDeviceSelected;
+
+			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
+		}
+
+		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
+			if ( Visibility != Visibility.Visible ) return;
+
+			if ( args.VirtualKey == VirtualKey.Space ) ControlPanel.Visibility = ControlPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {
@@ -209,6 +218,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					}
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Play ();
 					CurrentReleaseInfo.Visibility = Visibility.Collapsed;
+					if ( ControlPanel.Visibility == Visibility.Visible ) ControlPanel.Visibility = Visibility.Collapsed;
 					break;
 				default: throw new NotSupportedException ( $"State {state} not supporting." );
 			}
@@ -277,6 +287,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_TapCount++;
 
 			var view = ApplicationView.GetForCurrentView ();
+			view.FullScreenSystemOverlayMode = FullScreenSystemOverlayMode.Minimal;
 			if ( view.IsFullScreenMode ) {
 				view.ExitFullScreenMode ();
 			}
@@ -320,6 +331,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			castingPicker.Show ( new Rect ( pt.X , pt.Y , CastToDevice.ActualWidth , CastToDevice.ActualHeight ) , Windows.UI.Popups.Placement.Above );
 		}
+
 	}
 
 }

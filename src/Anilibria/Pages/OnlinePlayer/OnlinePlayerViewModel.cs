@@ -187,11 +187,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			else {
 				Releases = parameter as IEnumerable<ReleaseModel>;
-				m_SelectedRelease = Releases.First ();
-				m_SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
-				RaisePropertyChanged ( () => SelectedOnlineVideo );
-				ChangeVideoSource ();
-				RaisePropertyChanged ( () => SelectedRelease );
+				SelectedRelease = Releases.First ();
+				SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
+
+				ChangePlayback ( PlaybackState.Play , false );
 			}
 
 			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
@@ -354,7 +353,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
-				ChangeVideoSource ();
+				if ( m_SelectedOnlineVideo != null) ChangeVideoSource ();
 			}
 		}
 
