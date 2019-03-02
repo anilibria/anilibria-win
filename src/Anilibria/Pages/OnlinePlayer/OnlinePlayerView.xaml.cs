@@ -68,6 +68,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			castingPicker = new CastingDevicePicker ();
 			castingPicker.Filter.SupportsVideo = true;
+			castingPicker.Filter.SupportedCastingSources.Add ( OnlinePlayer.MediaPlayer.GetAsCastingSource () );
 			castingPicker.CastingDeviceSelected += CastingPicker_CastingDeviceSelected;
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
@@ -89,7 +90,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 					//connection.ErrorOccurred += Connection_ErrorOccurred;
 					//connection.StateChanged += Connection_StateChanged;
 
-					await connection.RequestStartCastingAsync ( OnlinePlayer.MediaPlayer.GetAsCastingSource () );
+					var videoSource = OnlinePlayer.MediaPlayer.GetAsCastingSource ();
+					await connection.RequestStartCastingAsync ( videoSource );
 				}
 			);
 		}
