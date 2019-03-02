@@ -182,11 +182,14 @@
     <Compile Include="Services\Implementations\StorageService.cs" />
     <Compile Include="Services\Implementations\SynchronizeService.cs" />
     <Compile Include="Services\Implementations\SyncService.cs" />
+    <Compile Include="Services\Implementations\SystemService.cs" />
     <Compile Include="Services\ISynchronizationService.cs" />
     <Compile Include="Services\PresentationClasses\ApiResponse.cs" />
     <Compile Include="Services\PresentationClasses\ApiResponseError.cs" />
     <Compile Include="Services\PresentationClasses\AuthorizationModel.cs" />
     <Compile Include="Services\PresentationClasses\BlockedInfo.cs" />
+    <Compile Include="Services\PresentationClasses\DeviceFamilyType.cs" />
+    <Compile Include="Services\PresentationClasses\DeviceInputType.cs" />
     <Compile Include="Services\PresentationClasses\Favorite.cs" />
     <Compile Include="Services\PresentationClasses\FavoriteModel.cs" />
     <Compile Include="Services\PresentationClasses\PagingInfo.cs" />

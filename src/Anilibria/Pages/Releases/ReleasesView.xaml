@@ -61,62 +61,64 @@
 							Text="{Binding Title}"
 						/>
 						<StackPanel Orientation="Vertical">
-							<TextBlock>
-							<Run
-								Text="Статус"
-								FontWeight="Bold"
-							/>
-							<Run
-								Text="{Binding Status}"
-							/>
+							<TextBlock Foreground="Black">
+								<Run
+									Text="Статус"
+									FontWeight="Bold"
+								/>
+								<Run
+									Text="{Binding Status}"
+								/>
 							</TextBlock>
 						</StackPanel>
 						<StackPanel Orientation="Vertical">
-							<TextBlock>
-							<Run
-								Text="Год"
-								FontWeight="Bold"
-							/>
-							<Run
-								Text="{Binding Year}"
-							/>
+							<TextBlock Foreground="Black">
+								<Run
+									Text="Год"
+									FontWeight="Bold"
+								/>
+								<Run
+									Text="{Binding Year}"
+								/>
 							</TextBlock>
 						</StackPanel>
 						<StackPanel Orientation="Vertical">
-							<TextBlock>
-							<Run
-								Text="Тип"
-								FontWeight="Bold"
-							/>
-							<Run
-								Text="{Binding Type}"
-							/>
+							<TextBlock Foreground="Black">
+								<Run
+									Text="Тип"
+									FontWeight="Bold"
+								/>
+								<Run
+									Text="{Binding Type}"
+								/>
 							</TextBlock>
 						</StackPanel>
 						<StackPanel Orientation="Vertical">
 							<TextBlock
-							MaxLines="3"
-							TextWrapping="WrapWholeWords">
-							<Run
-								Text="Жанры"
-								FontWeight="Bold"
-							/>
-							<Run
-								Text="{Binding Genres}"
-							/>
+								MaxLines="3"
+								TextWrapping="WrapWholeWords"
+								Foreground="Black">
+								<Run
+									Text="Жанры"
+									FontWeight="Bold"
+								/>
+								<Run
+									Text="{Binding Genres}"
+								/>
 							</TextBlock>
 						</StackPanel>
 						<StackPanel Orientation="Vertical">
 							<TextBlock
 							MaxLines="5"
-							TextWrapping="WrapWholeWords">
-							<Run
-								Text="Озвучка"
-								FontWeight="Bold"
-							/>
-							<Run
-								Text="{Binding Voices}"
-							/>
+							TextWrapping="WrapWholeWords"
+							Foreground="Black">
+								<Run
+									Text="Озвучка"
+									FontWeight="Bold"
+								/>
+								<Run
+									Text="{Binding Voices}"
+								/>
 							</TextBlock>
 						</StackPanel>
 					</StackPanel>
@@ -131,17 +133,35 @@
 							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
 						<Grid Grid.Column="0" VerticalAlignment="Center">
-							<TextBlock Height="20" FontFamily="Segoe MDL2 Assets" FontSize="18">&#xEB51;</TextBlock>
+							<TextBlock
+								Height="20"
+								FontFamily="Segoe MDL2 Assets"
+								FontSize="18"
+								Foreground="Black">
+								&#xEB51;
+							</TextBlock>
 						</Grid>
 						<Grid Grid.Column="1" VerticalAlignment="Top">
-							<TextBlock Height="20" Margin="4 0 0 0" FontSize="16" Text="{Binding Rating}" />
+							<TextBlock
+								Height="20"
+								Margin="4 0 0 0"
+								FontSize="16"
+								Text="{Binding Rating}"
+								Foreground="Black"
+							/>
 						</Grid>
 						<Grid
 							Grid.Column="2"
 							VerticalAlignment="Center"
 							Visibility="{Binding AddToFavorite}"
 							Margin="4 0 0 2">
-							<TextBlock Height="20" FontFamily="Segoe MDL2 Assets" FontSize="18">&#xE734;</TextBlock>
+							<TextBlock
+								Height="20"
+								FontFamily="Segoe MDL2 Assets"
+								FontSize="18"
+								Foreground="Black">
+								&#xE734;
+							</TextBlock>
 						</Grid>
 					</Grid>
 				</Grid>
@@ -583,7 +603,8 @@
 						<Flyout>
 							<StackPanel HorizontalAlignment="Stretch">
 								<TextBlock
-									Margin="4 0 4 4">
+									Margin="4 0 4 4"
+									Foreground="Black">
 									Имя
 								</TextBlock>
 								<TextBox
@@ -594,6 +615,7 @@
 								<Button
 									HorizontalAlignment="Stretch"
 									Margin="4 0 4 4"
+									Style="{StaticResource ActionButtonStyle}"
 									Command="{Binding FilterCommand}">
 									Фильтровать
 								</Button>
@@ -669,7 +691,8 @@
 						Margin="0 0 0 4">
 					</Border>
 					<StackPanel Orientation="Vertical">
-						<TextBlock>
+						<TextBlock
+							Foreground="Black">
 							<Run
 								Text="Статус"
 								FontWeight="Bold"
@@ -680,7 +703,8 @@
 						</TextBlock>
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
-						<TextBlock>
+						<TextBlock
+							Foreground="Black">
 							<Run
 								Text="Год"
 								FontWeight="Bold"
@@ -691,7 +715,8 @@
 						</TextBlock>
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
-						<TextBlock>
+						<TextBlock
+							Foreground="Black">
 							<Run
 								Text="Тип"
 								FontWeight="Bold"
@@ -703,7 +728,8 @@
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							TextWrapping="WrapWholeWords">
+							TextWrapping="WrapWholeWords"
+							Foreground="Black">
 							<Run
 								Text="Жанры"
 								FontWeight="Bold"
@@ -715,7 +741,8 @@
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							TextWrapping="WrapWholeWords">
+							TextWrapping="WrapWholeWords"
+							Foreground="Black">
 							<Run
 								Text="Озвучка"
 								FontWeight="Bold"
@@ -731,9 +758,12 @@
 						Margin="0 6 0 4">
 					</Border>
 					<StackPanel Orientation="Vertical">
-						<ScrollViewer MaxHeight="310">
+						<ScrollViewer
+							x:Name="CardDescription"
+							MaxHeight="310">
 							<TextBlock
 								TextWrapping="WrapWholeWords"
+								Foreground="Black"
 								converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}">
 							</TextBlock>
 						</ScrollViewer>
@@ -749,11 +779,13 @@
 						VerticalAlignment="Top"
 						HorizontalAlignment="Center">
 						<Border
+							x:Name="CardPosterBorder"
 							BorderBrush="#d3d3d3"
 							BorderThickness="4"
 							HorizontalAlignment="Stretch"
 							Height="450">
 							<Image
+								x:Name="CardPoster"
 								Stretch="Uniform"
 								Height="450"
 								HorizontalAlignment="Center"
@@ -842,7 +874,8 @@
 							TextAlignment="Center"
 							FontWeight="Bold"
 							FontSize="20"
-							Margin="0 0 0 4">
+							Margin="0 0 0 4"
+							Foreground="Black">
 							Смотреть онлайн
 						</TextBlock>
 						<Grid>
@@ -852,7 +885,8 @@
 							</Grid.ColumnDefinitions>
 							<TextBlock
 								VerticalAlignment="Center"
-								HorizontalAlignment="Right">
+								HorizontalAlignment="Right"
+								Foreground="Black">
 								<Run>Доступно</Run>
 								<Run Text="{Binding OpenedRelease.CountVideoOnline}" />
 								<Run>видео</Run>
@@ -860,8 +894,9 @@
 							<Button
 								HorizontalAlignment="Center"
 								Grid.Column="1"
-								Command="{Binding OpenOnlineVideoCommand}">
-								Открыть в плеере
+								Command="{Binding OpenOnlineVideoCommand}"
+								Style="{StaticResource ActionButtonStyle}">
+								Смотреть
 							</Button>
 						</Grid>
 					</StackPanel>
@@ -877,56 +912,63 @@
 							TextAlignment="Center"
 							FontWeight="Bold"
 							FontSize="20"
-							Margin="0 0 0 4">
+							Margin="0 0 0 4"
+							Foreground="Black">
 							Скачать торрентом
 						</TextBlock>
-						<ItemsControl
-							ItemsSource="{Binding OpenedRelease.Torrents}">
-							<ItemsControl.ItemsPanel>
-								<ItemsPanelTemplate>
-									<StackPanel Orientation="Vertical" />
-								</ItemsPanelTemplate>
-							</ItemsControl.ItemsPanel>
+						<ScrollViewer MaxHeight="50">
+							<ItemsControl
+								ItemsSource="{Binding OpenedRelease.Torrents}">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel Orientation="Vertical" />
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
 
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition />
-											<ColumnDefinition />
-											<ColumnDefinition Width="Auto" />
-										</Grid.ColumnDefinitions>
-										<TextBlock
-											TextAlignment="Center"
-											VerticalAlignment="Center">
-											<Run Text="{Binding Series}"></Run>
-											<Run Text="{Binding Quality}"></Run>
-										</TextBlock>
-										<TextBlock
-											Grid.Column="1"
-											VerticalAlignment="Center"
-											TextAlignment="Center"
-											Margin="2 0 2 0">
-											<Run
-												Foreground="Olive"
-												Text="{Binding Size}"
-											/>
-											<Run>Скачан</Run>
-											<Run
-												Foreground="ForestGreen"
-												Text="{Binding Completed}"
-											/>
-										</TextBlock>
-										<Button
-											Grid.Column="2" Margin="0 1 0 1"
-											Command="{Binding DataContext.OpenTorrentCommand, ElementName=ReleasesContainer}"
-											CommandParameter="{Binding Url}">
-											Скачать
-										</Button>
-									</Grid>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Grid>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="Auto" />
+												<ColumnDefinition />
+												<ColumnDefinition  Width="Auto" />
+											</Grid.ColumnDefinitions>
+											<TextBlock
+												Foreground="Black"
+												VerticalAlignment="Center">
+												<Run Text="{Binding Series}"></Run>
+												<Run Text="{Binding Quality}"></Run>
+											</TextBlock>
+											<TextBlock
+												Grid.Column="1"
+												VerticalAlignment="Center"
+												HorizontalAlignment="Center"
+												TextAlignment="Center"
+												Margin="2 0 2 0"
+												Foreground="Black">
+												<Run
+													Foreground="Olive"
+													Text="{Binding Size}"
+												/>
+												<Run>Скачан</Run>
+												<Run
+													Foreground="ForestGreen"
+													Text="{Binding Completed}"
+												/>
+											</TextBlock>
+											<Button
+												Grid.Column="2" Margin="0 1 0 1"
+												Command="{Binding DataContext.OpenTorrentCommand, ElementName=ReleasesContainer}"
+												CommandParameter="{Binding Url}"
+												Style="{StaticResource ActionButtonStyle}"
+												HorizontalAlignment="Right">
+												Скачать
+											</Button>
+										</Grid>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</ScrollViewer>
 					</StackPanel>
 				</Grid>
 				<Grid
@@ -935,6 +977,7 @@
 					Visibility="{Binding IsShowComments}"
 					Margin="4">
 					<Button
+						Style="{StaticResource ActionButtonStyle}"
 						HorizontalAlignment="Center"
 						Command="{Binding CloseCommentsCommand}">
 						Скрыть Комментарии
@@ -948,5 +991,48 @@
 				/>
 			</Grid>
 		</Border>
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup>
+				<VisualState x:Name="ExtraWide">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="1800" MinWindowHeight="1200" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="CardPosterBorder.Height" Value="550" />
+						<Setter Target="CardPoster.Height" Value="550" />
+						<Setter Target="CardDescription.Height" Value="400" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="Wide">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="1400" MinWindowHeight="720" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="CardPosterBorder.Height" Value="450" />
+						<Setter Target="CardPoster.Height" Value="450" />
+						<Setter Target="CardDescription.Height" Value="310" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="Square">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="720" MinWindowHeight="440" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="CardPosterBorder.Height" Value="320" />
+						<Setter Target="CardPoster.Height" Value="320" />
+						<Setter Target="CardDescription.Height" Value="190" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="Snapped">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="CardPosterBorder.Height" Value="250" />
+						<Setter Target="CardPoster.Height" Value="250" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
 	</Grid>
 </UserControl>

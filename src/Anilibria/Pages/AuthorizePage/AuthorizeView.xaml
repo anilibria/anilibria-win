@@ -44,6 +44,7 @@
 			Background="White"
 			Width="300">
 			<TextBlock
+				Foreground="Black"
 				Margin="4">
 				Email
 			</TextBlock>
@@ -53,6 +54,7 @@
 				Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 			/>
 			<TextBlock
+				Foreground="Black"
 				Margin="4">
 				Пароль
 			</TextBlock>
@@ -77,6 +79,7 @@
 					Grid.Column="1"
 					Margin="4"
 					Command="{Binding SigninCommand}"
+					Style="{StaticResource ActionButtonStyle}"
 					HorizontalAlignment="Right">
 					Войти
 				</Button>

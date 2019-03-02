@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Anilibria.Services.Implementations;
+using Anilibria.Services.PresentationClasses;
 using Windows.Devices.Input;
 using Windows.Foundation;
+using Windows.Gaming.Input;
 using Windows.Media.Casting;
 using Windows.Media.Playback;
 using Windows.System;
@@ -12,7 +15,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace Anilibria.Pages.OnlinePlayer {
@@ -27,6 +29,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private OnlinePlayerViewModel m_ViewModel;
 
 		private DispatcherTimer m_DispatherTimer;
+
+		private DispatcherTimer m_GamepadTimer;
 
 		private bool m_MediaOpened = false;
 
@@ -43,6 +47,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private double m_PreviousY = 0;
 
 		private int m_LastActivityTime = 0;
+
+		private GamepadButtons m_PreviousStateButtons = new GamepadButtons ();
 
 		CastingDevicePicker castingPicker;
 
@@ -66,13 +72,82 @@ namespace Anilibria.Pages.OnlinePlayer {
 			Loaded += OnlinePlayerView_Loaded;
 			Unloaded += OnlinePlayerView_Unloaded;
 
-			castingPicker = new CastingDevicePicker ();
-			castingPicker.Filter.SupportsVideo = true;
-			castingPicker.Filter.SupportedCastingSources.Add ( OnlinePlayer.MediaPlayer.GetAsCastingSource () );
-			castingPicker.CastingDeviceSelected += CastingPicker_CastingDeviceSelected;
+			if ( SystemService.GetDeviceFamilyType () != DeviceFamilyType.Xbox ) {
+				castingPicker = new CastingDevicePicker ();
+				castingPicker.Filter.SupportsVideo = true;
+				castingPicker.Filter.SupportedCastingSources.Add ( OnlinePlayer.MediaPlayer.GetAsCastingSource () );
+				castingPicker.CastingDeviceSelected += CastingPicker_CastingDeviceSelected;
+			}
+			else {
+				CastToDevice.Visibility = Visibility.Collapsed;
+
+				m_GamepadTimer = new DispatcherTimer ();
+				m_GamepadTimer.Tick += GamepadTimer_Tick;
+				m_GamepadTimer.Start ();
+			}
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
 		}
+
+		/// <summary>
+		/// Gamepad timer tick handler.
+		/// </summary>
+		private void GamepadTimer_Tick ( object sender , object e ) {
+			if ( Visibility == Visibility.Collapsed || m_ViewModel == null || m_ViewModel.SelectedRelease == null ) return;
+
+			if ( Gamepad.Gamepads.Count == 0 ) return;
+
+			var firstGamepad = Gamepad.Gamepads.First ();
+			var gamepadState = firstGamepad.GetCurrentReading ();
+
+			var previousStateButtons = m_PreviousStateButtons;
+			m_PreviousStateButtons = gamepadState.Buttons;
+
+			if ( previousStateButtons.HasFlag ( GamepadButtons.X ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.X ) ) {
+				OnlinePlayer_Tapped ( null , null );
+				return;
+			}
+			if ( previousStateButtons.HasFlag ( GamepadButtons.Y ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.Y ) ) {
+				ControlPanel.Visibility = ControlPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+				return;
+			}
+			if ( previousStateButtons.HasFlag ( GamepadButtons.DPadRight ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.DPadRight ) ) {
+				if ( m_ViewModel.SelectedOnlineVideo != null ) m_ViewModel.IsHD = !m_ViewModel.IsHD;
+				return;
+			}
+			if ( previousStateButtons.HasFlag ( GamepadButtons.DPadUp ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.DPadUp ) ) {
+				m_ViewModel.ChangeVolumeCommand.Execute ( .1 );
+				return;
+			}
+			if ( previousStateButtons.HasFlag ( GamepadButtons.DPadDown ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.DPadDown ) ) {
+				m_ViewModel.ChangeVolumeCommand.Execute ( -.1 );
+				return;
+			}
+			if ( previousStateButtons.HasFlag ( GamepadButtons.LeftShoulder ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.LeftShoulder ) ) {
+				if ( m_ViewModel.SelectedRelease.CountVideoOnline > 1 ) {
+					var index = m_ViewModel.SelectedRelease.OnlineVideos.ToList ().IndexOf ( m_ViewModel.SelectedOnlineVideo );
+					if ( index < m_ViewModel.SelectedRelease.OnlineVideos.Count () - 1 ) m_ViewModel.SelectedOnlineVideo = m_ViewModel.SelectedRelease.OnlineVideos.ElementAt ( index + 1 );
+				}
+				return;
+			}
+			if ( previousStateButtons.HasFlag ( GamepadButtons.RightShoulder ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.RightShoulder ) ) {
+				if ( m_ViewModel.SelectedRelease.CountVideoOnline > 1 ) {
+					var index = m_ViewModel.SelectedRelease.OnlineVideos.ToList ().IndexOf ( m_ViewModel.SelectedOnlineVideo );
+					if ( index > 0 ) m_ViewModel.SelectedOnlineVideo = m_ViewModel.SelectedRelease.OnlineVideos.ElementAt ( index - 1 );
+				}
+				return;
+			}
+			//TODO: change selected releases
+			//if ( gamepadState.LeftTrigger == 1 ) {
+
+			//	return;
+			//}
+			//if ( gamepadState.RightTrigger == 1 ) {
+
+			//	return;
+			//}
+		}
+
 
 		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
 			if ( Visibility != Visibility.Visible ) return;
@@ -165,7 +240,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && ControlPanel.Visibility == Visibility.Collapsed ) {
 				m_LastActivityTime++;
 				if ( !( m_PreviousX == m_MouseX && m_PreviousY == m_MouseY ) ) {
-					Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 0 );
+					RestoreCursor ();
 					m_LastActivityTime = 0;
 					m_PreviousX = m_MouseX;
 					m_PreviousY = m_MouseY;
@@ -176,6 +251,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 					Window.Current.CoreWindow.PointerCursor = null;
 				}
 			}
+			else {
+				RestoreCursor ();
+			}
+		}
+
+		private void RestoreCursor () {
+			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 0 );
 		}
 
 		private void TimerTick ( object sender , object e ) {
@@ -271,6 +353,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 				case MediaPlaybackState.Paused:
 					ChangePlaybackHandler ( PlaybackState.Play , needAnimation: true );
 					if ( ControlPanel.Visibility == Visibility.Visible ) ControlPanel.Visibility = Visibility.Collapsed;
+					break;
+				case MediaPlaybackState.None:
+					if ( ControlPanel.Visibility != Visibility.Visible ) ControlPanel.Visibility = Visibility.Visible;
 					break;
 			}
 		}

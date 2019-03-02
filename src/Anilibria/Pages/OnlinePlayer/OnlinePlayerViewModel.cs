@@ -59,7 +59,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <param name="analyticsService">Analytics service.</param>
 		public OnlinePlayerViewModel ( IAnalyticsService analyticsService ) {
 			m_AnalyticsService = analyticsService;
-			m_IsHD = true;
+			m_IsHD = false;
 
 			CreateCommands ();
 			Volume = .8;

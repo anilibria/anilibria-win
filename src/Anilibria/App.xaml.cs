@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Anilibria.Services.Implementations;
+using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -38,6 +40,9 @@ namespace Anilibria {
 		/// </summary>
 		/// <param name="e">Details about the launch request and process.</param>
 		protected override async void OnLaunched ( LaunchActivatedEventArgs e ) {
+			//if app started on xbox then increase screen size on full screen.
+			if (SystemService.GetDeviceFamilyType() == DeviceFamilyType.Xbox) ApplicationView.GetForCurrentView ().SetDesiredBoundsMode ( ApplicationViewBoundsMode.UseCoreWindow );
+
 			await PopulateFirstStartReleases ();
 
 			var rootFrame = Window.Current.Content as Frame;
