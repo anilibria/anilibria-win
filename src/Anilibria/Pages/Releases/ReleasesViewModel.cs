@@ -9,6 +9,7 @@ using Anilibria.Collections;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
+using Anilibria.Services.Implementations;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.System;
@@ -62,6 +63,12 @@ namespace Anilibria.Pages.Releases {
 			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
 
 			CreateCommands ();
+			RefreshSelectedReleases ();
+			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
+		}
+
+		private void RefreshAfterSynchronize () {
+			RefreshReleases ();
 			RefreshSelectedReleases ();
 		}
 

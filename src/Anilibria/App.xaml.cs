@@ -38,11 +38,11 @@ namespace Anilibria {
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="e">Details about the launch request and process.</param>
-		protected override async void OnLaunched ( LaunchActivatedEventArgs e ) {
+		protected override void OnLaunched ( LaunchActivatedEventArgs e ) {
 			//if app started on xbox then increase screen size on full screen.
 			if (SystemService.GetDeviceFamilyType() == DeviceFamilyType.Xbox) ApplicationView.GetForCurrentView ().SetDesiredBoundsMode ( ApplicationViewBoundsMode.UseCoreWindow );
 
-			await PopulateFirstStartReleases ();
+			PopulateFirstStartReleases ();
 
 			var rootFrame = Window.Current.Content as Frame;
 
@@ -64,8 +64,11 @@ namespace Anilibria {
 			}
 		}
 
-		private async Task PopulateFirstStartReleases () {
-			await new SynchronizeService ( ApiService.Current () , StorageService.Current () ).SynchronizeReleases ();
+		private void PopulateFirstStartReleases () {
+			//don't wait for release sync because it may take longer than expected
+			#pragma warning disable CS4014
+			new SynchronizeService ( ApiService.Current () , StorageService.Current () ).SynchronizeReleases ();
+			#pragma warning restore CS4014
 		}
 
 		/// <summary>

@@ -207,6 +207,8 @@ namespace Anilibria.Services.Implementations {
 				if ( addReleases.Any () ) collection.AddRange ( addReleases );
 				if ( updatedReleases.Any () ) collection.Update ( updatedReleases );
 				changesCollection.Update ( changes );
+
+				ObserverEvents.FireEvent ( "synchronizedReleases" );
 			}
 			catch {
 				//TODO: Added logging
