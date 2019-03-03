@@ -53,6 +53,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsShowComments;
 
+		private bool m_EmptyReleases;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -68,6 +70,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RefreshAfterSynchronize () {
+			IsShowReleaseCard = false;
 			RefreshReleases ();
 			RefreshSelectedReleases ();
 		}
@@ -210,7 +213,7 @@ namespace Anilibria.Pages.Releases {
 
 		private void OpenOnlineVideo () {
 			IsShowReleaseCard = false;
-			ChangePage ( "Player" , SelectedReleases.ToList () );
+			ChangePage ( "Player" , new List<ReleaseModel> { OpenedRelease } );
 		}
 
 		private void Filter () => RefreshReleases ();
@@ -254,6 +257,7 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		private void RefreshReleases () {
 			m_AllReleases = GetReleasesByCurrentMode ();
+			EmptyReleases = m_AllReleases.Count () == 0;
 
 			m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
 				PageSize = 20 ,
@@ -452,6 +456,15 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_SelectedReleases;
 			set => Set ( ref m_SelectedReleases , value );
+		}
+
+		/// <summary>
+		/// Empty releases.
+		/// </summary>
+		public bool EmptyReleases
+		{
+			get => m_EmptyReleases;
+			set => Set ( ref m_EmptyReleases , value );
 		}
 
 		/// <summary>

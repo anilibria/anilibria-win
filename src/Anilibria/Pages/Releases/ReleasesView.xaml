@@ -645,6 +645,22 @@
 			HorizontalAlignment="Stretch"
 			HorizontalContentAlignment="Center"
 		/>
+		<StackPanel
+			Orientation="Horizontal"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			Grid.Row="2"
+			Visibility="{Binding EmptyReleases}">
+			<TextBlock
+				TextAlignment="Center"
+				FontSize="20"
+				TextWrapping="WrapWholeWords"
+				TextTrimming="WordEllipsis"
+				FontWeight="Bold"
+				Foreground="#b32121">
+				Релизы еще не загружены, пожалуйста подождите пока они загрузятся
+			</TextBlock>
+		</StackPanel>
 		<Rectangle
 			Fill="Black"
 			Opacity=".5"

@@ -17,7 +17,9 @@ namespace Anilibria.Controls {
 		}
 
 		private void PointingGridControl_PointerMoved ( object sender , PointerRoutedEventArgs e ) {
-			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Hand , 0 );
+			if ( Window.Current.CoreWindow.PointerCursor != null && Window.Current.CoreWindow.PointerCursor.Type != CoreCursorType.Hand ) {
+				Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Hand , 0 );
+			}
 		}
 
 		private void PointingGridControl_PointerExited ( object sender , PointerRoutedEventArgs e ) {
