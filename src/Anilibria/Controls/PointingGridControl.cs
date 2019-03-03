@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Anilibria.Controls {
 
@@ -12,13 +13,18 @@ namespace Anilibria.Controls {
 		public PointingGridControl () {
 			PointerEntered += PointingGridControl_PointerEntered;
 			PointerExited += PointingGridControl_PointerExited;
+			PointerMoved += PointingGridControl_PointerMoved;
 		}
 
-		private void PointingGridControl_PointerExited ( object sender , Windows.UI.Xaml.Input.PointerRoutedEventArgs e ) {
+		private void PointingGridControl_PointerMoved ( object sender , PointerRoutedEventArgs e ) {
+			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Hand , 0 );
+		}
+
+		private void PointingGridControl_PointerExited ( object sender , PointerRoutedEventArgs e ) {
 			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 0 );
 		}
 
-		private void PointingGridControl_PointerEntered ( object sender , Windows.UI.Xaml.Input.PointerRoutedEventArgs e ) {
+		private void PointingGridControl_PointerEntered ( object sender , PointerRoutedEventArgs e ) {
 			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Hand , 0 );
 		}
 

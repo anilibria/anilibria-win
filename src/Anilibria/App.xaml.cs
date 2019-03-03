@@ -4,7 +4,6 @@ using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

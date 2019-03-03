@@ -74,7 +74,7 @@ namespace Anilibria.Pages.Releases {
 			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && SelectedReleases.Count > 0 );
 			OpenTorrentCommand = CreateCommand<string> ( OpenTorrent );
 			AddCardFavoriteCommand = CreateCommand ( AddCardFavorite );
-			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite );
 			AddToLocalFavoritesCommand = CreateCommand ( AddToLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			RemoveFromLocalFavoritesCommand = CreateCommand ( RemoveFromLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			ShowCommentsCommand = CreateCommand ( ShowComments );

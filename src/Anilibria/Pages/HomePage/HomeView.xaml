@@ -9,6 +9,7 @@
 	xmlns:authorize="using:Anilibria.Pages.AuthorizePage"
 	xmlns:youtube="using:Anilibria.Pages.Youtube"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
+	xmlns:controls="using:Anilibria.Controls"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
 	Loaded="Page_Loaded">
@@ -58,18 +59,19 @@
 							MaxLines="2"
 							Foreground="Black"
 						/>
-						<Grid
+						<controls:PointingGridControl
 							Grid.Column="2"
 							Tapped="Grid_Tapped"
 							Width="40"
-							Height="40">
+							Height="40"
+							ToolTipService.ToolTip="Выйти из текущего аккаунта">
 							<Image
 								Source="/Assets/Icons/logout.svg"
 								Stretch="Uniform"
 								Width="30"
 								Height="30"
 							/>
-						</Grid>
+						</controls:PointingGridControl>
 					</Grid>
 					<ListView
 						RelativePanel.Below="UserInfo"
