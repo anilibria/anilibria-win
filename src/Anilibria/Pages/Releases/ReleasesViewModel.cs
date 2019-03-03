@@ -230,6 +230,7 @@ namespace Anilibria.Pages.Releases {
 			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
 				OpenedRelease = SelectedReleases.First ();
 				IsShowReleaseCard = true;
+				RefreshSelectedReleases ();
 			}
 		}
 

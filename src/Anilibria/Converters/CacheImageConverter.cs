@@ -39,19 +39,23 @@ namespace Anilibria.Converters {
 			var dataContext = StorageService.Current ();
 
 			if ( !dataContext.IsFileExists ( group , releaseId ) ) {
-				var byteArray = await new HttpClient ().GetByteArrayAsync ( uri );
+				try {
+					var byteArray = await new HttpClient ().GetByteArrayAsync ( uri );
 
-				using ( Stream stream = new MemoryStream () ) {
-					stream.Write ( byteArray , 0 , byteArray.Length );
-					stream.Position = 0;
+					using ( Stream stream = new MemoryStream () ) {
+						stream.Write ( byteArray , 0 , byteArray.Length );
+						stream.Position = 0;
 
-					dataContext.UploadFile ( group , releaseId , stream );
+						dataContext.UploadFile ( group , releaseId , stream );
 
-					stream.Position = 0;
-					var bitmapImage = new BitmapImage ();
-					await bitmapImage.SetSourceAsync ( stream.AsRandomAccessStream () );
+						stream.Position = 0;
+						var bitmapImage = new BitmapImage ();
+						await bitmapImage.SetSourceAsync ( stream.AsRandomAccessStream () );
 
-					image.Source = bitmapImage;
+						image.Source = bitmapImage;
+					}
+				} catch {
+					image.Source = null;
 				}
 			}
 			else {

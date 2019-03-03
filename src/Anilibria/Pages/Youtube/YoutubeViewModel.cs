@@ -60,6 +60,7 @@ namespace Anilibria.Pages.Youtube {
 			if ( SelectedVideos.Count == 1 ) {
 				var video = SelectedVideos.First ();
 				await Launcher.LaunchUriAsync ( video.VideoUrl );
+				RefreshSelectedVideos ();
 			}
 		}
 

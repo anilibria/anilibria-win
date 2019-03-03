@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:controls="using:Anilibria.Controls"
+	xmlns:converters="using:Anilibria.Converters"
     mc:Ignorable="d">
 
 	<UserControl.Resources>
@@ -12,7 +13,8 @@
 			<Grid
 				Padding="4"
 				Background="White"
-				VerticalAlignment="Stretch">
+				VerticalAlignment="Stretch"
+				Width="380">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -20,11 +22,12 @@
 
 				<Border>
 					<Image
-					
 						Width="355"
 						VerticalAlignment="Top"
 						Stretch="Uniform"
-						Source="{Binding Image}"
+						Tag="{Binding Id}"
+						converters:CacheImageConverter.ImageGroup="Youtube"
+						converters:CacheImageConverter.ImagePath="{Binding Image}"
 					/>
 				</Border>
 
