@@ -10,6 +10,8 @@ using Anilibria.Services.Implementations;
 using Anilibria.Pages.AuthorizePage;
 using Windows.UI.Xaml.Input;
 using Anilibria.Pages.Youtube;
+using Windows.UI.Xaml.Media.Animation;
+using System;
 
 namespace Anilibria {
 
@@ -22,6 +24,10 @@ namespace Anilibria {
 
 		private Dictionary<string , FrameworkElement> m_Pages = new Dictionary<string , FrameworkElement> ();
 
+		private DispatcherTimer m_HideMessageTimer = new DispatcherTimer ();
+
+		private HomeViewModel m_ViewModel;
+
 		public HomeView () {
 			InitializeComponent ();
 
@@ -31,11 +37,27 @@ namespace Anilibria {
 			m_Pages.Add ( "Youtube" , Youtube );
 
 			CreateViewModels ();
+
+			m_HideMessageTimer.Tick += HideMessageTimer_Tick;
+			m_HideMessageTimer.Interval = TimeSpan.FromSeconds ( 4 );
+
+			( Resources["HideMessage"] as Storyboard ).Completed += HideMessageAnimationCompleted;
+		}
+
+		private void HideMessageAnimationCompleted ( object sender , object e ) {
+			m_ViewModel.ShowedMessage = false;
+		}
+
+		private void HideMessageTimer_Tick ( object sender , object e ) {
+			RunHidePauseAnimation ();
+			m_HideMessageTimer.Stop ();
 		}
 
 		private void CreateViewModels () {
 			var viewmodel = new HomeViewModel ( ApiService.Current () );
 			viewmodel.ChangePage = ChangePage;
+			viewmodel.StartShowMessageAnimation = RunShowPauseAnimation;
+			m_ViewModel = viewmodel;
 			DataContext = viewmodel;
 
 			CreateReleasesViewModel ( viewmodel );
@@ -111,6 +133,19 @@ namespace Anilibria {
 			var viewModel = DataContext as HomeViewModel;
 			viewModel.SignoutCommand.Execute ( null );
 		}
+
+		private void RunHidePauseAnimation () {
+			var hideStoryboard = Resources["HideMessage"] as Storyboard;
+			hideStoryboard.Begin ();
+		}
+
+		private void RunShowPauseAnimation () {
+			var storyboard = Resources["ShowMessage"] as Storyboard;
+			storyboard.Begin ();
+			if ( m_HideMessageTimer.IsEnabled ) m_HideMessageTimer.Stop ();
+			m_HideMessageTimer.Start ();
+		}
+
 	}
 
 }

@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
+using Anilibria.Services.Implementations;
 
 namespace Anilibria.Pages.OnlinePlayer {
 
@@ -59,7 +60,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <param name="analyticsService">Analytics service.</param>
 		public OnlinePlayerViewModel ( IAnalyticsService analyticsService ) {
 			m_AnalyticsService = analyticsService;
-			m_IsHD = false;
+			m_IsSD = true;
 
 			CreateCommands ();
 			Volume = .8;

@@ -157,6 +157,7 @@
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerViewModel.cs" />
     <Compile Include="Pages\OnlinePlayer\PlaybackState.cs" />
     <Compile Include="Pages\OnlinePlayer\VideoTimeFormatter.cs" />
+    <Compile Include="Pages\PresentationClasses\MessageModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\ReleaseModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentModel.cs" />

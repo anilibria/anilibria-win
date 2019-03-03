@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.HomePage.PresentationClasses;
+using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Services.Exceptions;
+using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;
 
@@ -39,6 +41,12 @@ namespace Anilibria.Pages.HomePage {
 		private UserModel m_UserModel;
 
 		private bool m_IsAuthorized;
+
+		private bool m_ShowedMessage;
+
+		private string m_DialogHeader;
+
+		private string m_DialogMessage;
 
 		public HomeViewModel ( IAnilibriaApiService anilibriaApiService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
@@ -81,6 +89,16 @@ namespace Anilibria.Pages.HomePage {
 			RefreshOptions ();
 
 			CreateCommands ();
+
+			ObserverEvents.SubscribeOnEvent ( "showMessage" , ShowMessage );
+		}
+
+		private void ShowMessage ( object message ) {
+			var model = message as MessageModel;
+			DialogHeader = model.Header;
+			DialogMessage = model.Message;
+			ShowedMessage = true;
+			StartShowMessageAnimation ();
 		}
 
 		private void CreateCommands () {
@@ -88,10 +106,27 @@ namespace Anilibria.Pages.HomePage {
 		}
 
 		private async void Signout () {
-			await m_AnilibriaApiService.Logout ();
-			RefreshOptions ();
-			UserModel = null;
-			await RefreshFavorites?.Invoke ();
+			try {
+				await m_AnilibriaApiService.Logout ();
+				RefreshOptions ();
+				UserModel = null;
+				await RefreshFavorites?.Invoke ();
+
+				ShowMessage (
+					new MessageModel {
+						Header = "Выход из аккаунта" ,
+						Message = "Вы вышли из аккаунта. Для повторного входа перейдите в меню на страницу Войти."
+					}
+				);
+			}
+			catch {
+				ShowMessage (
+					new MessageModel {
+						Header = "Ошибка",
+						Message = "Не удалось выйти из аккаунта."
+					}
+				);
+			}
 		}
 
 		public async Task Initialize () {
@@ -139,6 +174,33 @@ namespace Anilibria.Pages.HomePage {
 				RefreshOptions ();
 				UserModel = null;
 			}
+		}
+
+		/// <summary>
+		/// Dialog header.
+		/// </summary>
+		public string DialogHeader
+		{
+			get => m_DialogHeader;
+			set => Set ( ref m_DialogHeader , value );
+		}
+
+		/// <summary>
+		/// Dialog message.
+		/// </summary>
+		public string DialogMessage
+		{
+			get => m_DialogMessage;
+			set => Set ( ref m_DialogMessage , value );
+		}
+
+		/// <summary>
+		/// Show message.
+		/// </summary>
+		public bool ShowedMessage
+		{
+			get => m_ShowedMessage;
+			set => Set ( ref m_ShowedMessage , value );
 		}
 
 		/// <summary>
@@ -213,7 +275,16 @@ namespace Anilibria.Pages.HomePage {
 			get;
 			set;
 		}
-		
+
+		/// <summary>
+		/// Start animation for showing message.
+		/// </summary>
+		public Action StartShowMessageAnimation
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Signout command.
 		/// </summary>

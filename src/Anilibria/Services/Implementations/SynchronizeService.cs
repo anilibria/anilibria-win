@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
@@ -208,10 +209,23 @@ namespace Anilibria.Services.Implementations {
 				if ( updatedReleases.Any () ) collection.Update ( updatedReleases );
 				changesCollection.Update ( changes );
 
-				ObserverEvents.FireEvent ( "synchronizedReleases" );
+				ObserverEvents.FireEvent ( "synchronizedReleases" , null );
+				ObserverEvents.FireEvent (
+					"showMessage" ,
+					new MessageModel {
+						Header = "Синхронизация релизов" ,
+						Message = "Синхронизация релизов успешно выполнена"
+					}
+				);
 			}
 			catch {
-				//TODO: Added logging
+				ObserverEvents.FireEvent (
+					"showMessage" ,
+					new MessageModel {
+						Header = "Синхронизация релизов" ,
+						Message = "Не удалось выполнить синхронизацию релизов"
+					}
+				);
 			}
 
 		}

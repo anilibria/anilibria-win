@@ -69,7 +69,7 @@ namespace Anilibria.Pages.Releases {
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 		}
 
-		private void RefreshAfterSynchronize () {
+		private void RefreshAfterSynchronize ( object parameter ) {
 			IsShowReleaseCard = false;
 			RefreshReleases ();
 			RefreshSelectedReleases ();

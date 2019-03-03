@@ -14,6 +14,37 @@
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
 	Loaded="Page_Loaded">
 
+	<Page.Resources>
+		<Storyboard x:Name="ShowMessage">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="InformationMessage">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="-10"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="InformationMessage">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="5"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="InformationMessage">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0" />
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value=".99" />
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Name="HideMessage">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="InformationMessage">
+				<EasingDoubleKeyFrame KeyTime="0" Value="-10"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="InformationMessage">
+				<EasingDoubleKeyFrame KeyTime="0" Value="5"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="InformationMessage">
+				<EasingDoubleKeyFrame KeyTime="0" Value=".99" />
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0" />
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+	</Page.Resources>
+	
 	<Grid>
 		<SplitView
 			x:Name="Sidebar"
@@ -146,5 +177,41 @@
 				/>
 			</Grid>
 		</SplitView>
+		<Border
+			x:Name="InformationMessage"
+			Margin="0 60 10 0"
+			BorderBrush="#881919"
+			BorderThickness="2"
+			Width="300"
+			MaxWidth="400"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Visibility="{Binding ShowedMessage}">
+			<Grid
+				Background="White"
+				Padding="8">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<TextBlock
+					Grid.Row="0"
+					Foreground="#b32121"
+					TextAlignment="Center"
+					Text="{Binding DialogHeader}">
+				</TextBlock>
+				<TextBlock
+					Grid.Row="1"
+					Foreground="Black"
+					MaxLines="3"
+					TextWrapping="WrapWholeWords"
+					TextTrimming="WordEllipsis"
+					Text="{Binding DialogMessage}">
+				</TextBlock>
+			</Grid>
+			<Border.RenderTransform>
+				<CompositeTransform></CompositeTransform>
+			</Border.RenderTransform>
+		</Border>
 	</Grid>
 </Page>
