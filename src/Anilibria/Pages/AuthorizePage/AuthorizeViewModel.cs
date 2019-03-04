@@ -21,15 +21,20 @@ namespace Anilibria.Pages.AuthorizePage {
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
+		private readonly IAnalyticsService m_AnalyticsService;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria api service.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public AuthorizeViewModel ( IAnilibriaApiService anilibriaApiService ) {
+		public AuthorizeViewModel ( IAnilibriaApiService anilibriaApiService , IAnalyticsService analyticsService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 
 			CreateCommands ();
+
+			m_AnalyticsService.TrackEvent ( "AuthorizePage" , "Opened" , "Simple start" );
 		}
 
 		private void CreateCommands () {

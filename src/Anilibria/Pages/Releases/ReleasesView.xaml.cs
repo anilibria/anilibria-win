@@ -16,7 +16,7 @@ namespace Anilibria.Pages.Releases {
 		public ReleasesView () {
 			InitializeComponent ();
 
-			DataContext = new ReleasesViewModel ( ApiService.Current () , StorageService.Current () , SyncService.Current () );
+			DataContext = new ReleasesViewModel ( ApiService.Current () , StorageService.Current () , SyncService.Current () , new AnalyticsService () );
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
 		}

@@ -5,7 +5,6 @@ using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
-using Anilibria.Services.Implementations;
 
 namespace Anilibria.Pages.OnlinePlayer {
 

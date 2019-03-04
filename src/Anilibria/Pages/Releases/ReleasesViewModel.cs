@@ -41,6 +41,8 @@ namespace Anilibria.Pages.Releases {
 
 		private readonly ISynchronizationService m_SynchronizeService;
 
+		private readonly IAnalyticsService m_AnalyticsService;
+
 		private readonly string[] m_FileSizes = { "B" , "KB" , "MB" , "GB" , "TB" };
 
 		private IEnumerable<long> m_Favorites = Enumerable.Empty<long> ();
@@ -59,14 +61,17 @@ namespace Anilibria.Pages.Releases {
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria Api Service.</param>
-		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService ) {
+		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService , IAnalyticsService analyticsService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
+			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 
 			CreateCommands ();
 			RefreshSelectedReleases ();
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
+
+			m_AnalyticsService.TrackEvent ( "Releases" , "Opened" , "Simple start" );
 		}
 
 		private void RefreshAfterSynchronize ( object parameter ) {

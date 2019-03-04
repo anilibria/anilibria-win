@@ -11,7 +11,7 @@ namespace Anilibria.Pages.AuthorizePage {
 		public AuthorizeView () {
 			InitializeComponent ();
 
-			DataContext = new AuthorizeViewModel ( ApiService.Current () );
+			DataContext = new AuthorizeViewModel ( ApiService.Current () , new AnalyticsService () );
 		}
 
 	}
