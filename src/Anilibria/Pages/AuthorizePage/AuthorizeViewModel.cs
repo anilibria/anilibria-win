@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Anilibria.MVVM;
+using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services;
+using Anilibria.Services.Implementations;
 
 namespace Anilibria.Pages.AuthorizePage {
 
@@ -46,6 +48,14 @@ namespace Anilibria.Pages.AuthorizePage {
 				ChangePage ( "Releases" , null );
 				RefreshOptions?.Invoke ();
 				await ChangeUserSession ();
+
+				ObserverEvents.FireEvent (
+					"showMessage" ,
+					new MessageModel {
+						Header = "Авторизация" ,
+						Message = "Вы успешно вошли в аккаунт"
+					}
+				);
 			}
 			else {
 				ErrorMessage = "Не удалось авторизоваться";

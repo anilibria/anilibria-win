@@ -56,7 +56,13 @@ namespace Anilibria.Services.Implementations {
 				}
 			}
 			catch {
-				//TODO: Added logging
+				ObserverEvents.FireEvent (
+					"showMessage" ,
+					new MessageModel {
+						Header = "Синхронизация избранного" ,
+						Message = "Не удалось выполнить синхронизацию избранного"
+					}
+				);
 			}
 		}
 
