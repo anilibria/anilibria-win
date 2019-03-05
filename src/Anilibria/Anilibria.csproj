@@ -134,10 +134,16 @@
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\MediaSourceConverter.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
+    <Compile Include="Pages\AboutPage\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AuthorizePage\AuthorizeView.xaml.cs">
       <DependentUpon>AuthorizeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\AuthorizePage\AuthorizeViewModel.cs" />
+    <Compile Include="Pages\DiagnosticsPage\DiagnosticsPageView.xaml.cs">
+      <DependentUpon>DiagnosticsPageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HomePage\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -294,7 +300,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Pages\AboutPage\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AuthorizePage\AuthorizeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\DiagnosticsPage\DiagnosticsPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

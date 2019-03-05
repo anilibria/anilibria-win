@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Anilibria.Pages.DiagnosticsPage;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;
@@ -7,7 +6,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 #if !DEBUG
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -33,6 +31,33 @@ namespace Anilibria {
 #endif
 		}
 
+		protected override void OnActivated ( IActivatedEventArgs args ) {
+			if ( args.Kind != ActivationKind.Protocol ) return;
+
+			var isNotStarted = args.PreviousExecutionState == ApplicationExecutionState.NotRunning || args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser;
+			if ( isNotStarted ) TransitionToFullScreen ();
+
+			var eventArgs = args as ProtocolActivatedEventArgs;
+			var uri = eventArgs.Uri;
+
+			switch ( uri.Host.ToLowerInvariant () ) {
+				case "diagnosticspage":
+					TransitionToDiagnosticsPage ();
+					break;
+				default:
+					if ( isNotStarted ) Exit ();
+					break;
+			}
+		}
+
+		private void TransitionToDiagnosticsPage () {
+			if ( Window.Current.Content == null ) Window.Current.Content = new Frame ();
+
+			var frame = (Frame) Window.Current.Content;
+			frame.Navigate ( typeof ( DiagnosticsPageView ) );
+			Window.Current.Activate ();
+		}
+
 		/// <summary>
 		/// Invoked when the application is launched normally by the end user.  Other entry points
 		/// will be used such as when the application is launched to open a specific file.
@@ -40,7 +65,7 @@ namespace Anilibria {
 		/// <param name="e">Details about the launch request and process.</param>
 		protected override void OnLaunched ( LaunchActivatedEventArgs e ) {
 			//if app started on xbox then increase screen size on full screen.
-			if (SystemService.GetDeviceFamilyType() == DeviceFamilyType.Xbox) ApplicationView.GetForCurrentView ().SetDesiredBoundsMode ( ApplicationViewBoundsMode.UseCoreWindow );
+			TransitionToFullScreen ();
 
 			PopulateFirstStartReleases ();
 
@@ -48,12 +73,6 @@ namespace Anilibria {
 
 			if ( rootFrame == null ) {
 				rootFrame = new Frame ();
-
-				rootFrame.NavigationFailed += OnNavigationFailed;
-
-				if ( e.PreviousExecutionState == ApplicationExecutionState.Terminated ) {
-					//TODO: Load state from previously suspended application
-				}
 
 				Window.Current.Content = rootFrame;
 			}
@@ -64,19 +83,16 @@ namespace Anilibria {
 			}
 		}
 
-		private void PopulateFirstStartReleases () {
-			//don't wait for release sync because it may take longer than expected
-			#pragma warning disable CS4014
-			new SynchronizeService ( ApiService.Current () , StorageService.Current () ).SynchronizeReleases ();
-			#pragma warning restore CS4014
+		private static void TransitionToFullScreen () {
+			if ( SystemService.GetDeviceFamilyType () == DeviceFamilyType.Xbox ) ApplicationView.GetForCurrentView ().SetDesiredBoundsMode ( ApplicationViewBoundsMode.UseCoreWindow );
 		}
 
-		/// <summary>
-		/// Invoked when Navigation to a certain page fails
-		/// </summary>
-		/// <param name="sender">The Frame which failed navigation</param>
-		/// <param name="e">Details about the navigation failure</param>
-		void OnNavigationFailed ( object sender , NavigationFailedEventArgs e ) => throw new Exception ( "Failed to load Page " + e.SourcePageType.FullName );
+		private void PopulateFirstStartReleases () {
+			//don't wait for release sync because it may take longer than expected
+#pragma warning disable CS4014
+			new SynchronizeService ( ApiService.Current () , StorageService.Current () ).SynchronizeReleases ();
+#pragma warning restore CS4014
+		}
 
 		/// <summary>
 		/// Invoked when application execution is being suspended. Application state is saved
