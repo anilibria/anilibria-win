@@ -17,6 +17,12 @@ body {
 	margin-bottom: 20px;
 }
 
+.link-header {
+	font-size: 16px;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
 .block-header .block-bold {
 	font-weight: bold;
 	font-size: 20px;
