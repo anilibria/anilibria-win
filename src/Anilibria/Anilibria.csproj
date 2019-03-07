@@ -210,8 +210,11 @@
     <Compile Include="Services\PresentationClasses\YoutubeModel.cs" />
     <Compile Include="Storage\Entities\ChangesEntity.cs" />
     <Compile Include="Storage\Entities\LocalFavoriteEntity.cs" />
+    <Compile Include="Storage\Entities\PlayerRestoreEntity.cs" />
+    <Compile Include="Storage\Entities\ReleaseVideoStateEntity.cs" />
     <Compile Include="Storage\Entities\PlaylistItemEntity.cs" />
     <Compile Include="Storage\Entities\TorrentItemEntity.cs" />
+    <Compile Include="Storage\Entities\VideoStateEntity.cs" />
     <Compile Include="Storage\IEnitityCollection.cs" />
     <Compile Include="Storage\Implementations\DataContext.cs" />
     <Compile Include="Storage\Entities\ReleaseEntity.cs" />

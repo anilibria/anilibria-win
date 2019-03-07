@@ -5,6 +5,8 @@ using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
+using Anilibria.Storage;
+using Anilibria.Storage.Entities;
 
 namespace Anilibria.Pages.OnlinePlayer {
 
@@ -41,7 +43,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private double m_Position;
 
-		private IAnalyticsService m_AnalyticsService;
+		private readonly IAnalyticsService m_AnalyticsService;
+
+		private readonly IAnilibriaApiService m_AnilibriaApiService;
+
+		private readonly IDataContext m_DataContext;
 
 		private bool m_IsHD;
 
@@ -53,16 +59,36 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsBuffering;
 
+		private PlayerRestoreEntity m_PlayerRestoreEntity;
+
+		private IEntityCollection<PlayerRestoreEntity> m_RestoreCollection;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="analyticsService">Analytics service.</param>
-		public OnlinePlayerViewModel ( IAnalyticsService analyticsService ) {
-			m_AnalyticsService = analyticsService;
+		/// <param name="dataContext">Data context.</param>
+		/// <param name="anilibriaApiService">Anilibria restful service.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public OnlinePlayerViewModel ( IAnalyticsService analyticsService , IDataContext dataContext , IAnilibriaApiService anilibriaApiService ) {
+			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
+			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_IsSD = true;
 
 			CreateCommands ();
 			Volume = .8;
+
+			m_RestoreCollection = m_DataContext.GetCollection<PlayerRestoreEntity> ();
+			m_PlayerRestoreEntity = m_RestoreCollection.FirstOrDefault ();
+			if ( m_PlayerRestoreEntity == null ) {
+				m_PlayerRestoreEntity = new PlayerRestoreEntity {
+					ReleaseId = -1 ,
+					VideoId = -1 ,
+					VideoPosition = 0
+				};
+				m_RestoreCollection.Add ( m_PlayerRestoreEntity );
+			}
 		}
 
 		/// <summary>
@@ -177,13 +203,56 @@ namespace Anilibria.Pages.OnlinePlayer {
 			IsMediaOpened = true;
 		}
 
+		private ReleaseModel MapToReleaseModel ( ReleaseEntity releaseEntity ) {
+			return new ReleaseModel {
+				Id = releaseEntity.Id ,
+				Title = releaseEntity.Title ,
+				CountVideoOnline = releaseEntity.Playlist?.Count () ?? 0 ,
+				Poster = m_AnilibriaApiService.GetUrl ( releaseEntity.Poster ) ,
+				OnlineVideos = releaseEntity.Playlist?
+					.Select (
+						a => new OnlineVideoModel {
+							HDQuality = a.HD ,
+							Order = a.Id ,
+							SDQuality = a.SD ,
+							Title = a.Title
+						}
+					)
+					.ToList ()
+			};
+		}
+
+		/// <summary>
+		/// Save player restore state.
+		/// </summary>
+		public void SavePlayerRestoreState () {
+			m_PlayerRestoreEntity.ReleaseId = SelectedRelease.Id;
+			m_PlayerRestoreEntity.VideoId = SelectedOnlineVideo.Order;
+			m_PlayerRestoreEntity.VideoPosition = Position;
+			m_RestoreCollection.Update ( m_PlayerRestoreEntity );
+		}
+
 		/// <summary>
 		/// Start navigate to page.
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
 			if ( parameter == null ) {
-				if ( VideoSource != null ) ChangePlayback ( PlaybackState.Play , false );
+				if ( VideoSource != null ) {
+					ChangePlayback ( PlaybackState.Play , false );
+				}
+				else {
+					if ( m_PlayerRestoreEntity != null && m_PlayerRestoreEntity.ReleaseId > 0 ) {
+						var release = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == m_PlayerRestoreEntity.ReleaseId );
+						if ( release != null ) {
+							m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
+							SelectedRelease = MapToReleaseModel ( release );
+							SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
+
+							ChangePlayback ( PlaybackState.Play , false );
+						}
+					}
+				}
 			}
 			else {
 				Releases = parameter as IEnumerable<ReleaseModel>;
@@ -353,7 +422,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
-				if ( m_SelectedOnlineVideo != null) ChangeVideoSource ();
+				if ( m_SelectedOnlineVideo != null ) {
+					ChangeVideoSource ();
+					SavePlayerRestoreState ();
+				}
 			}
 		}
 

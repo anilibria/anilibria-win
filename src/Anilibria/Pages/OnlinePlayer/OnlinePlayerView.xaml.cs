@@ -48,13 +48,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private int m_LastActivityTime = 0;
 
+		private int m_LastRestoreActivityTime = 0;
+
 		private GamepadButtons m_PreviousStateButtons = new GamepadButtons ();
 
 		CastingDevicePicker castingPicker;
 
 		public OnlinePlayerView () {
 			InitializeComponent ();
-			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () ) {
+			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () , StorageService.Current () , ApiService.Current () ) {
 				ChangeVolumeHandler = ChangeVolumeHandler ,
 				ChangePlayback = ChangePlaybackHandler ,
 				ChangePosition = ChangePosition
@@ -256,6 +258,17 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
+		private void SaveRestoreState () {
+			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Playing ) return;
+
+			m_LastRestoreActivityTime++;
+			if ( m_LastRestoreActivityTime < 1000 ) return;
+
+			m_LastRestoreActivityTime = 0;
+
+			m_ViewModel.SavePlayerRestoreState ();
+		}
+
 		private void RestoreCursor () {
 			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 0 );
 		}
@@ -266,6 +279,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !m_BlockedTrackSlider ) Slider.Value = OnlinePlayer.MediaPlayer.PlaybackSession.Position.TotalSeconds;
 
 				MouseHidingTracker ();
+				SaveRestoreState ();
 			}
 		}
 
