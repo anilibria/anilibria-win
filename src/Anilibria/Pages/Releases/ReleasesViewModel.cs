@@ -29,6 +29,14 @@ namespace Anilibria.Pages.Releases {
 
 		private ObservableCollection<ReleaseModel> m_SelectedReleases;
 
+		private ObservableCollection<SortingItemModel> m_SortingItems;
+
+		private SortingItemModel m_SelectedSortingItem;
+
+		private ObservableCollection<SortingDirectionModel> m_SortingDirections;
+
+		private SortingDirectionModel m_SelectedSortingDirection;
+
 		private ReleaseModel m_OpenedRelease;
 
 		private bool m_IsShowReleaseCard;
@@ -68,10 +76,58 @@ namespace Anilibria.Pages.Releases {
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 
 			CreateCommands ();
+			CreateSortingItems ();
 			RefreshSelectedReleases ();
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 
 			m_AnalyticsService.TrackEvent ( "Releases" , "Opened" , "Simple start" );
+		}
+
+		private void CreateSortingItems () {
+			m_SortingItems = new ObservableCollection<SortingItemModel> (
+				new List<SortingItemModel> {
+					new SortingItemModel {
+						Name = "Дате последнего обновления",
+						Type = SortingItemType.DateLastUpdate,
+					},
+					new SortingItemModel {
+						Name = "Имени",
+						Type = SortingItemType.Name,
+					},
+					new SortingItemModel {
+						Name = "Году",
+						Type = SortingItemType.Year,
+					},
+					new SortingItemModel {
+						Name = "Рейтингу",
+						Type = SortingItemType.Rating,
+					},
+					new SortingItemModel {
+						Name = "Статусу",
+						Type = SortingItemType.Status,
+					},
+					new SortingItemModel {
+						Name = "Оригинальному имени",
+						Type = SortingItemType.OriginalName,
+					},
+				}
+			);
+
+			m_SortingDirections = new ObservableCollection<SortingDirectionModel> (
+				new List<SortingDirectionModel> {
+					new SortingDirectionModel {
+						Name = "Восходящем",
+						Type = SortingDirectionType.Ascending
+					},
+					new SortingDirectionModel {
+						Name = "Нисходящем",
+						Type = SortingDirectionType.Descending
+					}
+				}
+			);
+
+			m_SelectedSortingItem = m_SortingItems.First ();
+			m_SelectedSortingDirection = m_SortingDirections.Last ();
 		}
 
 		private void RefreshAfterSynchronize ( object parameter ) {
@@ -286,6 +342,24 @@ namespace Anilibria.Pages.Releases {
 			return readableSize + " " + m_FileSizes[order];
 		}
 
+		private IOrderedEnumerable<ReleaseEntity> OrderReleases ( IEnumerable<ReleaseEntity> releases ) {
+			switch ( m_SelectedSortingItem.Type ) {
+				case SortingItemType.DateLastUpdate:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Timestamp ) : releases.OrderByDescending ( a => a.Timestamp );
+				case SortingItemType.Name:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Names.First () ) : releases.OrderByDescending ( a => a.Names.First () );
+				case SortingItemType.OriginalName:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Names.Last () ) : releases.OrderByDescending ( a => a.Names.Last () );
+				case SortingItemType.Status:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Status ) : releases.OrderByDescending ( a => a.Status );
+				case SortingItemType.Year:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Year ) : releases.OrderByDescending ( a => a.Year );
+				case SortingItemType.Rating:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Rating ) : releases.OrderByDescending ( a => a.Rating );
+				default: throw new NotSupportedException ( $"Sorting sorting item {m_SelectedSortingItem}." );
+			}
+		}
+
 		/// <summary>
 		/// Get items page.
 		/// </summary>
@@ -296,7 +370,7 @@ namespace Anilibria.Pages.Releases {
 			var releases = m_AllReleases;
 			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => a.Names.Any ( name => name.Contains ( FilterByName ) ) );
 
-			releases = releases.OrderByDescending ( a => a.Timestamp );
+			releases = OrderReleases ( releases );
 
 			var result = releases
 				.Skip ( ( page - 1 ) * pageSize )
@@ -361,6 +435,54 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		public void NavigateFrom () {
 
+		}
+
+		/// <summary>
+		/// Sorting items.
+		/// </summary>
+		public ObservableCollection<SortingItemModel> SortingItems
+		{
+			get => m_SortingItems;
+			set => Set ( ref m_SortingItems , value );
+		}
+
+		/// <summary>
+		/// Selected sorting item.
+		/// </summary>
+		public SortingItemModel SelectedSortingItem
+		{
+			get => m_SelectedSortingItem;
+			set
+			{
+				if ( !Set ( ref m_SelectedSortingItem , value ) ) return;
+
+				RefreshSelectedReleases ();
+				RefreshReleases ();
+			}
+		}
+
+		/// <summary>
+		/// Sorting directions
+		/// </summary>
+		public ObservableCollection<SortingDirectionModel> SortingDirections
+		{
+			get => m_SortingDirections;
+			set => Set ( ref m_SortingDirections , value );
+		}
+
+		/// <summary>
+		/// Selected sorting direction.
+		/// </summary>
+		public SortingDirectionModel SelectedSortingDirection
+		{
+			get => m_SelectedSortingDirection;
+			set
+			{
+				if ( !Set ( ref m_SelectedSortingDirection , value ) ) return;
+
+				RefreshSelectedReleases ();
+				RefreshReleases ();
+			}
 		}
 
 		/// <summary>

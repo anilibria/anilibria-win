@@ -592,7 +592,7 @@
 				</Button>
 				<Button
 					x:Name="FilterButton"
-					RelativePanel.AlignRightWithPanel="True"
+					RelativePanel.LeftOf="SortingButton"
 					Style="{StaticResource IconsButtonStyle}">
 					<Image
 						Width="{StaticResource IconSize}"
@@ -619,6 +619,36 @@
 									Command="{Binding FilterCommand}">
 									Фильтровать
 								</Button>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+				<Button
+					x:Name="SortingButton"
+					RelativePanel.AlignRightWithPanel="True"
+					Style="{StaticResource IconsButtonStyle}">
+					<Image
+						Width="{StaticResource IconSize}"
+						Height="{StaticResource IconSize}"
+						Source="/Assets/Icons/sort.svg"
+					/>
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel>
+								<TextBlock Margin="0 2 0 2">Фильтровать по</TextBlock>
+								<ComboBox
+									Width="280"
+									SelectedItem="{Binding SelectedSortingItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									ItemsSource="{Binding SortingItems}"
+									DisplayMemberPath="Name">
+								</ComboBox>
+								<TextBlock Margin="0 2 0 2">В порядке</TextBlock>
+								<ComboBox
+									Width="280"
+									SelectedItem="{Binding SelectedSortingDirection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									ItemsSource="{Binding SortingDirections}"
+									DisplayMemberPath="Name">
+								</ComboBox>
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>

@@ -166,6 +166,10 @@
     <Compile Include="Pages\PresentationClasses\MessageModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\ReleaseModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SortingDirectionType.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SortingItemModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SortingItemType.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SortingDirectionModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentModel.cs" />
     <Compile Include="Pages\Releases\ReleasesView.xaml.cs">
       <DependentUpon>ReleasesView.xaml</DependentUpon>
@@ -248,6 +252,7 @@
     <Content Include="Assets\Icons\filter.svg" />
     <Content Include="Assets\Icons\humburger.svg" />
     <Content Include="Assets\Icons\playlist.svg" />
+    <Content Include="Assets\Icons\sort.svg" />
     <Content Include="Assets\Icons\speaker.svg" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
