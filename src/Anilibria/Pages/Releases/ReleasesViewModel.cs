@@ -65,6 +65,16 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_EmptyReleases;
 
+		private string m_FilterByGenres;
+
+		private string m_FilterByYears;
+
+		private string m_FilterByVoicers;
+
+		private string m_FilterByType;
+
+		private string m_FilterByStatus;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -360,6 +370,29 @@ namespace Anilibria.Pages.Releases {
 			}
 		}
 
+		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
+			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => a.Names.Any ( name => name.Contains ( FilterByName ) ) );
+			if ( !string.IsNullOrEmpty ( FilterByType ) ) releases = releases.Where ( a => a.Type.Contains ( FilterByType ) );
+			if ( !string.IsNullOrEmpty ( FilterByStatus ) ) {
+				var statuses = FilterByStatus.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
+				releases = releases.Where ( a => statuses.Contains ( a.Status ) );
+			}
+			if ( !string.IsNullOrEmpty ( FilterByGenres ) ) {
+				var genres = FilterByGenres.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
+				releases = releases.Where ( a => a.Genres.Any ( genre => genres.Contains ( genre ) ) );
+			}
+			if ( !string.IsNullOrEmpty ( FilterByYears ) ) {
+				var years = FilterByYears.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
+				releases = releases.Where ( a => a.Year != null && years.Contains ( a.Year ) );
+			}
+			if ( !string.IsNullOrEmpty ( FilterByVoicers ) ) {
+				var voicers = FilterByVoicers.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
+				releases = releases.Where ( a => a.Voices.Any ( voice => voicers.Contains ( voice ) ) );
+			}
+
+			return releases;
+		}
+
 		/// <summary>
 		/// Get items page.
 		/// </summary>
@@ -367,8 +400,7 @@ namespace Anilibria.Pages.Releases {
 		/// <param name="pageSize">Page size.</param>
 		/// <returns>Items on current page.</returns>
 		private Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize ) {
-			var releases = m_AllReleases;
-			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => a.Names.Any ( name => name.Contains ( FilterByName ) ) );
+			var releases = FilteringReleases ( m_AllReleases );
 
 			releases = OrderReleases ( releases );
 
@@ -574,6 +606,51 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_FilterByName;
 			set => Set ( ref m_FilterByName , value );
+		}
+
+		/// <summary>
+		/// Filter by genres.
+		/// </summary>
+		public string FilterByGenres
+		{
+			get => m_FilterByGenres;
+			set => Set ( ref m_FilterByGenres , value );
+		}
+
+		/// <summary>
+		/// Filter by years.
+		/// </summary>
+		public string FilterByYears
+		{
+			get => m_FilterByYears;
+			set => Set ( ref m_FilterByYears , value );
+		}
+
+		/// <summary>
+		/// Filter by voices.
+		/// </summary>
+		public string FilterByVoicers
+		{
+			get => m_FilterByVoicers;
+			set => Set ( ref m_FilterByVoicers , value );
+		}
+
+		/// <summary>
+		/// Filter by type.
+		/// </summary>
+		public string FilterByType
+		{
+			get => m_FilterByType;
+			set => Set ( ref m_FilterByType , value );
+		}
+
+		/// <summary>
+		/// Filter by status.
+		/// </summary>
+		public string FilterByStatus
+		{
+			get => m_FilterByStatus;
+			set => Set ( ref m_FilterByStatus , value );
 		}
 
 		/// <summary>

@@ -612,6 +612,60 @@
 									Margin="4 0 4 4"
 									Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								/>
+								<TextBlock
+									Margin="4 0 4 4"
+									Foreground="Black">
+									Жанры
+								</TextBlock>
+								<TextBox
+									Width="200"
+									Margin="4 0 4 4"
+									Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									PlaceholderText="Вводите через запятую"
+								/>
+								<TextBlock
+									Margin="4 0 4 4"
+									Foreground="Black">
+									Года
+								</TextBlock>
+								<TextBox
+									Width="200"
+									Margin="4 0 4 4"
+									Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									PlaceholderText="Вводите через запятую"
+								/>
+								<TextBlock
+									Margin="4 0 4 4"
+									Foreground="Black">
+									Озвучка
+								</TextBlock>
+								<TextBox
+									Width="200"
+									Margin="4 0 4 4"
+									Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									PlaceholderText="Вводите через запятую"
+								/>
+								<TextBlock
+									Margin="4 0 4 4"
+									Foreground="Black">
+									Тип
+								</TextBlock>
+								<TextBox
+									Width="200"
+									Margin="4 0 4 4"
+									Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+								/>
+								<TextBlock
+									Margin="4 0 4 4"
+									Foreground="Black">
+									Статусы
+								</TextBlock>
+								<TextBox
+									Width="200"
+									Margin="4 0 4 4"
+									Text="{Binding FilterByStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									PlaceholderText="Вводите через запятую"
+								/>
 								<Button
 									HorizontalAlignment="Stretch"
 									Margin="4 0 4 4"
