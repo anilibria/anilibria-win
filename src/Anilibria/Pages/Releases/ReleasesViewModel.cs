@@ -75,6 +75,8 @@ namespace Anilibria.Pages.Releases {
 
 		private string m_FilterByStatus;
 
+		private bool m_IsRefreshing;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -160,6 +162,17 @@ namespace Anilibria.Pages.Releases {
 			RemoveFromLocalFavoritesCommand = CreateCommand ( RemoveFromLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
 			ShowCommentsCommand = CreateCommand ( ShowComments );
 			CloseCommentsCommand = CreateCommand ( CloseComments );
+			RefreshCommand = CreateCommand ( Refresh , () => !IsRefreshing );
+		}
+
+		private async void Refresh () {
+			IsRefreshing = true;
+			RaiseCanExecuteChanged ( RefreshCommand );
+
+			await m_SynchronizeService.SynchronizeReleases ();
+
+			IsRefreshing = false;
+			RaiseCanExecuteChanged ( RefreshCommand );
 		}
 
 		private void CloseComments () {
@@ -467,6 +480,15 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		public void NavigateFrom () {
 
+		}
+
+		/// <summary>
+		/// Is refreshing.
+		/// </summary>
+		public bool IsRefreshing
+		{
+			get => m_IsRefreshing;
+			set => Set ( ref m_IsRefreshing , value );
 		}
 
 		/// <summary>
@@ -801,6 +823,15 @@ namespace Anilibria.Pages.Releases {
 		/// Close comments commands.
 		/// </summary>
 		public ICommand CloseCommentsCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Refresh command.
+		/// </summary>
+		public ICommand RefreshCommand
 		{
 			get;
 			set;

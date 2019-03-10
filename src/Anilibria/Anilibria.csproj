@@ -246,6 +246,7 @@
     <Content Include="Assets\Icons\logout.svg" />
     <Content Include="Assets\Icons\menu.svg" />
     <Content Include="Assets\Icons\pause.svg" />
+    <Content Include="Assets\Icons\refresh.svg" />
     <Content Include="Assets\Icons\removefavorite.svg" />
     <Content Include="Assets\Icons\settings.svg" />
     <Content Include="Assets\Icons\slider.svg" />

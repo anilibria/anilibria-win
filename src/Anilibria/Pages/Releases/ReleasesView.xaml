@@ -560,7 +560,22 @@
 						Source="/Assets/Icons/humburger.svg"
 					/>
 				</Button>
+
 				<Button
+					x:Name="RefreshButton"
+					RelativePanel.LeftOf="FavoritesButton"
+					Style="{StaticResource IconsButtonStyle}"
+					Command="{Binding RefreshCommand}"
+					ToolTipService.ToolTip="Выполнить синхронизацию релизов">
+					<Image
+						Width="{StaticResource IconSize}"
+						Height="{StaticResource IconSize}"
+						Source="/Assets/Icons/refresh.svg"
+					/>
+				</Button>
+				
+				<Button
+					x:Name="FavoritesButton"
 					RelativePanel.LeftOf="FilterButton"
 					Style="{StaticResource IconsButtonStyle}"
 					ToolTipService.ToolTip="Чтобы добавить в избранное необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
