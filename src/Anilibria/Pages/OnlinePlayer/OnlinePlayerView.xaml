@@ -404,7 +404,7 @@
 										<Button.CommandParameter>
 											<x:Double>.1</x:Double>
 										</Button.CommandParameter>
-										<TextBlock>+</TextBlock>
+										<TextBlock Foreground="Black">+</TextBlock>
 									</Button>
 									<Grid x:Name="VolumeText">
 										<TextBlock
@@ -420,7 +420,7 @@
 										<Button.CommandParameter>
 											<x:Double>-.1</x:Double>
 										</Button.CommandParameter>
-										<TextBlock>-</TextBlock>
+										<TextBlock Foreground="Black">-</TextBlock>
 									</Button>
 									<Button
 										Style="{StaticResource VolumeButton}"
@@ -515,10 +515,25 @@
 						<Button.Flyout>
 							<Flyout>
 								<StackPanel>
-									<TextBlock>Качество</TextBlock>
+									<TextBlock
+										Foreground="Black"
+										Margin="4"
+										FontSize="16">
+										Качество
+									</TextBlock>
 									<StackPanel Orientation="Horizontal">
-										<ToggleButton IsChecked="{Binding IsHD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">720p</ToggleButton>
-										<ToggleButton IsChecked="{Binding IsSD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">480p</ToggleButton>
+										<ToggleButton
+											Foreground="Black"
+											FontSize="20"
+											IsChecked="{Binding IsHD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+											720p
+										</ToggleButton>
+										<ToggleButton
+											Foreground="Black"
+											FontSize="20"
+											IsChecked="{Binding IsSD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+											480p
+										</ToggleButton>
 									</StackPanel>
 								</StackPanel>
 							</Flyout>

@@ -7,6 +7,7 @@ using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Windows.Storage;
 
 namespace Anilibria.Pages.OnlinePlayer {
 
@@ -14,6 +15,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 	/// View model.
 	/// </summary>
 	public class OnlinePlayerViewModel : ViewModel, INavigation {
+
+		private const string PlayerQualitySettings = "PlayerQuality";
+
+		private const string PlayerVolumeSettings = "PlayerVolume";
 
 		private double m_Volume;
 
@@ -75,9 +80,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_IsSD = true;
+			m_Volume = .8;
+
+			RestoreSettings ();
+
+			UpdateVolumeState ( m_Volume );
 
 			CreateCommands ();
-			Volume = .8;
 
 			m_RestoreCollection = m_DataContext.GetCollection<PlayerRestoreEntity> ();
 			m_PlayerRestoreEntity = m_RestoreCollection.FirstOrDefault ();
@@ -89,6 +98,17 @@ namespace Anilibria.Pages.OnlinePlayer {
 				};
 				m_RestoreCollection.Add ( m_PlayerRestoreEntity );
 			}
+
+		}
+
+		private void RestoreSettings () {
+			var values = ApplicationData.Current.RoamingSettings.Values;
+			if ( values.ContainsKey ( PlayerQualitySettings ) ) {
+				var isHD = (bool) values[PlayerQualitySettings];
+				m_IsSD = !isHD;
+				m_IsHD = isHD;
+			}
+			if ( values.ContainsKey ( PlayerVolumeSettings ) ) m_Volume = (double) values[PlayerVolumeSettings];
 		}
 
 		/// <summary>
@@ -237,6 +257,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
+			UpdateVolumeState ( m_Volume );
+
 			if ( parameter == null ) {
 				if ( VideoSource != null ) {
 					ChangePlayback ( PlaybackState.Play , false );
@@ -291,10 +313,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_Volume , value ) ) return;
 
-				SetPercentDisplayVolume ( value );
+				ApplicationData.Current.RoamingSettings.Values[PlayerVolumeSettings] = value;
 
-				ChangeVolumeHandler?.Invoke ( value );
+				UpdateVolumeState ( value );
 			}
+		}
+
+		private void UpdateVolumeState ( double value ) {
+			SetPercentDisplayVolume ( value );
+
+			ChangeVolumeHandler?.Invoke ( value );
 		}
 
 		/// <summary>
@@ -354,6 +382,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 				IsSD = !value;
 
+				ApplicationData.Current.RoamingSettings.Values[PlayerQualitySettings] = value;
+
 				m_RestorePosition = Position;
 				ChangeVideoSource ();
 			}
@@ -370,6 +400,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !Set ( ref m_IsSD , value ) ) return;
 
 				IsHD = !value;
+
+				ApplicationData.Current.RoamingSettings.Values[PlayerQualitySettings] = IsHD;
 
 				m_RestorePosition = Position;
 				ChangeVideoSource ();
