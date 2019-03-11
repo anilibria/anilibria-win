@@ -137,6 +137,7 @@
     <Compile Include="Pages\AboutPage\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AboutPage\AboutViewModel.cs" />
     <Compile Include="Pages\AuthorizePage\AuthorizeView.xaml.cs">
       <DependentUpon>AuthorizeView.xaml</DependentUpon>
     </Compile>

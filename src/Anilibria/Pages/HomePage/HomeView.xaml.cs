@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Input;
 using Anilibria.Pages.Youtube;
 using Windows.UI.Xaml.Media.Animation;
 using System;
+using Anilibria.Pages.AboutPage;
 
 namespace Anilibria {
 
@@ -35,6 +36,7 @@ namespace Anilibria {
 			m_Pages.Add ( "Player" , Player );
 			m_Pages.Add ( "Authorize" , Authorize );
 			m_Pages.Add ( "Youtube" , Youtube );
+			m_Pages.Add ( "About" , About );
 
 			CreateViewModels ();
 
@@ -64,6 +66,7 @@ namespace Anilibria {
 			CreatePlayerViewModel ();
 			CreateAuthorizeViewModel ( viewmodel );
 			CreateYoutubeViewModel ();
+			CreateAboutViewModel ();
 		}
 
 		private void CreateYoutubeViewModel () {
@@ -85,6 +88,12 @@ namespace Anilibria {
 			viewModel.ShowSidebar = ShowSidebar;
 			viewModel.ChangePage = ChangePage;
 		}
+
+		private void CreateAboutViewModel () {
+			var viewModel = About.DataContext as AboutViewModel;
+			viewModel.ShowSidebar = ShowSidebar;
+		}
+
 
 		private void CreateReleasesViewModel ( HomeViewModel homeViewModel ) {
 			var releasesViewModel = Releases.DataContext as ReleasesViewModel;
@@ -117,7 +126,8 @@ namespace Anilibria {
 			if ( currentNavigation != null ) currentNavigation.NavigateTo ( parameter );
 
 			var viewModel = DataContext as HomeViewModel;
-			viewModel.ChangeSelectedItem ( viewModel.Items.First ( a => a.Page == page ) );
+			var pageItem = viewModel.Items.FirstOrDefault ( a => a.Page == page );
+			viewModel.ChangeSelectedItem ( pageItem );
 
 			m_PreviousPage = page;
 			//hide sidebar after change page
@@ -144,6 +154,10 @@ namespace Anilibria {
 			storyboard.Begin ();
 			if ( m_HideMessageTimer.IsEnabled ) m_HideMessageTimer.Stop ();
 			m_HideMessageTimer.Start ();
+		}
+
+		private void StackPanel_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			ChangePage ( "About" , null );
 		}
 
 	}

@@ -8,7 +8,245 @@
 	d:DesignHeight="300"
 	d:DesignWidth="400">
 
-	<Grid>
-		
+	<Grid
+		Background="#D3D3D3">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+
+		<Border
+			Grid.Row="0"
+			Grid.ColumnSpan="2"
+			Background="#b32121"
+			BorderBrush="#881919"
+			BorderThickness="0 0 0 2">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
+				<Button
+					Style="{StaticResource IconsButtonStyle}"
+					Command="{Binding ShowSidebarCommand}">
+					<Image
+						Width="{StaticResource IconSize}"
+						Height="{StaticResource IconSize}"
+						Source="/Assets/Icons/humburger.svg"
+					/>
+				</Button>
+			</RelativePanel>
+		</Border>
+
+		<StackPanel
+			Grid.Column="0"
+			Grid.Row="1">
+			<Image
+				Margin="0 10 0 0"
+				VerticalAlignment="Center"
+				Source="/Assets/anilibriaiconbig.png"
+				Width="140"
+				Height="140"
+			/>
+			<TextBlock
+				FontSize="30"
+				Foreground="Black"
+				HorizontalAlignment="Center">
+				Клиент для сайта AniLibria
+			</TextBlock>
+			<TextBlock
+				FontSize="26"
+				HorizontalAlignment="Center">
+				<Hyperlink NavigateUri="https://www.anilibria.tv/">https://www.anilibria.tv/</Hyperlink>
+			</TextBlock>
+			<TextBlock
+				Foreground="Black"
+				FontSize="20"
+				HorizontalAlignment="Center">
+				<Run
+					Text="Версия"
+				/>
+				<Run
+					Text="{Binding Version}"
+				/>
+			</TextBlock>
+			<TextBlock
+				Foreground="Black"
+				FontSize="24"
+				Margin="0 10 0 10"
+				HorizontalAlignment="Center">
+				Спасибо что выбираете нас!
+			</TextBlock>
+			<TextBlock
+				Foreground="Black"
+				FontSize="24"
+				Margin="0 10 0 10"
+				HorizontalAlignment="Center">
+				Благодарности:
+			</TextBlock>
+			<TextBlock
+				Foreground="Black"
+				FontSize="22"
+				HorizontalAlignment="Center">
+				poiuty
+			</TextBlock>
+			<TextBlock
+				Foreground="Black"
+				FontSize="22"
+				HorizontalAlignment="Center">
+				RadiationX
+			</TextBlock>
+		</StackPanel>
+		<StackPanel
+			Grid.Column="1"
+			Grid.Row="1">
+			<TextBlock
+				Foreground="Black"
+				FontSize="20"
+				Margin="0 10 0 10"
+				HorizontalAlignment="Center">
+				Используемые иконки:
+			</TextBlock>
+			<ScrollViewer
+				MaxHeight="200">
+				<StackPanel Orientation="Vertical">
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.freepik.com/">Freepik</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/cole-bemis">Cole Bemis</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/smashicons">Smashicons</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/srip">srip</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/gregor-cresnar">Gregor Cresnar</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/google">Google</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/egor-rumyantsev">Egor Rumyantsev</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/those-icons">Those Icons</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+					<TextBlock
+						Foreground="Black"
+						FontSize="16"
+						HorizontalAlignment="Center">
+						<Run>Icons made by</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/authors/yannick">Yannick</Hyperlink>
+						<Run>from</Run>
+						<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+						<Run>is licensed by</Run>
+						<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					</TextBlock>
+				</StackPanel>
+			</ScrollViewer>
+			<TextBlock
+				Foreground="Black"
+				FontSize="20"
+				Margin="0 10 0 10"
+				HorizontalAlignment="Center">
+				3rd библиотеки:
+			</TextBlock>
+			<TextBlock
+					Foreground="Black"
+					FontSize="16"
+					HorizontalAlignment="Center">
+				<Run>
+					LiteDB
+				</Run>
+				<Hyperlink NavigateUri="https://github.com/mbdavid/LiteDB/blob/master/LICENSE">license</Hyperlink>
+			</TextBlock>
+			<TextBlock
+					Foreground="Black"
+					FontSize="16"
+					HorizontalAlignment="Center">
+				<Run>
+					Html Agility Pack
+				</Run>
+				<Hyperlink NavigateUri="https://github.com/zzzprojects/html-agility-pack/blob/master/LICENSE">license</Hyperlink>
+			</TextBlock>
+			<TextBlock
+					Foreground="Black"
+					FontSize="16"
+					HorizontalAlignment="Center">
+				<Run>
+					Newtonsoft.Json
+				</Run>
+				<Hyperlink NavigateUri="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md">license</Hyperlink>
+			</TextBlock>
+		</StackPanel>
 	</Grid>
 </UserControl>

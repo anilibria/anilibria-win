@@ -8,6 +8,7 @@
 	xmlns:releases="using:Anilibria.Pages.Releases"
 	xmlns:authorize="using:Anilibria.Pages.AuthorizePage"
 	xmlns:youtube="using:Anilibria.Pages.Youtube"
+	xmlns:about="using:Anilibria.Pages.AboutPage"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	xmlns:controls="using:Anilibria.Controls"
 	mc:Ignorable="d"
@@ -134,7 +135,8 @@
 						RelativePanel.AlignBottomWithPanel="True"
 						RelativePanel.AlignRightWithPanel="True"
 						RelativePanel.AlignLeftWithPanel="True"
-						Margin="8 0 0 4">
+						Margin="8 0 0 4"
+						Tapped="StackPanel_Tapped">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition />
@@ -149,7 +151,7 @@
 							VerticalAlignment="Center"
 							Grid.Column="1"
 							Margin="8 0 0 0">
-							<TextBlock Foreground="Black">Клиент для сайта Anilibria</TextBlock>
+							<TextBlock Foreground="Black">Клиент для сайта AniLibria</TextBlock>
 							<TextBlock Foreground="Black">
 								<Run>версия</Run>
 								<Run Text="{Binding Version}" />
@@ -173,6 +175,10 @@
 				/>
 				<youtube:YoutubeView
 					x:Name="Youtube"
+					Visibility="Collapsed"
+				/>
+				<about:AboutView
+					x:Name="About"
 					Visibility="Collapsed"
 				/>
 			</Grid>
