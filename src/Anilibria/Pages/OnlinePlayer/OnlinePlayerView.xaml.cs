@@ -343,6 +343,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
 					m_ViewModel.MediaOpened ( m_Duration );
 					PauseIcon.Opacity = 0;
+					CurrentReleaseInfo.Visibility = Visibility.Collapsed;
 				}
 			);
 		}

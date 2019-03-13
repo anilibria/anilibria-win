@@ -66,7 +66,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private PlayerRestoreEntity m_PlayerRestoreEntity;
 
-		private IEntityCollection<PlayerRestoreEntity> m_RestoreCollection;
+		private ReleaseVideoStateEntity m_ReleaseVideoStateEntity;
+
+		private readonly IEntityCollection<PlayerRestoreEntity> m_RestoreCollection;
+
+		private readonly IEntityCollection<ReleaseVideoStateEntity> m_ReleaseStateCollection;
 
 		/// <summary>
 		/// Constructor injection.
@@ -99,6 +103,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_RestoreCollection.Add ( m_PlayerRestoreEntity );
 			}
 
+			m_ReleaseStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
 		}
 
 		private void RestoreSettings () {
@@ -250,6 +255,34 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_PlayerRestoreEntity.VideoId = SelectedOnlineVideo.Order;
 			m_PlayerRestoreEntity.VideoPosition = Position;
 			m_RestoreCollection.Update ( m_PlayerRestoreEntity );
+
+			if ( m_ReleaseVideoStateEntity == null || m_ReleaseVideoStateEntity.ReleaseId != SelectedRelease.Id ) {
+				m_ReleaseVideoStateEntity = m_ReleaseStateCollection.FirstOrDefault ( a => a.ReleaseId == SelectedRelease.Id );
+				if ( m_ReleaseVideoStateEntity == null ) {
+					m_ReleaseVideoStateEntity = new ReleaseVideoStateEntity {
+						ReleaseId = SelectedRelease.Id ,
+						VideoStates = new List<VideoStateEntity> ()
+					};
+					m_ReleaseStateCollection.Add ( m_ReleaseVideoStateEntity );
+				}
+			}
+
+			if ( m_ReleaseVideoStateEntity.VideoStates == null ) m_ReleaseVideoStateEntity.VideoStates = new List<VideoStateEntity> ();
+
+			var videoState = m_ReleaseVideoStateEntity.VideoStates.FirstOrDefault ( a => a.Id == SelectedOnlineVideo.Order );
+			if ( videoState == null ) {
+				m_ReleaseVideoStateEntity.VideoStates.Add (
+					new VideoStateEntity {
+						Id = SelectedOnlineVideo.Order ,
+						LastPosition = Position
+					}
+				);
+			}
+			else {
+				videoState.LastPosition = Position;
+			}
+
+			m_ReleaseStateCollection.Update ( m_ReleaseVideoStateEntity );
 		}
 
 		/// <summary>
@@ -278,8 +311,19 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			else {
 				Releases = parameter as IEnumerable<ReleaseModel>;
-				SelectedRelease = Releases.First ();
-				SelectedOnlineVideo = SelectedRelease.OnlineVideos.First ();
+				var release = Releases.First ();
+				m_ReleaseVideoStateEntity = m_ReleaseStateCollection.FirstOrDefault ( a => a.ReleaseId == release.Id );
+				int onlineVideoIndex = -1;
+				if ( m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
+					onlineVideoIndex = m_ReleaseVideoStateEntity.VideoStates.Max ( a => a.Id );
+					var lastVideo = m_ReleaseVideoStateEntity.VideoStates.First ( a => a.Id == onlineVideoIndex );
+					m_RestorePosition = lastVideo.LastPosition;
+				}
+
+				SelectedRelease = release;
+				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos.First () : SelectedRelease.OnlineVideos.First(a => a.Order == onlineVideoIndex );
+
+
 
 				ChangePlayback ( PlaybackState.Play , false );
 			}

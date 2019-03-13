@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Anilibria.Storage.Entities {
+﻿namespace Anilibria.Storage.Entities {
 
 	/// <summary>
 	/// Entity for keep player state for restore it after player first opened.

@@ -17,9 +17,18 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
+		/// Release identifier.
+		/// </summary>
+		public long ReleaseId
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// State for online video in release.
 		/// </summary>
-		public IEnumerable<VideoStateEntity> VideoStates
+		public ICollection<VideoStateEntity> VideoStates
 		{
 			get;
 			set;
