@@ -8,6 +8,7 @@ using Anilibria.Services;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.Storage;
+using Windows.UI.ViewManagement;
 
 namespace Anilibria.Pages.OnlinePlayer {
 
@@ -67,6 +68,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private PlayerRestoreEntity m_PlayerRestoreEntity;
 
 		private ReleaseVideoStateEntity m_ReleaseVideoStateEntity;
+
+		private double m_PositionPercent;
 
 		private readonly IEntityCollection<PlayerRestoreEntity> m_RestoreCollection;
 
@@ -178,7 +181,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			Position = timeSpan.TotalSeconds;
 
-			DisplayPositionPercent = $"({Math.Round ( timeSpan.TotalMilliseconds / m_Duration.TotalMilliseconds * 100 )}%)";
+			PositionPercent = Math.Round ( timeSpan.TotalMilliseconds / m_Duration.TotalMilliseconds * 100 );
+			DisplayPositionPercent = $"({PositionPercent}%)";
 		}
 
 		/// <summary>
@@ -280,6 +284,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			else {
 				videoState.LastPosition = Position;
+				if ( !videoState.IsSeen && PositionPercent >= 90 && PositionPercent <= 100 ) videoState.IsSeen = true;
 			}
 
 			m_ReleaseStateCollection.Update ( m_ReleaseVideoStateEntity );
@@ -336,6 +341,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// </summary>
 		public void NavigateFrom () {
 			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause , false );
+
+			var view = ApplicationView.GetForCurrentView ();
+			if ( view.IsFullScreenMode ) view.ExitFullScreenMode ();
 		}
 
 		/// <summary>
@@ -459,6 +467,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get => m_DisplayVolume;
 			set => Set ( ref m_DisplayVolume , value );
+		}
+
+		/// <summary>
+		/// Display position percent.
+		/// </summary>
+		public double PositionPercent
+		{
+			get => m_PositionPercent;
+			set => Set ( ref m_PositionPercent , value );
 		}
 
 		/// <summary>
