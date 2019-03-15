@@ -200,13 +200,30 @@ namespace Anilibria.Pages.Releases {
 			IsShowComments = true;
 		}
 
+		private int GetNewSeries ( long releaseId , int oldCount , IEnumerable<ReleaseEntity> releaseEntities ) {
+			var release = releaseEntities.FirstOrDefault ( a => a.Id == releaseId );
+			if ( release == null ) return 0;
+
+			var currentCount = release.Playlist?.Count () ?? 0;
+			if ( currentCount == 0 ) return 0;
+
+			return currentCount - oldCount;
+		}
+
 		private void RefreshNotification () {
 			var collection = m_DataContext.GetCollection<ChangesEntity> ();
 			var changes = collection.FirstOrDefault ();
 			if ( changes == null ) return;
 
+
+			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
+			if ( changes.NewOnlineSeries.Any () ) {
+				var ids = changes.NewOnlineSeries.Select ( a => a.Key ).ToArray ();
+				onlineSeriesReleases = m_AllReleases.Where ( a => ids.Contains ( a.Id ) );
+			}
+
 			NewReleasesCount = changes.NewReleases.Count ();
-			NewOnlineSeriesCount = changes.NewOnlineSeries.Any () ? changes.NewOnlineSeries.Select ( a => a.Value ).Sum () : 0;
+			NewOnlineSeriesCount = changes.NewOnlineSeries.Any () ? changes.NewOnlineSeries.Select ( a => GetNewSeries ( a.Key , a.Value , onlineSeriesReleases ) ).Sum () : 0;
 			NewTorrentSeriesCount = changes.NewTorrentSeries.Count ();
 			IsNewReleases = NewReleasesCount > 0;
 			IsNewOnlineSeries = NewOnlineSeriesCount > 0;
