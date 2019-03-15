@@ -724,8 +724,7 @@
 				</Button>
 				<Grid
 					x:Name="NotificationButton"
-					RelativePanel.AlignRightWithPanel="True"
-					Visibility="{Binding IsShowNotification}">
+					RelativePanel.AlignRightWithPanel="True">
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
 						<Image
@@ -791,7 +790,7 @@
 												Grid.Column="0"
 												Width="35"
 												TextAlignment="Center"
-												Text="{Binding NewOnlineSeriesCount}"
+												Text="{Binding NewTorrentSeriesCount}"
 											/>
 											<TextBlock
 												Grid.Column="1">
@@ -811,6 +810,7 @@
 						Width="16"
 						Height="16"
 						IsHitTestVisible="False"
+						Visibility="{Binding IsShowNotification}"
 					/>
 				</Grid>
 			</RelativePanel>

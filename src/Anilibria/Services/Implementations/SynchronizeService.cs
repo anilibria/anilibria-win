@@ -158,13 +158,14 @@ namespace Anilibria.Services.Implementations {
 				if ( !changesEntity.NewTorrents.ContainsKey ( release.Id ) ) changesEntity.NewTorrents.Add ( release.Id , releaseEntity.Torrents.Count () );
 			}
 
-			var torrentSeries = releaseEntity.Torrents.Select ( oldTorrent => (oldTorretnSerie: oldTorrent, newTorrentSerie: release.Torrents.FirstOrDefault ( newTorrent => newTorrent.Id == oldTorrent.Id )) ).ToList ();
+			for ( var i = 0 ; i < releaseEntity.Torrents.Count () ; i++ ) {
+				var oldTorrent = releaseEntity.Torrents.ElementAt ( i );
+				var newTorrent = release.Torrents.ElementAtOrDefault ( i );
+				if ( newTorrent == null ) return;
 
-			foreach ( var (oldTorretnSerie, newTorrentSerie) in torrentSeries ) {
-				if ( newTorrentSerie == null ) continue;
-				if ( oldTorretnSerie.Series != newTorrentSerie.Series?.TrimEnd () ) {
+				if ( oldTorrent.Size != newTorrent.Size ) {
 					if ( !changesEntity.NewTorrentSeries.ContainsKey ( release.Id ) ) changesEntity.NewTorrentSeries.Add ( release.Id , new Dictionary<long , string> () );
-					if ( !changesEntity.NewTorrentSeries[release.Id].ContainsKey ( oldTorretnSerie.Id ) ) changesEntity.NewTorrentSeries[release.Id].Add ( oldTorretnSerie.Id , oldTorretnSerie.Series );
+					if ( !changesEntity.NewTorrentSeries[release.Id].ContainsKey ( oldTorrent.Id ) ) changesEntity.NewTorrentSeries[release.Id].Add ( oldTorrent.Id , oldTorrent.Series );
 				}
 			}
 
