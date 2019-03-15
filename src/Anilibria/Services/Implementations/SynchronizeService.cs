@@ -205,6 +205,16 @@ namespace Anilibria.Services.Implementations {
 
 					if ( cacheRelease == null ) {
 						addReleases.Add ( MapToRelease ( release ) );
+						if ( cacheReleases.Count () > 0 ) {
+							if ( changes.NewReleases == null ) {
+								changes.NewReleases = new List<long> { release.Id };
+							}
+							else {
+								var newReleases = changes.NewReleases.ToList ();
+								newReleases.Add ( release.Id );
+								changes.NewReleases = newReleases;
+							}
+						}
 					}
 					else {
 						UpdateCachedRelease ( release , cacheRelease , changes );

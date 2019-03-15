@@ -206,7 +206,7 @@ namespace Anilibria.Pages.Releases {
 			if ( changes == null ) return;
 
 			NewReleasesCount = changes.NewReleases.Count ();
-			NewOnlineSeriesCount = changes.NewOnlineSeries.Count ();
+			NewOnlineSeriesCount = changes.NewOnlineSeries.Any () ? changes.NewOnlineSeries.Select ( a => a.Value ).Sum () : 0;
 			NewTorrentSeriesCount = changes.NewTorrentSeries.Count ();
 			IsNewReleases = NewReleasesCount > 0;
 			IsNewOnlineSeries = NewOnlineSeriesCount > 0;
