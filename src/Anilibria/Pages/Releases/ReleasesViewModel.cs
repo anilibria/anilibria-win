@@ -77,6 +77,20 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsRefreshing;
 
+		private bool m_IsNewReleases;
+
+		private bool m_IsNewOnlineSeries;
+
+		private bool m_IsNewTorrentSeries;
+
+		private int m_NewReleasesCount;
+
+		private int m_NewOnlineSeriesCount;
+
+		private int m_NewTorrentSeriesCount;
+
+		private bool m_IsShowNotification;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -146,6 +160,7 @@ namespace Anilibria.Pages.Releases {
 			IsShowReleaseCard = false;
 			RefreshReleases ();
 			RefreshSelectedReleases ();
+			RefreshNotification ();
 		}
 
 		private void CreateCommands () {
@@ -183,6 +198,20 @@ namespace Anilibria.Pages.Releases {
 			var uri = new Uri ( $"https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/{OpenedRelease.Code}.html" );
 			CommentsUri = uri;
 			IsShowComments = true;
+		}
+
+		private void RefreshNotification () {
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+			var changes = collection.FirstOrDefault ();
+			if ( changes == null ) return;
+
+			NewReleasesCount = changes.NewReleases.Count ();
+			NewOnlineSeriesCount = changes.NewOnlineSeries.Count ();
+			NewTorrentSeriesCount = changes.NewTorrentSeries.Count ();
+			IsNewReleases = NewReleasesCount > 0;
+			IsNewOnlineSeries = NewOnlineSeriesCount > 0;
+			IsNewTorrentSeries = NewTorrentSeriesCount > 0;
+			IsShowNotification = NewReleasesCount > 0 || NewOnlineSeriesCount > 0 || NewTorrentSeriesCount > 0;
 		}
 
 		private LocalFavoriteEntity GetLocalFavorites ( IEntityCollection<LocalFavoriteEntity> collection ) {
@@ -674,6 +703,71 @@ namespace Anilibria.Pages.Releases {
 			get => m_FilterByStatus;
 			set => Set ( ref m_FilterByStatus , value );
 		}
+
+		/// <summary>
+		/// Is show notification.
+		/// </summary>
+		public bool IsShowNotification
+		{
+			get => m_IsShowNotification;
+			set => Set ( ref m_IsShowNotification , value );
+		}
+
+
+		/// <summary>
+		/// New releases exists.
+		/// </summary>
+		public bool IsNewReleases
+		{
+			get => m_IsNewReleases;
+			set => Set ( ref m_IsNewReleases , value );
+		}
+
+		/// <summary>
+		/// New online series exists.
+		/// </summary>
+		public bool IsNewOnlineSeries
+		{
+			get => m_IsNewOnlineSeries;
+			set => Set ( ref m_IsNewOnlineSeries , value );
+		}
+
+		/// <summary>
+		/// New torrent series exists.
+		/// </summary>
+		public bool IsNewTorrentSeries
+		{
+			get => m_IsNewTorrentSeries;
+			set => Set ( ref m_IsNewTorrentSeries , value );
+		}
+
+		/// <summary>
+		/// New releases exists.
+		/// </summary>
+		public int NewReleasesCount
+		{
+			get => m_NewReleasesCount;
+			set => Set ( ref m_NewReleasesCount , value );
+		}
+
+		/// <summary>
+		/// New online series exists.
+		/// </summary>
+		public int NewOnlineSeriesCount
+		{
+			get => m_NewOnlineSeriesCount;
+			set => Set ( ref m_NewOnlineSeriesCount , value );
+		}
+
+		/// <summary>
+		/// New torrent series exists.
+		/// </summary>
+		public int NewTorrentSeriesCount
+		{
+			get => m_NewTorrentSeriesCount;
+			set => Set ( ref m_NewTorrentSeriesCount , value );
+		}
+
 
 		/// <summary>
 		/// Selected releases.

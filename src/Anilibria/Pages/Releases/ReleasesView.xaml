@@ -694,7 +694,7 @@
 				</Button>
 				<Button
 					x:Name="SortingButton"
-					RelativePanel.AlignRightWithPanel="True"
+					RelativePanel.LeftOf="NotificationButton"
 					Style="{StaticResource IconsButtonStyle}">
 					<Image
 						Width="{StaticResource IconSize}"
@@ -722,6 +722,97 @@
 						</Flyout>
 					</Button.Flyout>
 				</Button>
+				<Grid
+					x:Name="NotificationButton"
+					RelativePanel.AlignRightWithPanel="True"
+					Visibility="{Binding IsShowNotification}">
+					<Button
+						Style="{StaticResource IconsButtonStyle}">
+						<Image
+							Width="{StaticResource IconSize}"
+							Height="{StaticResource IconSize}"
+							Source="/Assets/Icons/notification.svg"
+						/>
+						<Button.Flyout>
+							<Flyout>
+								<StackPanel>
+									<Border
+										Visibility="{Binding IsNewReleases}"
+										Margin="0 2 0 2"
+										MinWidth="200"
+										BorderBrush="#881919"
+										BorderThickness="2"
+										Background="White"
+										Padding="8">
+										<StackPanel Orientation="Horizontal">
+											<TextBlock
+												Grid.Column="0"
+												Width="35"
+												TextAlignment="Center"
+												Text="{Binding NewReleasesCount}"
+											/>
+											<TextBlock
+												Grid.Column="1">
+												Новых релизов
+											</TextBlock>
+										</StackPanel>
+									</Border>
+									<Border
+										Visibility="{Binding IsNewOnlineSeries}"
+										Margin="0 2 0 2"
+										MinWidth="200"
+										BorderBrush="#881919"
+										BorderThickness="2"
+										Background="White"
+										Padding="8">
+										<StackPanel Orientation="Horizontal">
+											<TextBlock
+												Grid.Column="0"
+												Width="35"
+												TextAlignment="Center"
+												Text="{Binding NewOnlineSeriesCount}"
+											/>
+											<TextBlock
+												Grid.Column="1">
+												Новых онлайн серий
+											</TextBlock>
+										</StackPanel>
+									</Border>
+									<Border
+										Visibility="{Binding IsNewTorrentSeries}"
+										Margin="0 2 0 2"
+										MinWidth="200"
+										BorderBrush="#881919"
+										BorderThickness="2"
+										Background="White"
+										Padding="8">
+										<StackPanel Orientation="Horizontal">
+											<TextBlock
+												Grid.Column="0"
+												Width="35"
+												TextAlignment="Center"
+												Text="{Binding NewOnlineSeriesCount}"
+											/>
+											<TextBlock
+												Grid.Column="1">
+												Новые торренты
+											</TextBlock>
+										</StackPanel>
+									</Border>
+								</StackPanel>
+							</Flyout>
+						</Button.Flyout>
+					</Button>
+					<Ellipse
+						VerticalAlignment="Top"
+						HorizontalAlignment="Right"
+						Margin="0 8 8 0"
+						Fill="#4ca2c2"
+						Width="16"
+						Height="16"
+						IsHitTestVisible="False"
+					/>
+				</Grid>
 			</RelativePanel>
 		</Border>
 		<StackPanel
