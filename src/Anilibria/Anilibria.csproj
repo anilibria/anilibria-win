@@ -167,6 +167,8 @@
     <Compile Include="Pages\PresentationClasses\MessageModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\ReleaseModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SectionModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SectionType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingDirectionType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemType.cs" />

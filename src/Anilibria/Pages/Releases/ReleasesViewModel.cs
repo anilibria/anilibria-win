@@ -37,6 +37,10 @@ namespace Anilibria.Pages.Releases {
 
 		private SortingDirectionModel m_SelectedSortingDirection;
 
+		private ObservableCollection<SectionModel> m_Sections;
+
+		private SectionModel m_SelectedSection;
+
 		private ReleaseModel m_OpenedRelease;
 
 		private bool m_IsShowReleaseCard;
@@ -91,6 +95,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsShowNotification;
 
+		private ChangesEntity m_Changes;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -103,10 +109,38 @@ namespace Anilibria.Pages.Releases {
 
 			CreateCommands ();
 			CreateSortingItems ();
+			CreateSections ();
 			RefreshSelectedReleases ();
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 
 			m_AnalyticsService.TrackEvent ( "Releases" , "Opened" , "Simple start" );
+		}
+
+		private void CreateSections () {
+			Sections = new ObservableCollection<SectionModel> {
+				new SectionModel {
+					Title = "Все релизы",
+					Type = SectionType.All
+				},
+				new SectionModel {
+					Title = "Избранное",
+					Type = SectionType.Favorite
+				},
+				new SectionModel {
+					Title = "Новые релизы",
+					Type = SectionType.NewReleases
+				},
+				new SectionModel {
+					Title = "Релизы с новыми сериями",
+					Type = SectionType.NewOnlineSeries
+				},
+				new SectionModel {
+					Title = "Релизы с обновленными торрентами",
+					Type = SectionType.NewTorrentSeries
+				},
+			};
+			m_SelectedSection = Sections.First ();
+			RaisePropertyChanged ( () => SelectedSection );
 		}
 
 		private void CreateSortingItems () {
@@ -178,6 +212,22 @@ namespace Anilibria.Pages.Releases {
 			ShowCommentsCommand = CreateCommand ( ShowComments );
 			CloseCommentsCommand = CreateCommand ( CloseComments );
 			RefreshCommand = CreateCommand ( Refresh , () => !IsRefreshing );
+			ResetNotificationCommand = CreateCommand ( ResetNotification );
+		}
+
+		private void ResetNotification () {
+			if ( m_Changes == null ) return;
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+
+			m_Changes.NewOnlineSeries.Clear ();
+			m_Changes.NewReleases = Enumerable.Empty<long> ();
+			m_Changes.NewTorrents.Clear ();
+			m_Changes.NewTorrentSeries.Clear ();
+
+			collection.Update ( m_Changes );
+
+			RefreshNotification ();
 		}
 
 		private async void Refresh () {
@@ -212,19 +262,19 @@ namespace Anilibria.Pages.Releases {
 
 		private void RefreshNotification () {
 			var collection = m_DataContext.GetCollection<ChangesEntity> ();
-			var changes = collection.FirstOrDefault ();
-			if ( changes == null ) return;
+			m_Changes = collection.FirstOrDefault ();
+			if ( m_Changes == null ) return;
 
 
 			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
-			if ( changes.NewOnlineSeries.Any () ) {
-				var ids = changes.NewOnlineSeries.Select ( a => a.Key ).ToArray ();
+			if ( m_Changes.NewOnlineSeries.Any () ) {
+				var ids = m_Changes.NewOnlineSeries.Select ( a => a.Key ).ToArray ();
 				onlineSeriesReleases = m_AllReleases.Where ( a => ids.Contains ( a.Id ) );
 			}
 
-			NewReleasesCount = changes.NewReleases.Count ();
-			NewOnlineSeriesCount = changes.NewOnlineSeries.Any () ? changes.NewOnlineSeries.Select ( a => GetNewSeries ( a.Key , a.Value , onlineSeriesReleases ) ).Sum () : 0;
-			NewTorrentSeriesCount = changes.NewTorrentSeries.Count ();
+			NewReleasesCount = m_Changes.NewReleases.Count ();
+			NewOnlineSeriesCount = m_Changes.NewOnlineSeries.Any () ? m_Changes.NewOnlineSeries.Select ( a => GetNewSeries ( a.Key , a.Value , onlineSeriesReleases ) ).Sum () : 0;
+			NewTorrentSeriesCount = m_Changes.NewTorrentSeries.Count ();
 			IsNewReleases = NewReleasesCount > 0;
 			IsNewOnlineSeries = NewOnlineSeriesCount > 0;
 			IsNewTorrentSeries = NewTorrentSeriesCount > 0;
@@ -452,6 +502,27 @@ namespace Anilibria.Pages.Releases {
 			return releases;
 		}
 
+		private IEnumerable<ReleaseEntity> FilteringBySection ( IEnumerable<ReleaseEntity> releases ) {
+			var sectionType = SelectedSection.Type;
+
+			switch ( sectionType ) {
+				case SectionType.All:
+					return releases;
+				case SectionType.Favorite:
+					return releases.Where ( a => m_Favorites.Contains ( a.Id ) );
+				case SectionType.NewReleases:
+					var newReleases = m_Changes.NewReleases ?? Enumerable.Empty<long> ();
+					return releases.Where ( a => newReleases.Contains ( a.Id ) );
+				case SectionType.NewOnlineSeries:
+					var newSeries = m_Changes.NewOnlineSeries?.Keys ?? Enumerable.Empty<long> ();
+					return releases.Where ( a => newSeries.Contains ( a.Id ) );
+				case SectionType.NewTorrentSeries:
+					var newTorrents = m_Changes.NewOnlineSeries?.Keys ?? Enumerable.Empty<long> ();
+					return releases.Where ( a => newTorrents.Contains ( a.Id ) );
+				default: throw new NotSupportedException ( "Section type not supported." );
+			}
+		}
+
 		/// <summary>
 		/// Get items page.
 		/// </summary>
@@ -460,6 +531,8 @@ namespace Anilibria.Pages.Releases {
 		/// <returns>Items on current page.</returns>
 		private Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize ) {
 			var releases = FilteringReleases ( m_AllReleases );
+
+			releases = FilteringBySection ( releases );
 
 			releases = OrderReleases ( releases );
 
@@ -730,6 +803,29 @@ namespace Anilibria.Pages.Releases {
 			set => Set ( ref m_IsShowNotification , value );
 		}
 
+		/// <summary>
+		/// Sections.
+		/// </summary>
+		public ObservableCollection<SectionModel> Sections
+		{
+			get => m_Sections;
+			set => Set ( ref m_Sections , value );
+		}
+
+		/// <summary>
+		/// Selected section.
+		/// </summary>
+		public SectionModel SelectedSection
+		{
+			get => m_SelectedSection;
+			set
+			{
+				if ( !Set ( ref m_SelectedSection , value ) ) return;
+
+				RefreshReleases ();
+				RefreshSelectedReleases ();
+			}
+		}
 
 		/// <summary>
 		/// New releases exists.
@@ -943,6 +1039,15 @@ namespace Anilibria.Pages.Releases {
 		/// Refresh command.
 		/// </summary>
 		public ICommand RefreshCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Reset notification command.
+		/// </summary>
+		public ICommand ResetNotificationCommand
 		{
 			get;
 			set;

@@ -735,6 +735,12 @@
 						<Button.Flyout>
 							<Flyout>
 								<StackPanel>
+									<Button
+										Visibility="{Binding IsShowNotification}"
+										Command="{Binding ResetNotificationCommand}"
+										Margin="0 2 0 2">
+										Отметить все как просмотренное
+									</Button>
 									<Border
 										Visibility="{Binding IsNewReleases}"
 										Margin="0 2 0 2"
@@ -815,17 +821,29 @@
 				</Grid>
 			</RelativePanel>
 		</Border>
-		<StackPanel
+		<Grid
 			Grid.Row="1"
-			Orientation="Horizontal"
-			HorizontalAlignment="Right">
+			Margin="0 2 0 2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<ComboBox
+				Grid.Column="0"
+				ItemsSource="{Binding Sections}"
+				SelectedItem="{Binding SelectedSection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				Width="300"
+				DisplayMemberPath="Title"
+			/>
 			<ToggleSwitch
+				Grid.Column="1"
+				HorizontalAlignment="Right"
 				OnContent="Множественный"
 				OffContent="Одиночный"
 				FontSize="12"
 				IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 			</ToggleSwitch>
-		</StackPanel>
+		</Grid>
 		<controls:BindableGridControl
 			Style="{StaticResource GridViewStyle}"
 			Grid.Row="2"
