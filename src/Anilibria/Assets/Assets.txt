@@ -1,1 +1,25 @@
-﻿<div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+﻿                                                                                                                                                                                                                   
+                                                                                        bbbbbbbb                                                                                                                   
+               AAA                                 iiii  LLLLLLLLLLL               iiii b::::::b                                 iiii                            TTTTTTTTTTTTTTTTTTTTTTTVVVVVVVV           VVVVVVVV
+              A:::A                               i::::i L:::::::::L              i::::ib::::::b                                i::::i                           T:::::::::::::::::::::TV::::::V           V::::::V
+             A:::::A                               iiii  L:::::::::L               iiii b::::::b                                 iiii                            T:::::::::::::::::::::TV::::::V           V::::::V
+            A:::::::A                                    LL:::::::LL                     b:::::b                                                                 T:::::TT:::::::TT:::::TV::::::V           V::::::V
+           A:::::::::A         nnnn  nnnnnnnn    iiiiiii   L:::::L               iiiiiii b:::::bbbbbbbbb    rrrrr   rrrrrrrrr  iiiiiii   aaaaaaaaaaaaa           TTTTTT  T:::::T  TTTTTT V:::::V           V:::::V 
+          A:::::A:::::A        n:::nn::::::::nn  i:::::i   L:::::L               i:::::i b::::::::::::::bb  r::::rrr:::::::::r i:::::i   a::::::::::::a                  T:::::T          V:::::V         V:::::V  
+         A:::::A A:::::A       n::::::::::::::nn  i::::i   L:::::L                i::::i b::::::::::::::::b r:::::::::::::::::r i::::i   aaaaaaaaa:::::a                 T:::::T           V:::::V       V:::::V   
+        A:::::A   A:::::A      nn:::::::::::::::n i::::i   L:::::L                i::::i b:::::bbbbb:::::::brr::::::rrrrr::::::ri::::i            a::::a                 T:::::T            V:::::V     V:::::V    
+       A:::::A     A:::::A       n:::::nnnn:::::n i::::i   L:::::L                i::::i b:::::b    b::::::b r:::::r     r:::::ri::::i     aaaaaaa:::::a                 T:::::T             V:::::V   V:::::V     
+      A:::::AAAAAAAAA:::::A      n::::n    n::::n i::::i   L:::::L                i::::i b:::::b     b:::::b r:::::r     rrrrrrri::::i   aa::::::::::::a                 T:::::T              V:::::V V:::::V      
+     A:::::::::::::::::::::A     n::::n    n::::n i::::i   L:::::L                i::::i b:::::b     b:::::b r:::::r            i::::i  a::::aaaa::::::a                 T:::::T               V:::::V:::::V       
+    A:::::AAAAAAAAAAAAA:::::A    n::::n    n::::n i::::i   L:::::L         LLLLLL i::::i b:::::b     b:::::b r:::::r            i::::i a::::a    a:::::a                 T:::::T                V:::::::::V        
+   A:::::A             A:::::A   n::::n    n::::ni::::::iLL:::::::LLLLLLLLL:::::Li::::::ib:::::bbbbbb::::::b r:::::r           i::::::ia::::a    a:::::a               TT:::::::TT               V:::::::V         
+  A:::::A               A:::::A  n::::n    n::::ni::::::iL::::::::::::::::::::::Li::::::ib::::::::::::::::b  r:::::r           i::::::ia:::::aaaa::::::a  ......       T:::::::::T                V:::::V          
+ A:::::A                 A:::::A n::::n    n::::ni::::::iL::::::::::::::::::::::Li::::::ib:::::::::::::::b   r:::::r           i::::::i a::::::::::aa:::a .::::.       T:::::::::T                 V:::V           
+AAAAAAA                   AAAAAAAnnnnnn    nnnnnniiiiiiiiLLLLLLLLLLLLLLLLLLLLLLLLiiiiiiiibbbbbbbbbbbbbbbb    rrrrrrr           iiiiiiii  aaaaaaaaaa  aaaa ......       TTTTTTTTTTT                  VVV            
+                                                                                                                                                                                                                   
+
+AniLibria client for Windows 10
+
+Program contains release's catalog, mediaplayer for watch online video from website and youtube video's catalog.
+
+Copyright (c) 2019 RomanAsylum
