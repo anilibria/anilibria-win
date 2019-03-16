@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services.Implementations;
 using Windows.System;
 using Windows.UI.Core;
@@ -52,6 +54,22 @@ namespace Anilibria.Pages.Releases {
 			var dataContext = (ReleasesViewModel) DataContext;
 			dataContext.ShowCommentsCommand.Execute ( null );
 		}
+
+		private void NewReleasesNotificationTapped ( object sender , TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			if (dataContext.SelectedSection?.Type != SectionType.NewReleases) dataContext.SelectedSection = dataContext.Sections.FirstOrDefault ( a => a.Type == SectionType.NewReleases );
+		}
+
+		private void NewOnlineSeriesNotificationTapped ( object sender , TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			if ( dataContext.SelectedSection?.Type != SectionType.NewOnlineSeries ) dataContext.SelectedSection = dataContext.Sections.FirstOrDefault ( a => a.Type == SectionType.NewOnlineSeries );
+		}
+
+		private void NewTorrentsNotificationTapped ( object sender , TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			if ( dataContext.SelectedSection?.Type != SectionType.NewTorrentSeries ) dataContext.SelectedSection = dataContext.Sections.FirstOrDefault ( a => a.Type == SectionType.NewTorrentSeries );
+		}
+
 	}
 
 }

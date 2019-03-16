@@ -746,69 +746,78 @@
 										Margin="0 2 0 2">
 										Отметить все как просмотренное
 									</Button>
-									<Border
-										Visibility="{Binding IsNewReleases}"
-										Margin="0 2 0 2"
-										MinWidth="200"
-										BorderBrush="#881919"
-										BorderThickness="2"
-										Background="White"
-										Padding="8">
-										<StackPanel Orientation="Horizontal">
-											<TextBlock
-												Grid.Column="0"
-												Width="35"
-												TextAlignment="Center"
-												Text="{Binding NewReleasesCount}"
-											/>
-											<TextBlock
-												Grid.Column="1">
-												Новых релизов
-											</TextBlock>
-										</StackPanel>
-									</Border>
-									<Border
-										Visibility="{Binding IsNewOnlineSeries}"
-										Margin="0 2 0 2"
-										MinWidth="200"
-										BorderBrush="#881919"
-										BorderThickness="2"
-										Background="White"
-										Padding="8">
-										<StackPanel Orientation="Horizontal">
-											<TextBlock
-												Grid.Column="0"
-												Width="35"
-												TextAlignment="Center"
-												Text="{Binding NewOnlineSeriesCount}"
-											/>
-											<TextBlock
-												Grid.Column="1">
-												Новых онлайн серий
-											</TextBlock>
-										</StackPanel>
-									</Border>
-									<Border
-										Visibility="{Binding IsNewTorrentSeries}"
-										Margin="0 2 0 2"
-										MinWidth="200"
-										BorderBrush="#881919"
-										BorderThickness="2"
-										Background="White"
-										Padding="8">
-										<StackPanel Orientation="Horizontal">
-											<TextBlock
-												Grid.Column="0"
-												Width="35"
-												TextAlignment="Center"
-												Text="{Binding NewTorrentSeriesCount}"
-											/>
-											<TextBlock
-												Grid.Column="1">
-												Новые торренты
-											</TextBlock>
-										</StackPanel>
-									</Border>
+									<controls:PointingGridControl
+										Tapped="NewReleasesNotificationTapped">
+										<Border
+											Visibility="{Binding IsNewReleases}"
+											Margin="0 2 0 2"
+											MinWidth="200"
+											BorderBrush="#881919"
+											BorderThickness="2"
+											Background="White"
+											Padding="8">
+											<StackPanel Orientation="Horizontal">
+												<TextBlock
+													Grid.Column="0"
+													Width="35"
+													TextAlignment="Center"
+													Text="{Binding NewReleasesCount}"
+												/>
+												<TextBlock
+													Grid.Column="1">
+													Новых релизов
+												</TextBlock>
+											</StackPanel>
+										</Border>
+									</controls:PointingGridControl>
+									<controls:PointingGridControl
+										Tapped="NewOnlineSeriesNotificationTapped">
+										<Border
+											Visibility="{Binding IsNewOnlineSeries}"
+											Margin="0 2 0 2"
+											MinWidth="200"
+											BorderBrush="#881919"
+											BorderThickness="2"
+											Background="White"
+											Padding="8">
+											<StackPanel Orientation="Horizontal">
+												<TextBlock
+													Grid.Column="0"
+													Width="35"
+													TextAlignment="Center"
+													Text="{Binding NewOnlineSeriesCount}"
+												/>
+												<TextBlock
+													Grid.Column="1">
+													Новых онлайн серий
+												</TextBlock>
+											</StackPanel>
+										</Border>
+									</controls:PointingGridControl>
+									<controls:PointingGridControl
+										Tapped="NewTorrentsNotificationTapped">
+										<Border
+											Visibility="{Binding IsNewTorrentSeries}"
+											Margin="0 2 0 2"
+											MinWidth="200"
+											BorderBrush="#881919"
+											BorderThickness="2"
+											Background="White"
+											Padding="8">
+											<StackPanel Orientation="Horizontal">
+												<TextBlock
+													Grid.Column="0"
+													Width="35"
+													TextAlignment="Center"
+													Text="{Binding NewTorrentSeriesCount}"
+												/>
+												<TextBlock
+													Grid.Column="1">
+													Новые торренты
+												</TextBlock>
+											</StackPanel>
+										</Border>
+									</controls:PointingGridControl>
 								</StackPanel>
 							</Flyout>
 						</Button.Flyout>
