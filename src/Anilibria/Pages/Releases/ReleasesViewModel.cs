@@ -220,10 +220,10 @@ namespace Anilibria.Pages.Releases {
 
 			var collection = m_DataContext.GetCollection<ChangesEntity> ();
 
-			m_Changes.NewOnlineSeries.Clear ();
+			m_Changes.NewOnlineSeries?.Clear ();
 			m_Changes.NewReleases = Enumerable.Empty<long> ();
-			m_Changes.NewTorrents.Clear ();
-			m_Changes.NewTorrentSeries.Clear ();
+			m_Changes.NewTorrents?.Clear ();
+			m_Changes.NewTorrentSeries?.Clear ();
 
 			collection.Update ( m_Changes );
 
@@ -420,6 +420,7 @@ namespace Anilibria.Pages.Releases {
 			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
 				OpenedRelease = SelectedReleases.First ();
 				IsShowReleaseCard = true;
+				ClearReleaseNotification ( OpenedRelease.Id );
 				RefreshSelectedReleases ();
 			}
 		}
@@ -517,7 +518,7 @@ namespace Anilibria.Pages.Releases {
 					var newSeries = m_Changes.NewOnlineSeries?.Keys ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newSeries.Contains ( a.Id ) );
 				case SectionType.NewTorrentSeries:
-					var newTorrents = m_Changes.NewOnlineSeries?.Keys ?? Enumerable.Empty<long> ();
+					var newTorrents = m_Changes.NewTorrentSeries?.Keys ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newTorrents.Contains ( a.Id ) );
 				default: throw new NotSupportedException ( "Section type not supported." );
 			}
@@ -577,6 +578,26 @@ namespace Anilibria.Pages.Releases {
 			);
 
 			return Task.FromResult ( result );
+		}
+
+		private void ClearReleaseNotification ( long releaseId ) {
+			if ( m_Changes == null ) return;
+
+			if ( m_Changes.NewReleases != null && m_Changes.NewReleases.Any () && m_Changes.NewReleases.Any ( a => a == releaseId ) ) {
+				m_Changes.NewReleases = m_Changes.NewReleases.Where ( a => a != releaseId ).ToList ();
+			}
+
+			if ( m_Changes.NewOnlineSeries != null && m_Changes.NewOnlineSeries.Any () && m_Changes.NewOnlineSeries.Any ( a => a.Key == releaseId ) ) {
+				m_Changes.NewOnlineSeries.Remove ( releaseId );
+			}
+
+			if ( m_Changes.NewTorrentSeries != null && m_Changes.NewTorrentSeries.Any () && m_Changes.NewTorrentSeries.Any ( a => a.Key == releaseId ) ) {
+				m_Changes.NewTorrentSeries.Remove ( releaseId );
+			}
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+			collection.Update ( m_Changes );
+			RefreshNotification ();
 		}
 
 		/// <summary>

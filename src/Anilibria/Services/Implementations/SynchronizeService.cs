@@ -142,10 +142,6 @@ namespace Anilibria.Services.Implementations {
 				if ( !changesEntity.NewOnlineSeries.ContainsKey ( release.Id ) ) changesEntity.NewOnlineSeries.Add ( release.Id , releaseEntity.Playlist.Count () );
 			}
 
-			if ( changesEntity.NewOnlineSeries.ContainsKey ( release.Id ) && releaseEntity.Playlist.Count () == changesEntity.NewOnlineSeries[release.Id] ) {
-				if ( changesEntity.NewOnlineSeries.ContainsKey ( release.Id ) ) changesEntity.NewOnlineSeries.Remove ( release.Id );
-			}
-
 			releaseEntity.Playlist = release.Playlist
 				.Select (
 					a =>

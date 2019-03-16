@@ -735,6 +735,11 @@
 						<Button.Flyout>
 							<Flyout>
 								<StackPanel>
+									<TextBlock
+										Visibility="{Binding IsShowNotification, Converter={StaticResource InverseBoolConverter}}"
+										TextAlignment="Center">
+										У Вас нет новых уведомлений
+									</TextBlock>
 									<Button
 										Visibility="{Binding IsShowNotification}"
 										Command="{Binding ResetNotificationCommand}"
