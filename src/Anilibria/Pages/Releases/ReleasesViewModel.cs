@@ -429,7 +429,7 @@ namespace Anilibria.Pages.Releases {
 			var context = m_DataContext.GetCollection<ReleaseEntity> ();
 
 			return context
-				.Find ( a => true )
+				.Find ( a => !a.Blocked ) // All blocking releases not showed on releases page!!!
 				.ToList ();
 		}
 
