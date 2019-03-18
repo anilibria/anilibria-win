@@ -165,7 +165,7 @@ namespace Anilibria.Services.Implementations {
 
 				if ( oldTorrent.Size != newTorrent.Size ) {
 					if ( !changesEntity.NewTorrentSeries.ContainsKey ( release.Id ) ) changesEntity.NewTorrentSeries.Add ( release.Id , new Dictionary<long , string> () );
-					if ( !changesEntity.NewTorrentSeries[release.Id].ContainsKey ( oldTorrent.Id ) ) changesEntity.NewTorrentSeries[release.Id].Add ( oldTorrent.Id , oldTorrent.Series );
+					if ( !changesEntity.NewTorrentSeries[release.Id].ContainsKey ( oldTorrent.Id ) ) changesEntity.NewTorrentSeries[release.Id].Add ( oldTorrent.Id , oldTorrent.Size.ToString () ?? "" );
 				}
 			}
 
