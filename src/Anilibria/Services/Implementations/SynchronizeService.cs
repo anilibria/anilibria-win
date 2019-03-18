@@ -161,7 +161,7 @@ namespace Anilibria.Services.Implementations {
 			for ( var i = 0 ; i < releaseEntity.Torrents.Count () ; i++ ) {
 				var oldTorrent = releaseEntity.Torrents.ElementAt ( i );
 				var newTorrent = release.Torrents.ElementAtOrDefault ( i );
-				if ( newTorrent == null ) return;
+				if ( newTorrent == null ) break;
 
 				if ( oldTorrent.Size != newTorrent.Size ) {
 					if ( !changesEntity.NewTorrentSeries.ContainsKey ( release.Id ) ) changesEntity.NewTorrentSeries.Add ( release.Id , new Dictionary<long , string> () );
@@ -195,6 +195,8 @@ namespace Anilibria.Services.Implementations {
 				var changes = GetChanges ( changesCollection );
 
 				var cacheReleases = collection.Find ( a => true );
+
+				var relrease423 = cacheReleases.Where ( a => a.Id == 423 ).FirstOrDefault ();
 
 				var addReleases = new List<ReleaseEntity> ();
 				var updatedReleases = new List<ReleaseEntity> ();
