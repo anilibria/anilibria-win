@@ -40,3 +40,7 @@ body {
 	display: flex;
 	justify-content: center;
 }
+
+.centered-text {
+	text-align: center; 
+}
