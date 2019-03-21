@@ -1,0 +1,1 @@
+reg add "HKCU\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" /v "D:\progs\totalcmd\TOTALCMD64.EXE" /t REG_SZ /d RUNASADMIN
