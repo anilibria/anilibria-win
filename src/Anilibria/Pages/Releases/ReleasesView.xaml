@@ -1002,6 +1002,7 @@
 							<TextBlock
 								TextWrapping="WrapWholeWords"
 								Foreground="Black"
+								Margin="0 0 14 0"
 								converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}">
 							</TextBlock>
 						</ScrollViewer>
@@ -1157,6 +1158,7 @@
 						</TextBlock>
 						<ScrollViewer MaxHeight="50">
 							<ItemsControl
+								Margin="0 0 18 0"
 								ItemsSource="{Binding OpenedRelease.Torrents}">
 								<ItemsControl.ItemsPanel>
 									<ItemsPanelTemplate>

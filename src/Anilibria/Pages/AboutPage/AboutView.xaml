@@ -114,6 +114,12 @@
 					Foreground="Black"
 					FontSize="22"
 					HorizontalAlignment="Center">
+					Lupin
+				</TextBlock>
+				<TextBlock
+					Foreground="Black"
+					FontSize="22"
+					HorizontalAlignment="Center">
 					poiuty
 				</TextBlock>
 				<TextBlock
