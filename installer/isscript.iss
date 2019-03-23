@@ -2,7 +2,8 @@
 #define MyAppVersion "1.0"
 #define MyAppPublisher "EmptyFlow"
 #define MyAppURL "https://www.anilibria.tv"
-#define MyAppExeName "runinstaller.bat"
+#define MyAppExeName "AnilibriaInstaller.exe"
+#define MyAppIcoName "anilibriaicon.ico"
 
 [Setup]
 AppId={{9B533D44-2551-4904-A457-8163BCABFB41}
@@ -17,10 +18,11 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=MIT.txt
-OutputBaseFilename=setup
+OutputBaseFilename=AnilibriaInstallerSetup
 SetupIconFile=anilibriaicon.ico
 Compression=lzma
 SolidCompression=yes
+PrivilegesRequired=admin
 
 [Languages]
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
@@ -31,13 +33,14 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "runinstaller.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "AnilibriaInstaller.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "runinctaller.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "cerinstaller.ps1"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppIcoName}"; DestDir: "{app}"
 
 [Icons]
+Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppIcoName}"; Tasks: desktopicon
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
