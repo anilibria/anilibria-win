@@ -28,6 +28,19 @@ Write-Host "Remove certificate from temporary folder...."
 
 Remove-Item $certificatePath
 
+$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" 
+ 
+Write-Host "Enable sideloading...." 
+
+$Name1 = "AllowAllTrustedApps" 
+$value1 = "1" 
+New-ItemProperty -Path $registryPath -Name $name1 -Value $value1 -PropertyType DWORD -Force 
+ 
+$Name2 = "AllowDevelopmentWithoutDevLicense" 
+$value2 = "0" 
+ 
+New-ItemProperty -Path $registryPath -Name $name2 -Value $value2 -PropertyType DWORD -Force
+
 Write-Host "Installation complete"
 
 [System.Diagnostics.Process]::Start("ms-appinstaller:?source=https://anilibria.github.io/anilibria-win/dist/Anilibria.appinstaller")
