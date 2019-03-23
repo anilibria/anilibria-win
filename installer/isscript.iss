@@ -34,7 +34,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "AnilibriaInstaller.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "runinctaller.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "runinstaller.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "cerinstaller.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppIcoName}"; DestDir: "{app}"
 
