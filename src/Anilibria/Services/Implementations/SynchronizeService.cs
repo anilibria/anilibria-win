@@ -196,8 +196,6 @@ namespace Anilibria.Services.Implementations {
 
 				var cacheReleases = collection.Find ( a => true );
 
-				var relrease423 = cacheReleases.Where ( a => a.Id == 423 ).FirstOrDefault ();
-
 				var addReleases = new List<ReleaseEntity> ();
 				var updatedReleases = new List<ReleaseEntity> ();
 

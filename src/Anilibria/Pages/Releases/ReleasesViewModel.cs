@@ -512,13 +512,13 @@ namespace Anilibria.Pages.Releases {
 				case SectionType.Favorite:
 					return releases.Where ( a => m_Favorites.Contains ( a.Id ) );
 				case SectionType.NewReleases:
-					var newReleases = m_Changes.NewReleases ?? Enumerable.Empty<long> ();
+					var newReleases = m_Changes?.NewReleases ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newReleases.Contains ( a.Id ) );
 				case SectionType.NewOnlineSeries:
-					var newSeries = m_Changes.NewOnlineSeries?.Keys ?? Enumerable.Empty<long> ();
+					var newSeries = m_Changes?.NewOnlineSeries?.Keys ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newSeries.Contains ( a.Id ) );
 				case SectionType.NewTorrentSeries:
-					var newTorrents = m_Changes.NewTorrentSeries?.Keys ?? Enumerable.Empty<long> ();
+					var newTorrents = m_Changes?.NewTorrentSeries?.Keys ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newTorrents.Contains ( a.Id ) );
 				default: throw new NotSupportedException ( "Section type not supported." );
 			}
