@@ -612,7 +612,7 @@
 					<Image
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/filter.svg"
+						Source="/Assets/Icons/search.svg"
 					/>
 					<Button.Flyout>
 						<Flyout>
@@ -625,6 +625,7 @@
 								<TextBox
 									Width="200"
 									Margin="4 0 4 4"
+									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								/>
 								<TextBlock
@@ -635,6 +636,7 @@
 								<TextBox
 									Width="200"
 									Margin="4 0 4 4"
+									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
 								/>
@@ -646,6 +648,7 @@
 								<TextBox
 									Width="200"
 									Margin="4 0 4 4"
+									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
 								/>
@@ -657,6 +660,7 @@
 								<TextBox
 									Width="200"
 									Margin="4 0 4 4"
+									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
 								/>
@@ -668,6 +672,7 @@
 								<TextBox
 									Width="200"
 									Margin="4 0 4 4"
+									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								/>
 								<TextBlock
@@ -678,6 +683,7 @@
 								<TextBox
 									Width="200"
 									Margin="4 0 4 4"
+									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
 								/>

@@ -480,16 +480,20 @@ namespace Anilibria.Pages.Releases {
 			}
 		}
 
+		private bool ContainsInArrayCaseSensitive ( string filter , IEnumerable<string> values ) {
+			return values?.Where ( a => a != null ).Select ( a => a.ToLowerInvariant () ).Any ( a => a.Contains ( filter.ToLowerInvariant () ) ) ?? false;
+		}
+
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
-			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => a.Names.Any ( name => name.Contains ( FilterByName ) ) );
-			if ( !string.IsNullOrEmpty ( FilterByType ) ) releases = releases.Where ( a => a.Type.Contains ( FilterByType ) );
+			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => ContainsInArrayCaseSensitive ( FilterByName , a.Names ) );
+			if ( !string.IsNullOrEmpty ( FilterByType ) ) releases = releases.Where ( a => a.Type?.ToLowerInvariant ().Contains ( FilterByType.ToLowerInvariant () ) ?? false );
 			if ( !string.IsNullOrEmpty ( FilterByStatus ) ) {
 				var statuses = FilterByStatus.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => statuses.Contains ( a.Status ) );
+				releases = releases.Where ( a => statuses?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { a.Status } ) ) ?? false );
 			}
 			if ( !string.IsNullOrEmpty ( FilterByGenres ) ) {
 				var genres = FilterByGenres.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Genres.Any ( genre => genres.Contains ( genre ) ) );
+				releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
 			}
 			if ( !string.IsNullOrEmpty ( FilterByYears ) ) {
 				var years = FilterByYears.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
@@ -497,7 +501,7 @@ namespace Anilibria.Pages.Releases {
 			}
 			if ( !string.IsNullOrEmpty ( FilterByVoicers ) ) {
 				var voicers = FilterByVoicers.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Voices.Any ( voice => voicers.Contains ( voice ) ) );
+				releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
 			}
 
 			return releases;

@@ -253,6 +253,7 @@
     <Content Include="Assets\Icons\pause.svg" />
     <Content Include="Assets\Icons\refresh.svg" />
     <Content Include="Assets\Icons\removefavorite.svg" />
+    <Content Include="Assets\Icons\search.svg" />
     <Content Include="Assets\Icons\settings.svg" />
     <Content Include="Assets\Icons\slider.svg" />
     <Content Include="Assets\Icons\filter.svg" />
