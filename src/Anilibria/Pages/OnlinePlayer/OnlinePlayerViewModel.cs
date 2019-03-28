@@ -8,6 +8,7 @@ using Anilibria.Services;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.Storage;
+using Windows.System.Display;
 using Windows.UI.ViewManagement;
 
 namespace Anilibria.Pages.OnlinePlayer {
@@ -74,6 +75,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private readonly IEntityCollection<PlayerRestoreEntity> m_RestoreCollection;
 
 		private readonly IEntityCollection<ReleaseVideoStateEntity> m_ReleaseStateCollection;
+
+		private DisplayRequest m_DisplayRequest;
 
 		/// <summary>
 		/// Constructor injection.
@@ -295,6 +298,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
+			try {
+				if ( m_DisplayRequest == null ) m_DisplayRequest = new DisplayRequest ();
+				m_DisplayRequest.RequestActive ();
+			}
+			catch {
+			}
+
 			UpdateVolumeState ( m_Volume );
 
 			if ( parameter == null ) {
@@ -326,7 +336,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				}
 
 				SelectedRelease = release;
-				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos.First () : SelectedRelease.OnlineVideos.First(a => a.Order == onlineVideoIndex );
+				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos.First () : SelectedRelease.OnlineVideos.First ( a => a.Order == onlineVideoIndex );
 
 
 
@@ -340,6 +350,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// End navigate to page.
 		/// </summary>
 		public void NavigateFrom () {
+			try {
+				m_DisplayRequest.RequestRelease ();
+			}
+			catch {
+			}
+
 			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause , false );
 
 			var view = ApplicationView.GetForCurrentView ();
