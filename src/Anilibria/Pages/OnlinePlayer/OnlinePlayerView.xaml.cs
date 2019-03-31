@@ -4,14 +4,11 @@ using System.Threading.Tasks;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Windows.Devices.Input;
-using Windows.Foundation;
 using Windows.Gaming.Input;
 using Windows.Media.Casting;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Input;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -67,6 +64,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			OnlinePlayer.MediaPlayer.BufferingStarted += MediaPlayer_BufferingStarted;
 			OnlinePlayer.MediaPlayer.BufferingEnded += MediaPlayer_BufferingEnded;
 			OnlinePlayer.MediaPlayer.CurrentStateChanged += MediaPlayer_CurrentStateChanged;
+			OnlinePlayer.MediaPlayer.VolumeChanged += MediaPlayer_VolumeChanged;
 			OnlinePlayer.TransportControls.IsFastForwardButtonVisible = true;
 			OnlinePlayer.TransportControls.IsFastForwardEnabled = true;
 			OnlinePlayer.TransportControls.IsFastRewindButtonVisible = true;
@@ -99,6 +97,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
 			Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+		}
+
+		private async void MediaPlayer_VolumeChanged ( MediaPlayer sender , object args ) {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_ViewModel.Volume = OnlinePlayer.MediaPlayer.Volume;
+				}
+			);
+
 		}
 
 		private async void MediaPlayer_CurrentStateChanged ( MediaPlayer sender , object args ) {
