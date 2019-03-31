@@ -68,6 +68,19 @@ namespace Anilibria.Pages.OnlinePlayer {
 			OnlinePlayer.MediaPlayer.SourceChanged += MediaPlayer_SourceChanged;
 			OnlinePlayer.MediaPlayer.BufferingStarted += MediaPlayer_BufferingStarted;
 			OnlinePlayer.MediaPlayer.BufferingEnded += MediaPlayer_BufferingEnded;
+			OnlinePlayer.MediaPlayer.CurrentStateChanged += MediaPlayer_CurrentStateChanged;
+			OnlinePlayer.TransportControls.IsFastForwardButtonVisible = true;
+			OnlinePlayer.TransportControls.IsFastForwardEnabled = true;
+			OnlinePlayer.TransportControls.IsFastRewindButtonVisible = true;
+			OnlinePlayer.TransportControls.IsFastRewindEnabled = true;
+			//OnlinePlayer.TransportControls.IsPlaybackRateButtonVisible = true;
+			//OnlinePlayer.TransportControls.IsPlaybackRateEnabled = true;
+			OnlinePlayer.TransportControls.IsSkipBackwardButtonVisible = true;
+			OnlinePlayer.TransportControls.IsSkipBackwardEnabled = true;
+			OnlinePlayer.TransportControls.IsSkipForwardButtonVisible = true;
+			OnlinePlayer.TransportControls.IsSkipForwardEnabled = true;
+			OnlinePlayer.TransportControls.IsZoomButtonVisible = true;
+			OnlinePlayer.TransportControls.IsZoomEnabled = true;
 
 			RunTimer ();
 
@@ -81,14 +94,31 @@ namespace Anilibria.Pages.OnlinePlayer {
 				castingPicker.CastingDeviceSelected += CastingPicker_CastingDeviceSelected;
 			}
 			else {
-				CastToDevice.Visibility = Visibility.Collapsed;
-
 				m_GamepadTimer = new DispatcherTimer ();
 				m_GamepadTimer.Tick += GamepadTimer_Tick;
 				m_GamepadTimer.Start ();
 			}
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
+			Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+		}
+
+		private async void MediaPlayer_CurrentStateChanged ( MediaPlayer sender , object args ) {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_ViewModel.MediaStateChanged ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState );
+				}
+			);
+		}
+
+		private void CoreWindow_PointerMoved ( CoreWindow sender , PointerEventArgs args ) {
+			if ( Visibility != Visibility.Visible ) return;
+
+			if ( args.CurrentPoint.PointerDevice.PointerDeviceType == PointerDeviceType.Mouse ) {
+				m_MouseX = args.CurrentPoint.Position.X;
+				m_MouseY = args.CurrentPoint.Position.Y;
+			}
 		}
 
 		/// <summary>
@@ -231,15 +261,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void Grid_PointerMoved ( object sender , PointerRoutedEventArgs e ) {
-			if ( e.Pointer.PointerDeviceType == PointerDeviceType.Mouse ) {
-				PointerPoint ptrPt = e.GetCurrentPoint ( this );
-				m_MouseX = ptrPt.Position.X;
-				m_MouseY = ptrPt.Position.Y;
-			}
 		}
 
 		private void MouseHidingTracker () {
-			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && ControlPanel.Visibility == Visibility.Collapsed ) {
+			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
+			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && windowHeight - m_MouseY > 110 ) {
 				m_LastActivityTime++;
 				if ( !( m_PreviousX == m_MouseX && m_PreviousY == m_MouseY ) ) {
 					RestoreCursor ();
@@ -276,7 +302,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void TimerTick ( object sender , object e ) {
 			if ( m_MediaOpened ) {
 				m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
-				if ( !m_BlockedTrackSlider ) Slider.Value = OnlinePlayer.MediaPlayer.PlaybackSession.Position.TotalSeconds;
 
 				MouseHidingTracker ();
 				SaveRestoreState ();
@@ -398,22 +423,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
-		private async void Slider_ManipulationCompleted ( object sender , ManipulationCompletedRoutedEventArgs e ) {
-			await Task.Delay ( 100 );
-			ChangePosition ( TimeSpan.FromSeconds ( Slider.Value ) );
-			m_ViewModel.RefreshPosition ( TimeSpan.FromSeconds ( Slider.Value ) );
-			m_BlockedTrackSlider = false;
-		}
-
-		private void Slider_Tapped ( object sender , TappedRoutedEventArgs e ) {
-			m_BlockedTrackSlider = true;
-
-			ChangePosition ( TimeSpan.FromSeconds ( Slider.Value ) );
-			m_ViewModel.RefreshPosition ( TimeSpan.FromSeconds ( Slider.Value ) );
-
-			m_BlockedTrackSlider = false;
-		}
-
 		private void OnlinePlayer_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
 			if ( ControlPanel.Visibility == Visibility.Collapsed ) {
 				ControlPanel.Visibility = Visibility.Visible;
@@ -421,17 +430,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 			else {
 				ControlPanel.Visibility = Visibility.Collapsed;
 			}
-		}
-
-		private void Slider_ManipulationStarting ( object sender , ManipulationStartingRoutedEventArgs e ) {
-			m_BlockedTrackSlider = true;
-		}
-
-		private void CastToDevice_Click ( object sender , RoutedEventArgs e ) {
-			var transform = CastToDevice.TransformToVisual ( Window.Current.Content as UIElement );
-			var pt = transform.TransformPoint ( new Point ( 0 , 0 ) );
-
-			castingPicker.Show ( new Rect ( pt.X , pt.Y , CastToDevice.ActualWidth , CastToDevice.ActualHeight ) , Windows.UI.Popups.Placement.Above );
 		}
 
 	}

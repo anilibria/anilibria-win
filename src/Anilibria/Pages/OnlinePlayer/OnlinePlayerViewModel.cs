@@ -7,6 +7,7 @@ using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI.ViewManagement;
@@ -77,6 +78,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private readonly IEntityCollection<ReleaseVideoStateEntity> m_ReleaseStateCollection;
 
 		private DisplayRequest m_DisplayRequest;
+
+		private bool m_IsVideosFlyoutVisible;
 
 		/// <summary>
 		/// Constructor injection.
@@ -212,6 +215,27 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( currentIndex > 0 ) SelectedOnlineVideo = SelectedRelease.OnlineVideos.ElementAt ( currentIndex - 1 );
 		}
 
+		public void MediaStateChanged ( MediaPlaybackState playbackState ) {
+			switch ( playbackState ) {
+				case MediaPlaybackState.None:
+					break;
+				case MediaPlaybackState.Opening:
+					break;
+				case MediaPlaybackState.Buffering:
+					break;
+				case MediaPlaybackState.Playing:
+					//WORKAROUND: reactive value changed only after real value changed.
+					if ( !IsVideosFlyoutVisible ) IsVideosFlyoutVisible = true;
+					IsVideosFlyoutVisible = false;
+					break;
+				case MediaPlaybackState.Paused:
+
+					break;
+				default:
+					break;
+			}
+		}
+
 		/// <summary>
 		/// Media closed handler.
 		/// </summary>
@@ -286,7 +310,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				);
 			}
 			else {
-				videoState.LastPosition = Position;
+				videoState.LastPosition = Position == 0 && videoState.LastPosition > 0 ? videoState.LastPosition : Position;
+				
 				if ( !videoState.IsSeen && PositionPercent >= 90 && PositionPercent <= 100 ) videoState.IsSeen = true;
 			}
 
@@ -360,6 +385,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			var view = ApplicationView.GetForCurrentView ();
 			if ( view.IsFullScreenMode ) view.ExitFullScreenMode ();
+		}
+
+		/// <summary>
+		/// Is videos flyout visible.
+		/// </summary>
+		public bool IsVideosFlyoutVisible
+		{
+			get => m_IsVideosFlyoutVisible;
+			set => Set ( ref m_IsVideosFlyoutVisible , value );
 		}
 
 		/// <summary>
@@ -532,6 +566,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
 				if ( m_SelectedOnlineVideo != null ) {
+					//WORKAROUND: reactive value changed only after real value changed.
+					if ( !IsVideosFlyoutVisible ) IsVideosFlyoutVisible = true;
+					IsVideosFlyoutVisible = false;
 					ChangeVideoSource ();
 					SavePlayerRestoreState ();
 				}
