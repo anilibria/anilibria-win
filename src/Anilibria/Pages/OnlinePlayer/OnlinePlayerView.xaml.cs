@@ -36,8 +36,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private TimeSpan m_Duration = new TimeSpan ();
 
-		private bool m_BlockedTrackSlider = false;
-
 		private double m_MouseX = 0;
 
 		private double m_MouseY = 0;
@@ -381,21 +379,21 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( m_TapCount > 1 ) return;
 
+			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
+			if ( !( windowHeight - m_MouseY > 130 ) ) return;
+
+			var mediaPlayer = OnlinePlayer.MediaPlayer;
+
 			switch ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState ) {
 				case MediaPlaybackState.Playing:
-					if ( ControlPanel.Visibility == Visibility.Visible ) {
-						ControlPanel.Visibility = Visibility.Collapsed;
-						return;
+					if ( mediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && mediaPlayer.PlaybackSession.CanPause ) {
+						mediaPlayer.Pause ();
 					}
-					ChangePlaybackHandler ( PlaybackState.Pause , needAnimation: true );
-					if ( ControlPanel.Visibility != Visibility.Visible ) ControlPanel.Visibility = Visibility.Visible;
 					break;
 				case MediaPlaybackState.Paused:
-					ChangePlaybackHandler ( PlaybackState.Play , needAnimation: true );
-					if ( ControlPanel.Visibility == Visibility.Visible ) ControlPanel.Visibility = Visibility.Collapsed;
-					break;
-				case MediaPlaybackState.None:
-					if ( ControlPanel.Visibility != Visibility.Visible ) ControlPanel.Visibility = Visibility.Visible;
+					if ( mediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Paused ) {
+						mediaPlayer.Play ();
+					}
 					break;
 			}
 		}
@@ -413,14 +411,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void OnlinePlayer_DoubleTapped ( object sender , DoubleTappedRoutedEventArgs e ) {
 			m_TapCount++;
 
-			var view = ApplicationView.GetForCurrentView ();
-			view.FullScreenSystemOverlayMode = FullScreenSystemOverlayMode.Minimal;
-			if ( view.IsFullScreenMode ) {
-				view.ExitFullScreenMode ();
-			}
-			else {
-				view.TryEnterFullScreenMode ();
-			}
+			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
+			if ( !( windowHeight - m_MouseY > 130 ) ) return;
+
+			OnlinePlayer.IsFullWindow = !OnlinePlayer.IsFullWindow;
 		}
 
 		private void OnlinePlayer_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {

@@ -1133,14 +1133,13 @@
 				RightTapped="OnlinePlayer_RightTapped"
 				Source="{Binding VideoSource, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MediaSourceConverter}}"
 				AutoPlay="True"
-				AreTransportControlsEnabled="True">
+				AreTransportControlsEnabled="True"
+				DoubleTapped="OnlinePlayer_DoubleTapped"
+				Tapped="OnlinePlayer_Tapped">
 				<MediaPlayerElement.TransportControls>
 					<MediaTransportControls Style="{StaticResource AnilibriaPlayerTransportControls}"/>
 				</MediaPlayerElement.TransportControls>
 			</MediaPlayerElement>
-			<!--DoubleTapped="OnlinePlayer_DoubleTapped"
-			Tapped="OnlinePlayer_Tapped"
-			-->
 		</Grid>
 		<Grid>
 			<Grid.RowDefinitions>
