@@ -45,6 +45,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private int m_LastRestoreActivityTime = 0;
 
+		private bool m_TransportControlsCaptured = false;
+
 		private GamepadButtons m_PreviousStateButtons = new GamepadButtons ();
 
 		CastingDevicePicker castingPicker;
@@ -77,6 +79,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			OnlinePlayer.TransportControls.IsSkipForwardEnabled = true;
 			OnlinePlayer.TransportControls.IsZoomButtonVisible = true;
 			OnlinePlayer.TransportControls.IsZoomEnabled = true;
+			OnlinePlayer.TransportControls.IsFullWindowEnabled = false;
+			OnlinePlayer.TransportControls.IsFullWindowButtonVisible = false;
 
 			RunTimer ();
 
@@ -326,28 +330,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 					break;
 				case PlaybackState.Pause:
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.CanPause ) {
-						if ( needAnimation ) {
-							RunShowPauseAnimation ();
-						}
-						else {
-							PauseIcon.Opacity = .8;
-						}
 						OnlinePlayer.MediaPlayer.Pause ();
-						CurrentReleaseInfo.Visibility = Visibility.Visible;
 					}
 					break;
 				case PlaybackState.Play:
-					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Paused ) {
-						if ( needAnimation ) {
-							RunHidePauseAnimation ();
-						}
-						else {
-							PauseIcon.Opacity = 0;
-						}
-					}
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Play ();
-					CurrentReleaseInfo.Visibility = Visibility.Collapsed;
-					if ( ControlPanel.Visibility == Visibility.Visible ) ControlPanel.Visibility = Visibility.Collapsed;
 					break;
 				default: throw new NotSupportedException ( $"State {state} not supporting." );
 			}
@@ -374,21 +361,19 @@ namespace Anilibria.Pages.OnlinePlayer {
 					m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
 					m_ViewModel.MediaOpened ( m_Duration );
 					PauseIcon.Opacity = 0;
-					CurrentReleaseInfo.Visibility = Visibility.Collapsed;
 				}
 			);
 		}
 		private void ChangeVolumeHandler ( double value ) => OnlinePlayer.MediaPlayer.Volume = value;
 
 		private async void OnlinePlayer_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			if ( m_TransportControlsCaptured ) return;
+
 			m_TapCount = 1;
 
 			await Task.Delay ( 300 );
 
 			if ( m_TapCount > 1 ) return;
-
-			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
-			if ( !( windowHeight - m_MouseY > 130 ) ) return;
 
 			var mediaPlayer = OnlinePlayer.MediaPlayer;
 
@@ -417,12 +402,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void OnlinePlayer_DoubleTapped ( object sender , DoubleTappedRoutedEventArgs e ) {
+			if ( m_TransportControlsCaptured ) return;
+
 			m_TapCount++;
 
-			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
-			if ( !( windowHeight - m_MouseY > 130 ) ) return;
-
-			OnlinePlayer.IsFullWindow = !OnlinePlayer.IsFullWindow;
+			m_ViewModel.ToggleFullScreenCommand.Execute ( null );
 		}
 
 		private void OnlinePlayer_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
@@ -434,6 +418,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
+		private void RootGrid_PointerEntered ( object sender , PointerRoutedEventArgs e ) {
+			m_TransportControlsCaptured = true;
+		}
+
+		private void RootGrid_PointerExited ( object sender , PointerRoutedEventArgs e ) {
+			m_TransportControlsCaptured = false;
+		}
 	}
 
 }

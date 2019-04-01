@@ -81,6 +81,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsVideosFlyoutVisible;
 
+		private bool m_IsShowReleaseInfo;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -132,6 +134,18 @@ namespace Anilibria.Pages.OnlinePlayer {
 			ChangeVolumeCommand = CreateCommand<double> ( ChangeVolume );
 			MuteCommand = CreateCommand ( Mute );
 			ShowSidebarCommand = CreateCommand ( ShowSidebarFromPage );
+			ToggleFullScreenCommand = CreateCommand ( ToggleFullScreen );
+		}
+
+		private void ToggleFullScreen () {
+			var view = ApplicationView.GetForCurrentView ();
+			view.FullScreenSystemOverlayMode = FullScreenSystemOverlayMode.Minimal;
+			if ( view.IsFullScreenMode ) {
+				view.ExitFullScreenMode ();
+			}
+			else {
+				view.TryEnterFullScreenMode ();
+			}
 		}
 
 		/// <summary>
@@ -234,6 +248,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				default:
 					break;
 			}
+			IsShowReleaseInfo = playbackState == MediaPlaybackState.Paused;
 		}
 
 		/// <summary>
@@ -311,7 +326,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			else {
 				videoState.LastPosition = Position == 0 && videoState.LastPosition > 0 ? videoState.LastPosition : Position;
-				
+
 				if ( !videoState.IsSeen && PositionPercent >= 90 && PositionPercent <= 100 ) videoState.IsSeen = true;
 			}
 
@@ -594,6 +609,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Show release info.
+		/// </summary>
+		public bool IsShowReleaseInfo
+		{
+			get => m_IsShowReleaseInfo;
+			set => Set ( ref m_IsShowReleaseInfo , value );
+		}
+
+		/// <summary>
 		/// Releases.
 		/// </summary>
 		public IEnumerable<ReleaseModel> Releases
@@ -660,6 +684,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Show sidebar command.
 		/// </summary>
 		public ICommand ShowSidebarCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Toggle full screen command.
+		/// </summary>
+		public ICommand ToggleFullScreenCommand
 		{
 			get;
 			set;
