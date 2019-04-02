@@ -1393,7 +1393,7 @@
 				Grid.Column="0"
 				Background="Black"
 				VerticalAlignment="Top"
-				Visibility="{Binding IsBuffering}">
+				Visibility="Collapsed">
 				<TextBlock
 					Foreground="White">Буферизация....</TextBlock>
 			</StackPanel>
