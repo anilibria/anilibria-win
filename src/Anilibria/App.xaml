@@ -138,9 +138,9 @@
 		</Style>
 
 		<Style x:Key="OnlinePlayerAppButton" TargetType="AppBarButton">
-			<Setter Property="Background" Value="{ThemeResource AppBarButtonBackground}" />
-			<Setter Property="Foreground" Value="{ThemeResource AppBarButtonForeground}" />
-			<Setter Property="BorderBrush" Value="{ThemeResource AppBarButtonBorderBrush}" />
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Foreground" Value="Black" />
+			<Setter Property="BorderBrush" Value="Transparent" />
 			<Setter Property="HorizontalAlignment" Value="Left" />
 			<Setter Property="VerticalAlignment" Value="Top" />
 			<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />

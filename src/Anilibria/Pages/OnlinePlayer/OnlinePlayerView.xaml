@@ -534,6 +534,8 @@
 								<Style x:Key='AppBarButtonStyle' TargetType='AppBarButton'>
 									<Setter Property='Width' Value='{ThemeResource MTCMediaButtonWidth}' />
 									<Setter Property='Height' Value='{ThemeResource MTCMediaButtonHeight}' />
+									<Setter Property='Background' Value='Transparent' />
+									<Setter Property='Foreground' Value='Black' />
 								</Style>
 
 								<!--New CommandBar Style-->
