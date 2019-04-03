@@ -16,156 +16,158 @@
 
 	<UserControl.Resources>
 		<DataTemplate x:Key="ReleaseItemTemplate">
-			<Grid
-				Padding="4"
-				Background="White">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"></ColumnDefinition>
-					<ColumnDefinition></ColumnDefinition>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition></RowDefinition>
-				</Grid.RowDefinitions>
-
-				<Image
-					x:Name="Image"
-					Height="300"
-					Stretch="Uniform"
-					Tag="{Binding Id}"
-					converters:CacheImageConverter.ImageGroup="Poster"
-					converters:CacheImageConverter.ImagePath="{Binding Poster}"
-					Grid.Row="0"
-					Grid.Column="0"
-				/>
-
+			<Border CornerRadius="8">
 				<Grid
-					Grid.Column="1"
-					Grid.Row="0"
-					Margin="3"
-					MaxWidth="250"
-					VerticalAlignment="Stretch"
-					Padding="0">
+					Padding="10"
+					Background="White">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+					</Grid.ColumnDefinitions>
 					<Grid.RowDefinitions>
-						<RowDefinition />
-						<RowDefinition Height="Auto" />
+						<RowDefinition></RowDefinition>
 					</Grid.RowDefinitions>
 
-					<StackPanel
+					<Image
+						x:Name="Image"
+						Height="300"
+						Stretch="Uniform"
+						Tag="{Binding Id}"
+						converters:CacheImageConverter.ImageGroup="Poster"
+						converters:CacheImageConverter.ImagePath="{Binding Poster}"
 						Grid.Row="0"
-						Orientation="Vertical">
-						<TextBlock
-							TextWrapping="Wrap"
-							TextTrimming="CharacterEllipsis"
-							MaxLines="3"
-							Foreground="#b32121"
-							Text="{Binding Title}"
-						/>
-						<StackPanel Orientation="Vertical">
-							<TextBlock Foreground="Black">
-								<Run
-									Text="Статус"
-									FontWeight="Bold"
-								/>
-								<Run
-									Text="{Binding Status}"
-								/>
-							</TextBlock>
-						</StackPanel>
-						<StackPanel Orientation="Vertical">
-							<TextBlock Foreground="Black">
-								<Run
-									Text="Год"
-									FontWeight="Bold"
-								/>
-								<Run
-									Text="{Binding Year}"
-								/>
-							</TextBlock>
-						</StackPanel>
-						<StackPanel Orientation="Vertical">
-							<TextBlock Foreground="Black">
-								<Run
-									Text="Тип"
-									FontWeight="Bold"
-								/>
-								<Run
-									Text="{Binding Type}"
-								/>
-							</TextBlock>
-						</StackPanel>
-						<StackPanel Orientation="Vertical">
+						Grid.Column="0"
+					/>
+
+					<Grid
+						Grid.Column="1"
+						Grid.Row="0"
+						Margin="3"
+						MaxWidth="250"
+						VerticalAlignment="Stretch"
+						Padding="0">
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<StackPanel
+							Grid.Row="0"
+							Orientation="Vertical">
 							<TextBlock
+								TextWrapping="Wrap"
+								TextTrimming="CharacterEllipsis"
 								MaxLines="3"
+								Foreground="#b32121"
+								Text="{Binding Title}"
+							/>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Foreground="Black">
+									<Run
+										Text="Статус"
+										FontWeight="Bold"
+									/>
+									<Run
+										Text="{Binding Status}"
+									/>
+								</TextBlock>
+							</StackPanel>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Foreground="Black">
+									<Run
+										Text="Год"
+										FontWeight="Bold"
+									/>
+									<Run
+										Text="{Binding Year}"
+									/>
+								</TextBlock>
+							</StackPanel>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Foreground="Black">
+									<Run
+										Text="Тип"
+										FontWeight="Bold"
+									/>
+									<Run
+										Text="{Binding Type}"
+									/>
+								</TextBlock>
+							</StackPanel>
+							<StackPanel Orientation="Vertical">
+								<TextBlock
+									MaxLines="3"
+									TextWrapping="WrapWholeWords"
+									Foreground="Black">
+									<Run
+										Text="Жанры"
+										FontWeight="Bold"
+									/>
+									<Run
+										Text="{Binding Genres}"
+									/>
+								</TextBlock>
+							</StackPanel>
+							<StackPanel Orientation="Vertical">
+								<TextBlock
+								MaxLines="5"
 								TextWrapping="WrapWholeWords"
 								Foreground="Black">
-								<Run
-									Text="Жанры"
-									FontWeight="Bold"
-								/>
-								<Run
-									Text="{Binding Genres}"
-								/>
-							</TextBlock>
+									<Run
+										Text="Озвучка"
+										FontWeight="Bold"
+									/>
+									<Run
+										Text="{Binding Voices}"
+									/>
+								</TextBlock>
+							</StackPanel>
 						</StackPanel>
-						<StackPanel Orientation="Vertical">
-							<TextBlock
-							MaxLines="5"
-							TextWrapping="WrapWholeWords"
-							Foreground="Black">
-								<Run
-									Text="Озвучка"
-									FontWeight="Bold"
-								/>
-								<Run
-									Text="{Binding Voices}"
-								/>
-							</TextBlock>
-						</StackPanel>
-					</StackPanel>
-					<Grid
-						Grid.Row="1"
-						VerticalAlignment="Bottom"
-						Height="28">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<Grid Grid.Column="0" VerticalAlignment="Center">
-							<TextBlock
-								Height="20"
-								FontFamily="Segoe MDL2 Assets"
-								FontSize="18"
-								Foreground="Black">
-								&#xEB51;
-							</TextBlock>
-						</Grid>
-						<Grid Grid.Column="1" VerticalAlignment="Top">
-							<TextBlock
-								Height="20"
-								Margin="4 0 0 0"
-								FontSize="16"
-								Text="{Binding Rating}"
-								Foreground="Black"
-							/>
-						</Grid>
 						<Grid
-							Grid.Column="2"
-							VerticalAlignment="Center"
-							Visibility="{Binding AddToFavorite}"
-							Margin="4 0 0 2">
-							<TextBlock
-								Height="20"
-								FontFamily="Segoe MDL2 Assets"
-								FontSize="18"
-								Foreground="Black">
-								&#xE734;
-							</TextBlock>
+							Grid.Row="1"
+							VerticalAlignment="Bottom"
+							Height="28">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition />
+							</Grid.ColumnDefinitions>
+							<Grid Grid.Column="0" VerticalAlignment="Center">
+								<TextBlock
+									Height="20"
+									FontFamily="Segoe MDL2 Assets"
+									FontSize="18"
+									Foreground="Black">
+									&#xEB51;
+								</TextBlock>
+							</Grid>
+							<Grid Grid.Column="1" VerticalAlignment="Top">
+								<TextBlock
+									Height="20"
+									Margin="4 0 0 0"
+									FontSize="16"
+									Text="{Binding Rating}"
+									Foreground="Black"
+								/>
+							</Grid>
+							<Grid
+								Grid.Column="2"
+								VerticalAlignment="Center"
+								Visibility="{Binding AddToFavorite}"
+								Margin="4 0 0 2">
+								<TextBlock
+									Height="20"
+									FontFamily="Segoe MDL2 Assets"
+									FontSize="18"
+									Foreground="Black">
+									&#xE734;
+								</TextBlock>
+							</Grid>
 						</Grid>
 					</Grid>
 				</Grid>
-			</Grid>
+			</Border>
 		</DataTemplate>
 		<Style x:Key="GridViewStyle" TargetType="GridView">
 			<Setter Property="ItemTemplate" Value="{StaticResource ReleaseItemTemplate}"/>
@@ -542,25 +544,43 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
 		<Border
 			Grid.Row="0"
-			Background="#b32121"
-			BorderBrush="#881919"
-			BorderThickness="0 0 0 2">
-			<RelativePanel
-				HorizontalAlignment="Stretch">
-				<Button
-					x:Name="SidebarButton"
-					RelativePanel.AlignLeftWithPanel="True"
+			Grid.Column="0"
+			Background="#ba2d2d"
+			Width="44">
+			<Button
+					x:Name="SidebarButton2"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowSidebarCommand}">
-					<Image
+				<Image
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/humburger.svg"
+						Source="/Assets/Icons/hambergermenu.svg"
 					/>
-				</Button>
-
+			</Button>
+		</Border>
+		<Border
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			Background="#9e2323"
+			Width="44"
+			>
+			
+		</Border>
+		<Border
+			Grid.Row="0"
+			Grid.Column="1"
+			Background="#b3b3b3">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
 				<Button
 					x:Name="RefreshButton"
 					RelativePanel.LeftOf="FavoritesButton"
@@ -843,6 +863,7 @@
 		</Border>
 		<Grid
 			Grid.Row="1"
+			Grid.Column="1"
 			Margin="0 2 0 2">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
@@ -867,6 +888,7 @@
 		<controls:BindableGridControl
 			Style="{StaticResource GridViewStyle}"
 			Grid.Row="2"
+			Grid.Column="1"
 			ItemsSource="{Binding Collection}"
 			MultipleSelectedItems="{Binding SelectedReleases}"
 			IsMultipleSelect="{Binding IsMultipleSelect}"
@@ -878,6 +900,7 @@
 			VerticalAlignment="Center"
 			HorizontalAlignment="Center"
 			Grid.Row="2"
+			Grid.Column="1"
 			Visibility="{Binding EmptyReleases}">
 			<TextBlock
 				TextAlignment="Center"
@@ -894,6 +917,7 @@
 			Opacity=".5"
 			Grid.Row="0"
 			Grid.RowSpan="3"
+			Grid.ColumnSpan="2"
 			Visibility="{Binding IsShowReleaseCard}"
 			Tapped="Rectangle_Tapped">
 		</Rectangle>
@@ -901,6 +925,7 @@
 			Margin="10"
 			Grid.Row="1"
 			Grid.RowSpan="2"
+			Grid.ColumnSpan="2"
 			BorderBrush="#881919"
 			BorderThickness="2"
 			MaxWidth="800"
