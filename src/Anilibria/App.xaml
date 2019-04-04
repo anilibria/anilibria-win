@@ -5,7 +5,7 @@
 	xmlns:converters="using:Anilibria.Converters">
 
 	<Application.Resources>
-		<x:Double x:Key="IconSize">30</x:Double>
+		<x:Double x:Key="IconSize">28</x:Double>
 
 		<converters:InverseBoolConverter x:Key="InverseBoolConverter" />
 

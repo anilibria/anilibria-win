@@ -131,6 +131,7 @@
     <Compile Include="Controls\BindableGridControl.cs" />
     <Compile Include="Controls\FlyoutHelpers.cs" />
     <Compile Include="Controls\PointingGridControl.cs" />
+    <Compile Include="Converters\CacheImageBrushConverter.cs" />
     <Compile Include="Converters\CacheImageConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\MediaSourceConverter.cs" />

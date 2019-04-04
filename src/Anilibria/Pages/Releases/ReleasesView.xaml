@@ -19,7 +19,7 @@
 			<Border CornerRadius="8">
 				<Grid
 					Padding="10"
-					Background="White">
+					Background="#f2f2f2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
@@ -28,16 +28,23 @@
 						<RowDefinition></RowDefinition>
 					</Grid.RowDefinitions>
 
-					<Image
-						x:Name="Image"
+					<Border
 						Height="300"
-						Stretch="Uniform"
-						Tag="{Binding Id}"
-						converters:CacheImageConverter.ImageGroup="Poster"
-						converters:CacheImageConverter.ImagePath="{Binding Poster}"
+						Width="200"
 						Grid.Row="0"
 						Grid.Column="0"
-					/>
+						BorderBrush="#adadad"
+						BorderThickness="2"
+						CornerRadius="5">
+						<Border.Background>
+							<ImageBrush
+								Stretch="UniformToFill"
+								converters:CacheImageBrushConverter.ImageId="{Binding Id}"
+								converters:CacheImageBrushConverter.ImageGroup="Poster"
+								converters:CacheImageBrushConverter.ImagePath="{Binding Poster}"
+							/>
+						</Border.Background>
+					</Border>
 
 					<Grid
 						Grid.Column="1"
@@ -538,7 +545,7 @@
 	</UserControl.Resources>
 
 	<Grid
-		Background="#D3D3D3">
+		Background="#e6e6e6">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -571,19 +578,12 @@
 			Grid.RowSpan="2"
 			Grid.Column="0"
 			Background="#9e2323"
-			Width="44"
-			>
-			
-		</Border>
-		<Border
-			Grid.Row="0"
-			Grid.Column="1"
-			Background="#b3b3b3">
+			Width="44">
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<Button
 					x:Name="RefreshButton"
-					RelativePanel.LeftOf="FavoritesButton"
+					RelativePanel.AlignTopWithPanel="True"
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding RefreshCommand}"
 					ToolTipService.ToolTip="Выполнить синхронизацию релизов">
@@ -593,10 +593,9 @@
 						Source="/Assets/Icons/refresh.svg"
 					/>
 				</Button>
-				
 				<Button
 					x:Name="FavoritesButton"
-					RelativePanel.LeftOf="FilterButton"
+					RelativePanel.Below="RefreshButton"
 					Style="{StaticResource IconsButtonStyle}"
 					ToolTipService.ToolTip="Чтобы добавить в избранное необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
 					<Image
@@ -605,7 +604,7 @@
 						Source="/Assets/Icons/favorite.svg"
 					/>
 					<Button.Flyout>
-						<MenuFlyout>
+						<MenuFlyout Placement="RightEdgeAlignedTop">
 							<MenuFlyoutItem
 								Text="Добавить в избранное"
 								Command="{Binding AddToFavoritesCommand}"
@@ -627,7 +626,7 @@
 				</Button>
 				<Button
 					x:Name="FilterButton"
-					RelativePanel.LeftOf="SortingButton"
+					RelativePanel.Below="FavoritesButton"
 					Style="{StaticResource IconsButtonStyle}">
 					<Image
 						Width="{StaticResource IconSize}"
@@ -635,7 +634,7 @@
 						Source="/Assets/Icons/search.svg"
 					/>
 					<Button.Flyout>
-						<Flyout>
+						<Flyout Placement="RightEdgeAlignedTop">
 							<StackPanel HorizontalAlignment="Stretch">
 								<TextBlock
 									Margin="4 0 4 4"
@@ -720,7 +719,7 @@
 				</Button>
 				<Button
 					x:Name="SortingButton"
-					RelativePanel.LeftOf="NotificationButton"
+					RelativePanel.Below="FilterButton"
 					Style="{StaticResource IconsButtonStyle}">
 					<Image
 						Width="{StaticResource IconSize}"
@@ -728,7 +727,7 @@
 						Source="/Assets/Icons/sort.svg"
 					/>
 					<Button.Flyout>
-						<Flyout>
+						<Flyout Placement="RightEdgeAlignedTop">
 							<StackPanel>
 								<TextBlock Margin="0 2 0 2">Фильтровать по</TextBlock>
 								<ComboBox
@@ -750,7 +749,7 @@
 				</Button>
 				<Grid
 					x:Name="NotificationButton"
-					RelativePanel.AlignRightWithPanel="True">
+					RelativePanel.Below="SortingButton">
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
 						<Image
@@ -759,7 +758,7 @@
 							Source="/Assets/Icons/notification.svg"
 						/>
 						<Button.Flyout>
-							<Flyout>
+							<Flyout Placement="RightEdgeAlignedTop">
 								<StackPanel>
 									<TextBlock
 										Visibility="{Binding IsShowNotification, Converter={StaticResource InverseBoolConverter}}"
@@ -859,6 +858,16 @@
 						Visibility="{Binding IsShowNotification}"
 					/>
 				</Grid>
+			</RelativePanel>
+		</Border>
+		<Border
+			Grid.Row="0"
+			Grid.Column="1"
+			Background="#b3b3b3">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
+				
+				
 			</RelativePanel>
 		</Border>
 		<Grid
