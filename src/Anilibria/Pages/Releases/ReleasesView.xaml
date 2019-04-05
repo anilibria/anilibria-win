@@ -762,13 +762,15 @@
 								<StackPanel>
 									<TextBlock
 										Visibility="{Binding IsShowNotification, Converter={StaticResource InverseBoolConverter}}"
-										TextAlignment="Center">
+										TextAlignment="Center"
+										Foreground="Black">
 										У Вас нет новых уведомлений
 									</TextBlock>
 									<Button
 										Visibility="{Binding IsShowNotification}"
 										Command="{Binding ResetNotificationCommand}"
-										Margin="0 2 0 2">
+										Margin="0 2 0 2"
+										Foreground="Black">
 										Отметить все как просмотренное
 									</Button>
 									<controls:PointingGridControl
@@ -787,6 +789,7 @@
 													Width="35"
 													TextAlignment="Center"
 													Text="{Binding NewReleasesCount}"
+													Foreground="Black"
 												/>
 												<TextBlock
 													Grid.Column="1">
@@ -811,6 +814,7 @@
 													Width="35"
 													TextAlignment="Center"
 													Text="{Binding NewOnlineSeriesCount}"
+													Foreground="Black"
 												/>
 												<TextBlock
 													Grid.Column="1">
@@ -835,6 +839,7 @@
 													Width="35"
 													TextAlignment="Center"
 													Text="{Binding NewTorrentSeriesCount}"
+													Foreground="Black"
 												/>
 												<TextBlock
 													Grid.Column="1">
