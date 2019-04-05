@@ -1217,7 +1217,6 @@
 													Width="50">
 													<AppBarButton.Flyout>
 														<Flyout
-															Placement="Right"
 															controls:FlyoutHelper.IsOpen="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsVideosFlyoutVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 															controls:FlyoutHelper.IsOnlyHide="True">
 															<Flyout.FlyoutPresenterStyle>

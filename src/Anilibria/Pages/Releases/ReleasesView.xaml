@@ -604,7 +604,7 @@
 						Source="/Assets/Icons/favorite.svg"
 					/>
 					<Button.Flyout>
-						<MenuFlyout Placement="RightEdgeAlignedTop">
+						<MenuFlyout>
 							<MenuFlyoutItem
 								Text="Добавить в избранное"
 								Command="{Binding AddToFavoritesCommand}"
@@ -634,7 +634,7 @@
 						Source="/Assets/Icons/search.svg"
 					/>
 					<Button.Flyout>
-						<Flyout Placement="RightEdgeAlignedTop">
+						<Flyout>
 							<StackPanel HorizontalAlignment="Stretch">
 								<TextBlock
 									Margin="4 0 4 4"
@@ -727,7 +727,7 @@
 						Source="/Assets/Icons/sort.svg"
 					/>
 					<Button.Flyout>
-						<Flyout Placement="RightEdgeAlignedTop">
+						<Flyout>
 							<StackPanel>
 								<TextBlock Margin="0 2 0 2">Фильтровать по</TextBlock>
 								<ComboBox
@@ -758,7 +758,7 @@
 							Source="/Assets/Icons/notification.svg"
 						/>
 						<Button.Flyout>
-							<Flyout Placement="RightEdgeAlignedTop">
+							<Flyout>
 								<StackPanel>
 									<TextBlock
 										Visibility="{Binding IsShowNotification, Converter={StaticResource InverseBoolConverter}}"
