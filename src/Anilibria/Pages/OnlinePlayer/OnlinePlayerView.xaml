@@ -1159,23 +1159,22 @@
 												<ColumnDefinition />
 												<ColumnDefinition Width="Auto" />
 											</Grid.ColumnDefinitions>
-											<CommandBar
-												Grid.Column="0"
-												Margin='0,0,0,9'
-												Style='{StaticResource CommandBarStyle}'
-												OverflowButtonVisibility="Collapsed">
-												<AppBarButton
+											<StackPanel
+												Orientation="Horizontal"
+												Margin='0,0,0,9'>
+												<Button
+													VerticalAlignment="Top"
 													ToolTipService.ToolTip="Открыть меню"
-													Style='{StaticResource AppBarButtonStyle}'
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'
 													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ShowSidebarCommand}">
-													<AppBarButton.Icon>
-														<FontIcon Glyph="&#xE700;" />
-													</AppBarButton.Icon>
-												</AppBarButton>
-												<AppBarButton x:Name='VolumeMuteButton'
-														Style='{StaticResource OnlinePlayerAppButton}'
-														Width="50">
-													<AppBarButton.Flyout>
+													<FontIcon Glyph="&#xE700;" />
+												</Button>
+												<Button x:Name='VolumeMuteButton'
+														Width="50"
+														Style="{StaticResource PlayerFlyoutButtonStyle}"
+														VerticalAlignment="Top">
+													<Button.Flyout>
 														<Flyout x:Name='VolumeFlyout' FlyoutPresenterStyle="{StaticResource FlyoutStyle}">
 															<StackPanel Orientation="Horizontal" >
 																<AppBarButton x:Name='AudioMuteButton'
@@ -1206,16 +1205,15 @@
 																	/>
 															</StackPanel>
 														</Flyout>
-													</AppBarButton.Flyout>
-													<AppBarButton.Icon>
-														<SymbolIcon x:Name='VolumeMuteSymbol' Symbol='Volume' />
-													</AppBarButton.Icon>
-												</AppBarButton>
-												<AppBarButton
+													</Button.Flyout>
+													<SymbolIcon x:Name='VolumeMuteSymbol' Symbol='Volume' />
+												</Button>
+												<Button
 													ToolTipService.ToolTip="Выбор видео"
-													Style='{StaticResource OnlinePlayerAppButton}'
-													Width="50">
-													<AppBarButton.Flyout>
+													Style='{StaticResource PlayerFlyoutButtonStyle}'
+													Width="50"
+													VerticalAlignment="Top">
+													<Button.Flyout>
 														<Flyout
 															controls:FlyoutHelper.IsOpen="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsVideosFlyoutVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 															controls:FlyoutHelper.IsOnlyHide="True">
@@ -1234,12 +1232,10 @@
 																</ListView>
 															</Grid>
 														</Flyout>
-													</AppBarButton.Flyout>
-													<AppBarButton.Icon>
-														<FontIcon Glyph="&#xEE40;" />
-													</AppBarButton.Icon>
-												</AppBarButton>
-											</CommandBar>
+													</Button.Flyout>
+													<FontIcon Glyph="&#xEE40;" />
+												</Button>
+											</StackPanel>
 											<CommandBar
 												x:Name="MediaControlsCommandBar"
 												Grid.Column="1"
