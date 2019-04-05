@@ -245,6 +245,7 @@
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
     <Content Include="Assets\Icons\AnilibriaLogo.svg" />
+    <Content Include="Assets\Icons\authorization.svg" />
     <Content Include="Assets\Icons\cast.svg" />
     <Content Include="Assets\Icons\chat.svg" />
     <Content Include="Assets\Icons\close.svg" />
@@ -265,6 +266,8 @@
     <Content Include="Assets\Icons\playlist.svg" />
     <Content Include="Assets\Icons\sort.svg" />
     <Content Include="Assets\Icons\speaker.svg" />
+    <Content Include="Assets\Icons\videoplayer.svg" />
+    <Content Include="Assets\Icons\youtube.svg" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
