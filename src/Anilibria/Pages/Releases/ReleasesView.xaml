@@ -605,6 +605,13 @@
 					/>
 					<Button.Flyout>
 						<MenuFlyout>
+							<MenuFlyout.MenuFlyoutPresenterStyle>
+								<Style TargetType="MenuFlyoutPresenter">
+									<Setter Property="Background" Value="#e6e6e6" />
+									<Setter Property="BorderThickness" Value="1" />
+									<Setter Property="BorderBrush" Value="#f0f0f0" />
+								</Style>
+							</MenuFlyout.MenuFlyoutPresenterStyle>
 							<MenuFlyoutItem
 								Text="Добавить в избранное"
 								Command="{Binding AddToFavoritesCommand}"
@@ -635,84 +642,83 @@
 					/>
 					<Button.Flyout>
 						<Flyout>
+							<Flyout.FlyoutPresenterStyle>
+								<Style TargetType="FlyoutPresenter">
+									<Setter Property="Background" Value="#e6e6e6" />
+									<Setter Property="BorderThickness" Value="1" />
+									<Setter Property="BorderBrush" Value="#f0f0f0" />
+								</Style>
+							</Flyout.FlyoutPresenterStyle>
 							<StackPanel HorizontalAlignment="Stretch">
-								<TextBlock
-									Margin="4 0 4 4"
-									Foreground="Black">
-									Имя
-								</TextBlock>
-								<TextBox
-									Width="200"
-									Margin="4 0 4 4"
-									IsSpellCheckEnabled="False"
-									Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-								/>
 								<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Жанры
 								</TextBlock>
-								<TextBox
+								<controls:TimingTextBox
+									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
 									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
+									TimeoutCommand="{Binding FilterCommand}"
 								/>
 								<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Года
 								</TextBlock>
-								<TextBox
+								<controls:TimingTextBox
+									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
 									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
+									TimeoutCommand="{Binding FilterCommand}"
 								/>
 								<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Озвучка
 								</TextBlock>
-								<TextBox
+								<controls:TimingTextBox
+									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
 									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
+									TimeoutCommand="{Binding FilterCommand}"
 								/>
 								<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Тип
 								</TextBlock>
-								<TextBox
+								<controls:TimingTextBox
+									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
 									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									TimeoutCommand="{Binding FilterCommand}"
 								/>
 								<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Статусы
 								</TextBlock>
-								<TextBox
+								<controls:TimingTextBox
+									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
 									IsSpellCheckEnabled="False"
 									Text="{Binding FilterByStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									PlaceholderText="Вводите через запятую"
+									TimeoutCommand="{Binding FilterCommand}"
 								/>
-								<Button
-									HorizontalAlignment="Stretch"
-									Margin="4 0 4 4"
-									Style="{StaticResource ActionButtonStyle}"
-									Command="{Binding FilterCommand}">
-									Фильтровать
-								</Button>
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>
@@ -728,16 +734,33 @@
 					/>
 					<Button.Flyout>
 						<Flyout>
+							<Flyout.FlyoutPresenterStyle>
+								<Style TargetType="FlyoutPresenter">
+									<Setter Property="Background" Value="#e6e6e6" />
+									<Setter Property="BorderThickness" Value="1" />
+									<Setter Property="BorderBrush" Value="#f0f0f0" />
+								</Style>
+							</Flyout.FlyoutPresenterStyle>
 							<StackPanel>
-								<TextBlock Margin="0 2 0 2">Фильтровать по</TextBlock>
+								<TextBlock
+									Margin="0 2 0 2"
+									Foreground="Black">
+									Фильтровать по
+								</TextBlock>
 								<ComboBox
+									Style="{StaticResource AnilibriaComboBox}"
 									Width="280"
 									SelectedItem="{Binding SelectedSortingItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									ItemsSource="{Binding SortingItems}"
 									DisplayMemberPath="Name">
 								</ComboBox>
-								<TextBlock Margin="0 2 0 2">В порядке</TextBlock>
+								<TextBlock
+									Margin="0 2 0 2"
+									Foreground="Black">
+									В порядке
+								</TextBlock>
 								<ComboBox
+									Style="{StaticResource AnilibriaComboBox}"
 									Width="280"
 									SelectedItem="{Binding SelectedSortingDirection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									ItemsSource="{Binding SortingDirections}"
@@ -900,7 +923,7 @@
 		<Grid
 			Grid.Row="1"
 			Grid.Column="1"
-			Margin="0 4 0 0">
+			Margin="0 6 0 4">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition />
@@ -910,16 +933,20 @@
 				Grid.Column="1"
 				Orientation="Horizontal"
 				HorizontalAlignment="Center">
-				<TextBox
+				<controls:TimingTextBox
 					Style="{StaticResource AnilibriaTextBox}"
 					MinWidth="250"
-					Width="300"
-					Margin="4 0 4 4"
+					Width="380"
+					Margin="0 -3 4 0"
+					VerticalAlignment="Center"
 					IsSpellCheckEnabled="False"
+					HorizontalAlignment="Center"
 					PlaceholderText="Введите название релиза для поиска"
 					Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+					TimeoutCommand="{Binding FilterCommand}"
 				/>
 				<ComboBox
+					Margin="0 -1 0 0"
 					RelativePanel.AlignHorizontalCenterWithPanel="True"
 					Style="{StaticResource AnilibriaComboBox}"
 					ItemsSource="{Binding Sections}"

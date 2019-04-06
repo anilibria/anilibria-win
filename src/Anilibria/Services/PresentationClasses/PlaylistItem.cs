@@ -53,7 +53,7 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// SD source for download as single video file.
+		/// HD source for download as single video file.
 		/// </summary>
 		public Uri SrcHd
 		{
@@ -62,7 +62,7 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Full HD (optional).
+		/// Video in Full HD quality (optional).
 		/// </summary>
 		public Uri FullHd
 		{

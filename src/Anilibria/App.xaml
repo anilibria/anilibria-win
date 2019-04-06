@@ -276,7 +276,7 @@
 										<Storyboard>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
 												Storyboard.TargetProperty="Background">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="#881919" />
+												<DiscreteObjectKeyFrame KeyTime="0" Value="#ba2d2d" />
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
 												Storyboard.TargetProperty="Foreground">
@@ -289,7 +289,7 @@
 										<Storyboard>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
 												Storyboard.TargetProperty="Background">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="#881919" />
+												<DiscreteObjectKeyFrame KeyTime="0" Value="#ba2d2d" />
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
 												Storyboard.TargetProperty="Foreground">
@@ -309,7 +309,7 @@
 										<Storyboard>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
 												Storyboard.TargetProperty="Background">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="#881919" />
+												<DiscreteObjectKeyFrame KeyTime="0" Value="#ba2d2d" />
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
 												Storyboard.TargetProperty="Foreground">
@@ -322,7 +322,7 @@
 										<Storyboard>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
 												Storyboard.TargetProperty="Background">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="#881919" />
+												<DiscreteObjectKeyFrame KeyTime="0" Value="#ba2d2d" />
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
 												Storyboard.TargetProperty="Foreground">
@@ -605,7 +605,7 @@
 
 		<Style x:Key="AnilibriaTextBox" TargetType="TextBox">
 			<Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />
-			<Setter Property="MinHeight" Value="36" />
+			<Setter Property="MinHeight" Value="35" />
 			<Setter Property="Foreground" Value="Black" />
 			<Setter Property="Background" Value="White" />
 			<Setter Property="BorderBrush" Value="Transparent" />
