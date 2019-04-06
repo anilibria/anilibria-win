@@ -897,19 +897,39 @@
 				</StackPanel>
 			</RelativePanel>
 		</Border>
-		<RelativePanel
+		<Grid
 			Grid.Row="1"
 			Grid.Column="1"
-			Margin="0 2 0 2">
-			<ComboBox
-				RelativePanel.AlignHorizontalCenterWithPanel="True"
-				Style="{StaticResource AnilibriaComboBox}"
-				ItemsSource="{Binding Sections}"
-				SelectedItem="{Binding SelectedSection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-				Width="300"
-				DisplayMemberPath="Title"
-			/>
-		</RelativePanel>
+			Margin="0 4 0 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<StackPanel
+				Grid.Column="1"
+				Orientation="Horizontal"
+				HorizontalAlignment="Center">
+				<TextBox
+					Style="{StaticResource AnilibriaTextBox}"
+					MinWidth="250"
+					Width="300"
+					Margin="4 0 4 4"
+					IsSpellCheckEnabled="False"
+					PlaceholderText="Введите название релиза для поиска"
+					Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				/>
+				<ComboBox
+					RelativePanel.AlignHorizontalCenterWithPanel="True"
+					Style="{StaticResource AnilibriaComboBox}"
+					ItemsSource="{Binding Sections}"
+					SelectedItem="{Binding SelectedSection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+					MinWidth="250"
+					Width="300"
+					DisplayMemberPath="Title"
+				/>
+			</StackPanel>
+		</Grid>
 		<controls:BindableGridControl
 			Style="{StaticResource GridViewStyle}"
 			Grid.Row="2"
