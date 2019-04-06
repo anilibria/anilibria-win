@@ -871,34 +871,45 @@
 			Background="#b3b3b3">
 			<RelativePanel
 				HorizontalAlignment="Stretch">
-				
-				
+				<ToggleSwitch
+					HorizontalAlignment="Center"
+					OnContent="Множественный"
+					OffContent="Одиночный"
+					FontSize="12"
+					IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+				</ToggleSwitch>
+				<StackPanel RelativePanel.AlignRightWithPanel="True" Orientation="Horizontal" HorizontalAlignment="Right">
+					<StackPanel Orientation="Vertical">
+						<TextBlock
+							TextAlignment="Right"
+							Foreground="White"
+							FontSize="18"
+							FontWeight="Bold">
+							User name
+						</TextBlock>
+						<TextBlock
+							Foreground="White"
+							FontSize="14"
+							TextAlignment="Right">
+							Выйти
+						</TextBlock>
+					</StackPanel>
+				</StackPanel>
 			</RelativePanel>
 		</Border>
-		<Grid
+		<RelativePanel
 			Grid.Row="1"
 			Grid.Column="1"
 			Margin="0 2 0 2">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
 			<ComboBox
-				Grid.Column="0"
+				RelativePanel.AlignHorizontalCenterWithPanel="True"
+				Style="{StaticResource AnilibriaComboBox}"
 				ItemsSource="{Binding Sections}"
 				SelectedItem="{Binding SelectedSection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				Width="300"
 				DisplayMemberPath="Title"
 			/>
-			<ToggleSwitch
-				Grid.Column="1"
-				HorizontalAlignment="Right"
-				OnContent="Множественный"
-				OffContent="Одиночный"
-				FontSize="12"
-				IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-			</ToggleSwitch>
-		</Grid>
+		</RelativePanel>
 		<controls:BindableGridControl
 			Style="{StaticResource GridViewStyle}"
 			Grid.Row="2"

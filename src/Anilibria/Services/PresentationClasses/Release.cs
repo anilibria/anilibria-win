@@ -54,15 +54,6 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Poster for card.
-		/// </summary>
-		public string PosterFull
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// Favorite info.
 		/// </summary>
 		public Favorite Favorite
@@ -72,7 +63,7 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// ?????.
+		/// Timestamp last updated.
 		/// </summary>
 		public string Last
 		{

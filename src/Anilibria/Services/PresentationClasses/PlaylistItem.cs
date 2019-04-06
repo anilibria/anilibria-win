@@ -43,6 +43,33 @@ namespace Anilibria.Services.PresentationClasses {
 			set;
 		}
 
+		/// <summary>
+		/// SD source for download as single video file.
+		/// </summary>
+		public Uri SrcSd
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// SD source for download as single video file.
+		/// </summary>
+		public Uri SrcHd
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Full HD (optional).
+		/// </summary>
+		public Uri FullHd
+		{
+			get;
+			set;
+		}
+
 	}
 
 }
