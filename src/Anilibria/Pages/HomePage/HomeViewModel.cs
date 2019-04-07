@@ -109,7 +109,7 @@ namespace Anilibria.Pages.HomePage {
 			SignoutCommand = CreateCommand ( Signout );
 		}
 
-		private async void Signout () {
+		public async void Signout () {
 			try {
 				await m_AnilibriaApiService.Logout ();
 				RefreshOptions ();

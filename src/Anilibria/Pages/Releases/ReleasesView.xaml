@@ -900,21 +900,59 @@
 					FontSize="12"
 					IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 				</ToggleSwitch>
-				<StackPanel RelativePanel.AlignRightWithPanel="True" Orientation="Horizontal" HorizontalAlignment="Right">
+				<StackPanel
+					Visibility="{Binding IsAuthorized}"
+					RelativePanel.AlignRightWithPanel="True"
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
 					<StackPanel Orientation="Vertical">
 						<TextBlock
 							TextAlignment="Right"
 							Foreground="White"
 							FontSize="18"
-							FontWeight="Bold">
-							User name
-						</TextBlock>
-						<TextBlock
-							Foreground="White"
-							FontSize="14"
-							TextAlignment="Right">
-							Выйти
-						</TextBlock>
+							FontWeight="Bold"
+							Text="{Binding UserModel.Login}"
+						/>
+						<controls:PointingGridControl
+							Tapped="SingoutTapped">
+							<TextBlock
+								Foreground="White"
+								FontSize="14"
+								TextAlignment="Right">
+								Выйти
+							</TextBlock>
+						</controls:PointingGridControl>
+					</StackPanel>
+					<Grid>
+						<controls:PointingGridControl
+							VerticalAlignment="Bottom"
+							Margin="3 0 0 2"
+							Tapped="SingoutTapped"
+							Width="12"
+							Height="12">
+							<Image
+								Source="/Assets/Icons/logout.svg"
+								Stretch="Uniform"
+								Width="12"
+								Height="12"
+							/>
+						</controls:PointingGridControl>
+					</Grid>
+					<StackPanel
+						Margin="15 0 0 0"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center">
+						<Ellipse
+							Width="34"
+							Height="34"
+							Grid.Column="0">
+							<Ellipse.Fill>
+								<ImageBrush
+									ImageSource="{Binding UserModel.ImageUrl}"
+									Stretch="Uniform"
+								/>
+							</Ellipse.Fill>
+						</Ellipse>
 					</StackPanel>
 				</StackPanel>
 			</RelativePanel>

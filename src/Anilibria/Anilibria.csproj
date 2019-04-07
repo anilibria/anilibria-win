@@ -161,6 +161,8 @@
     <Compile Include="Pages\HomePage\HomeViewModel.cs" />
     <Compile Include="Pages\HomePage\PresentationClasses\SplitViewItem.cs" />
     <Compile Include="Pages\INavigation.cs" />
+    <Compile Include="Pages\Models\ReleaseNavigateEvent.cs" />
+    <Compile Include="Pages\Models\ReleaseNavigateEventType.cs" />
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerView.xaml.cs">
       <DependentUpon>OnlinePlayerView.xaml</DependentUpon>
     </Compile>

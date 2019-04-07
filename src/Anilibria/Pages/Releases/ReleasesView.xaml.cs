@@ -70,6 +70,10 @@ namespace Anilibria.Pages.Releases {
 			if ( dataContext.SelectedSection?.Type != SectionType.NewTorrentSeries ) dataContext.SelectedSection = dataContext.Sections.FirstOrDefault ( a => a.Type == SectionType.NewTorrentSeries );
 		}
 
+		private void SingoutTapped ( object sender , TappedRoutedEventArgs e ) {
+			var dataContext = (ReleasesViewModel) DataContext;
+			dataContext.Signout ();
+		}
 	}
 
 }

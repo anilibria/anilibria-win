@@ -10,6 +10,7 @@ using Anilibria.MVVM;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Services.Implementations;
+using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.System;
@@ -96,6 +97,8 @@ namespace Anilibria.Pages.Releases {
 		private bool m_IsShowNotification;
 
 		private ChangesEntity m_Changes;
+
+		private UserModel m_UserModel;
 
 		/// <summary>
 		/// Constructor injection.
@@ -353,7 +356,9 @@ namespace Anilibria.Pages.Releases {
 				if ( userModel != null ) {
 					var userFavorite = userFavoritesCollection.FirstOrDefault ( a => a.Id == userModel.Id );
 					if ( userFavorite != null ) favorites.AddRange ( userFavorite.Releases );
+					userModel.ImageUrl = m_AnilibriaApiService.GetUrl ( userModel.Avatar );
 				}
+				UserModel = userModel;
 			}
 
 			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
@@ -926,6 +931,15 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// User model.
+		/// </summary>
+		public UserModel UserModel
+		{
+			get => m_UserModel;
+			set => Set ( ref m_UserModel , value );
+		}
+
+		/// <summary>
 		/// Change page handler.
 		/// </summary>
 		public Action<string , object> ChangePage
@@ -938,6 +952,15 @@ namespace Anilibria.Pages.Releases {
 		/// Show sidebar.
 		/// </summary>
 		public Action ShowSidebar
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Signout.
+		/// </summary>
+		public Action Signout
 		{
 			get;
 			set;

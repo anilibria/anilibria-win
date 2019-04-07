@@ -99,6 +99,7 @@ namespace Anilibria {
 			var releasesViewModel = Releases.DataContext as ReleasesViewModel;
 			releasesViewModel.ShowSidebar = ShowSidebar;
 			releasesViewModel.ChangePage = ChangePage;
+			releasesViewModel.Signout = homeViewModel.Signout;
 
 			homeViewModel.RefreshFavorites = releasesViewModel.SynchronizeFavorites;
 		}
