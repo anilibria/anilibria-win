@@ -88,7 +88,10 @@
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="Button">
-						<Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+						<Grid
+							x:Name="RootGrid"
+							Background="{TemplateBinding Background}"
+							CornerRadius="14">
 							<VisualStateManager.VisualStateGroups>
 								<VisualStateGroup x:Name="CommonStates">
 									<VisualState x:Name="Normal">

@@ -790,10 +790,10 @@
 										У Вас нет новых уведомлений
 									</TextBlock>
 									<Button
+										Style="{StaticResource ActionButtonStyle}"
 										Visibility="{Binding IsShowNotification}"
 										Command="{Binding ResetNotificationCommand}"
-										Margin="0 2 0 2"
-										Foreground="Black">
+										Margin="0 2 0 2">
 										Отметить все как просмотренное
 									</Button>
 									<controls:PointingGridControl
@@ -999,15 +999,17 @@
 			Grid.RowSpan="2"
 			Grid.ColumnSpan="2"
 			BorderBrush="#881919"
-			BorderThickness="2"
+			BorderThickness="0"
+			CornerRadius="8"
 			MaxWidth="800"
 			VerticalAlignment="Center"
 			Visibility="{Binding IsShowReleaseCard}">
 			<Grid
-				Background="White">
+				Background="#f2f2f2">
 				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition />
-					<ColumnDefinition />
+					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
@@ -1016,21 +1018,14 @@
 				</Grid.RowDefinitions>
 				<StackPanel
 					Grid.Row="0"
-					Grid.Column="0"
-					Margin="18 16 6 0">
+					Grid.Column="1"
+					Margin="2 16 6 0">
 					<TextBlock
-						Foreground="#b32121"
+						Foreground="#a32727"
 						Text="{Binding OpenedRelease.Title}"
 						TextWrapping="Wrap"
-						TextAlignment="Center"
-						HorizontalAlignment="Center">
-
-					</TextBlock>
-					<Border
-						BorderBrush="#d3d3d3"
-						BorderThickness="1"
-						Margin="0 0 0 4">
-					</Border>
+						FontWeight="SemiBold"
+					/>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
 							Foreground="Black">
@@ -1093,15 +1088,12 @@
 							/>
 						</TextBlock>
 					</StackPanel>
-					<Border
-						BorderBrush="#d3d3d3"
-						BorderThickness="1"
-						Margin="0 6 0 4">
-					</Border>
-					<StackPanel Orientation="Vertical">
+					<StackPanel
+						Orientation="Vertical"
+						Margin="0 6 0 0">
 						<ScrollViewer
 							x:Name="CardDescription"
-							MaxHeight="310">
+							MaxHeight="190">
 							<TextBlock
 								TextWrapping="WrapWholeWords"
 								Foreground="Black"
@@ -1111,9 +1103,74 @@
 						</ScrollViewer>
 					</StackPanel>
 				</StackPanel>
+				<StackPanel
+					Grid.Row="0"
+					Grid.Column="2"
+					Orientation="Vertical"
+					Margin="4 16 16 0">
+					<controls:PointingGridControl
+								x:Name="CloseButton"
+								Width="20"
+								Height="20"
+								Margin="4 0 1 8"
+								Tapped="Rectangle_Tapped"
+								ToolTipService.ToolTip="Закрыть карточку">
+						<Image
+									Source="/Assets/Icons/close.svg"
+									Stretch="Uniform"
+									Width="20"
+									Height="20"
+								/>
+					</controls:PointingGridControl>
+					<Grid Visibility="{Binding IsAuthorized}">
+						<controls:PointingGridControl
+									Width="20"
+									Height="20"
+									Margin="4 2 1 8"
+									Visibility="{Binding OpenedReleaseInFavorite, Converter={StaticResource InverseBoolConverter}}"
+									Tapped="PointingGridControl_Tapped"
+									ToolTipService.ToolTip="Добавить в избранное">
+							<Image
+										Source="/Assets/Icons/favoriteblack.svg"
+										Stretch="Uniform"
+										Width="20"
+										Height="20"
+									/>
+						</controls:PointingGridControl>
+						<controls:PointingGridControl
+									Width="20"
+									Height="20"
+									Margin="4 2 1 8"
+									x:Name="RemoveFavoriteButton"
+									Visibility="{Binding OpenedReleaseInFavorite}"
+									Tapped="RemoveFavoriteButton_Tapped"
+									ToolTipService.ToolTip="Удалить из избранного">
+							<Image
+										Source="/Assets/Icons/removefavorite.svg"
+										Stretch="Uniform"
+										Width="20"
+										Height="20"
+									/>
+						</controls:PointingGridControl>
+					</Grid>
+					<controls:PointingGridControl
+									Width="20"
+									Height="20"
+									Margin="4 2 1 8"
+									x:Name="ShowComments"
+									Tapped="ShowComments_Tapped"
+									ToolTipService.ToolTip="Открыть коментарии">
+						<Image
+										Source="/Assets/Icons/chat.svg"
+										Stretch="Uniform"
+										Width="20"
+										Height="20"
+									/>
+					</controls:PointingGridControl>
+				</StackPanel>
 				<Grid
 					Grid.Row="0"
-					Grid.Column="1"
+					Grid.Column="0"
 					Margin="0 16 6 0"
 					HorizontalAlignment="Stretch">
 					<StackPanel
@@ -1122,81 +1179,22 @@
 						HorizontalAlignment="Center">
 						<Border
 							x:Name="CardPosterBorder"
-							BorderBrush="#d3d3d3"
-							BorderThickness="4"
+							Margin="16 0 16 0"
+							BorderBrush="#adadad"
+							BorderThickness="2"
+							CornerRadius="8"
 							HorizontalAlignment="Stretch"
-							Height="450">
-							<Image
-								x:Name="CardPoster"
-								Stretch="Uniform"
-								Height="450"
-								HorizontalAlignment="Center"
-								Tag="{Binding OpenedRelease.Id}"
-								converters:CacheImageConverter.ImageGroup="Poster"
-								converters:CacheImageConverter.ImagePath="{Binding OpenedRelease.Poster}"
-							/>
-						</Border>
-						<StackPanel Orientation="Vertical">
-							<controls:PointingGridControl
-								x:Name="CloseButton"
-								Width="24"
-								Height="24"
-								Margin="4 0 1 1"
-								Tapped="Rectangle_Tapped"
-								ToolTipService.ToolTip="Закрыть карточку">
-								<Image
-									Source="/Assets/Icons/close.svg"
-									Stretch="Uniform"
-									Width="24"
-									Height="24"
+							Height="300"
+							Width="200">
+							<Border.Background>
+								<ImageBrush
+									Stretch="UniformToFill"
+									converters:CacheImageBrushConverter.ImageId="{Binding OpenedRelease.Id}"
+									converters:CacheImageBrushConverter.ImageGroup="Poster"
+									converters:CacheImageBrushConverter.ImagePath="{Binding OpenedRelease.Poster}"
 								/>
-							</controls:PointingGridControl>
-							<Grid Visibility="{Binding IsAuthorized}">
-								<controls:PointingGridControl
-									Width="24"
-									Height="24"
-									Margin="4 2 1 1"
-									Visibility="{Binding OpenedReleaseInFavorite, Converter={StaticResource InverseBoolConverter}}"
-									Tapped="PointingGridControl_Tapped"
-									ToolTipService.ToolTip="Добавить в избранное">
-									<Image
-										Source="/Assets/Icons/favoriteblack.svg"
-										Stretch="Uniform"
-										Width="24"
-										Height="24"
-									/>
-								</controls:PointingGridControl>
-								<controls:PointingGridControl
-									Width="24"
-									Height="24"
-									Margin="4 2 1 1"
-									x:Name="RemoveFavoriteButton"
-									Visibility="{Binding OpenedReleaseInFavorite}"
-									Tapped="RemoveFavoriteButton_Tapped"
-									ToolTipService.ToolTip="Удалить из избранного">
-									<Image
-										Source="/Assets/Icons/removefavorite.svg"
-										Stretch="Uniform"
-										Width="24"
-										Height="24"
-									/>
-								</controls:PointingGridControl>
-							</Grid>
-							<controls:PointingGridControl
-									Width="24"
-									Height="24"
-									Margin="4 2 1 1"
-									x:Name="ShowComments"
-									Tapped="ShowComments_Tapped"
-									ToolTipService.ToolTip="Открыть коментарии">
-								<Image
-										Source="/Assets/Icons/chat.svg"
-										Stretch="Uniform"
-										Width="24"
-										Height="24"
-									/>
-							</controls:PointingGridControl>
-						</StackPanel>
+							</Border.Background>
+						</Border>
 					</StackPanel>
 				</Grid>
 				<Grid
@@ -1206,36 +1204,28 @@
 					Margin="0 0 0 10"
 					Visibility="{Binding IsShowComments, Converter={StaticResource InverseBoolConverter}}">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*" />
-						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="0.6*" />
+						<ColumnDefinition Width="0.4*" />
 					</Grid.ColumnDefinitions>
 					<StackPanel
-						Grid.Column="0"
+						Grid.Column="1"
 						Orientation="Vertical">
-						<TextBlock
-							TextAlignment="Center"
-							FontWeight="Bold"
-							FontSize="20"
-							Margin="0 0 0 4"
-							Foreground="Black">
-							Смотреть онлайн
-						</TextBlock>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition />
-								<ColumnDefinition />
+								<ColumnDefinition Width="Auto" />
 							</Grid.ColumnDefinitions>
 							<TextBlock
 								VerticalAlignment="Center"
 								HorizontalAlignment="Right"
+								Margin="0 0 20 0"
 								Foreground="Black">
 								<Run>Доступно</Run>
 								<Run Text="{Binding OpenedRelease.CountVideoOnline}" />
 								<Run>видео</Run>
 							</TextBlock>
 							<Button
-								HorizontalAlignment="Center"
+								HorizontalAlignment="Right"
 								Grid.Column="1"
 								Command="{Binding OpenOnlineVideoCommand}"
 								Style="{StaticResource ActionButtonStyle}">
@@ -1243,25 +1233,11 @@
 							</Button>
 						</Grid>
 					</StackPanel>
-					<Border
-						Grid.Column="1"
-						BorderBrush="#d3d3d3"
-						BorderThickness="0 0 2 0"
-						Margin="8 0 8 0"
-					/>
 					<StackPanel
-						Grid.Column="2">
-						<TextBlock
-							TextAlignment="Center"
-							FontWeight="Bold"
-							FontSize="20"
-							Margin="0 0 0 4"
-							Foreground="Black">
-							Скачать торрентом
-						</TextBlock>
+						Grid.Column="0">
 						<ScrollViewer MaxHeight="50">
 							<ItemsControl
-								Margin="0 0 18 0"
+								Margin="18 0 0 0"
 								ItemsSource="{Binding OpenedRelease.Torrents}">
 								<ItemsControl.ItemsPanel>
 									<ItemsPanelTemplate>
@@ -1282,26 +1258,10 @@
 												VerticalAlignment="Center">
 												<Run Text="{Binding Series}"></Run>
 												<Run Text="{Binding Quality}"></Run>
-											</TextBlock>
-											<TextBlock
-												Grid.Column="1"
-												VerticalAlignment="Center"
-												HorizontalAlignment="Center"
-												TextAlignment="Center"
-												Margin="2 0 2 0"
-												Foreground="Black">
-												<Run
-													Foreground="Olive"
-													Text="{Binding Size}"
-												/>
-												<Run>Скачан</Run>
-												<Run
-													Foreground="ForestGreen"
-													Text="{Binding Completed}"
-												/>
+												<Run Text="{Binding Size}"></Run>
 											</TextBlock>
 											<Button
-												Grid.Column="2" Margin="0 1 0 1"
+												Grid.Column="2" Margin="0 1 18 1"
 												Command="{Binding DataContext.OpenTorrentCommand, ElementName=ReleasesContainer}"
 												CommandParameter="{Binding Url}"
 												Style="{StaticResource ActionButtonStyle}"
@@ -1328,7 +1288,7 @@
 					</Button>
 				</Grid>
 				<WebView
-					Grid.ColumnSpan="2"
+					Grid.ColumnSpan="3"
 					Grid.RowSpan="1"
 					Visibility="{Binding IsShowComments}"
 					Source="{Binding CommentsUri}"
@@ -1337,13 +1297,11 @@
 		</Border>
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup>
-				<VisualState x:Name="ExtraWide">
+				<!--<VisualState x:Name="ExtraWide">
 					<VisualState.StateTriggers>
 						<AdaptiveTrigger MinWindowWidth="1800" MinWindowHeight="1200" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="CardPosterBorder.Height" Value="550" />
-						<Setter Target="CardPoster.Height" Value="550" />
 						<Setter Target="CardDescription.Height" Value="400" />
 					</VisualState.Setters>
 				</VisualState>
@@ -1352,8 +1310,6 @@
 						<AdaptiveTrigger MinWindowWidth="1400" MinWindowHeight="720" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="CardPosterBorder.Height" Value="450" />
-						<Setter Target="CardPoster.Height" Value="450" />
 						<Setter Target="CardDescription.Height" Value="310" />
 					</VisualState.Setters>
 				</VisualState>
@@ -1362,20 +1318,17 @@
 						<AdaptiveTrigger MinWindowWidth="720" MinWindowHeight="440" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="CardPosterBorder.Height" Value="320" />
-						<Setter Target="CardPoster.Height" Value="320" />
 						<Setter Target="CardDescription.Height" Value="190" />
 					</VisualState.Setters>
-				</VisualState>
-				<VisualState x:Name="Snapped">
+				</VisualState>-->
+				<!--<VisualState x:Name="Snapped">
 					<VisualState.StateTriggers>
 						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
 						<Setter Target="CardPosterBorder.Height" Value="250" />
-						<Setter Target="CardPoster.Height" Value="250" />
 					</VisualState.Setters>
-				</VisualState>
+				</VisualState>-->
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 	</Grid>
