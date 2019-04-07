@@ -561,7 +561,6 @@
 			Background="#ba2d2d"
 			Width="44">
 			<Button
-					x:Name="SidebarButton2"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Style="{StaticResource IconsButtonStyle}"

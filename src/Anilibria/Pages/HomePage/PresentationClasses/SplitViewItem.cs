@@ -35,6 +35,15 @@ namespace Anilibria.Pages.HomePage.PresentationClasses {
 		}
 
 		/// <summary>
+		/// Icon in uri respresent.
+		/// </summary>
+		public Uri IconUri
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Is visible.
 		/// </summary>
 		public Func<bool> IsVisible

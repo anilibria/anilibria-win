@@ -59,24 +59,28 @@ namespace Anilibria.Pages.HomePage {
 					Name = "Каталог релизов",
 					Page = ReleasesPage,
 					Icon = "\xF168",
+					IconUri = new Uri("ms-appx:///Assets/Icons/hambergermenu.svg"),
 					IsVisible = StubMenuIsVisible
 				},
 				new SplitViewItem {
 					Name = "Видеоплеер",
 					Page = PlayerPage,
 					Icon = "\xE714",
+					IconUri = new Uri("ms-appx:///Assets/Icons/videoplayer.svg"),
 					IsVisible = StubMenuIsVisible
 				},
 				new SplitViewItem {
 					Name = "Yotube",
 					Page = YoutubePage,
 					Icon = "\xE786",
+					IconUri = new Uri("ms-appx:///Assets/Icons/youtube.svg"),
 					IsVisible = StubMenuIsVisible
 				},
 				new SplitViewItem {
 					Name = "Войти",
 					Page = AuthorizePage,
 					Icon = "\xE77B",
+					IconUri = new Uri("ms-appx:///Assets/Icons/user.svg"),
 					IsVisible = AuthorizeOptionIsVisible
 				}
 				/*,

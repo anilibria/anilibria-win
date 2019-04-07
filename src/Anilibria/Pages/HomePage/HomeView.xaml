@@ -52,10 +52,16 @@
 			DisplayMode="Overlay"
 			OpenPaneLength="260">
 			<SplitView.Pane>
-				<RelativePanel
-					Background="#D3D3D3"
-					BorderBrush="#881919"
-					BorderThickness="0 0 2 0">
+				<RelativePanel>
+					<RelativePanel.Background>
+						<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+							<GradientStop Color="#6b0200" Offset="0.0"></GradientStop>
+							<GradientStop Color="#ab0909" Offset="0.3"></GradientStop>
+							<GradientStop Color="#d41515" Offset="0.5"></GradientStop>
+							<GradientStop Color="#fc2626" Offset="0.7"></GradientStop>
+							<GradientStop Color="#f52c39" Offset="1"></GradientStop>
+						</LinearGradientBrush>
+					</RelativePanel.Background>
 					<Grid
 						x:Name="UserInfo"
 						RelativePanel.AlignTopWithPanel="True"
@@ -84,12 +90,13 @@
 							Grid.Column="1"
 							Margin="8 0 0 0"
 							TextAlignment="Center"
+							HorizontalAlignment="Center"
 							VerticalAlignment="Center"
 							Text="{Binding UserModel.Login}"
 							TextTrimming="CharacterEllipsis"
 							TextWrapping="Wrap"
 							MaxLines="2"
-							Foreground="Black"
+							Foreground="White"
 						/>
 						<controls:PointingGridControl
 							Grid.Column="2"
@@ -111,21 +118,22 @@
 						RelativePanel.AlignLeftWithPanel="True"
 						HorizontalAlignment="Stretch"
 						ItemsSource="{Binding Items}"
+						ItemContainerStyle="{StaticResource SidebarListViewItem}"
 						SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 						<ListView.ItemTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-									<TextBlock
-										Text="{Binding Icon}"
-										FontFamily="Segoe MDL2 Assets"
-										FontSize="30"
-										Foreground="Black"
+									<Image
+										Width="28"
+										Height="28"
+										Stretch="Uniform"
+										Source="{Binding IconUri}"
 									/>
 									<TextBlock
 										Text="{Binding Name}"
 										VerticalAlignment="Center"
 										Margin="10 0 0 0"
-										Foreground="Black"
+										Foreground="White"
 									/>
 								</StackPanel>
 							</DataTemplate>
@@ -151,8 +159,8 @@
 							VerticalAlignment="Center"
 							Grid.Column="1"
 							Margin="8 0 0 0">
-							<TextBlock Foreground="Black">Клиент для сайта AniLibria</TextBlock>
-							<TextBlock Foreground="Black">
+							<TextBlock Foreground="White">Клиент для сайта AniLibria</TextBlock>
+							<TextBlock Foreground="White">
 								<Run>версия</Run>
 								<Run Text="{Binding Version}" />
 							</TextBlock>
