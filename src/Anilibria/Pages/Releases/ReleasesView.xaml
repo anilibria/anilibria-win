@@ -612,18 +612,22 @@
 								</Style>
 							</MenuFlyout.MenuFlyoutPresenterStyle>
 							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Добавить в избранное"
 								Command="{Binding AddToFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Удалить из избранного"
 								Command="{Binding RemoveFromFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Добавить в локальное избранное"
 								Command="{Binding AddToLocalFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Удалить из локального избранного"
 								Command="{Binding RemoveFromLocalFavoritesCommand}"
 							/>
