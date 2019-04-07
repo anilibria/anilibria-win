@@ -781,6 +781,13 @@
 						/>
 						<Button.Flyout>
 							<Flyout>
+								<Flyout.FlyoutPresenterStyle>
+									<Style TargetType="FlyoutPresenter">
+										<Setter Property="Background" Value="#e6e6e6" />
+										<Setter Property="BorderThickness" Value="1" />
+										<Setter Property="BorderBrush" Value="#f0f0f0" />
+									</Style>
+								</Flyout.FlyoutPresenterStyle>
 								<StackPanel>
 									<TextBlock
 										Visibility="{Binding IsShowNotification, Converter={StaticResource InverseBoolConverter}}"
@@ -814,7 +821,8 @@
 													Foreground="Black"
 												/>
 												<TextBlock
-													Grid.Column="1">
+													Grid.Column="1"
+													Foreground="Black">
 													Новых релизов
 												</TextBlock>
 											</StackPanel>
@@ -839,7 +847,8 @@
 													Foreground="Black"
 												/>
 												<TextBlock
-													Grid.Column="1">
+													Grid.Column="1"
+													Foreground="Black">
 													Новых онлайн серий
 												</TextBlock>
 											</StackPanel>
@@ -864,7 +873,8 @@
 													Foreground="Black"
 												/>
 												<TextBlock
-													Grid.Column="1">
+													Grid.Column="1"
+													Foreground="Black">
 													Новые торренты
 												</TextBlock>
 											</StackPanel>
