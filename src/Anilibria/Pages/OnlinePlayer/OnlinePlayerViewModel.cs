@@ -83,6 +83,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsShowReleaseInfo;
 
+		private bool m_IsExistsFullHD;
+
+		private bool m_IsFullHD;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -189,6 +193,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void ChangeVideoSource () {
 			if ( m_SelectedOnlineVideo == null ) return;
 
+			if ( IsFullHD ) {
+				VideoSource = m_SelectedOnlineVideo.FullHDQuality;
+				return;
+			}
 			VideoSource = IsHD ? m_SelectedOnlineVideo.HDQuality : m_SelectedOnlineVideo.SDQuality;
 		}
 
@@ -286,6 +294,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							HDQuality = a.HD ,
 							Order = a.Id ,
 							SDQuality = a.SD ,
+							FullHDQuality = a.FullHD ,
 							Title = a.Title
 						}
 					)
@@ -498,7 +507,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_IsHD , value ) ) return;
 
-				IsSD = !value;
+				m_IsSD = !value;
+				m_IsFullHD = !value;
+				RaisePropertyChanged ( () => IsSD );
+				RaisePropertyChanged ( () => IsFullHD );
 
 				ApplicationData.Current.RoamingSettings.Values[PlayerQualitySettings] = value;
 
@@ -517,13 +529,45 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_IsSD , value ) ) return;
 
-				IsHD = !value;
+				m_IsHD = !value;
+				m_IsFullHD = !value;
+				RaisePropertyChanged ( () => IsHD );
+				RaisePropertyChanged ( () => IsFullHD );
 
 				ApplicationData.Current.RoamingSettings.Values[PlayerQualitySettings] = IsHD;
 
 				m_RestorePosition = Position;
 				ChangeVideoSource ();
 			}
+		}
+
+		/// <summary>
+		/// Is HD quality.
+		/// </summary>
+		public bool IsFullHD
+		{
+			get => m_IsFullHD;
+			set
+			{
+				if ( !Set ( ref m_IsFullHD , value ) ) return;
+
+				m_IsHD = !value;
+				m_IsSD = !value;
+				RaisePropertyChanged ( () => IsHD );
+				RaisePropertyChanged ( () => IsSD );
+
+				m_RestorePosition = Position;
+				ChangeVideoSource ();
+			}
+		}
+
+		/// <summary>
+		/// is exists fullHD quality.
+		/// </summary>
+		public bool IsExistsFullHD
+		{
+			get => m_IsExistsFullHD;
+			set => Set ( ref m_IsExistsFullHD , value );
 		}
 
 		/// <summary>
@@ -584,6 +628,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( m_SelectedOnlineVideo != null ) {
 					//WORKAROUND: reactive value changed only after real value changed.
 					if ( !IsVideosFlyoutVisible ) IsVideosFlyoutVisible = true;
+					IsExistsFullHD = m_SelectedOnlineVideo.FullHDQuality != null;
+					if ( !IsExistsFullHD && IsFullHD ) {
+						m_IsFullHD = false;
+						m_IsHD = false;
+						m_IsSD = true;
+						RaisePropertyChanged ( () => IsSD );
+						RaisePropertyChanged ( () => IsHD );
+						RaisePropertyChanged ( () => IsFullHD );
+					}
 					IsVideosFlyoutVisible = false;
 					ChangeVideoSource ();
 					SavePlayerRestoreState ();

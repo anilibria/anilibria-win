@@ -580,7 +580,9 @@ namespace Anilibria.Pages.Releases {
 							Order = videoOnline.Id ,
 							Title = videoOnline.Title ,
 							HDQuality = videoOnline.HD ,
-							SDQuality = videoOnline.SD
+							SDQuality = videoOnline.SD,
+							FullHDQuality = videoOnline.FullHD,
+
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
 				}

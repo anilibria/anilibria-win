@@ -43,6 +43,15 @@ namespace Anilibria.Storage.Entities {
 			set;
 		}
 
+		/// <summary>
+		/// Full in HD quality.
+		/// </summary>
+		public Uri FullHD
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

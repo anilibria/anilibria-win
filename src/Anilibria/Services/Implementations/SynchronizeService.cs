@@ -91,7 +91,8 @@ namespace Anilibria.Services.Implementations {
 							Id = a.Id ,
 							Title = a.Title ,
 							HD = a.HD ,
-							SD = a.SD
+							SD = a.SD ,
+							FullHD = a.FullHd
 						}
 					)
 					.ToArray () ?? Enumerable.Empty<PlaylistItemEntity> () ,
@@ -149,6 +150,7 @@ namespace Anilibria.Services.Implementations {
 							Id = a.Id ,
 							HD = a.HD ,
 							SD = a.SD ,
+							FullHD = a.FullHd ,
 							Title = a.Title
 						}
 					)

@@ -43,6 +43,15 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 			set;
 		}
 
+		/// <summary>
+		/// Link to video in FullHD quality.
+		/// </summary>
+		public Uri FullHDQuality
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

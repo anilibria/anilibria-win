@@ -1115,6 +1115,15 @@
 													Orientation="Horizontal"
 													HorizontalAlignment="Center">
 													<ToggleButton
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsExistsFullHD}"
+														Style="{StaticResource QualityToggleButton}"
+														Foreground="Black"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsFullHD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														1080p
+													</ToggleButton>
+													<ToggleButton
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
 														Height="40"
