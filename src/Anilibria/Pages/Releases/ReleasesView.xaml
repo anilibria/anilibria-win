@@ -908,6 +908,10 @@
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<ToggleSwitch
+					Margin="8 0 0 0"
+					RelativePanel.AlignLeftWithPanel="True"
+					RelativePanel.AlignTopWithPanel="True"
+					RelativePanel.AlignBottomWithPanel="True"
 					HorizontalAlignment="Center"
 					OnContent="Множественный"
 					OffContent="Одиночный"

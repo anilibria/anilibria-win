@@ -131,6 +131,19 @@
 				<TextBlock
 					Foreground="Black"
 					FontSize="24"
+					Margin="0 10 0 10"
+					HorizontalAlignment="Center">
+					Дизайн:
+				</TextBlock>
+				<TextBlock
+					Foreground="Black"
+					FontSize="22"
+					HorizontalAlignment="Center">
+					Sebastian Wilde
+				</TextBlock>
+				<TextBlock
+					Foreground="Black"
+					FontSize="24"
 					Margin="0 20 0 10"
 					HorizontalAlignment="Center">
 					Используемые иконки:
@@ -240,6 +253,28 @@
 					HorizontalAlignment="Center">
 					<Run>Icons made by</Run>
 					<Hyperlink NavigateUri="https://www.flaticon.com/authors/pixel-perfect">Pixel perfect</Hyperlink>
+					<Run>from</Run>
+					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Run>is licensed by</Run>
+					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+				</TextBlock>
+				<TextBlock
+					Foreground="Black"
+					FontSize="16"
+					HorizontalAlignment="Center">
+					<Run>Icons made by</Run>
+					<Hyperlink NavigateUri="https://www.flaticon.com/authors/gregor-cresnar">Gregor Cresnar</Hyperlink>
+					<Run>from</Run>
+					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Run>is licensed by</Run>
+					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+				</TextBlock>
+				<TextBlock
+					Foreground="Black"
+					FontSize="16"
+					HorizontalAlignment="Center">
+					<Run>Icons made by</Run>
+					<Hyperlink NavigateUri="https://www.flaticon.com/authors/eleonor-wang">Eleonor Wang</Hyperlink>
 					<Run>from</Run>
 					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
