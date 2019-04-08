@@ -377,7 +377,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			else {
 				Releases = parameter as IEnumerable<ReleaseModel>;
 				var release = Releases.First ();
-				m_ReleaseVideoStateEntity = m_ReleaseStateCollection.FirstOrDefault ( a => a.ReleaseId == release.Id );
+				m_ReleaseVideoStateEntity = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id );
 				int onlineVideoIndex = -1;
 				if ( m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
 					onlineVideoIndex = m_ReleaseVideoStateEntity.VideoStates.Max ( a => a.Id );
@@ -386,7 +386,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				}
 
 				SelectedRelease = release;
-				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos.First () : SelectedRelease.OnlineVideos.First ( a => a.Order == onlineVideoIndex );
+				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos.Last () : SelectedRelease.OnlineVideos.First ( a => a.Order == onlineVideoIndex );
 
 
 

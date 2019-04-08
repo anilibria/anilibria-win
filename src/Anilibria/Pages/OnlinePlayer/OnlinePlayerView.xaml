@@ -1069,6 +1069,7 @@
 												MinWidth='80'
 												Height='33'
 												VerticalAlignment='Center'
+												IsTabStop="False"
 												IsThumbToolTipEnabled='False'/>
 											<ProgressBar x:Name='BufferingProgressBar'
 												Height='4'
@@ -1115,6 +1116,7 @@
 													Orientation="Horizontal"
 													HorizontalAlignment="Center">
 													<ToggleButton
+														IsTabStop="False"
 														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsExistsFullHD}"
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
@@ -1124,6 +1126,7 @@
 														1080p
 													</ToggleButton>
 													<ToggleButton
+														IsTabStop="False"
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
 														Height="40"
@@ -1132,6 +1135,7 @@
 														720p
 													</ToggleButton>
 													<ToggleButton
+														IsTabStop="False"
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
 														Height="40"
@@ -1175,14 +1179,16 @@
 													VerticalAlignment="Top"
 													ToolTipService.ToolTip="Открыть меню"
 													Width="50"
+													IsTabStop="False"
 													Style='{StaticResource PlayerFlyoutButtonStyle}'
 													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ShowSidebarCommand}">
 													<FontIcon Glyph="&#xE700;" />
 												</Button>
 												<Button x:Name='VolumeMuteButton'
-														Width="50"
-														Style="{StaticResource PlayerFlyoutButtonStyle}"
-														VerticalAlignment="Top">
+													IsTabStop="False"
+													Width="50"
+													Style="{StaticResource PlayerFlyoutButtonStyle}"
+													VerticalAlignment="Top">
 													<Button.Flyout>
 														<Flyout x:Name='VolumeFlyout' FlyoutPresenterStyle="{StaticResource FlyoutStyle}">
 															<StackPanel Orientation="Horizontal" >
@@ -1221,6 +1227,7 @@
 													ToolTipService.ToolTip="Выбор видео"
 													Style='{StaticResource PlayerFlyoutButtonStyle}'
 													Width="50"
+													IsTabStop="False"
 													VerticalAlignment="Top">
 													<Button.Flyout>
 														<Flyout
@@ -1266,6 +1273,7 @@
 													<AppBarButton x:Name='SkipBackwardButton'
 														Style='{StaticResource AppBarButtonStyle}'
 														MediaTransportControlsHelper.DropoutOrder='5'
+														IsTabStop="False"
 														Visibility='Collapsed'>
 														<AppBarButton.Icon>
 															<FontIcon Glyph="&#xED3C;" />
@@ -1274,6 +1282,7 @@
 													<AppBarButton x:Name='RewindButton'
 														Style='{StaticResource AppBarButtonStyle}'
 														MediaTransportControlsHelper.DropoutOrder='2'
+														IsTabStop="False"
 														Visibility='Collapsed'>
 														<AppBarButton.Icon>
 															<FontIcon Glyph="&#xEB9E;"/>
@@ -1281,6 +1290,7 @@
 													</AppBarButton>
 													<AppBarButton x:Name='PlayPauseButton'
 														Style='{StaticResource AppBarButtonStyle}'
+														IsTabStop="False"
 														MediaTransportControlsHelper.DropoutOrder='11'>
 														<AppBarButton.Icon>
 															<SymbolIcon x:Name='PlayPauseSymbol' Symbol='Play' />
@@ -1296,6 +1306,7 @@
 													</AppBarButton>
 													<AppBarButton x:Name='FastForwardButton'
 														Style='{StaticResource AppBarButtonStyle}'
+														IsTabStop="False"
 														MediaTransportControlsHelper.DropoutOrder='3'
 														Visibility='Collapsed'>
 														<AppBarButton.Icon>
@@ -1304,6 +1315,7 @@
 													</AppBarButton>
 													<AppBarButton x:Name='SkipForwardButton'
 														Style='{StaticResource AppBarButtonStyle}'
+														IsTabStop="False"
 														MediaTransportControlsHelper.DropoutOrder='5'
 														Visibility='Collapsed'>
 														<AppBarButton.Icon>
@@ -1326,6 +1338,7 @@
 												Style='{StaticResource CommandBarStyle}'
 												OverflowButtonVisibility="Collapsed">
 												<AppBarButton x:Name='CastButton'
+													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
 													MediaTransportControlsHelper.DropoutOrder='7'>
 													<AppBarButton.Icon>
@@ -1333,6 +1346,7 @@
 													</AppBarButton.Icon>
 												</AppBarButton>
 												<AppBarButton x:Name='ZoomButton'
+													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
 													MediaTransportControlsHelper.DropoutOrder='6'>
 													<AppBarButton.Icon>
@@ -1340,6 +1354,7 @@
 													</AppBarButton.Icon>
 												</AppBarButton>
 												<AppBarButton
+													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
 													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ToggleFullScreenCommand}">
 													<AppBarButton.Icon>
@@ -1347,6 +1362,7 @@
 													</AppBarButton.Icon>
 												</AppBarButton>
 												<AppBarButton x:Name='FullWindowButton'
+													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
 													MediaTransportControlsHelper.DropoutOrder='8'>
 													<AppBarButton.Icon>

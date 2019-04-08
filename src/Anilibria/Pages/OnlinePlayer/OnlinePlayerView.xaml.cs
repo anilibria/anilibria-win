@@ -194,7 +194,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
 			if ( Visibility != Visibility.Visible ) return;
 
-			if ( args.VirtualKey == VirtualKey.Space ) ControlPanel.Visibility = ControlPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+			if ( args.VirtualKey == VirtualKey.Space ) {
+				switch ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState ) {
+					case MediaPlaybackState.Playing:
+						OnlinePlayer.MediaPlayer.Pause ();
+						break;
+					case MediaPlaybackState.Paused:
+						OnlinePlayer.MediaPlayer.Play ();
+						break;
+				}
+			}
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {
