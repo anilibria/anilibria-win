@@ -190,7 +190,10 @@ namespace Anilibria.Services.Implementations {
 
 		public async Task SynchronizeReleases () {
 			try {
+				//uncomment experimental feature
+				//var touchedReleases = await m_AnilibriaApiService.GetTouchedReleases ();
 				var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
+				//var schedules = await m_AnilibriaApiService.GetSchedule ();
 
 				var collection = m_DataContext.GetCollection<ReleaseEntity> ();
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();

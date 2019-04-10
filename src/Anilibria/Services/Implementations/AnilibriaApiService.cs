@@ -125,6 +125,56 @@ namespace Anilibria.Services.Implementations {
 		}
 
 		/// <summary>
+		/// Get touched releases.
+		/// </summary>
+		/// <returns>Release's collection.</returns>
+		public async Task<IEnumerable<TouchReleaseModel>> GetTouchedReleases () {
+			var parameters = new List<KeyValuePair<string , string>> {
+				new KeyValuePair<string , string> ( "query" , "list" ),
+				new KeyValuePair<string , string> ( "filter" , "id,last" ),
+				new KeyValuePair<string , string> ( "page" , "1" ),
+				new KeyValuePair<string , string> ( "perPage" , "2000" )
+			};
+			var formContent = new FormUrlEncodedContent ( parameters );
+			var httpClient = new HttpClient ();
+			var result = await httpClient.PostAsync ( m_ApiIndexUrl , formContent );
+			var content = await result.Content.ReadAsStringAsync ();
+
+			var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList<TouchReleaseModel>>> ( content );
+			if ( !responseModel.Status ) {
+				//TODO: handle error
+			}
+
+			return responseModel.Data.Items.ToList ();
+		}
+
+		/// <summary>
+		/// Get schedule.
+		/// </summary>
+		/// <returns>Schedule data.</returns>
+		public async Task<IDictionary<int , IEnumerable<long>>> GetSchedule () {
+			var parameters = new List<KeyValuePair<string , string>> {
+				new KeyValuePair<string , string> ( "query" , "schedule" ),
+				new KeyValuePair<string , string> ( "filter" , "id" ),
+			};
+			var formContent = new FormUrlEncodedContent ( parameters );
+			var httpClient = new HttpClient ();
+			var result = await httpClient.PostAsync ( m_ApiIndexUrl , formContent );
+			var content = await result.Content.ReadAsStringAsync ();
+
+			var responseModel = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<ScheduleDayModel>>> ( content );
+			if ( !responseModel.Status ) {
+				//TODO: handle error 0_0
+			}
+
+			var daysDictionary = new Dictionary<int , IEnumerable<long>> ();
+			foreach ( var scheduleDay in responseModel.Data ) {
+				daysDictionary.Add ( scheduleDay.Day , scheduleDay.Items.Select ( a => a.Id ).ToList () );
+			}
+			return daysDictionary;
+		}
+
+		/// <summary>
 		/// Authentification by email and password.
 		/// </summary>
 		/// <param name="email">User email.</param>

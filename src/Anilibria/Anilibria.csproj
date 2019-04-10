@@ -217,8 +217,11 @@
     <Compile Include="Services\PresentationClasses\PagingList.cs" />
     <Compile Include="Services\PresentationClasses\PlaylistItem.cs" />
     <Compile Include="Services\PresentationClasses\Release.cs" />
+    <Compile Include="Services\PresentationClasses\ScheduleDayModel.cs" />
+    <Compile Include="Services\PresentationClasses\ScheduleModel.cs" />
     <Compile Include="Services\PresentationClasses\StatusType.cs" />
     <Compile Include="Services\PresentationClasses\TorrentItem.cs" />
+    <Compile Include="Services\PresentationClasses\TouchReleaseModel.cs" />
     <Compile Include="Services\PresentationClasses\UserModel.cs" />
     <Compile Include="Services\PresentationClasses\YoutubeModel.cs" />
     <Compile Include="Storage\Entities\ChangesEntity.cs" />

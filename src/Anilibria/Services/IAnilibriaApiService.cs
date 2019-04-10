@@ -21,6 +21,18 @@ namespace Anilibria.Services {
 		Task<IEnumerable<Release>> GetPage ( int page , int pageSize , string name = default ( string ) );
 
 		/// <summary>
+		/// Get touched releases.
+		/// </summary>
+		/// <returns>Release's collection.</returns>
+		Task<IEnumerable<TouchReleaseModel>> GetTouchedReleases ();
+
+		/// <summary>
+		/// Get schedule.
+		/// </summary>
+		/// <returns>Schedule data.</returns>
+		Task<IDictionary<int , IEnumerable<long>>> GetSchedule ();
+
+		/// <summary>
 		/// Get youtube videos.
 		/// </summary>
 		/// <param name="page">Page number.</param>
@@ -86,7 +98,7 @@ namespace Anilibria.Services {
 		/// </summary>
 		/// <param name="torrentUri">Torrent uri.</param>
 		/// <returns>Torrent path.</returns>
-		Task<StorageFile> DownloadTorrent (string torrentUri);
+		Task<StorageFile> DownloadTorrent ( string torrentUri );
 
 	}
 
