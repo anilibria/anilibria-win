@@ -70,7 +70,7 @@ namespace Anilibria.Pages.HomePage {
 					IsVisible = StubMenuIsVisible
 				},
 				new SplitViewItem {
-					Name = "Yotube",
+					Name = "Youtube",
 					Page = YoutubePage,
 					Icon = "\xE786",
 					IconUri = new Uri("ms-appx:///Assets/Icons/youtube.svg"),

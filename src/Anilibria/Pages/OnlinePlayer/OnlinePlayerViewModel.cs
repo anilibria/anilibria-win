@@ -386,11 +386,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 				}
 
 				SelectedRelease = release;
-				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos.Last () : SelectedRelease.OnlineVideos.First ( a => a.Order == onlineVideoIndex );
+				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos?.Last () : SelectedRelease.OnlineVideos?.First ( a => a.Order == onlineVideoIndex );
 
-
-
-				ChangePlayback ( PlaybackState.Play , false );
+				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 			}
 
 			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
