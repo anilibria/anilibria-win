@@ -174,7 +174,7 @@ namespace Anilibria.Pages.HomePage {
 					UserModel = model;
 				}
 			}
-			catch ( AuthorizeDeletedException ) {
+			catch {
 				RefreshOptions ();
 				UserModel = null;
 			}
