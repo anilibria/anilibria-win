@@ -394,9 +394,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 				}
 
 				SelectedRelease = release;
-				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease.OnlineVideos?.Last () : SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
+				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.Last () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
-				if ( SelectedOnlineVideo == null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) SelectedOnlineVideo = SelectedRelease.OnlineVideos.Last ();
+				if ( SelectedOnlineVideo == null && SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) SelectedOnlineVideo = SelectedRelease.OnlineVideos.Last ();
 
 				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 			}
