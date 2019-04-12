@@ -87,6 +87,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsFullHD;
 
+		private bool m_ShowPlaylistButton = true;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -139,6 +141,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 			MuteCommand = CreateCommand ( Mute );
 			ShowSidebarCommand = CreateCommand ( ShowSidebarFromPage );
 			ToggleFullScreenCommand = CreateCommand ( ToggleFullScreen );
+			ShowPlaylistCommand = CreateCommand(ShowPlaylist);
+		}
+
+		private void ShowPlaylist()
+		{
+			ShowPlaylistButton = false;
 		}
 
 		private void ToggleFullScreen () {
@@ -393,6 +401,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 			}
 
+			ShowPlaylistButton = true;
+
 			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
 		}
 
@@ -405,6 +415,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			catch {
 			}
+			ShowPlaylistButton = true;
 
 			if ( VideoSource != null ) ChangePlayback ( PlaybackState.Pause , false );
 
@@ -690,6 +701,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Show playlist button.
+		/// </summary>
+		public bool ShowPlaylistButton {
+			get => m_ShowPlaylistButton;
+			set => Set(ref m_ShowPlaylistButton, value);
+		}
+
+		/// <summary>
 		/// Change page handler.
 		/// </summary>
 		public Action<string , object> ChangePage
@@ -748,6 +767,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// </summary>
 		public ICommand ToggleFullScreenCommand
 		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Show playlist command.
+		/// </summary>
+		public ICommand ShowPlaylistCommand {
 			get;
 			set;
 		}

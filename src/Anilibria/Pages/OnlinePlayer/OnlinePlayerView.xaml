@@ -1023,7 +1023,7 @@
 								</VisualStateGroup>
 							</VisualStateManager.VisualStateGroups>
 
-							<Border x:Name='ControlPanel_ControlPanelVisibilityStates_Border'>
+							<Border x:Name='ControlPanel_ControlPanelVisibilityStates_Border' Loaded="ControlPanel_ControlPanelVisibilityStates_Border_Loaded">
 								<Grid x:Name='ControlPanelGrid'
 									Background='#e6e6e6'
 									VerticalAlignment='Bottom'
@@ -1399,24 +1399,45 @@
 		</Grid>
 		<Grid>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition />
-				<RowDefinition Height="Auto" />
+				<RowDefinition Height=".8*" />
+				<RowDefinition Height=".2*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition />
 				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
-			<StackPanel
-				Grid.Row="1"
+			<Grid
+				x:Name="PlaylistGrid"
+				Grid.Row="0"
 				Grid.Column="0"
-				Background="Black"
-				VerticalAlignment="Top"
-				Visibility="Collapsed">
-				<TextBlock
-					Foreground="White">Буферизация....</TextBlock>
-			</StackPanel>
+				VerticalAlignment="Stretch"
+				Background="Transparent">
+				<Rectangle
+					IsHitTestVisible="False"
+					Fill="White"
+					Opacity=".8"
+					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
+				</Rectangle>
+				<ListView
+					ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
+					Width="160"
+					HorizontalAlignment="Left"
+					ItemsSource="{Binding SelectedRelease.OnlineVideos}"
+					SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+					ItemClick="ListView_ItemClick"
+					DisplayMemberPath="Title"
+					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
+				</ListView>
+				<Button
+					Background="LightGray"
+					Style="{StaticResource PlayerFlyoutButtonStyle}"
+					VerticalAlignment="Center"
+					Command="{Binding ShowPlaylistCommand}"
+					Visibility="{Binding ShowPlaylistButton}">
+					<FontIcon Glyph="&#xEE40;" />
+				</Button>
+			</Grid>
 			<Border
 				x:Name="ControlPanel"
 				Grid.Row="0"
@@ -1425,61 +1446,11 @@
 				BorderBrush="#881919"
 				BorderThickness="0 0 0 2"
 				Visibility="Collapsed">
-				<RelativePanel
-					HorizontalAlignment="Stretch">
-					<Button
-						x:Name="SidebarButton"
-						Style="{StaticResource IconsButtonStyle}"
-						Command="{Binding ShowSidebarCommand}">
-						<Image
-							Width="{StaticResource IconSize}"
-							Height="{StaticResource IconSize}"
-							Source="/Assets/Icons/humburger.svg"
-						/>
-					</Button>
-					<StackPanel
-						x:Name="QualityPanel"
-						Orientation="Horizontal"
-						RelativePanel.AlignRightWithPanel="True">
-						
-					</StackPanel>
-				</RelativePanel>
 			</Border>
-			<Grid
-				Grid.RowSpan="3"
-				Grid.ColumnSpan="3"
-				IsHitTestVisible="False"
-				x:Name="PauseIcon"
-				Opacity="0"
-				RenderTransformOrigin=".5 .5">
-				<Grid.RenderTransform>
-					<CompositeTransform></CompositeTransform>
-				</Grid.RenderTransform>
-				<Grid>
-					<Ellipse
-						x:Name="PauseIconBackground"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Center"
-						Fill="LightGray"
-						Height="260"
-						Width="260"
-						IsHitTestVisible="False">
-					</Ellipse>
-					<Image
-						x:Name="PauseIconViewbox"
-						Source="/Assets/Icons/pause.svg"
-						Width="245"
-						Height="245"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						IsHitTestVisible="False">
-					</Image>
-				</Grid>
-			</Grid>
 			<StackPanel
 				x:Name="CurrentReleaseInfo"
 				Visibility="{Binding IsShowReleaseInfo, UpdateSourceTrigger=PropertyChanged}"
-				Grid.Row="1"
+				Grid.Row="0"
 				Grid.Column="2">
 				<Border
 					BorderBrush="#881919"
@@ -1560,10 +1531,6 @@
 						<AdaptiveTrigger MinWindowWidth="1800" MinWindowHeight="1200" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="PauseIconBackground.Width" Value="300" />
-						<Setter Target="PauseIconBackground.Height" Value="300" />
-						<Setter Target="PauseIconViewbox.Width" Value="245" />
-						<Setter Target="PauseIconViewbox.Height" Value="245" />
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="20" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="20" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="20" />
@@ -1575,10 +1542,6 @@
 						<AdaptiveTrigger MinWindowWidth="1400" MinWindowHeight="720" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="PauseIconBackground.Width" Value="285" />
-						<Setter Target="PauseIconBackground.Height" Value="285" />
-						<Setter Target="PauseIconViewbox.Width" Value="200"/>
-						<Setter Target="PauseIconViewbox.Height" Value="200"/>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="16" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="16" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="16" />
@@ -1590,10 +1553,6 @@
 						<AdaptiveTrigger MinWindowWidth="720" MinWindowHeight="440" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="PauseIconBackground.Width" Value="145" />
-						<Setter Target="PauseIconBackground.Height" Value="145" />
-						<Setter Target="PauseIconViewbox.Width" Value="100"/>
-						<Setter Target="PauseIconViewbox.Height" Value="100"/>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="14" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="14" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="14" />
@@ -1606,10 +1565,6 @@
 						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="PauseIconBackground.Width" Value="75" />
-						<Setter Target="PauseIconBackground.Height" Value="75" />
-						<Setter Target="PauseIconViewbox.Width" Value="50"/>
-						<Setter Target="PauseIconViewbox.Height" Value="50"/>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="12" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="12" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="12" />

@@ -325,6 +325,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				MouseHidingTracker ();
 				SaveRestoreState ();
 			}
+			if (m_ControlMediaBorder != null && PlaylistGrid != null) PlaylistGrid.Opacity = m_ControlMediaBorder.Opacity;
 		}
 
 		private void StopTimer () {
@@ -369,7 +370,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 				() => {
 					m_Duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
 					m_ViewModel.MediaOpened ( m_Duration );
-					PauseIcon.Opacity = 0;
 				}
 			);
 		}
@@ -383,6 +383,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			await Task.Delay ( 300 );
 
 			if ( m_TapCount > 1 ) return;
+
+			m_ViewModel.ShowPlaylistButton = true;
 
 			var mediaPlayer = OnlinePlayer.MediaPlayer;
 
@@ -416,15 +418,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_TapCount++;
 
 			m_ViewModel.ToggleFullScreenCommand.Execute ( null );
-		}
 
-		private void OnlinePlayer_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
-			if ( ControlPanel.Visibility == Visibility.Collapsed ) {
-				ControlPanel.Visibility = Visibility.Visible;
-			}
-			else {
-				ControlPanel.Visibility = Visibility.Collapsed;
-			}
+			m_ViewModel.ShowPlaylistButton = true;
 		}
 
 		private void RootGrid_PointerEntered ( object sender , PointerRoutedEventArgs e ) {
@@ -433,6 +428,18 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private void RootGrid_PointerExited ( object sender , PointerRoutedEventArgs e ) {
 			m_TransportControlsCaptured = false;
+		}
+
+		private Border m_ControlMediaBorder;
+
+		private void ControlPanel_ControlPanelVisibilityStates_Border_Loaded(object sender, RoutedEventArgs e)
+		{
+			m_ControlMediaBorder = sender as Border;
+		}
+
+		private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			m_ViewModel.ShowPlaylistButton = false;
 		}
 	}
 
