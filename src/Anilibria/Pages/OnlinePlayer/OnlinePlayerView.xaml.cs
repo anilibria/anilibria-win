@@ -56,7 +56,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () , StorageService.Current () , ApiService.Current () ) {
 				ChangeVolumeHandler = ChangeVolumeHandler ,
 				ChangePlayback = ChangePlaybackHandler ,
-				ChangePosition = ChangePosition
+				ChangePosition = ChangePosition,
+				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist
 			};
 			DataContext = m_ViewModel;
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
@@ -149,10 +150,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				OnlinePlayer_Tapped ( null , null );
 				return;
 			}
-			if ( previousStateButtons.HasFlag ( GamepadButtons.Y ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.Y ) ) {
-				ControlPanel.Visibility = ControlPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-				return;
-			}
+			//if ( previousStateButtons.HasFlag ( GamepadButtons.Y ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.Y ) ) {
+			//}
 			if ( previousStateButtons.HasFlag ( GamepadButtons.DPadRight ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.DPadRight ) ) {
 				if ( m_ViewModel.SelectedOnlineVideo != null ) m_ViewModel.IsHD = !m_ViewModel.IsHD;
 				return;
@@ -325,7 +324,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				MouseHidingTracker ();
 				SaveRestoreState ();
 			}
-			if (m_ControlMediaBorder != null && PlaylistGrid != null) PlaylistGrid.Opacity = m_ControlMediaBorder.Opacity;
+			if ( m_ControlMediaBorder != null && PlaylistGrid != null ) PlaylistGrid.Opacity = m_ControlMediaBorder.Opacity;
 		}
 
 		private void StopTimer () {
@@ -384,7 +383,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( m_TapCount > 1 ) return;
 
-			m_ViewModel.ShowPlaylistButton = true;
+			if ( !m_ViewModel.ShowPlaylistButton ) {
+				m_ViewModel.ShowPlaylistButton = true;
+				return;
+			}
 
 			var mediaPlayer = OnlinePlayer.MediaPlayer;
 
@@ -418,8 +420,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_TapCount++;
 
 			m_ViewModel.ToggleFullScreenCommand.Execute ( null );
-
-			m_ViewModel.ShowPlaylistButton = true;
 		}
 
 		private void RootGrid_PointerEntered ( object sender , PointerRoutedEventArgs e ) {
@@ -432,15 +432,21 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private Border m_ControlMediaBorder;
 
-		private void ControlPanel_ControlPanelVisibilityStates_Border_Loaded(object sender, RoutedEventArgs e)
-		{
+		private void ControlPanel_ControlPanelVisibilityStates_Border_Loaded ( object sender , RoutedEventArgs e ) {
 			m_ControlMediaBorder = sender as Border;
 		}
 
-		private void ListView_ItemClick(object sender, ItemClickEventArgs e)
-		{
-			m_ViewModel.ShowPlaylistButton = false;
+		private async void ScrollToSelectedItemInPlaylist () {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					if ( m_ViewModel.SelectedOnlineVideo == null ) return;
+
+					PlaylistListView.ScrollIntoView ( m_ViewModel.SelectedOnlineVideo );
+				}
+			);
 		}
+
 	}
 
 }
