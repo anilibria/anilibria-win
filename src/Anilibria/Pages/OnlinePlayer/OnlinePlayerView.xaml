@@ -1190,34 +1190,44 @@
 													Style="{StaticResource PlayerFlyoutButtonStyle}"
 													VerticalAlignment="Top">
 													<Button.Flyout>
-														<Flyout x:Name='VolumeFlyout' FlyoutPresenterStyle="{StaticResource FlyoutStyle}">
-															<StackPanel Orientation="Horizontal" >
-																<AppBarButton x:Name='AudioMuteButton'
-																		Style='{StaticResource AppBarButtonStyle}'
+														<Flyout x:Name='VolumeFlyout'>
+															<Flyout.FlyoutPresenterStyle>
+																<Style TargetType="FlyoutPresenter">
+																	<Setter Property="Padding" Value="0" />
+																	<Setter Property="Margin" Value="0" />
+																</Style>
+															</Flyout.FlyoutPresenterStyle>
+															<StackPanel
+																Background="#e6e6e6"
+																Orientation="Horizontal"
+																Padding="4">
+																<Button x:Name='AudioMuteButton'
+																		Style='{StaticResource PlayerFlyoutButtonStyle}'
 																		VerticalAlignment='Center'
 																		HorizontalAlignment='Center'
 																		Margin='12'
-																		Height="40">
-																	<AppBarButton.Icon>
-																		<SymbolIcon x:Name='AudioMuteSymbol' Symbol='Volume' />
-																	</AppBarButton.Icon>
-																</AppBarButton>
+																		Height="40"
+																		Width="50">
+																	<SymbolIcon x:Name='AudioMuteSymbol' Symbol='Volume' />
+																</Button>
 																<Slider x:Name='VolumeSlider'
-																		Value='50'
-																		IsThumbToolTipEnabled='False'
-																		Width='{ThemeResource MTCHorizontalVolumeSliderWidth}'
-																		VerticalAlignment='Center'
-																		HorizontalAlignment='Center'
-																		Margin='0'
-																	/>
-																<TextBlock x:Name='VolumeValue'
-																		Style='{StaticResource MediaTextBlockStyle}'
-																		Text="{Binding ElementName=VolumeSlider,Path=Value}"
-																		HorizontalAlignment='Center'
-																		VerticalAlignment='Center'
-																		Width='24'
-																		Margin='12'
-																	/>
+																	Value='50'
+																	Style="{StaticResource IconSliderStyle}"
+																	IsThumbToolTipEnabled='False'
+																	Width='{ThemeResource MTCHorizontalVolumeSliderWidth}'
+																	VerticalAlignment='Center'
+																	HorizontalAlignment='Center'
+																	Margin='0'
+																/>
+																<TextBlock
+																	x:Name='VolumeValue'
+																	Foreground="Black"
+																	Text="{Binding ElementName=VolumeSlider,Path=Value}"
+																	HorizontalAlignment='Center'
+																	VerticalAlignment='Center'
+																	Width='24'
+																	Margin='12'
+																/>
 															</StackPanel>
 														</Flyout>
 													</Button.Flyout>
@@ -1248,6 +1258,7 @@
 																	Автоматический переход между сериями
 																</TextBlock>
 																<ToggleSwitch
+																	Style="{StaticResource AnilibriaToggleSwitch}"
 																	IsTabStop="False"
 																	Margin="0 4 0 0"
 																	OnContent="Включен"

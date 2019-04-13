@@ -633,7 +633,7 @@
 									<VisualState x:Name="PointerOver">
 										<Storyboard>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="OuterBorder" Storyboard.TargetProperty="Stroke">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchStrokeOffPointerOver}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="OuterBorder" Storyboard.TargetProperty="Fill">
 												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -645,10 +645,10 @@
 												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="#ad3e3e"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Stroke">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchStrokeOnPointerOver}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchAreaGrid" Storyboard.TargetProperty="Background">
 												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -661,25 +661,25 @@
 												<DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="OuterBorder" Storyboard.TargetProperty="Stroke">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchStrokeOffPressed}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="OuterBorder" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchFillOffPressed}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="#ad3e3e"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchFillOnPressed}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="#ad3e3e"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Stroke">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchStrokeOnPressed}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobOff" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchKnobFillOffPressed}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobOn" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchKnobFillOnPressed}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchAreaGrid" Storyboard.TargetProperty="Background">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchContainerBackgroundPressed}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
 											</ObjectAnimationUsingKeyFrames>
 										</Storyboard>
 									</VisualState>
@@ -812,7 +812,19 @@
 									</VisualState>
 								</VisualStateGroup>
 							</VisualStateManager.VisualStateGroups>
-							<ContentPresenter x:Name="HeaderContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource ToggleSwitchHeaderForeground}" IsHitTestVisible="False" Margin="{StaticResource ToggleSwitchTopHeaderMargin}" Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+							<ContentPresenter
+								x:Name="HeaderContentPresenter"
+								AutomationProperties.AccessibilityView="Raw"
+								ContentTemplate="{TemplateBinding HeaderTemplate}"
+								Content="{TemplateBinding Header}"
+								Foreground="Black"
+								IsHitTestVisible="False"
+								Margin="{StaticResource ToggleSwitchTopHeaderMargin}"
+								Grid.Row="0"
+								TextWrapping="Wrap"
+								VerticalAlignment="Top"
+								Visibility="Collapsed"
+								x:DeferLoadStrategy="Lazy"/>
 							<Grid HorizontalAlignment="Left" MinWidth="{StaticResource ToggleSwitchThemeMinWidth}" Grid.Row="1" VerticalAlignment="Top">
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="Auto"/>
@@ -824,17 +836,65 @@
 									<RowDefinition Height="Auto"/>
 									<RowDefinition Height="{ThemeResource ToggleSwitchPostContentMargin}"/>
 								</Grid.RowDefinitions>
-								<Grid x:Name="SwitchAreaGrid" Background="{ThemeResource ToggleSwitchContainerBackground}" Grid.ColumnSpan="3" Control.IsTemplateFocusTarget="True" Margin="0,5" Grid.RowSpan="3"/>
-								<ContentPresenter x:Name="OffContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding OffContentTemplate}" Content="{TemplateBinding OffContent}" Grid.Column="2" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="False" Opacity="0" Grid.RowSpan="3" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-								<ContentPresenter x:Name="OnContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding OnContentTemplate}" Content="{TemplateBinding OnContent}" Grid.Column="2" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="False" Opacity="0" Grid.RowSpan="3" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-								<Rectangle x:Name="OuterBorder" Fill="{ThemeResource ToggleSwitchFillOff}" Height="20" RadiusX="10" RadiusY="10" Grid.Row="1" StrokeThickness="2" Stroke="{ThemeResource ToggleSwitchStrokeOff}" Width="44"/>
-								<Rectangle x:Name="SwitchKnobBounds" Fill="{ThemeResource ToggleSwitchFillOn}" Height="20" Opacity="0" RadiusX="10" RadiusY="10" Grid.Row="1" StrokeThickness="{ThemeResource ToggleSwitchOnStrokeThickness}" Stroke="{ThemeResource ToggleSwitchStrokeOn}" Width="44"/>
+								<Grid x:Name="SwitchAreaGrid"
+									Background="Transparent"
+									Grid.ColumnSpan="3"
+									Control.IsTemplateFocusTarget="True"
+									Margin="0,5"
+									Grid.RowSpan="3"/>
+								<ContentPresenter
+									x:Name="OffContentPresenter"
+									AutomationProperties.AccessibilityView="Raw"
+									ContentTemplate="{TemplateBinding OffContentTemplate}"
+									Content="{TemplateBinding OffContent}"
+									Grid.Column="2"
+									Foreground="Black"
+									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									IsHitTestVisible="False"
+									Opacity="0"
+									Grid.RowSpan="3"
+									VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+								<ContentPresenter
+									x:Name="OnContentPresenter"
+									AutomationProperties.AccessibilityView="Raw"
+									ContentTemplate="{TemplateBinding OnContentTemplate}"
+									Content="{TemplateBinding OnContent}"
+									Grid.Column="2"
+									Foreground="Black"
+									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									IsHitTestVisible="False"
+									Opacity="0"
+									Grid.RowSpan="3"
+									VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+								<Rectangle
+									x:Name="OuterBorder"
+									Fill="Transparent"
+									Height="20"
+									RadiusX="10"
+									RadiusY="10"
+									Grid.Row="1"
+									StrokeThickness="2"
+									Stroke="Black"
+									Width="44"
+								/>
+								<Rectangle
+									x:Name="SwitchKnobBounds"
+									Fill="#ad3e3e"
+									Height="20"
+									Opacity="0"
+									RadiusX="10"
+									RadiusY="10"
+									Grid.Row="1"
+									StrokeThickness="0"
+									Stroke="Transparent"
+									Width="44"
+								/>
 								<Grid x:Name="SwitchKnob" HorizontalAlignment="Left" Height="20" Grid.Row="1" Width="20">
 									<Grid.RenderTransform>
 										<TranslateTransform x:Name="KnobTranslateTransform"/>
 									</Grid.RenderTransform>
-									<Ellipse x:Name="SwitchKnobOn" Fill="{ThemeResource ToggleSwitchKnobFillOn}" Height="10" Opacity="0" Width="10"/>
-									<Ellipse x:Name="SwitchKnobOff" Fill="{ThemeResource ToggleSwitchKnobFillOff}" Height="10" Width="10"/>
+									<Ellipse x:Name="SwitchKnobOn" Fill="White" Height="10" Opacity="0" Width="10"/>
+									<Ellipse x:Name="SwitchKnobOff" Fill="Black" Height="10" Width="10"/>
 								</Grid>
 								<Thumb x:Name="SwitchThumb" AutomationProperties.AccessibilityView="Raw" Grid.ColumnSpan="3" Grid.RowSpan="3">
 									<Thumb.Template>
