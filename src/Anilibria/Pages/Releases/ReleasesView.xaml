@@ -908,6 +908,7 @@
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<ToggleSwitch
+					Style="{StaticResource AnilibriaToggleSwitch}"
 					Margin="8 0 0 0"
 					RelativePanel.AlignLeftWithPanel="True"
 					RelativePanel.AlignTopWithPanel="True"

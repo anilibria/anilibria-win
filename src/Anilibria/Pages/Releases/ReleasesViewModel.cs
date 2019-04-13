@@ -490,6 +490,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
+			if ( releases == null ) return Enumerable.Empty<ReleaseEntity> ();
+
 			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => ContainsInArrayCaseSensitive ( FilterByName , a.Names ) );
 			if ( !string.IsNullOrEmpty ( FilterByType ) ) releases = releases.Where ( a => a.Type?.ToLowerInvariant ().Contains ( FilterByType.ToLowerInvariant () ) ?? false );
 			if ( !string.IsNullOrEmpty ( FilterByStatus ) ) {
@@ -555,15 +557,15 @@ namespace Anilibria.Pages.Releases {
 					AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
 					Code = a.Code ,
 					Description = a.Description ,
-					Genres = string.Join ( ", " , a.Genres ) ,
-					Title = a.Names.FirstOrDefault () ,
+					Genres = a.Genres != null ? string.Join ( ", " , a.Genres ) : "" ,
+					Title = a.Names != null ? a.Names.FirstOrDefault () : "" ,
 					Names = a.Names ,
 					Poster = m_AnilibriaApiService.GetUrl ( a.Poster ) ,
 					Rating = a.Rating ,
 					Series = a.Series ,
 					Status = a.Status ,
 					Type = a.Type ,
-					Voices = string.Join ( ", " , a.Voices ) ,
+					Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
 					Year = a.Year ,
 					CountVideoOnline = a.Playlist?.Count () ?? 0 ,
 					Torrents = a?.Torrents?.Select (
@@ -580,8 +582,8 @@ namespace Anilibria.Pages.Releases {
 							Order = videoOnline.Id ,
 							Title = videoOnline.Title ,
 							HDQuality = videoOnline.HD ,
-							SDQuality = videoOnline.SD,
-							FullHDQuality = videoOnline.FullHD,
+							SDQuality = videoOnline.SD ,
+							FullHDQuality = videoOnline.FullHD ,
 
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
