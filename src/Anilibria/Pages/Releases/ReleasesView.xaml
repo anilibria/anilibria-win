@@ -50,7 +50,7 @@
 						Grid.Column="1"
 						Grid.Row="0"
 						Margin="3"
-						MaxWidth="250"
+						MaxWidth="230"
 						VerticalAlignment="Stretch"
 						Padding="0">
 						<Grid.RowDefinitions>

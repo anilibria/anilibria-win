@@ -1453,6 +1453,8 @@
 				</Rectangle>
 				<ListView
 					x:Name="PlaylistListView"
+					PointerEntered="PlaylistListView_PointerEntered"
+					PointerExited="PlaylistListView_PointerExited"
 					ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
 					Width="160"
 					HorizontalAlignment="Left"

@@ -283,7 +283,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private void MouseHidingTracker () {
 			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
-			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && windowHeight - m_MouseY > 110 ) {
+			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && windowHeight - m_MouseY > 110 && !m_TransportControlsCaptured) {
 				m_LastActivityTime++;
 				if ( !( m_PreviousX == m_MouseX && m_PreviousY == m_MouseY ) ) {
 					RestoreCursor ();
@@ -324,6 +324,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				MouseHidingTracker ();
 				SaveRestoreState ();
 			}
+
+			if ( m_TransportControlsCaptured ) return;
 			if ( m_ControlMediaBorder != null && PlaylistGrid != null ) PlaylistGrid.Opacity = m_ControlMediaBorder.Opacity;
 		}
 
@@ -447,6 +449,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 			);
 		}
 
+		private void PlaylistListView_PointerEntered(object sender, PointerRoutedEventArgs e)
+		{
+			m_TransportControlsCaptured = true;
+		}
+
+		private void PlaylistListView_PointerExited(object sender, PointerRoutedEventArgs e)
+		{
+			m_TransportControlsCaptured = false;
+		}
 	}
 
 }
