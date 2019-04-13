@@ -1224,7 +1224,7 @@
 													<SymbolIcon x:Name='VolumeMuteSymbol' Symbol='Volume' />
 												</Button>
 												<Button
-													ToolTipService.ToolTip="Выбор видео"
+													ToolTipService.ToolTip="Настройки"
 													Style='{StaticResource PlayerFlyoutButtonStyle}'
 													Width="50"
 													IsTabStop="False"
@@ -1239,17 +1239,26 @@
 																	<Setter Property="Margin" Value="0" />
 																</Style>
 															</Flyout.FlyoutPresenterStyle>
-															<Grid Background="#e6e6e6">
-																<ListView
-																	Height="160"
-																	ItemsSource="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.SelectedRelease.OnlineVideos}"
-																	SelectedItem="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-																	DisplayMemberPath="Title">
-																</ListView>
-															</Grid>
+															<StackPanel
+																Background="#e6e6e6"
+																Padding="10">
+																<TextBlock
+																	Foreground="Black"
+																	FontSize="14">
+																	Автоматический переход между сериями
+																</TextBlock>
+																<ToggleSwitch
+																	IsTabStop="False"
+																	Margin="0 4 0 0"
+																	OnContent="Включен"
+																	OffContent="Выключен"
+																	FontSize="12"
+																	IsOn="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsAutoTransition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+																</ToggleSwitch>
+															</StackPanel>
 														</Flyout>
 													</Button.Flyout>
-													<FontIcon Glyph="&#xEE40;" />
+													<FontIcon Glyph="&#xE713;" />
 												</Button>
 											</StackPanel>
 											<CommandBar
@@ -1270,6 +1279,12 @@
 														Style='{StaticResource AppBarButtonStyle}'
 														MediaTransportControlsHelper.DropoutOrder='1'
 														Visibility='Collapsed'/>
+													<AppBarButton
+														ToolTipService.ToolTip="Перейти на предыдущее видео"
+														Icon='Previous'
+														Style='{StaticResource AppBarButtonStyle}'
+														Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.PreviousTrackCommand}"
+													/>
 													<AppBarButton x:Name='SkipBackwardButton'
 														Style='{StaticResource AppBarButtonStyle}'
 														MediaTransportControlsHelper.DropoutOrder='5'
@@ -1322,6 +1337,12 @@
 															<FontIcon Glyph="&#xED3D;" />
 														</AppBarButton.Icon>
 													</AppBarButton>
+													<AppBarButton
+														ToolTipService.ToolTip="Перейти на следующее видео"
+														Icon='Next'
+														Style='{StaticResource AppBarButtonStyle}'
+														Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.NextTrackCommand}"
+													/>
 													<AppBarButton x:Name='PlaybackRateButton'
 														Style='{StaticResource OnlinePlayerAppButton}'
 														MediaTransportControlsHelper.DropoutOrder='4'
@@ -1420,12 +1441,12 @@
 					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
 				</Rectangle>
 				<ListView
+					x:Name="PlaylistListView"
 					ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
 					Width="160"
 					HorizontalAlignment="Left"
 					ItemsSource="{Binding SelectedRelease.OnlineVideos}"
 					SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-					ItemClick="ListView_ItemClick"
 					DisplayMemberPath="Title"
 					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
 				</ListView>
@@ -1451,12 +1472,15 @@
 				x:Name="CurrentReleaseInfo"
 				Visibility="{Binding IsShowReleaseInfo, UpdateSourceTrigger=PropertyChanged}"
 				Grid.Row="0"
-				Grid.Column="2">
+				Grid.Column="2"
+				Background="Transparent">
 				<Border
 					BorderBrush="#881919"
 					BorderThickness="2"
-					HorizontalAlignment="Right">
-					<Grid>
+					HorizontalAlignment="Right"
+					CornerRadius="8">
+					<Grid
+						CornerRadius="8">
 						<Rectangle
 							Fill="White"
 						/>

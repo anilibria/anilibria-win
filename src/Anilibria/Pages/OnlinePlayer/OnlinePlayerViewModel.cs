@@ -23,6 +23,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private const string PlayerVolumeSettings = "PlayerVolume";
 
+		private const string AutoTransitionSettings = "AutoTransition";
+
 		private double m_Volume;
 
 		private string m_DisplayVolume;
@@ -89,6 +91,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_ShowPlaylistButton = true;
 
+		private bool m_IsAutoTransition;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -131,6 +135,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_IsHD = isHD;
 			}
 			if ( values.ContainsKey ( PlayerVolumeSettings ) ) m_Volume = (double) values[PlayerVolumeSettings];
+			if ( values.ContainsKey ( AutoTransitionSettings ) ) m_IsAutoTransition = (bool) values[AutoTransitionSettings];
 		}
 
 		/// <summary>
@@ -141,11 +146,30 @@ namespace Anilibria.Pages.OnlinePlayer {
 			MuteCommand = CreateCommand ( Mute );
 			ShowSidebarCommand = CreateCommand ( ShowSidebarFromPage );
 			ToggleFullScreenCommand = CreateCommand ( ToggleFullScreen );
-			ShowPlaylistCommand = CreateCommand(ShowPlaylist);
+			ShowPlaylistCommand = CreateCommand ( ShowPlaylist );
+			NextTrackCommand = CreateCommand ( NextTrack );
+			PreviousTrackCommand = CreateCommand ( PreviousTrack );
 		}
 
-		private void ShowPlaylist()
-		{
+		private void PreviousTrack () {
+			if ( !( SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) ) return;
+			if ( SelectedOnlineVideo == null ) return;
+			if ( SelectedOnlineVideo.Order == 1 ) return;
+
+			var previousTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order - 1 );
+			if ( previousTrack != null ) SelectedOnlineVideo = previousTrack;
+		}
+
+		private void NextTrack () {
+			if ( !( SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) ) return;
+			if ( SelectedOnlineVideo == null ) return;
+			if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
+
+			var nextTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order + 1 );
+			if ( nextTrack != null ) SelectedOnlineVideo = nextTrack;
+		}
+
+		private void ShowPlaylist () {
 			ShowPlaylistButton = false;
 		}
 
@@ -242,7 +266,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			IsMediaOpened = false;
 			var currentIndex = SelectedRelease.OnlineVideos.ToList ().IndexOf ( SelectedOnlineVideo );
 
-			if ( currentIndex > 0 ) SelectedOnlineVideo = SelectedRelease.OnlineVideos.ElementAt ( currentIndex - 1 );
+			if ( currentIndex > 0 && m_IsAutoTransition ) SelectedOnlineVideo = SelectedRelease.OnlineVideos.ElementAt ( currentIndex - 1 );
 		}
 
 		public void MediaStateChanged ( MediaPlaybackState playbackState ) {
@@ -402,6 +426,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			ShowPlaylistButton = true;
 
 			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
+
+			if (SelectedOnlineVideo != null) ScrollToSelectedPlaylist ();
 		}
 
 		/// <summary>
@@ -701,9 +727,24 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Show playlist button.
 		/// </summary>
-		public bool ShowPlaylistButton {
+		public bool ShowPlaylistButton
+		{
 			get => m_ShowPlaylistButton;
-			set => Set(ref m_ShowPlaylistButton, value);
+			set => Set ( ref m_ShowPlaylistButton , value );
+		}
+
+		/// <summary>
+		/// Enable/disable auto transition beetween videos.
+		/// </summary>
+		public bool IsAutoTransition
+		{
+			get => m_IsAutoTransition;
+			set
+			{
+				if ( !Set ( ref m_IsAutoTransition , value ) ) return;
+
+				ApplicationData.Current.RoamingSettings.Values[AutoTransitionSettings] = value;
+			}
 		}
 
 		/// <summary>
@@ -733,6 +774,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 			set;
 		}
 
+		/// <summary>
+		/// Scroll to selected item in playlist.
+		/// </summary>
+		public Action ScrollToSelectedPlaylist
+		{
+			get;
+			set;
+		}
+		
 		/// <summary>
 		/// Change volume.
 		/// </summary>
@@ -772,7 +822,26 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Show playlist command.
 		/// </summary>
-		public ICommand ShowPlaylistCommand {
+		public ICommand ShowPlaylistCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open next track in playlist command.
+		/// </summary>
+		public ICommand NextTrackCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open previous track in playlist command.
+		/// </summary>
+		public ICommand PreviousTrackCommand
+		{
 			get;
 			set;
 		}
