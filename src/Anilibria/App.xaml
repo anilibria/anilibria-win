@@ -825,16 +825,16 @@
 								VerticalAlignment="Top"
 								Visibility="Collapsed"
 								x:DeferLoadStrategy="Lazy"/>
-							<Grid HorizontalAlignment="Left" MinWidth="{StaticResource ToggleSwitchThemeMinWidth}" Grid.Row="1" VerticalAlignment="Top">
+							<Grid HorizontalAlignment="Left" MinWidth="100" Grid.Row="1" VerticalAlignment="Top">
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="Auto"/>
 									<ColumnDefinition MaxWidth="12" Width="12"/>
 									<ColumnDefinition Width="Auto"/>
 								</Grid.ColumnDefinitions>
 								<Grid.RowDefinitions>
-									<RowDefinition Height="{ThemeResource ToggleSwitchPreContentMargin}"/>
+									<RowDefinition Height="*"/>
 									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="{ThemeResource ToggleSwitchPostContentMargin}"/>
+									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
 								<Grid x:Name="SwitchAreaGrid"
 									Background="Transparent"
