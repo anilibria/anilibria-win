@@ -39,16 +39,16 @@
 			VerticalAlignment="Center"
 			HorizontalAlignment="Center"
 			Padding="8"
-			BorderBrush="#881919"
-			BorderThickness="2"
-			Background="White"
-			Width="300">
+			Background="#e6e6e6"
+			Width="300"
+			CornerRadius="8">
 			<TextBlock
 				Foreground="Black"
 				Margin="4">
 				Email
 			</TextBlock>
 			<TextBox
+				Style="{StaticResource AnilibriaTextBox}"
 				Margin="4"
 				IsSpellCheckEnabled="False"
 				Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -59,8 +59,21 @@
 				Пароль
 			</TextBlock>
 			<PasswordBox
+				Style="{StaticResource AnilibriaPasswordBox}"
 				Margin="4"
 				Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+			/>
+			<TextBlock
+				Foreground="Black"
+				Margin="4"
+				TextWrapping="Wrap">
+				2fa код (оставьте поле пустым, если Вы не настроили двухфакторную аутентификацию)
+			</TextBlock>
+			<TextBox
+				Style="{StaticResource AnilibriaTextBox}"
+				Margin="4"
+				IsSpellCheckEnabled="False"
+				Text="{Binding TwoFACode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 			/>
 			<Grid
 				Margin="4 0 4 0">

@@ -179,12 +179,13 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <param name="email">User email.</param>
 		/// <param name="password">User password.</param>
-		public async Task<bool> Authentification ( string email , string password ) {
+		public async Task<bool> Authentification ( string email , string password, string fa2code ) {
 			var formContent = new FormUrlEncodedContent (
 				new[]
 				{
 					new KeyValuePair<string, string>("mail", email),
-					new KeyValuePair<string, string>("passwd", password)
+					new KeyValuePair<string, string>("passwd", password),
+					new KeyValuePair<string, string>("fa2code", fa2code)
 				}
 			);
 

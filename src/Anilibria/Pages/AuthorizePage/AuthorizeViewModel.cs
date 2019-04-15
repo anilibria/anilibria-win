@@ -19,6 +19,8 @@ namespace Anilibria.Pages.AuthorizePage {
 
 		private string m_ErrorMessage;
 
+		private string m_TwoFACode;
+
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
 		private readonly IAnalyticsService m_AnalyticsService;
@@ -48,7 +50,7 @@ namespace Anilibria.Pages.AuthorizePage {
 
 		private async void Signin () {
 			ErrorMessage = "";
-			var result = await m_AnilibriaApiService.Authentification ( Email , Password );
+			var result = await m_AnilibriaApiService.Authentification ( Email , Password, TwoFACode );
 			if ( result ) {
 				ChangePage ( "Releases" , null );
 				RefreshOptions?.Invoke ();
@@ -104,6 +106,20 @@ namespace Anilibria.Pages.AuthorizePage {
 				if ( !Set ( ref m_Password , value ) ) return;
 
 				RaiseCommands ();
+			}
+		}
+
+		/// <summary>
+		/// 2fa code.
+		/// </summary>
+		public string TwoFACode
+		{
+			get => m_TwoFACode;
+			set
+			{
+				if (!Set(ref m_TwoFACode, value)) return;
+
+				RaiseCommands();
 			}
 		}
 
