@@ -1345,8 +1345,11 @@
 					</Button>
 				</Grid>
 				<WebView
+					x:Name="CommentsWebView"
 					Grid.ColumnSpan="3"
 					Grid.RowSpan="1"
+					NewWindowRequested="WebView_NewWindowRequested"
+					NavigationCompleted="CommentsWebView_NavigationCompleted"
 					Visibility="{Binding IsShowComments}"
 					Source="{Binding CommentsUri}"
 				/>

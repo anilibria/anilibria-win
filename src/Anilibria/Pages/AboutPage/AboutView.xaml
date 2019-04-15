@@ -93,6 +93,19 @@
 					HorizontalAlignment="Center"
 					TextWrapping="WrapWholeWords"
 					TextAlignment="Center">
+					<Run>В случае если у Вас есть проблемы с приложением Вы можете</Run>
+					<Hyperlink
+						NavigateUri="tg://resolve?domain=AniLibriaTP">
+						написать в техподдержку
+					</Hyperlink>
+				</TextBlock>
+				<TextBlock
+					Foreground="Black"
+					FontSize="16"
+					Margin="0 10 0 10"
+					HorizontalAlignment="Center"
+					TextWrapping="WrapWholeWords"
+					TextAlignment="Center">
 					<Run>Весь материал в приложении представлен исключительно для домашнего ознакомительного просмотра.</Run>
 					<LineBreak />
 					<Run>

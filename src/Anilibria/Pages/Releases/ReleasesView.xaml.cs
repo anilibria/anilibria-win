@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services.Implementations;
 using Windows.System;
@@ -15,12 +16,19 @@ namespace Anilibria.Pages.Releases {
 	/// </summary>
 	public sealed partial class ReleasesView : UserControl {
 
+		private Uri m_CurrentUri;
+
+		private ReleasesViewModel m_ViewModel;
+
 		public ReleasesView () {
 			InitializeComponent ();
 
-			DataContext = new ReleasesViewModel ( ApiService.Current () , StorageService.Current () , SyncService.Current () , new AnalyticsService () );
+			m_ViewModel = new ReleasesViewModel ( ApiService.Current () , StorageService.Current () , SyncService.Current () , new AnalyticsService () );
+			DataContext = m_ViewModel;
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
+
+			m_ViewModel.SetCommentsUrl = SetCommentsUrl;
 		}
 
 		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
@@ -57,7 +65,7 @@ namespace Anilibria.Pages.Releases {
 
 		private void NewReleasesNotificationTapped ( object sender , TappedRoutedEventArgs e ) {
 			var dataContext = (ReleasesViewModel) DataContext;
-			if (dataContext.SelectedSection?.Type != SectionType.NewReleases) dataContext.SelectedSection = dataContext.Sections.FirstOrDefault ( a => a.Type == SectionType.NewReleases );
+			if ( dataContext.SelectedSection?.Type != SectionType.NewReleases ) dataContext.SelectedSection = dataContext.Sections.FirstOrDefault ( a => a.Type == SectionType.NewReleases );
 		}
 
 		private void NewOnlineSeriesNotificationTapped ( object sender , TappedRoutedEventArgs e ) {
@@ -73,6 +81,39 @@ namespace Anilibria.Pages.Releases {
 		private void SingoutTapped ( object sender , TappedRoutedEventArgs e ) {
 			var dataContext = (ReleasesViewModel) DataContext;
 			dataContext.Signout ();
+		}
+
+		private async void WebView_NewWindowRequested ( WebView sender , WebViewNewWindowRequestedEventArgs args ) {
+			args.Handled = true;
+
+			var uri = args.Uri.ToString ();
+
+			if ( !uri.StartsWith ( "https://oauth.vk.com/authorize" ) && !uri.StartsWith ( "https://vk.com/widget_comments.php" ) && !uri.StartsWith ( "https://vk.com/id" ) ) {
+				await Launcher.LaunchUriAsync ( args.Uri );
+				return;
+			}
+
+			if ( uri.StartsWith ( "https://oauth.vk.com/authorize" ) ) {
+				uri = uri.Replace ( "close.html" , WebUtility.UrlEncode ( m_CurrentUri.ToString () ) );
+			}
+
+			if ( uri.StartsWith ( "https://vk.com/id" ) ) {
+				uri = uri.Replace ( "vk.com" , "m.vk.com" );
+			}
+
+			CommentsWebView.Navigate ( new Uri ( uri ) );
+		}
+
+		private void SetCommentsUrl ( Uri newUrl ) {
+			CommentsWebView.Navigate ( newUrl );
+		}
+
+		private void Button_Click ( object sender , RoutedEventArgs e ) {
+			CommentsWebView.Refresh ();
+		}
+
+		private void CommentsWebView_NavigationCompleted ( WebView sender , WebViewNavigationCompletedEventArgs args ) {
+			m_CurrentUri = args.Uri;
 		}
 	}
 

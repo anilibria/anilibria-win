@@ -260,8 +260,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void ShowComments () {
-			var uri = new Uri ( $"https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/{OpenedRelease.Code}.html" );
-			CommentsUri = uri;
+			SetCommentsUrl ( new Uri ( $"https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/{OpenedRelease.Code}.html" ) );
 			IsShowComments = true;
 		}
 
@@ -962,6 +961,15 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_UserModel;
 			set => Set ( ref m_UserModel , value );
+		}
+
+		/// <summary>
+		/// Set comments url in web view.
+		/// </summary>
+		public Action<Uri> SetCommentsUrl
+		{
+			get;
+			set;
 		}
 
 		/// <summary>
