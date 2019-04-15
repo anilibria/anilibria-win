@@ -1154,7 +1154,8 @@
 								TextWrapping="WrapWholeWords"
 								Foreground="Black"
 								Margin="0 0 14 0"
-								converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}">
+								converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}"
+								converters:TextBlockHtmlConverter.LinkCommand="{Binding OpenCrossReleaseCommand}">
 							</TextBlock>
 						</ScrollViewer>
 					</StackPanel>

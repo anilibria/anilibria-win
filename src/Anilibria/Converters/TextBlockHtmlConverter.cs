@@ -1,17 +1,20 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Linq;
-using HtmlAgilityPack;
+using System.Windows.Input;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 
-namespace Anilibria.Converters {
+namespace Anilibria.Converters
+{
 
 	/// <summary>
 	/// Generate Xaml content based on Html.
 	/// </summary>
-	public class TextBlockHtmlConverter {
+	public class TextBlockHtmlConverter
+	{
 
 		public static readonly DependencyProperty HtmlContentProperty =
 			DependencyProperty.RegisterAttached (
@@ -26,10 +29,23 @@ namespace Anilibria.Converters {
 		}
 
 		public static string GetHtmlContent ( DependencyObject textBlock ) {
-			return (string) textBlock.GetValue ( HtmlContentProperty );
+			return (string) textBlock.GetValue(HtmlContentProperty);
 		}
 
-		private static void HtmlContentPropertyChanged ( DependencyObject d , DependencyPropertyChangedEventArgs e ) {
+		public static readonly DependencyProperty LinkCommandProperty =
+			DependencyProperty.RegisterAttached(
+				"LinkCommand",
+				typeof(ICommand),
+				typeof(TextBlockHtmlConverter),
+				new PropertyMetadata(null)
+		);
+
+		public static void SetLinkCommand ( DependencyObject textBlock, ICommand value ) => textBlock.SetValue(LinkCommandProperty, value);
+
+		public static ICommand GetLinkCommand ( DependencyObject textBlock ) => (ICommand)textBlock.GetValue(LinkCommandProperty);
+
+		private static void HtmlContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
 			TextBlock textBlock = d as TextBlock;
 			textBlock.ClearValue ( TextBlock.TextProperty );
 			textBlock.Inlines.Clear ();
@@ -48,10 +64,10 @@ namespace Anilibria.Converters {
 			var doc = new HtmlDocument ();
 			doc.LoadHtml ( formattedText );
 
-			foreach ( var childNode in doc.DocumentNode.ChildNodes ) ProcessInline ( null , childNode , textBlock.Inlines );
+			foreach (var childNode in doc.DocumentNode.ChildNodes) ProcessInline(null, childNode, textBlock.Inlines, textBlock);
 		}
 
-		private static void ProcessInline ( Span parent , HtmlNode node , InlineCollection collection ) {
+		private static void ProcessInline(Span parent, HtmlNode node, InlineCollection collection, TextBlock root) {
 			InlineCollection parentCollection = parent != null ? parent.Inlines : collection;
 			switch ( node.NodeType ) {
 				case HtmlNodeType.Text:
@@ -62,7 +78,7 @@ namespace Anilibria.Converters {
 					);
 					break;
 				case HtmlNodeType.Element:
-					switch ( node.Name ) {
+					switch (node.Name) {
 						case "br":
 							//don't need LineBreak because Inlines already breaking lines
 							return;
@@ -71,29 +87,46 @@ namespace Anilibria.Converters {
 							return;
 						case "b":
 						case "strong":
-							var bold = new Bold ();
-							parentCollection.Add ( bold );
+							var bold = new Bold();
+							parentCollection.Add(bold);
 
-							foreach ( var boldChild in node.ChildNodes ) ProcessInline ( bold , boldChild , collection );
+							foreach (var boldChild in node.ChildNodes) ProcessInline(bold, boldChild, collection, root);
 
 							return;
 						case "u":
-							var underline = new Underline ();
-							parentCollection.Add ( underline );
+							var underline = new Underline();
+							parentCollection.Add(underline);
 
-							foreach ( var underlineChild in node.ChildNodes ) ProcessInline ( underline , underlineChild , collection );
+							foreach (var underlineChild in node.ChildNodes) ProcessInline(underline, underlineChild, collection, root);
 
 							return;
 						case "a":
-							var url = node.Attributes.FirstOrDefault ( a => a.Name.ToLower () == "href" );
-							if ( url == null ) return;
+							var url = node.Attributes.FirstOrDefault(a => a.Name.ToLower() == "href");
+							if (url == null) return;
 
-							var hyperlink = new Hyperlink {
-								NavigateUri = new Uri ( url.Value )
-							};
-							parentCollection.Add ( hyperlink );
+							Hyperlink hyperlink = null;
 
-							foreach ( var underlineChild in node.ChildNodes ) ProcessInline ( hyperlink , underlineChild , collection );
+							if (!string.IsNullOrEmpty(url.Value) && (url.Value.StartsWith("https://www.anilibria.tv/release/") || url.Value.StartsWith("http://www.anilibria.tv/release/")))
+							{
+								var urlValue = url.Value;
+								hyperlink = new Hyperlink();
+								hyperlink.Click += (sender, args) =>
+								{
+									var linkCommand = GetLinkCommand(root);
+									if (linkCommand != null) linkCommand.Execute(urlValue);
+								};
+							}
+							else
+							{
+								hyperlink = new Hyperlink
+								{
+									NavigateUri = new Uri(url.Value)
+								};
+							}
+
+							parentCollection.Add(hyperlink);
+
+							foreach (var underlineChild in node.ChildNodes) ProcessInline(hyperlink, underlineChild, collection, root);
 
 							return;
 						default: return;

@@ -216,6 +216,18 @@ namespace Anilibria.Pages.Releases {
 			CloseCommentsCommand = CreateCommand ( CloseComments );
 			RefreshCommand = CreateCommand ( Refresh , () => !IsRefreshing );
 			ResetNotificationCommand = CreateCommand ( ResetNotification );
+			OpenCrossReleaseCommand = CreateCommand<string>( OpenCrossRelease );
+		}
+
+		private void OpenCrossRelease(string releaseUrl)
+		{
+			var releaseCode = releaseUrl.Replace("https://www.anilibria.tv/release/", "").Replace("http://www.anilibria.tv/release/", "").Replace(".html", "");
+			if (releaseCode.IndexOf("?") > -1) releaseCode = releaseCode.Substring(0, releaseCode.IndexOf("?"));
+			var release = m_AllReleases.FirstOrDefault(a => a.Code == releaseCode);
+			if (release != null)
+			{
+				OpenedRelease = MapToReleaseModel(release);
+			}
 		}
 
 		private void ResetNotification () {
@@ -541,56 +553,65 @@ namespace Anilibria.Pages.Releases {
 		/// <param name="page">Page.</param>
 		/// <param name="pageSize">Page size.</param>
 		/// <returns>Items on current page.</returns>
-		private Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize ) {
-			var releases = FilteringReleases ( m_AllReleases );
+		private Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize )
+		{
+			var releases = FilteringReleases(m_AllReleases);
 
-			releases = FilteringBySection ( releases );
+			releases = FilteringBySection(releases);
 
-			releases = OrderReleases ( releases );
+			releases = OrderReleases(releases);
 
 			var result = releases
-				.Skip ( ( page - 1 ) * pageSize )
-				.Take ( pageSize )
-				.Select (
-				a => new ReleaseModel {
-					Id = a.Id ,
-					AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
-					Code = a.Code ,
-					Description = a.Description ,
-					Genres = a.Genres != null ? string.Join ( ", " , a.Genres ) : "" ,
-					Title = a.Names != null ? a.Names.FirstOrDefault () : "" ,
-					Names = a.Names ,
-					Poster = m_AnilibriaApiService.GetUrl ( a.Poster ) ,
-					Rating = a.Rating ,
-					Series = a.Series ,
-					Status = a.Status ,
-					Type = a.Type ,
-					Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
-					Year = a.Year ,
-					CountVideoOnline = a.Playlist?.Count () ?? 0 ,
-					Torrents = a?.Torrents?.Select (
-						torrent => new TorrentModel {
-							Completed = torrent.Completed ,
-							Quality = $"[{torrent.Quality}]" ,
-							Series = torrent.Series ,
-							Size = GetFileSize ( torrent.Size ) ,
+				.Skip((page - 1) * pageSize)
+				.Take(pageSize)
+				.Select(MapToReleaseModel);
+
+			return Task.FromResult(result);
+		}
+
+		private ReleaseModel MapToReleaseModel(ReleaseEntity a)
+		{
+			return new ReleaseModel {
+				Id = a.Id,
+				AddToFavorite = m_Favorites?.Contains(a.Id) ?? false,
+				Code = a.Code,
+				Description = a.Description,
+				Genres = a.Genres != null ? string.Join(", ", a.Genres) : "",
+				Title = a.Names != null ? a.Names.FirstOrDefault() : "",
+				Names = a.Names,
+				Poster = m_AnilibriaApiService.GetUrl(a.Poster),
+				Rating = a.Rating,
+				Series = a.Series,
+				Status = a.Status,
+				Type = a.Type,
+				Voices = a.Voices != null ? string.Join(", ", a.Voices) : "",
+				Year = a.Year,
+				CountVideoOnline = a.Playlist?.Count() ?? 0,
+				Torrents = a?.Torrents?.Select(
+					torrent =>
+						new TorrentModel
+						{
+							Completed = torrent.Completed,
+							Quality = $"[{torrent.Quality}]",
+							Series = torrent.Series,
+							Size = GetFileSize(torrent.Size),
 							Url = torrent.Url
 						}
-					)?.ToList () ?? Enumerable.Empty<TorrentModel> () ,
-					OnlineVideos = a.Playlist?.Select (
-						videoOnline => new OnlineVideoModel {
-							Order = videoOnline.Id ,
-							Title = videoOnline.Title ,
-							HDQuality = videoOnline.HD ,
-							SDQuality = videoOnline.SD ,
-							FullHDQuality = videoOnline.FullHD ,
+					)?.ToList() ?? Enumerable.Empty<TorrentModel>(),
+				OnlineVideos = a.Playlist?
+					.Select(
+					videoOnline =>
+						new OnlineVideoModel
+						{
+							Order = videoOnline.Id,
+							Title = videoOnline.Title,
+							HDQuality = videoOnline.HD,
+							SDQuality = videoOnline.SD,
+							FullHDQuality = videoOnline.FullHD,
 
 						}
-					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
-				}
-			);
-
-			return Task.FromResult ( result );
+					)?.ToList() ?? Enumerable.Empty<OnlineVideoModel>()
+			};
 		}
 
 		private void ClearReleaseNotification ( long releaseId ) {
@@ -1101,6 +1122,14 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		public ICommand ResetNotificationCommand
 		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open cross release by hyperlink in text command.
+		/// </summary>
+		public ICommand OpenCrossReleaseCommand {
 			get;
 			set;
 		}
