@@ -12,30 +12,41 @@
 		Background="#D3D3D3">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
+			<RowDefinition />
 		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
 
 		<Border
 			Grid.Row="0"
-			Background="#b32121"
-			BorderBrush="#881919"
-			BorderThickness="0 0 0 2">
-			<RelativePanel
-				HorizontalAlignment="Stretch">
-				<Button
+			Grid.Column="0"
+			Background="#ba2d2d"
+			Width="44">
+			<Button
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowSidebarCommand}">
-					<Image
+				<Image
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/humburger.svg"
+						Source="/Assets/Icons/hambergermenu.svg"
 					/>
-				</Button>
-			</RelativePanel>
+			</Button>
+		</Border>
+		<Border
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			Background="#9e2323"
+			Width="44">
 		</Border>
 
 		<StackPanel
 			Grid.Row="1"
+			Grid.Column="1"
 			VerticalAlignment="Center"
 			HorizontalAlignment="Center"
 			Padding="8"

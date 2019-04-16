@@ -256,6 +256,7 @@
     <Content Include="Assets\Icons\cast.svg" />
     <Content Include="Assets\Icons\chat.svg" />
     <Content Include="Assets\Icons\close.svg" />
+    <Content Include="Assets\Icons\dice.svg" />
     <Content Include="Assets\Icons\favorite.svg" />
     <Content Include="Assets\Icons\favoriteblack.svg" />
     <Content Include="Assets\Icons\hambergermenu.svg" />

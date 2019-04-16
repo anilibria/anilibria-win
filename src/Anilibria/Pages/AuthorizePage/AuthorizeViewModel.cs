@@ -50,7 +50,7 @@ namespace Anilibria.Pages.AuthorizePage {
 
 		private async void Signin () {
 			ErrorMessage = "";
-			var result = await m_AnilibriaApiService.Authentification ( Email , Password, TwoFACode );
+			var (result, message) = await m_AnilibriaApiService.Authentification ( Email , Password, TwoFACode );
 			if ( result ) {
 				ChangePage ( "Releases" , null );
 				RefreshOptions?.Invoke ();
@@ -65,19 +65,21 @@ namespace Anilibria.Pages.AuthorizePage {
 				);
 			}
 			else {
-				ErrorMessage = "Не удалось авторизоваться";
+				ErrorMessage = message;
 			}
 		}
 
 		public void NavigateFrom () {
 			Email = "";
 			Password = "";
+			TwoFACode = "";
 			RaiseCommands ();
 		}
 
 		public void NavigateTo ( object parameter ) {
 			Email = "";
 			Password = "";
+			TwoFACode = "";
 			RaiseCommands ();
 		}
 

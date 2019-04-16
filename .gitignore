@@ -285,3 +285,4 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 /installer/Output/AnilibriaInstallerSetup.exe
+/installer/AnilibriaInstaller.exe
