@@ -338,6 +338,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Save player restore state.
 		/// </summary>
 		public void SavePlayerRestoreState () {
+			if ( SelectedOnlineVideo == null ) return;
+
 			var isNotNeedUpdatePosition = m_PlayerRestoreEntity?.ReleaseId == SelectedRelease?.Id && m_PlayerRestoreEntity?.VideoPosition > 0 && Position == 0;
 			m_PlayerRestoreEntity.ReleaseId = SelectedRelease.Id;
 			m_PlayerRestoreEntity.VideoId = SelectedOnlineVideo.Order;

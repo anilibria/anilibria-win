@@ -108,10 +108,6 @@ namespace Anilibria.Pages.Releases {
 			CommentsWebView.Navigate ( newUrl );
 		}
 
-		private void Button_Click ( object sender , RoutedEventArgs e ) {
-			CommentsWebView.Refresh ();
-		}
-
 		private void CommentsWebView_NavigationCompleted ( WebView sender , WebViewNavigationCompletedEventArgs args ) {
 			m_CurrentUri = args.Uri;
 		}
