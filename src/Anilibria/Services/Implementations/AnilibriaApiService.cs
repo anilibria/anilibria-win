@@ -179,12 +179,13 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <param name="email">User email.</param>
 		/// <param name="password">User password.</param>
-		public async Task<bool> Authentification ( string email , string password ) {
+		public async Task<(bool,string)> Authentification ( string email , string password, string fa2code ) {
 			var formContent = new FormUrlEncodedContent (
 				new[]
 				{
 					new KeyValuePair<string, string>("mail", email),
-					new KeyValuePair<string, string>("passwd", password)
+					new KeyValuePair<string, string>("passwd", password),
+					new KeyValuePair<string, string>("fa2code", fa2code)
 				}
 			);
 
@@ -193,14 +194,14 @@ namespace Anilibria.Services.Implementations {
 
 			var model = JsonConvert.DeserializeObject<AuthorizationModel> ( content );
 
-			if ( model.Err != "ok" ) return false;
+			if ( model.Err != "ok" ) return (false, model.Mes);
 
 			var cookies = m_HttpHandler.CookieContainer.GetCookies ( new Uri ( m_WebSiteUrl ) ).Cast<Cookie> ();
 			var sessionCookie = cookies.FirstOrDefault ( a => a.Name == m_SessionName );
 
 			SetSession ( sessionCookie.Value );
 
-			return true;
+			return (true, "");
 		}
 
 		/// <summary>

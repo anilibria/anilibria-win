@@ -18,7 +18,7 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=MIT.txt
-OutputBaseFilename={#MyAppExeName}
+OutputBaseFilename={#MyAppExeName}{#MyAppVersion}
 SetupIconFile=anilibriaicon.ico
 Compression=lzma
 SolidCompression=yes
@@ -34,12 +34,13 @@ Name: "{app}\"
 [Files]
 Source: "Add-AppDevPackage.resources\*"; DestDir: "{app}/Add-AppDevPackage.resources"; Flags: ignoreversion recursesubdirs
 Source: "Dependencies\*"; DestDir: "{app}/Dependencies"; Flags: ignoreversion recursesubdirs
+Source: "preinstall.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Anilibria_{#MyAppVersion}_x86_x64_arm.appxbundle"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Anilibria_{#MyAppVersion}_x86_x64_arm.cer"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Add-AppDevPackage.ps1"; DestDir: "{app}"; Flags: ignoreversion
-Source: "runps.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "runinstaller.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppIcoName}"; DestDir: "{app}"
 
 [Run]
-Filename: "{app}\runps.bat"; WorkingDir: "{app}"; Description: "Run true installer"; Flags: shellexec
+Filename: "{app}\AnilibriaInstaller.exe"; WorkingDir: "{app}"; Description: "Run true installer"
 

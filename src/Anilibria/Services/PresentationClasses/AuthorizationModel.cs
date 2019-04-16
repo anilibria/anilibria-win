@@ -17,6 +17,12 @@
 			set;
 		}
 
+		public string Mes
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

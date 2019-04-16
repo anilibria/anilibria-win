@@ -51,8 +51,9 @@ namespace Anilibria.Services {
 		/// </summary>
 		/// <param name="email">Email.</param>
 		/// <param name="password">Password.</param>
+		/// <param name="fa2code">2fa code.</param>
 		/// <returns>Authorization result.</returns>
-		Task<bool> Authentification ( string email , string password );
+		Task<(bool, string)> Authentification ( string email , string password, string fa2code);
 
 		/// <summary>
 		/// Logout.
