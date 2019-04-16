@@ -2,10 +2,12 @@
 using System;
 using System.Linq;
 using System.Windows.Input;
+using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Media;
 
 namespace Anilibria.Converters
 {
@@ -109,7 +111,10 @@ namespace Anilibria.Converters
 							if (!string.IsNullOrEmpty(url.Value) && (url.Value.StartsWith("https://www.anilibria.tv/release/") || url.Value.StartsWith("http://www.anilibria.tv/release/")))
 							{
 								var urlValue = url.Value;
-								hyperlink = new Hyperlink();
+								hyperlink = new Hyperlink
+								{
+									Foreground = new SolidColorBrush(Color.FromArgb(255, 163, 39, 39))
+								};
 								hyperlink.Click += (sender, args) =>
 								{
 									var linkCommand = GetLinkCommand(root);
@@ -120,10 +125,10 @@ namespace Anilibria.Converters
 							{
 								hyperlink = new Hyperlink
 								{
-									NavigateUri = new Uri(url.Value)
+									NavigateUri = new Uri(url.Value),
+									Foreground = new SolidColorBrush(Color.FromArgb(255, 163, 39, 39))
 								};
 							}
-
 							parentCollection.Add(hyperlink);
 
 							foreach (var underlineChild in node.ChildNodes) ProcessInline(hyperlink, underlineChild, collection, root);
