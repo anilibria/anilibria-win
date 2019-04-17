@@ -119,7 +119,7 @@ namespace Anilibria.Pages.HomePage {
 				ShowMessage (
 					new MessageModel {
 						Header = "Выход из аккаунта" ,
-						Message = "Вы вышли из аккаунта. Для повторного входа выберите в пункт Войти."
+						Message = "Вы вышли из аккаунта. Для повторного входа выберите в меню пункт Войти."
 					}
 				);
 			}

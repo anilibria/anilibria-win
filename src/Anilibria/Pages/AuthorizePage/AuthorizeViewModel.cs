@@ -50,22 +50,26 @@ namespace Anilibria.Pages.AuthorizePage {
 
 		private async void Signin () {
 			ErrorMessage = "";
-			var (result, message) = await m_AnilibriaApiService.Authentification ( Email , Password, TwoFACode );
-			if ( result ) {
-				ChangePage ( "Releases" , null );
-				RefreshOptions?.Invoke ();
-				await ChangeUserSession ();
+			try {
+				var (result, message) = await m_AnilibriaApiService.Authentification ( Email , Password, TwoFACode );
+				if ( result ) {
+					ChangePage ( "Releases" , null );
+					RefreshOptions?.Invoke ();
+					await ChangeUserSession ();
 
-				ObserverEvents.FireEvent (
-					"showMessage" ,
-					new MessageModel {
-						Header = "Авторизация" ,
-						Message = "Вы успешно вошли в аккаунт"
-					}
-				);
-			}
-			else {
-				ErrorMessage = message;
+					ObserverEvents.FireEvent (
+						"showMessage" ,
+						new MessageModel {
+							Header = "Авторизация" ,
+							Message = "Вы успешно вошли в аккаунт"
+						}
+					);
+				}
+				else {
+					ErrorMessage = message;
+				}
+			} catch {
+				ErrorMessage = "Ошибка авторизации";
 			}
 		}
 
