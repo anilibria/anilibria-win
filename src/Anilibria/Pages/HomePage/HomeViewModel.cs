@@ -20,13 +20,13 @@ namespace Anilibria.Pages.HomePage {
 	/// </summary>
 	public class HomeViewModel : ViewModel {
 
-		const string ReleasesPage = "Releases";
+		public const string ReleasesPage = "Releases";
 
-		const string PlayerPage = "Player";
+		public const string PlayerPage = "Player";
 
-		const string AuthorizePage = "Authorize";
+		public const string AuthorizePage = "Authorize";
 
-		const string YoutubePage = "Youtube";
+		public const string YoutubePage = "Youtube";
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 		

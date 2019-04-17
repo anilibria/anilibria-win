@@ -23,7 +23,7 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Background="#ba2d2d"
-			Width="44">
+			Width="48">
 			<Button
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -41,7 +41,7 @@
 			Grid.RowSpan="2"
 			Grid.Column="0"
 			Background="#9e2323"
-			Width="44">
+			Width="48">
 		</Border>
 
 		<StackPanel

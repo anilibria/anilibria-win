@@ -13,6 +13,7 @@ using Anilibria.Pages.Youtube;
 using Windows.UI.Xaml.Media.Animation;
 using System;
 using Anilibria.Pages.AboutPage;
+using Windows.UI.Core;
 
 namespace Anilibria {
 
@@ -29,6 +30,8 @@ namespace Anilibria {
 
 		private HomeViewModel m_ViewModel;
 
+		private SystemNavigationManager m_NavigationManager = SystemNavigationManager.GetForCurrentView ();
+
 		public HomeView () {
 			InitializeComponent ();
 
@@ -44,6 +47,8 @@ namespace Anilibria {
 			m_HideMessageTimer.Interval = TimeSpan.FromSeconds ( 4 );
 
 			( Resources["HideMessage"] as Storyboard ).Completed += HideMessageAnimationCompleted;
+
+			m_NavigationManager.BackRequested += CurrentView_BackRequested;
 		}
 
 		private void HideMessageAnimationCompleted ( object sender , object e ) {
@@ -108,6 +113,17 @@ namespace Anilibria {
 			Sidebar.IsPaneOpen = true;
 		}
 
+		private void CurrentView_BackRequested ( object sender , BackRequestedEventArgs e ) {
+			e.Handled = true;
+			m_NavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+			ChangePage ( HomeViewModel.ReleasesPage , null );
+		}
+
+		private void RefreshStateBackButton () {
+			var viewModel = DataContext as HomeViewModel;
+			m_NavigationManager.AppViewBackButtonVisibility = viewModel.SelectedItem?.Page != HomeViewModel.ReleasesPage ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+		}
+
 		/// <summary>
 		/// Change page.
 		/// </summary>
@@ -133,6 +149,8 @@ namespace Anilibria {
 			m_PreviousPage = page;
 			//hide sidebar after change page
 			Sidebar.IsPaneOpen = false;
+
+			RefreshStateBackButton ();
 		}
 
 		private async void Page_Loaded ( object sender , RoutedEventArgs e ) {

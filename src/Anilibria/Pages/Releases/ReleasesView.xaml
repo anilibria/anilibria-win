@@ -899,6 +899,18 @@
 						Visibility="{Binding IsShowNotification}"
 					/>
 				</Grid>
+				<Button
+					x:Name="RandomReleaseButton"
+					RelativePanel.Below="NotificationButton"
+					Style="{StaticResource IconsButtonStyle}"
+					Command="{Binding ShowRandomReleaseCommand}"
+					ToolTipService.ToolTip="Показать случайный релиз">
+					<Image
+						Width="{StaticResource IconSize}"
+						Height="{StaticResource IconSize}"
+						Source="/Assets/Icons/dice.svg"
+					/>
+				</Button>
 			</RelativePanel>
 		</Border>
 		<Border
