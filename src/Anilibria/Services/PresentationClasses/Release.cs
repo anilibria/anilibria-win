@@ -27,6 +27,15 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
+		/// Announce.
+		/// </summary>
+		public string Announce
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Names.
 		/// </summary>
 		public IEnumerable<string> Names

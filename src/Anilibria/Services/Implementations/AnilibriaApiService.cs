@@ -91,7 +91,10 @@ namespace Anilibria.Services.Implementations {
 				releases = responseModel.Data;
 			}
 
-			foreach ( var item in releases ) item.Type = HtmlEntity.DeEntitize ( item.Type ); //Type can be contains html special characters
+			foreach ( var item in releases ) {
+				item.Type = HtmlEntity.DeEntitize ( item.Type ); //Type can be contains html special characters
+				if ( !string.IsNullOrEmpty ( item.Announce ) ) item.Announce = HtmlEntity.DeEntitize ( item.Announce );
+			}
 
 			return releases;
 		}
@@ -179,7 +182,7 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <param name="email">User email.</param>
 		/// <param name="password">User password.</param>
-		public async Task<(bool,string)> Authentification ( string email , string password, string fa2code ) {
+		public async Task<(bool, string)> Authentification ( string email , string password , string fa2code ) {
 			var formContent = new FormUrlEncodedContent (
 				new[]
 				{

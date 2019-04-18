@@ -102,6 +102,8 @@ namespace Anilibria.Pages.Releases {
 
 		private UserModel m_UserModel;
 
+		private bool m_ShowAnnounce;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -585,6 +587,7 @@ namespace Anilibria.Pages.Releases {
 				Id = a.Id ,
 				AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
 				Code = a.Code ,
+				Announce = a.Announce ,
 				Description = a.Description ,
 				Genres = a.Genres != null ? string.Join ( ", " , a.Genres ) : "" ,
 				Title = a.Names != null ? a.Names.FirstOrDefault () : "" ,
@@ -740,6 +743,15 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Show announce.
+		/// </summary>
+		public bool ShowAnnounce
+		{
+			get => m_ShowAnnounce;
+			set => Set ( ref m_ShowAnnounce , value );
+		}
+
+		/// <summary>
 		/// Release for show in Release Card.
 		/// </summary>
 		public ReleaseModel OpenedRelease
@@ -750,6 +762,7 @@ namespace Anilibria.Pages.Releases {
 				if ( !Set ( ref m_OpenedRelease , value ) ) return;
 
 				RefreshCardFavorite ();
+				ShowAnnounce = value != null ? !string.IsNullOrEmpty ( value.Announce ) : false;
 			}
 		}
 

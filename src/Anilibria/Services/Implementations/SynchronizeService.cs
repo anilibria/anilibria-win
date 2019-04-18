@@ -70,6 +70,7 @@ namespace Anilibria.Services.Implementations {
 			return new ReleaseEntity {
 				Id = release.Id ,
 				Code = release.Code ,
+				Announce = release.Announce ,
 				Description = release.Description ,
 				Genres = release.Genres.ToArray () ,
 				Moon = release.Moon ,
@@ -128,6 +129,7 @@ namespace Anilibria.Services.Implementations {
 			if ( releaseEntity.Type != release.Type ) releaseEntity.Type = release.Type;
 			if ( releaseEntity.Status != release.Status ) releaseEntity.Status = release.Status;
 			if ( releaseEntity.Series != release.Series?.TrimEnd () ) releaseEntity.Series = release.Series;
+			if ( releaseEntity.Announce != release.Announce ) releaseEntity.Announce = release.Announce;
 			releaseEntity.Rating = release.Favorite?.Rating ?? 0;
 			releaseEntity.Title = release.Names?.FirstOrDefault () ?? "";
 			releaseEntity.Names = release.Names.ToList ();

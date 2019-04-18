@@ -27,6 +27,15 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
+		/// Announce.
+		/// </summary>
+		public string Announce
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Main name.
 		/// </summary>
 		public string Title

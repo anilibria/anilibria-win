@@ -1156,9 +1156,18 @@
 							/>
 						</TextBlock>
 					</StackPanel>
+					<TextBlock
+						Margin="0 2 0 0"
+						TextWrapping="WrapWholeWords"
+						TextTrimming="CharacterEllipsis"
+						Foreground="#a32727"
+						MaxLines="2"
+						Visibility="{Binding ShowAnnounce}"
+						Text="{Binding OpenedRelease.Announce}"
+					/>
 					<StackPanel
 						Orientation="Vertical"
-						Margin="0 6 0 0">
+						Margin="0 2 0 0">
 						<ScrollViewer
 							x:Name="CardDescription"
 							MaxHeight="190">
