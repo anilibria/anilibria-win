@@ -22,7 +22,6 @@
 			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
 			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
 			<Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}"/>
-			<Setter Property="ContextFlyout" Value="{StaticResource TextControlCommandBarContextFlyout}"/>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="PasswordBox">
