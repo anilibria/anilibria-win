@@ -93,7 +93,7 @@ namespace Anilibria.Pages.Releases {
 				return;
 			}
 
-			if ( uri.StartsWith ( "https://oauth.vk.com/authorize" ) ) {
+			if ( uri.StartsWith ( "https://oauth.vk.com/authorize" ) && m_CurrentUri != null ) {
 				uri = uri.Replace ( "close.html" , WebUtility.UrlEncode ( m_CurrentUri.ToString () ) );
 			}
 
