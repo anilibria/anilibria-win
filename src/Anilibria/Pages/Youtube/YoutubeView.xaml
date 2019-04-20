@@ -12,19 +12,24 @@
 		<DataTemplate x:Key="YoutubeItemTemplate">
 			<Grid
 				Padding="4"
-				Background="White"
 				VerticalAlignment="Stretch"
-				Width="380">
+				Width="380"
+				Background="#f2f2f2"
+				CornerRadius="8">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 
-				<Border>
+				<Border
+					Height="200"
+					Width="360"
+					BorderBrush="#adadad"
+					BorderThickness="2"
+					CornerRadius="5">
 					<Image
-						Width="355"
-						VerticalAlignment="Top"
-						Stretch="Uniform"
+						Stretch="UniformToFill"
+						HorizontalAlignment="Center"
 						Tag="{Binding Id}"
 						converters:CacheImageConverter.ImageGroup="Youtube"
 						converters:CacheImageConverter.ImagePath="{Binding Image}"
@@ -439,30 +444,41 @@
 		Background="#D3D3D3">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+
 		<Border
 			Grid.Row="0"
-			Background="#b32121"
-			BorderBrush="#881919"
-			BorderThickness="0 0 0 2">
-			<RelativePanel
-				HorizontalAlignment="Stretch">
-				<Button
+			Grid.Column="0"
+			Background="#ba2d2d"
+			Width="48">
+			<Button
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowSidebarCommand}">
-					<Image
+				<Image
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/humburger.svg"
+						Source="/Assets/Icons/hambergermenu.svg"
 					/>
-				</Button>
-			</RelativePanel>
+			</Button>
+		</Border>
+		<Border
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			Background="#9e2323"
+			Width="48">
 		</Border>
 		<controls:BindableGridControl
+			Grid.Row="1"
+			Grid.Column="1"
 			Style="{StaticResource GridViewStyle}"
-			Grid.Row="2"
 			ItemsSource="{Binding Collection}"
 			MultipleSelectedItems="{Binding SelectedVideos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 			HorizontalAlignment="Stretch"
