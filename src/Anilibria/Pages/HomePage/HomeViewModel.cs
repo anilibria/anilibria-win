@@ -8,7 +8,6 @@ using Anilibria.MVVM;
 using Anilibria.Pages.HomePage.PresentationClasses;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services;
-using Anilibria.Services.Exceptions;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;

@@ -15,7 +15,7 @@
 
 		NewTorrentSeries,
 
-		//Schedule,
+		Schedule,
 
 		//Seens,
 

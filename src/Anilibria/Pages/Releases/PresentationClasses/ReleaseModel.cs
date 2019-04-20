@@ -129,6 +129,24 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		}
 
 		/// <summary>
+		/// Scheduled on day.
+		/// </summary>
+		public string ScheduledOnDay
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Is exists scheduled on day.
+		/// </summary>
+		public bool IsExistsScheduledOnDay
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Year.
 		/// </summary>
 		public string Year

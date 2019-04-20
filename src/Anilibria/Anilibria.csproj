@@ -179,6 +179,8 @@
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingDirectionModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\TorrentDownloadMode.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\TorrentDownloadModeModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentModel.cs" />
     <Compile Include="Pages\Releases\ReleasesView.xaml.cs">
       <DependentUpon>ReleasesView.xaml</DependentUpon>
@@ -229,6 +231,7 @@
     <Compile Include="Storage\Entities\PlayerRestoreEntity.cs" />
     <Compile Include="Storage\Entities\ReleaseVideoStateEntity.cs" />
     <Compile Include="Storage\Entities\PlaylistItemEntity.cs" />
+    <Compile Include="Storage\Entities\ScheduleEntity.cs" />
     <Compile Include="Storage\Entities\TorrentItemEntity.cs" />
     <Compile Include="Storage\Entities\VideoStateEntity.cs" />
     <Compile Include="Storage\IEnitityCollection.cs" />
@@ -263,6 +266,7 @@
     <Content Include="Assets\Icons\logout.svg" />
     <Content Include="Assets\Icons\menu.svg" />
     <Content Include="Assets\Icons\notification.svg" />
+    <Content Include="Assets\Icons\options.svg" />
     <Content Include="Assets\Icons\pause.svg" />
     <Content Include="Assets\Icons\refresh.svg" />
     <Content Include="Assets\Icons\removefavorite.svg" />

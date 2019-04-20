@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Anilibria.Collections;
 using Anilibria.MVVM;
+using Anilibria.Pages.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
 using Windows.System;
 
 namespace Anilibria.Pages.Releases {
@@ -22,11 +27,17 @@ namespace Anilibria.Pages.Releases {
 	/// </summary>
 	public class ReleasesViewModel : ViewModel, INavigation {
 
+		private const string IsFavoriteNotificationsSettings = "IsFavoriteNotifications";
+
+		private const string TorrentModeSettings = "TorrentMode";
+
 		private Random m_Random = new Random ( Guid.NewGuid ().GetHashCode () );
 
 		private bool m_IsMultipleSelect;
 
 		private IEnumerable<ReleaseEntity> m_AllReleases;
+
+		private IDictionary<int , IEnumerable<long>> m_SchedulesReleases = new Dictionary<int , IEnumerable<long>> ();
 
 		private IncrementalLoadingCollection<ReleaseModel> m_Collection;
 
@@ -96,13 +107,34 @@ namespace Anilibria.Pages.Releases {
 
 		private int m_NewTorrentSeriesCount;
 
-		private bool m_IsShowNotification;
+		private bool m_IsShowNotification = false;
 
 		private ChangesEntity m_Changes;
 
 		private UserModel m_UserModel;
 
 		private bool m_ShowAnnounce;
+
+		private bool m_isFavoriteNotifications;
+
+		private TorrentDownloadModeModel m_SelectedTorrentDownloadMode;
+
+		private ObservableCollection<TorrentDownloadModeModel> m_TorrentDownloadModes = new ObservableCollection<TorrentDownloadModeModel> (
+			new List<TorrentDownloadModeModel> {
+				new TorrentDownloadModeModel {
+					Mode = TorrentDownloadMode.OpenInTorrentClient,
+					Title = "Открыть в торрент клиенте"
+				},
+				new TorrentDownloadModeModel {
+					Mode = TorrentDownloadMode.SaveAsFile,
+					Title = "Сохранить файл"
+				},
+				//new TorrentDownloadModeModel {
+				//	Mode = TorrentDownloadMode.DownloadToDownloadManager,
+				//	Name = "Использовать встроенный загрузчик"
+				//},
+			}
+		);
 
 		/// <summary>
 		/// Constructor injection.
@@ -118,9 +150,24 @@ namespace Anilibria.Pages.Releases {
 			CreateSortingItems ();
 			CreateSections ();
 			RefreshSelectedReleases ();
+			RestoreSettings ();
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 
 			m_AnalyticsService.TrackEvent ( "Releases" , "Opened" , "Simple start" );
+		}
+
+		private void RestoreSettings () {
+			var values = ApplicationData.Current.RoamingSettings.Values;
+			if ( values.ContainsKey ( IsFavoriteNotificationsSettings ) ) {
+				m_isFavoriteNotifications = (bool) values[IsFavoriteNotificationsSettings];
+			}
+			if ( values.ContainsKey ( TorrentModeSettings ) ) {
+				var torrentMode = (TorrentDownloadMode) ( (int) values[TorrentModeSettings] );
+				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.FirstOrDefault ( a => a.Mode == torrentMode ) ?? m_TorrentDownloadModes.First ();
+			}
+			else {
+				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.First ();
+			}
 		}
 
 		private void CreateSections () {
@@ -132,6 +179,10 @@ namespace Anilibria.Pages.Releases {
 				new SectionModel {
 					Title = "Избранное",
 					Type = SectionType.Favorite
+				},
+				new SectionModel {
+					Title = "Расписание",
+					Type = SectionType.Schedule
 				},
 				new SectionModel {
 					Title = "Новые релизы",
@@ -156,6 +207,10 @@ namespace Anilibria.Pages.Releases {
 					new SortingItemModel {
 						Name = "Дате последнего обновления",
 						Type = SortingItemType.DateLastUpdate,
+					},
+					new SortingItemModel {
+						Name = "Дню в расписании",
+						Type = SortingItemType.ScheduleDay,
 					},
 					new SortingItemModel {
 						Name = "Имени",
@@ -289,6 +344,18 @@ namespace Anilibria.Pages.Releases {
 			return currentCount - oldCount;
 		}
 
+		private int GetCountOnlineSeries ( IEnumerable<ReleaseEntity> onlineSeriesReleases ) {
+			if ( !m_Changes.NewOnlineSeries.Any () ) return 0;
+
+			return m_Changes.NewOnlineSeries.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Select ( a => GetNewSeries ( a.Key , a.Value , onlineSeriesReleases ) ).Sum ();
+		}
+
+		private int GetCountTorrentSeries () {
+			if ( !m_Changes.NewTorrentSeries.Any () ) return 0;
+
+			return m_Changes.NewTorrentSeries.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Count ();
+		}
+
 		private void RefreshNotification () {
 			var collection = m_DataContext.GetCollection<ChangesEntity> ();
 			m_Changes = collection.FirstOrDefault ();
@@ -302,8 +369,8 @@ namespace Anilibria.Pages.Releases {
 			}
 
 			NewReleasesCount = m_Changes.NewReleases.Count ();
-			NewOnlineSeriesCount = m_Changes.NewOnlineSeries.Any () ? m_Changes.NewOnlineSeries.Select ( a => GetNewSeries ( a.Key , a.Value , onlineSeriesReleases ) ).Sum () : 0;
-			NewTorrentSeriesCount = m_Changes.NewTorrentSeries.Count ();
+			NewOnlineSeriesCount = GetCountOnlineSeries ( onlineSeriesReleases );
+			NewTorrentSeriesCount = GetCountTorrentSeries ();
 			IsNewReleases = NewReleasesCount > 0;
 			IsNewOnlineSeries = NewOnlineSeriesCount > 0;
 			IsNewTorrentSeries = NewTorrentSeriesCount > 0;
@@ -369,7 +436,61 @@ namespace Anilibria.Pages.Releases {
 
 		public async void OpenTorrent ( string torrent ) {
 			var file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
-			await Launcher.LaunchFileAsync ( file );
+			var mode = SelectedTorrentDownloadMode?.Mode ?? TorrentDownloadMode.OpenInTorrentClient;
+
+			switch ( mode ) {
+				case TorrentDownloadMode.OpenInTorrentClient:
+					await Launcher.LaunchFileAsync ( file );
+					break;
+				case TorrentDownloadMode.SaveAsFile:
+					var savePicker = new FileSavePicker {
+						SuggestedStartLocation = PickerLocationId.Downloads ,
+						SuggestedFileName = Path.GetFileName ( torrent )
+					};
+					savePicker.FileTypeChoices.Add ( "Torrent file" , new List<string> () { ".torrent" } );
+					var savedFileLocation = await savePicker.PickSaveFileAsync ();
+					if ( savedFileLocation != null ) {
+						CachedFileManager.DeferUpdates ( savedFileLocation );
+						try {
+							using ( var sourceFile = await file.OpenStreamForReadAsync () )
+							using ( var targetFile = await savedFileLocation.OpenStreamForWriteAsync () ) {
+								await sourceFile.CopyToAsync ( targetFile );
+							}
+							var status = await CachedFileManager.CompleteUpdatesAsync ( savedFileLocation );
+							if ( status == FileUpdateStatus.Complete ) {
+								ObserverEvents.FireEvent (
+									"showMessage" ,
+									new MessageModel {
+										Header = "Сохранение торрента" ,
+										Message = "Сохранение успешно выполнено"
+									}
+								);
+							}
+							else {
+								ObserverEvents.FireEvent (
+									"showMessage" ,
+									new MessageModel {
+										Header = "Сохранение торрента" ,
+										Message = "Не удалось сохранить торрент файл"
+									}
+								);
+							}
+						}
+						catch {
+							ObserverEvents.FireEvent (
+								"showMessage" ,
+								new MessageModel {
+									Header = "Сохранение торрента" ,
+									Message = "Ошибка при сохранении торрент файл"
+								}
+							);
+						}
+					}
+					break;
+				case TorrentDownloadMode.DownloadToDownloadManager:
+				default: throw new NotSupportedException ( $"Download Mode {SelectedTorrentDownloadMode.Mode} not supported." );
+			}
+
 		}
 
 		private async Task RefreshFavorites () {
@@ -469,6 +590,7 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		private void RefreshReleases () {
 			m_AllReleases = GetReleasesByCurrentMode ();
+			m_SchedulesReleases = GetScheduleReleases ();
 			EmptyReleases = m_AllReleases.Count () == 0;
 
 			m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
@@ -476,6 +598,14 @@ namespace Anilibria.Pages.Releases {
 				GetPageFunction = GetItemsPageAsync
 			};
 			RaisePropertyChanged ( () => Collection );
+		}
+
+		private IDictionary<int , IEnumerable<long>> GetScheduleReleases () {
+			var scheduleCollection = m_DataContext.GetCollection<ScheduleEntity> ();
+			var entity = scheduleCollection.FirstOrDefault ();
+			if ( entity == null ) return new Dictionary<int , IEnumerable<long>> ();
+
+			return entity.Days ?? new Dictionary<int , IEnumerable<long>> ();
 		}
 
 		/// <summary>
@@ -507,6 +637,8 @@ namespace Anilibria.Pages.Releases {
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Year ) : releases.OrderByDescending ( a => a.Year );
 				case SortingItemType.Rating:
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Rating ) : releases.OrderByDescending ( a => a.Rating );
+				case SortingItemType.ScheduleDay:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => GetScheduleDayIndexOnRelease ( a ) ) : releases.OrderByDescending ( a => GetScheduleDayIndexOnRelease ( a ) );
 				default: throw new NotSupportedException ( $"Sorting sorting item {m_SelectedSortingItem}." );
 			}
 		}
@@ -548,14 +680,16 @@ namespace Anilibria.Pages.Releases {
 					return releases;
 				case SectionType.Favorite:
 					return releases.Where ( a => m_Favorites.Contains ( a.Id ) );
+				case SectionType.Schedule:
+					return releases.Where ( a => m_SchedulesReleases?.SelectMany ( b => b.Value )?.Contains ( a.Id ) ?? true );
 				case SectionType.NewReleases:
 					var newReleases = m_Changes?.NewReleases ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newReleases.Contains ( a.Id ) );
 				case SectionType.NewOnlineSeries:
-					var newSeries = m_Changes?.NewOnlineSeries?.Keys ?? Enumerable.Empty<long> ();
+					var newSeries = m_Changes?.NewOnlineSeries?.Keys.Where ( a => IsFavoriteNotifications ? m_Favorites?.Contains ( a ) ?? true : true ) ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newSeries.Contains ( a.Id ) );
 				case SectionType.NewTorrentSeries:
-					var newTorrents = m_Changes?.NewTorrentSeries?.Keys ?? Enumerable.Empty<long> ();
+					var newTorrents = m_Changes?.NewTorrentSeries?.Keys.Where ( a => IsFavoriteNotifications ? m_Favorites?.Contains ( a ) ?? true : true ) ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newTorrents.Contains ( a.Id ) );
 				default: throw new NotSupportedException ( "Section type not supported." );
 			}
@@ -582,8 +716,41 @@ namespace Anilibria.Pages.Releases {
 			return Task.FromResult ( result );
 		}
 
+		private readonly Dictionary<int , string> m_DayNames = new Dictionary<int , string> {
+			[1] = "понедельник" ,
+			[2] = "вторник" ,
+			[3] = "среда" ,
+			[4] = "четверг" ,
+			[5] = "пятница" ,
+			[6] = "суббота" ,
+			[7] = "воскресенье"
+		};
+
+		private string GetScheduleDayOnRelease ( ReleaseEntity releaseEntity ) {
+			if ( m_SchedulesReleases == null ) return "";
+
+			int day = m_SchedulesReleases
+				.Where ( a => a.Value.Any ( releaseId => releaseId == releaseEntity.Id ) )
+				.Select ( a => a.Key )
+				.FirstOrDefault ();
+			if ( day == 0 ) return "";
+
+			m_DayNames.TryGetValue ( day , out var dayTitle );
+			return dayTitle;
+		}
+
+		private int GetScheduleDayIndexOnRelease ( ReleaseEntity releaseEntity ) {
+			if ( m_SchedulesReleases == null ) return 10;
+
+			var day = m_SchedulesReleases
+				.Where ( a => a.Value.Any ( releaseId => releaseId == releaseEntity.Id ) )
+				.Select ( a => a.Key )
+				.FirstOrDefault ();
+			return day == 0 ? 10 : day;
+		}
+
 		private ReleaseModel MapToReleaseModel ( ReleaseEntity a ) {
-			return new ReleaseModel {
+			var releaseModel = new ReleaseModel {
 				Id = a.Id ,
 				AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
 				Code = a.Code ,
@@ -597,6 +764,7 @@ namespace Anilibria.Pages.Releases {
 				Series = a.Series ,
 				Status = a.Status ,
 				Type = a.Type ,
+				ScheduledOnDay = GetScheduleDayOnRelease ( a ) ,
 				Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
 				Year = a.Year ,
 				CountVideoOnline = a.Playlist?.Count () ?? 0 ,
@@ -623,6 +791,9 @@ namespace Anilibria.Pages.Releases {
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
 			};
+			releaseModel.IsExistsScheduledOnDay = !string.IsNullOrEmpty ( releaseModel.ScheduledOnDay );
+
+			return releaseModel;
 		}
 
 		private void ClearReleaseNotification ( long releaseId ) {
@@ -657,7 +828,7 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
-
+			m_AnalyticsService.TrackEvent ( "Releases" , "NavigatedTo" , "Simple" );
 		}
 
 		/// <summary>
@@ -983,6 +1154,45 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_UserModel;
 			set => Set ( ref m_UserModel , value );
+		}
+
+		/// <summary>
+		/// Is favorite notifications.
+		/// </summary>
+		public bool IsFavoriteNotifications
+		{
+			get => m_isFavoriteNotifications;
+			set
+			{
+				if ( !Set ( ref m_isFavoriteNotifications , value ) ) return;
+
+				ApplicationData.Current.RoamingSettings.Values[IsFavoriteNotificationsSettings] = value;
+
+				RefreshNotification ();
+			}
+		}
+
+		/// <summary>
+		/// Is favorite notifications.
+		/// </summary>
+		public TorrentDownloadModeModel SelectedTorrentDownloadMode
+		{
+			get => m_SelectedTorrentDownloadMode;
+			set
+			{
+				if ( !Set ( ref m_SelectedTorrentDownloadMode , value ) ) return;
+
+				ApplicationData.Current.RoamingSettings.Values[TorrentModeSettings] = (int) value.Mode;
+			}
+		}
+
+		/// <summary>
+		/// Is favorite notifications.
+		/// </summary>
+		public ObservableCollection<TorrentDownloadModeModel> TorrentDownloadModes
+		{
+			get => m_TorrentDownloadModes;
+			set => Set ( ref m_TorrentDownloadModes , value );
 		}
 
 		/// <summary>

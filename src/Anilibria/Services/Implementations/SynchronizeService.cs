@@ -195,7 +195,9 @@ namespace Anilibria.Services.Implementations {
 				//uncomment experimental feature
 				//var touchedReleases = await m_AnilibriaApiService.GetTouchedReleases ();
 				var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
-				//var schedules = await m_AnilibriaApiService.GetSchedule ();
+				var schedules = await m_AnilibriaApiService.GetSchedule ();
+
+				saveSchedule ( schedules );
 
 				var collection = m_DataContext.GetCollection<ReleaseEntity> ();
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
@@ -251,7 +253,21 @@ namespace Anilibria.Services.Implementations {
 					}
 				);
 			}
+		}
 
+		private void saveSchedule ( IDictionary<int , IEnumerable<long>> schedules ) {
+			var collection = m_DataContext.GetCollection<ScheduleEntity> ();
+			var entity = collection.FirstOrDefault ();
+			if (entity == null) {
+				collection.Add (
+					new ScheduleEntity {
+						Days = schedules
+					}
+				);
+			} else {
+				entity.Days = schedules;
+				collection.Update ( entity );
+			}
 		}
 
 		private ChangesEntity GetChanges ( IEntityCollection<ChangesEntity> changesCollection ) {
