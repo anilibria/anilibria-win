@@ -23,6 +23,7 @@ SetupIconFile=anilibriaicon.ico
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
+MinVersion=10.0.17134
 
 [Languages]
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
