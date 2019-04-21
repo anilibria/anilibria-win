@@ -23,6 +23,22 @@
 			set;
 		}
 
+		/// <summary>
+		/// Sorting mode.
+		/// </summary>
+		public SortingItemType SortingMode {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Sorting direction.
+		/// </summary>
+		public SortingDirectionType SortingDirection {
+			get;
+			set;
+		}
+
 	}
 
 }

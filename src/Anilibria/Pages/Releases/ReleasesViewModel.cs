@@ -41,7 +41,11 @@ namespace Anilibria.Pages.Releases {
 
 		private IncrementalLoadingCollection<ReleaseModel> m_Collection;
 
+		private ObservableCollection<IGrouping<string , ReleaseModel>> m_GroupingCollection;
+
 		private ObservableCollection<ReleaseModel> m_SelectedReleases;
+
+		private ObservableCollection<ReleaseModel> m_SelectedGroupedReleases;
 
 		private ObservableCollection<SortingItemModel> m_SortingItems;
 
@@ -70,6 +74,23 @@ namespace Anilibria.Pages.Releases {
 		private readonly IAnalyticsService m_AnalyticsService;
 
 		private readonly string[] m_FileSizes = { "B" , "KB" , "MB" , "GB" , "TB" };
+
+		private ObservableCollection<TorrentDownloadModeModel> m_TorrentDownloadModes = new ObservableCollection<TorrentDownloadModeModel> (
+			new List<TorrentDownloadModeModel> {
+				new TorrentDownloadModeModel {
+					Mode = TorrentDownloadMode.OpenInTorrentClient,
+					Title = "Открыть в торрент клиенте"
+				},
+				new TorrentDownloadModeModel {
+					Mode = TorrentDownloadMode.SaveAsFile,
+					Title = "Сохранить файл"
+				},
+				//new TorrentDownloadModeModel {
+				//	Mode = TorrentDownloadMode.DownloadToDownloadManager,
+				//	Name = "Использовать встроенный загрузчик"
+				//},
+			}
+		);
 
 		private IEnumerable<long> m_Favorites = Enumerable.Empty<long> ();
 
@@ -119,22 +140,7 @@ namespace Anilibria.Pages.Releases {
 
 		private TorrentDownloadModeModel m_SelectedTorrentDownloadMode;
 
-		private ObservableCollection<TorrentDownloadModeModel> m_TorrentDownloadModes = new ObservableCollection<TorrentDownloadModeModel> (
-			new List<TorrentDownloadModeModel> {
-				new TorrentDownloadModeModel {
-					Mode = TorrentDownloadMode.OpenInTorrentClient,
-					Title = "Открыть в торрент клиенте"
-				},
-				new TorrentDownloadModeModel {
-					Mode = TorrentDownloadMode.SaveAsFile,
-					Title = "Сохранить файл"
-				},
-				//new TorrentDownloadModeModel {
-				//	Mode = TorrentDownloadMode.DownloadToDownloadManager,
-				//	Name = "Использовать встроенный загрузчик"
-				//},
-			}
-		);
+		private bool m_GroupedGridVisible;
 
 		/// <summary>
 		/// Constructor injection.
@@ -174,27 +180,39 @@ namespace Anilibria.Pages.Releases {
 			Sections = new ObservableCollection<SectionModel> {
 				new SectionModel {
 					Title = "Все релизы",
-					Type = SectionType.All
+					Type = SectionType.All,
+					SortingMode = SortingItemType.DateLastUpdate,
+					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
 					Title = "Избранное",
-					Type = SectionType.Favorite
+					Type = SectionType.Favorite,
+					SortingMode = SortingItemType.DateLastUpdate,
+					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
 					Title = "Расписание",
-					Type = SectionType.Schedule
+					Type = SectionType.Schedule,
+					SortingMode = SortingItemType.ScheduleDay,
+					SortingDirection = SortingDirectionType.Ascending,
 				},
 				new SectionModel {
 					Title = "Новые релизы",
-					Type = SectionType.NewReleases
+					Type = SectionType.NewReleases,
+					SortingMode = SortingItemType.DateLastUpdate,
+					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
 					Title = "Релизы с новыми сериями",
-					Type = SectionType.NewOnlineSeries
+					Type = SectionType.NewOnlineSeries,
+					SortingMode = SortingItemType.DateLastUpdate,
+					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
 					Title = "Релизы с обновленными торрентами",
-					Type = SectionType.NewTorrentSeries
+					Type = SectionType.NewTorrentSeries,
+					SortingMode = SortingItemType.DateLastUpdate,
+					SortingDirection = SortingDirectionType.Descending,
 				},
 			};
 			m_SelectedSection = Sections.First ();
@@ -264,13 +282,13 @@ namespace Anilibria.Pages.Releases {
 			HideReleaseCardCommand = CreateCommand ( HideReleaseCard );
 			FilterCommand = CreateCommand ( Filter );
 			OpenOnlineVideoCommand = CreateCommand ( OpenOnlineVideo );
-			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && SelectedReleases.Count > 0 );
-			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && SelectedReleases.Count > 0 );
+			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && GetSelectedReleases ().Count > 0 );
+			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && GetSelectedReleases ().Count > 0 );
 			OpenTorrentCommand = CreateCommand<string> ( OpenTorrent );
 			AddCardFavoriteCommand = CreateCommand ( AddCardFavorite );
 			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite );
-			AddToLocalFavoritesCommand = CreateCommand ( AddToLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
-			RemoveFromLocalFavoritesCommand = CreateCommand ( RemoveFromLocalFavorites , () => IsMultipleSelect && SelectedReleases.Count > 0 );
+			AddToLocalFavoritesCommand = CreateCommand ( AddToLocalFavorites , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			RemoveFromLocalFavoritesCommand = CreateCommand ( RemoveFromLocalFavorites , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			ShowCommentsCommand = CreateCommand ( ShowComments );
 			CloseCommentsCommand = CreateCommand ( CloseComments );
 			RefreshCommand = CreateCommand ( Refresh , () => !IsRefreshing );
@@ -361,7 +379,6 @@ namespace Anilibria.Pages.Releases {
 			m_Changes = collection.FirstOrDefault ();
 			if ( m_Changes == null ) return;
 
-
 			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
 			if ( m_Changes.NewOnlineSeries.Any () ) {
 				var ids = m_Changes.NewOnlineSeries.Select ( a => a.Key ).ToArray ();
@@ -394,7 +411,7 @@ namespace Anilibria.Pages.Releases {
 			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
 			var favorites = GetLocalFavorites ( collection );
 
-			foreach ( var id in SelectedReleases.Select ( a => a.Id ) ) favorites.Releases.Remove ( id );
+			foreach ( var id in GetSelectedReleases ().Select ( a => a.Id ) ) favorites.Releases.Remove ( id );
 
 			favorites.Releases = favorites.Releases.Distinct ().ToList ();
 			collection.Update ( favorites );
@@ -408,7 +425,7 @@ namespace Anilibria.Pages.Releases {
 			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
 			var favorites = GetLocalFavorites ( collection );
 
-			foreach ( var id in SelectedReleases.Select ( a => a.Id ) ) favorites.Releases.Add ( id );
+			foreach ( var id in GetSelectedReleases ().Select ( a => a.Id ) ) favorites.Releases.Add ( id );
 
 			favorites.Releases = favorites.Releases.Distinct ().ToList ();
 			collection.Update ( favorites );
@@ -512,15 +529,23 @@ namespace Anilibria.Pages.Releases {
 			var localFavorites = GetLocalFavorites ( collection );
 
 			m_Favorites = favorites.Concat ( localFavorites.Releases );
-			foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+			if ( GroupedGridVisible ) {
+				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+			}
+			else {
+				foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+			}
 
 			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
 		}
 
-		public async Task SynchronizeFavorites () => await RefreshFavorites ();
+		public async Task SynchronizeFavorites () {
+			await RefreshFavorites ();
+			RefreshNotification ();
+		}
 
 		private async void RemoveFromFavorites () {
-			var ids = SelectedReleases.Select ( a => a.Id ).ToList ();
+			var ids = GetSelectedReleases ().Select ( a => a.Id ).ToList ();
 
 			var tasks = ids.Select ( a => m_AnilibriaApiService.RemoveUserFavorites ( a ) );
 
@@ -532,7 +557,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void AddToFavorites () {
-			var ids = SelectedReleases.Select ( a => a.Id ).ToList ();
+			var ids = GetSelectedReleases ().Select ( a => a.Id ).ToList ();
 
 			var tasks = ids.Select ( a => m_AnilibriaApiService.AddUserFavorites ( a ) );
 
@@ -552,18 +577,23 @@ namespace Anilibria.Pages.Releases {
 
 		private void HideReleaseCard () {
 			IsShowReleaseCard = false;
-			if ( SelectedReleases.Count == 1 ) RefreshSelectedReleases ();
+			if ( SelectedReleases.Count == 1 || SelectedGroupedReleases.Count == 1 ) RefreshSelectedReleases ();
 		}
 
 		private void ToggleSidebar () {
 			ShowSidebar?.Invoke ();
 		}
 
+		private ObservableCollection<ReleaseModel> GetSelectedReleases () => GroupedGridVisible ? SelectedGroupedReleases : SelectedReleases;
+
 		private void RefreshSelectedReleases () {
 			RaiseCommands ();
 
 			SelectedReleases = new ObservableCollection<ReleaseModel> ();
 			SelectedReleases.CollectionChanged += SelectedReleasesChanged;
+
+			SelectedGroupedReleases = new ObservableCollection<ReleaseModel> ();
+			SelectedGroupedReleases.CollectionChanged += SelectedGroupedReleasesChanged;
 		}
 
 		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
@@ -571,6 +601,17 @@ namespace Anilibria.Pages.Releases {
 
 			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
 				OpenedRelease = SelectedReleases.First ();
+				IsShowReleaseCard = true;
+				ClearReleaseNotification ( OpenedRelease.Id );
+				RefreshSelectedReleases ();
+			}
+		}
+
+		private void SelectedGroupedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
+			RaiseCommands ();
+
+			if ( !IsMultipleSelect && SelectedGroupedReleases.Count == 1 ) {
+				OpenedRelease = SelectedGroupedReleases.First ();
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
 				RefreshSelectedReleases ();
@@ -585,6 +626,14 @@ namespace Anilibria.Pages.Releases {
 				.ToList ();
 		}
 
+		private ObservableCollection<IGrouping<string , ReleaseModel>> GetGroupedReleases () {
+			var releases = FilteringReleases ( m_AllReleases );
+			releases = FilteringBySection ( releases );
+			releases = OrderReleases ( releases );
+
+			return new ObservableCollection<IGrouping<string , ReleaseModel>> ( releases.Select ( MapToReleaseModel ).GroupBy ( a => a.ScheduledOnDay ) );
+		}
+
 		/// <summary>
 		/// Refresh releases.
 		/// </summary>
@@ -593,11 +642,17 @@ namespace Anilibria.Pages.Releases {
 			m_SchedulesReleases = GetScheduleReleases ();
 			EmptyReleases = m_AllReleases.Count () == 0;
 
-			m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
-				PageSize = 20 ,
-				GetPageFunction = GetItemsPageAsync
-			};
-			RaisePropertyChanged ( () => Collection );
+			if ( GroupedGridVisible ) {
+				GroupingCollection = GetGroupedReleases ();
+				HideReleaseCard (); //WORKAROUND: other hand selcted items will be first item, I don't know why.
+			}
+			else {
+				m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
+					PageSize = 20 ,
+					GetPageFunction = GetItemsPageAsync
+				};
+				RaisePropertyChanged ( () => Collection );
+			}
 		}
 
 		private IDictionary<int , IEnumerable<long>> GetScheduleReleases () {
@@ -717,13 +772,13 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private readonly Dictionary<int , string> m_DayNames = new Dictionary<int , string> {
-			[1] = "понедельник" ,
-			[2] = "вторник" ,
-			[3] = "среда" ,
-			[4] = "четверг" ,
-			[5] = "пятница" ,
-			[6] = "суббота" ,
-			[7] = "воскресенье"
+			[1] = "Понедельник" ,
+			[2] = "Вторник" ,
+			[3] = "Среда" ,
+			[4] = "Четверг" ,
+			[5] = "Пятница" ,
+			[6] = "Суббота" ,
+			[7] = "Воскресенье"
 		};
 
 		private string GetScheduleDayOnRelease ( ReleaseEntity releaseEntity ) {
@@ -821,6 +876,7 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		public void Initialize () {
 			RefreshReleases ();
+			RefreshNotification ();
 		}
 
 		/// <summary>
@@ -902,6 +958,15 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_Collection;
 			set => Set ( ref m_Collection , value );
+		}
+
+		/// <summary>
+		/// Grouping collection.
+		/// </summary>
+		public ObservableCollection<IGrouping<string , ReleaseModel>> GroupingCollection
+		{
+			get => m_GroupingCollection;
+			set => Set ( ref m_GroupingCollection , value );
 		}
 
 		/// <summary>
@@ -1067,7 +1132,26 @@ namespace Anilibria.Pages.Releases {
 			get => m_SelectedSection;
 			set
 			{
+				var oldSection = m_SelectedSection;
 				if ( !Set ( ref m_SelectedSection , value ) ) return;
+
+				if ( value == null ) return;
+
+				if ( oldSection != null ) {
+					oldSection.SortingMode = m_SelectedSortingItem.Type;
+					oldSection.SortingDirection = m_SelectedSortingDirection.Type;
+				}
+
+				if ( m_SelectedSortingItem.Type != value.SortingMode ) {
+					m_SelectedSortingItem = m_SortingItems.First ( a => a.Type == value.SortingMode );
+					RaisePropertyChanged ( () => SelectedSortingItem );
+				}
+				if ( m_SelectedSortingDirection.Type != value.SortingDirection ) {
+					m_SelectedSortingDirection = m_SortingDirections.First ( a => a.Type == value.SortingDirection );
+					RaisePropertyChanged ( () => SelectedSortingDirection );
+				}
+
+				GroupedGridVisible = value.Type == SectionType.Schedule;
 
 				RefreshReleases ();
 				RefreshSelectedReleases ();
@@ -1139,6 +1223,15 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Selected grouped releases.
+		/// </summary>
+		public ObservableCollection<ReleaseModel> SelectedGroupedReleases
+		{
+			get => m_SelectedGroupedReleases;
+			set => Set ( ref m_SelectedGroupedReleases , value );
+		}
+
+		/// <summary>
 		/// Empty releases.
 		/// </summary>
 		public bool EmptyReleases
@@ -1193,6 +1286,15 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_TorrentDownloadModes;
 			set => Set ( ref m_TorrentDownloadModes , value );
+		}
+
+		/// <summary>
+		/// Grouped grid visible.
+		/// </summary>
+		public bool GroupedGridVisible
+		{
+			get => m_GroupedGridVisible;
+			set => Set ( ref m_GroupedGridVisible , value );
 		}
 
 		/// <summary>
