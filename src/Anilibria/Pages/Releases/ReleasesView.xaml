@@ -761,7 +761,7 @@
 								<TextBlock
 									Margin="0 2 0 2"
 									Foreground="Black">
-									Фильтровать по
+									Сортировать по
 								</TextBlock>
 								<ComboBox
 									Style="{StaticResource AnilibriaComboBox}"
