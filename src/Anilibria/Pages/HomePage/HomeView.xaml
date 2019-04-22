@@ -9,6 +9,7 @@
 	xmlns:authorize="using:Anilibria.Pages.AuthorizePage"
 	xmlns:youtube="using:Anilibria.Pages.Youtube"
 	xmlns:about="using:Anilibria.Pages.AboutPage"
+	xmlns:donate="using:Anilibria.Pages.DonatePage"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	xmlns:controls="using:Anilibria.Controls"
 	mc:Ignorable="d"
@@ -187,6 +188,10 @@
 				/>
 				<about:AboutView
 					x:Name="About"
+					Visibility="Collapsed"
+				/>
+				<donate:DonateView
+					x:Name="Donate"
 					Visibility="Collapsed"
 				/>
 			</Grid>

@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media.Animation;
 using System;
 using Anilibria.Pages.AboutPage;
 using Windows.UI.Core;
+using Anilibria.Pages.DonatePage;
 
 namespace Anilibria {
 
@@ -40,6 +41,7 @@ namespace Anilibria {
 			m_Pages.Add ( "Authorize" , Authorize );
 			m_Pages.Add ( "Youtube" , Youtube );
 			m_Pages.Add ( "About" , About );
+			m_Pages.Add ( "Donate" , Donate );
 
 			CreateViewModels ();
 
@@ -72,6 +74,7 @@ namespace Anilibria {
 			CreateAuthorizeViewModel ( viewmodel );
 			CreateYoutubeViewModel ();
 			CreateAboutViewModel ();
+			CreateDonateViewModel ();
 		}
 
 		private void CreateYoutubeViewModel () {
@@ -99,6 +102,10 @@ namespace Anilibria {
 			viewModel.ShowSidebar = ShowSidebar;
 		}
 
+		private void CreateDonateViewModel () {
+			var viewModel = Donate.DataContext as DonateViewModel;
+			viewModel.ShowSidebar = ShowSidebar;
+		}
 
 		private void CreateReleasesViewModel ( HomeViewModel homeViewModel ) {
 			var releasesViewModel = Releases.DataContext as ReleasesViewModel;

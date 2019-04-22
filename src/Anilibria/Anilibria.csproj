@@ -149,6 +149,10 @@
     <Compile Include="Pages\DiagnosticsPage\DiagnosticsPageView.xaml.cs">
       <DependentUpon>DiagnosticsPageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\DonatePage\DonateView.xaml.cs">
+      <DependentUpon>DonateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DonatePage\DonateViewModel.cs" />
     <Compile Include="Pages\HomePage\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -254,12 +258,14 @@
     <Content Include="Assets\anilibriaposter.png" />
     <Content Include="Assets\anilibriaposterwithtransparency.png" />
     <Content Include="Assets\Assets.txt" />
+    <Content Include="Assets\donate.jpg" />
     <Content Include="Assets\Icons\AnilibriaLogo.svg" />
     <Content Include="Assets\Icons\authorization.svg" />
     <Content Include="Assets\Icons\cast.svg" />
     <Content Include="Assets\Icons\chat.svg" />
     <Content Include="Assets\Icons\close.svg" />
     <Content Include="Assets\Icons\dice.svg" />
+    <Content Include="Assets\Icons\donate.svg" />
     <Content Include="Assets\Icons\favorite.svg" />
     <Content Include="Assets\Icons\favoriteblack.svg" />
     <Content Include="Assets\Icons\hambergermenu.svg" />
@@ -347,6 +353,10 @@
     <Page Include="Pages\DiagnosticsPage\DiagnosticsPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\DonatePage\DonateView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\HomePage\HomeView.xaml">
       <Generator>MSBuild:Compile</Generator>

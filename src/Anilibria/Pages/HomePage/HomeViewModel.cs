@@ -26,6 +26,8 @@ namespace Anilibria.Pages.HomePage {
 		public const string AuthorizePage = "Authorize";
 
 		public const string YoutubePage = "Youtube";
+		
+		public const string DonatePage = "Donate";
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 		
@@ -73,6 +75,13 @@ namespace Anilibria.Pages.HomePage {
 					Page = YoutubePage,
 					Icon = "\xE786",
 					IconUri = new Uri("ms-appx:///Assets/Icons/youtube.svg"),
+					IsVisible = StubMenuIsVisible
+				},
+				new SplitViewItem {
+					Name = "Поддержать проект",
+					Page = DonatePage,
+					Icon = "\xE786",
+					IconUri = new Uri("ms-appx:///Assets/Icons/donate.svg"),
 					IsVisible = StubMenuIsVisible
 				},
 				new SplitViewItem {
