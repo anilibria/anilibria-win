@@ -537,11 +537,11 @@ namespace Anilibria.Pages.Releases {
 			}
 
 			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
+			RefreshNotification ();
 		}
 
 		public async Task SynchronizeFavorites () {
 			await RefreshFavorites ();
-			RefreshNotification ();
 		}
 
 		private async void RemoveFromFavorites () {
