@@ -165,7 +165,8 @@
 						Grid.ColumnSpan="2"
 						Grid.Row="4"
 						HorizontalAlignment="Center"
-						TextAlignment="Center">
+						TextAlignment="Center"
+						Foreground="Black">
 						<Hyperlink
 							NavigateUri="https://www.patreon.com/anilibria"
 							Foreground="#a32727">

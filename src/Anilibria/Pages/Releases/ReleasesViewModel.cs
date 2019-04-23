@@ -975,7 +975,12 @@ namespace Anilibria.Pages.Releases {
 		public bool IsMultipleSelect
 		{
 			get => m_IsMultipleSelect;
-			set => Set ( ref m_IsMultipleSelect , value );
+			set
+			{
+				if (!Set(ref m_IsMultipleSelect, value)) return;
+
+				IsShowReleaseCard = false;
+			}
 		}
 
 		/// <summary>
