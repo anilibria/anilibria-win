@@ -593,6 +593,30 @@
 		</Style>
 	</UserControl.Resources>
 
+	<UserControl.Triggers>
+		<EventTrigger>
+			<BeginStoryboard>
+				<Storyboard RepeatBehavior="Forever">
+					<ColorAnimation
+						Storyboard.TargetName="FilterFilledEllipse"
+						Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
+						AutoReverse="True"
+						From="#2e6c85" To="#4ca2c2" Duration="0:0:1" />
+					<DoubleAnimation
+						Storyboard.TargetName="FilterFilledEllipseScale"
+						Storyboard.TargetProperty="ScaleX"
+						AutoReverse="True"
+						From=".7" To="1" Duration="0:0:1"/>
+					<DoubleAnimation
+						Storyboard.TargetName="FilterFilledEllipseScale"
+						Storyboard.TargetProperty="ScaleY"
+						AutoReverse="True"
+						From=".7" To="1" Duration="0:0:1"/>
+				</Storyboard>
+			</BeginStoryboard>
+		</EventTrigger>
+	</UserControl.Triggers>
+	
 	<Grid
 		Background="#e6e6e6">
 		<Grid.RowDefinitions>
@@ -683,45 +707,52 @@
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>
-				<Button
+				<Grid
 					x:Name="FilterButton"
-					RelativePanel.Below="FavoritesButton"
-					Style="{StaticResource IconsButtonStyle}">
-					<Image
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/search.svg"
-					/>
-					<Button.Flyout>
-						<Flyout>
-							<Flyout.FlyoutPresenterStyle>
-								<Style TargetType="FlyoutPresenter">
-									<Setter Property="Background" Value="#e6e6e6" />
-									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="#f0f0f0" />
-								</Style>
-							</Flyout.FlyoutPresenterStyle>
-							<StackPanel HorizontalAlignment="Stretch">
-								<TextBlock
-									Margin="4 0 4 4"
-									Foreground="Black">
-									Жанры
-								</TextBlock>
-								<controls:TimingTextBox
-									Style="{StaticResource AnilibriaTextBox}"
-									Width="200"
-									Margin="4 0 4 4"
-									IsSpellCheckEnabled="False"
-									Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-									PlaceholderText="Вводите через запятую"
-									TimeoutCommand="{Binding FilterCommand}"
-								/>
-								<TextBlock
+					RelativePanel.Below="FavoritesButton">
+					<Button
+						Style="{StaticResource IconsButtonStyle}">
+						<Image
+							Width="{StaticResource IconSize}"
+							Height="{StaticResource IconSize}"
+							Source="/Assets/Icons/search.svg"
+						/>
+						<Button.Flyout>
+							<Flyout>
+								<Flyout.FlyoutPresenterStyle>
+									<Style TargetType="FlyoutPresenter">
+										<Setter Property="Background" Value="#e6e6e6" />
+										<Setter Property="BorderThickness" Value="1" />
+										<Setter Property="BorderBrush" Value="#f0f0f0" />
+									</Style>
+								</Flyout.FlyoutPresenterStyle>
+								<StackPanel HorizontalAlignment="Stretch">
+									<Button
+										HorizontalAlignment="Stretch"
+										Style="{StaticResource ActionButtonStyle}"
+										Command="{Binding ClearFiltersCommands}">
+										Очистить фильтры
+									</Button>
+									<TextBlock
+										Margin="4 0 4 4"
+										Foreground="Black">
+										Жанры
+									</TextBlock>
+									<controls:TimingTextBox
+										Style="{StaticResource AnilibriaTextBox}"
+										Width="200"
+										Margin="4 0 4 4"
+										IsSpellCheckEnabled="False"
+										Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										PlaceholderText="Вводите через запятую"
+										TimeoutCommand="{Binding FilterCommand}"
+									/>
+									<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Года
-								</TextBlock>
-								<controls:TimingTextBox
+									</TextBlock>
+									<controls:TimingTextBox
 									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
@@ -730,12 +761,12 @@
 									PlaceholderText="Вводите через запятую"
 									TimeoutCommand="{Binding FilterCommand}"
 								/>
-								<TextBlock
+									<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Озвучка
-								</TextBlock>
-								<controls:TimingTextBox
+									</TextBlock>
+									<controls:TimingTextBox
 									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
@@ -744,12 +775,12 @@
 									PlaceholderText="Вводите через запятую"
 									TimeoutCommand="{Binding FilterCommand}"
 								/>
-								<TextBlock
+									<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Тип
-								</TextBlock>
-								<controls:TimingTextBox
+									</TextBlock>
+									<controls:TimingTextBox
 									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
@@ -757,12 +788,12 @@
 									Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									TimeoutCommand="{Binding FilterCommand}"
 								/>
-								<TextBlock
+									<TextBlock
 									Margin="4 0 4 4"
 									Foreground="Black">
 									Статусы
-								</TextBlock>
-								<controls:TimingTextBox
+									</TextBlock>
+									<controls:TimingTextBox
 									Style="{StaticResource AnilibriaTextBox}"
 									Width="200"
 									Margin="4 0 4 4"
@@ -771,10 +802,25 @@
 									PlaceholderText="Вводите через запятую"
 									TimeoutCommand="{Binding FilterCommand}"
 								/>
-							</StackPanel>
-						</Flyout>
-					</Button.Flyout>
-				</Button>
+								</StackPanel>
+							</Flyout>
+						</Button.Flyout>
+					</Button>
+					<Ellipse
+						x:Name="FilterFilledEllipse"
+						VerticalAlignment="Top"
+						HorizontalAlignment="Right"
+						Margin="0 8 8 0"
+						Fill="#4ca2c2"
+						Width="16"
+						Height="16"
+						IsHitTestVisible="False"
+						Visibility="{Binding FilterIsFilled}">
+						<Ellipse.RenderTransform>
+							<ScaleTransform x:Name="FilterFilledEllipseScale"></ScaleTransform>
+						</Ellipse.RenderTransform>
+					</Ellipse>
+				</Grid>
 				<Button
 					x:Name="SortingButton"
 					RelativePanel.Below="FilterButton"
@@ -1223,14 +1269,18 @@
 					/>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							Foreground="Black">
+							Foreground="Black"
+							converters:TextBlockHighlight.HyperLinkHightlight="True">
 							<Run
 								Text="Статус"
 								FontWeight="Bold"
 							/>
-							<Run
-								Text="{Binding OpenedRelease.Status}"
-							/>
+							<Hyperlink
+								Foreground="#a32727">
+								<Run
+									Text="{Binding OpenedRelease.Status}"
+								/>
+							</Hyperlink>
 						</TextBlock>
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
@@ -1303,7 +1353,8 @@
 								Foreground="Black"
 								Margin="0 0 14 0"
 								converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}"
-								converters:TextBlockHtmlConverter.LinkCommand="{Binding OpenCrossReleaseCommand}">
+								converters:TextBlockHtmlConverter.LinkCommand="{Binding OpenCrossReleaseCommand}"
+								converters:TextBlockHighlight.HyperLinkHightlight="True">
 							</TextBlock>
 						</ScrollViewer>
 					</StackPanel>

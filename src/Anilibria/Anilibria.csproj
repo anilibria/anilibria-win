@@ -137,6 +137,7 @@
     <Compile Include="Converters\CacheImageConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\MediaSourceConverter.cs" />
+    <Compile Include="Converters\TextBlockHighlight.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
     <Compile Include="Pages\AboutPage\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>

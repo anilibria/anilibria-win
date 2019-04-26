@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Anilibria.Collections;
+﻿using Anilibria.Collections;
 using Anilibria.MVVM;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
@@ -15,33 +7,43 @@ using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.System;
 
-namespace Anilibria.Pages.Releases {
+namespace Anilibria.Pages.Releases
+{
 
 	/// <summary>
 	/// Release view model.
 	/// </summary>
-	public class ReleasesViewModel : ViewModel, INavigation {
+	public class ReleasesViewModel : ViewModel, INavigation
+	{
 
 		private const string IsFavoriteNotificationsSettings = "IsFavoriteNotifications";
 
 		private const string TorrentModeSettings = "TorrentMode";
 
-		private Random m_Random = new Random ( Guid.NewGuid ().GetHashCode () );
+		private Random m_Random = new Random(Guid.NewGuid().GetHashCode());
 
 		private bool m_IsMultipleSelect;
 
 		private IEnumerable<ReleaseEntity> m_AllReleases;
 
-		private IDictionary<int , IEnumerable<long>> m_SchedulesReleases = new Dictionary<int , IEnumerable<long>> ();
+		private IDictionary<int, IEnumerable<long>> m_SchedulesReleases = new Dictionary<int, IEnumerable<long>>();
 
 		private IncrementalLoadingCollection<ReleaseModel> m_Collection;
 
-		private ObservableCollection<IGrouping<string , ReleaseModel>> m_GroupingCollection;
+		private ObservableCollection<IGrouping<string, ReleaseModel>> m_GroupingCollection;
 
 		private ObservableCollection<ReleaseModel> m_SelectedReleases;
 
@@ -73,9 +75,9 @@ namespace Anilibria.Pages.Releases {
 
 		private readonly IAnalyticsService m_AnalyticsService;
 
-		private readonly string[] m_FileSizes = { "B" , "KB" , "MB" , "GB" , "TB" };
+		private readonly string[] m_FileSizes = { "B", "KB", "MB", "GB", "TB" };
 
-		private ObservableCollection<TorrentDownloadModeModel> m_TorrentDownloadModes = new ObservableCollection<TorrentDownloadModeModel> (
+		private ObservableCollection<TorrentDownloadModeModel> m_TorrentDownloadModes = new ObservableCollection<TorrentDownloadModeModel>(
 			new List<TorrentDownloadModeModel> {
 				new TorrentDownloadModeModel {
 					Mode = TorrentDownloadMode.OpenInTorrentClient,
@@ -92,7 +94,7 @@ namespace Anilibria.Pages.Releases {
 			}
 		);
 
-		private IEnumerable<long> m_Favorites = Enumerable.Empty<long> ();
+		private IEnumerable<long> m_Favorites = Enumerable.Empty<long>();
 
 		private bool m_OpenedReleaseInFavorite;
 
@@ -142,41 +144,49 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_GroupedGridVisible;
 
+		private bool m_FilterIsFilled;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria Api Service.</param>
-		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService , IAnalyticsService analyticsService ) {
-			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
-			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
-			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
-			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
+		public ReleasesViewModel(IAnilibriaApiService anilibriaApiService, IDataContext dataContext, ISynchronizationService synchronizationService, IAnalyticsService analyticsService)
+		{
+			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException(nameof(anilibriaApiService));
+			m_DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException(nameof(synchronizationService));
+			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException(nameof(analyticsService));
 
-			CreateCommands ();
-			CreateSortingItems ();
-			CreateSections ();
-			RefreshSelectedReleases ();
-			RestoreSettings ();
-			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
+			CreateCommands();
+			CreateSortingItems();
+			CreateSections();
+			RefreshSelectedReleases();
+			RestoreSettings();
+			ObserverEvents.SubscribeOnEvent("synchronizedReleases", RefreshAfterSynchronize);
 
-			m_AnalyticsService.TrackEvent ( "Releases" , "Opened" , "Simple start" );
+			m_AnalyticsService.TrackEvent("Releases", "Opened", "Simple start");
 		}
 
-		private void RestoreSettings () {
+		private void RestoreSettings()
+		{
 			var values = ApplicationData.Current.RoamingSettings.Values;
-			if ( values.ContainsKey ( IsFavoriteNotificationsSettings ) ) {
-				m_isFavoriteNotifications = (bool) values[IsFavoriteNotificationsSettings];
+			if (values.ContainsKey(IsFavoriteNotificationsSettings))
+			{
+				m_isFavoriteNotifications = (bool)values[IsFavoriteNotificationsSettings];
 			}
-			if ( values.ContainsKey ( TorrentModeSettings ) ) {
-				var torrentMode = (TorrentDownloadMode) ( (int) values[TorrentModeSettings] );
-				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.FirstOrDefault ( a => a.Mode == torrentMode ) ?? m_TorrentDownloadModes.First ();
+			if (values.ContainsKey(TorrentModeSettings))
+			{
+				var torrentMode = (TorrentDownloadMode)((int)values[TorrentModeSettings]);
+				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.FirstOrDefault(a => a.Mode == torrentMode) ?? m_TorrentDownloadModes.First();
 			}
-			else {
-				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.First ();
+			else
+			{
+				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.First();
 			}
 		}
 
-		private void CreateSections () {
+		private void CreateSections()
+		{
 			Sections = new ObservableCollection<SectionModel> {
 				new SectionModel {
 					Title = "Все релизы",
@@ -215,12 +225,13 @@ namespace Anilibria.Pages.Releases {
 					SortingDirection = SortingDirectionType.Descending,
 				},
 			};
-			m_SelectedSection = Sections.First ();
-			RaisePropertyChanged ( () => SelectedSection );
+			m_SelectedSection = Sections.First();
+			RaisePropertyChanged(() => SelectedSection);
 		}
 
-		private void CreateSortingItems () {
-			m_SortingItems = new ObservableCollection<SortingItemModel> (
+		private void CreateSortingItems()
+		{
+			m_SortingItems = new ObservableCollection<SortingItemModel>(
 				new List<SortingItemModel> {
 					new SortingItemModel {
 						Name = "Дате последнего обновления",
@@ -253,7 +264,7 @@ namespace Anilibria.Pages.Releases {
 				}
 			);
 
-			m_SortingDirections = new ObservableCollection<SortingDirectionModel> (
+			m_SortingDirections = new ObservableCollection<SortingDirectionModel>(
 				new List<SortingDirectionModel> {
 					new SortingDirectionModel {
 						Name = "Восходящем",
@@ -266,238 +277,299 @@ namespace Anilibria.Pages.Releases {
 				}
 			);
 
-			m_SelectedSortingItem = m_SortingItems.First ();
-			m_SelectedSortingDirection = m_SortingDirections.Last ();
+			m_SelectedSortingItem = m_SortingItems.First();
+			m_SelectedSortingDirection = m_SortingDirections.Last();
 		}
 
-		private void RefreshAfterSynchronize ( object parameter ) {
+		private void RefreshAfterSynchronize(object parameter)
+		{
 			IsShowReleaseCard = false;
-			RefreshReleases ();
-			RefreshSelectedReleases ();
-			RefreshNotification ();
+			RefreshReleases();
+			RefreshSelectedReleases();
+			RefreshNotification();
 		}
 
-		private void CreateCommands () {
-			ShowSidebarCommand = CreateCommand ( ToggleSidebar );
-			HideReleaseCardCommand = CreateCommand ( HideReleaseCard );
-			FilterCommand = CreateCommand ( Filter );
-			OpenOnlineVideoCommand = CreateCommand ( OpenOnlineVideo );
-			AddToFavoritesCommand = CreateCommand ( AddToFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && GetSelectedReleases ().Count > 0 );
-			RemoveFromFavoritesCommand = CreateCommand ( RemoveFromFavorites , () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized () && GetSelectedReleases ().Count > 0 );
-			OpenTorrentCommand = CreateCommand<string> ( OpenTorrent );
-			AddCardFavoriteCommand = CreateCommand ( AddCardFavorite );
-			RemoveCardFavoriteCommand = CreateCommand ( RemoveCardFavorite );
-			AddToLocalFavoritesCommand = CreateCommand ( AddToLocalFavorites , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
-			RemoveFromLocalFavoritesCommand = CreateCommand ( RemoveFromLocalFavorites , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
-			ShowCommentsCommand = CreateCommand ( ShowComments );
-			CloseCommentsCommand = CreateCommand ( CloseComments );
-			RefreshCommand = CreateCommand ( Refresh , () => !IsRefreshing );
-			ResetNotificationCommand = CreateCommand ( ResetNotification );
-			OpenCrossReleaseCommand = CreateCommand<string> ( OpenCrossRelease );
-			ShowRandomReleaseCommand = CreateCommand ( ShowRandomRelease );
+		private void CreateCommands()
+		{
+			ShowSidebarCommand = CreateCommand(ToggleSidebar);
+			HideReleaseCardCommand = CreateCommand(HideReleaseCard);
+			FilterCommand = CreateCommand(Filter);
+			OpenOnlineVideoCommand = CreateCommand(OpenOnlineVideo);
+			AddToFavoritesCommand = CreateCommand(AddToFavorites, () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized() && GetSelectedReleases().Count > 0);
+			RemoveFromFavoritesCommand = CreateCommand(RemoveFromFavorites, () => IsMultipleSelect && m_AnilibriaApiService.IsAuthorized() && GetSelectedReleases().Count > 0);
+			OpenTorrentCommand = CreateCommand<string>(OpenTorrent);
+			AddCardFavoriteCommand = CreateCommand(AddCardFavorite);
+			RemoveCardFavoriteCommand = CreateCommand(RemoveCardFavorite);
+			AddToLocalFavoritesCommand = CreateCommand(AddToLocalFavorites, () => IsMultipleSelect && GetSelectedReleases().Count > 0);
+			RemoveFromLocalFavoritesCommand = CreateCommand(RemoveFromLocalFavorites, () => IsMultipleSelect && GetSelectedReleases().Count > 0);
+			ShowCommentsCommand = CreateCommand(ShowComments);
+			CloseCommentsCommand = CreateCommand(CloseComments);
+			RefreshCommand = CreateCommand(Refresh, () => !IsRefreshing);
+			ResetNotificationCommand = CreateCommand(ResetNotification);
+			OpenCrossReleaseCommand = CreateCommand<string>(OpenCrossRelease);
+			ShowRandomReleaseCommand = CreateCommand(ShowRandomRelease);
+			ClearFiltersCommands = CreateCommand(ClearFilters);
 		}
 
-		private void ShowRandomRelease () {
-			if ( m_AllReleases == null || m_AllReleases.Count () == 0 ) return;
+		private void RefreshFilterState()
+		{
+			var allEmpties = string.IsNullOrEmpty(m_FilterByGenres) &&
+				string.IsNullOrEmpty(m_FilterByStatus) &&
+				string.IsNullOrEmpty(m_FilterByType) &&
+				string.IsNullOrEmpty(m_FilterByVoicers) &&
+				string.IsNullOrEmpty(m_FilterByYears);
+			FilterIsFilled = !allEmpties;
+		}
 
-			var randomIndex = m_Random.Next ( m_AllReleases.Count () - 1 );
+		private void ClearFilters()
+		{
+			m_FilterByGenres = "";
+			RaisePropertyChanged(() => FilterByGenres);
+			m_FilterByStatus = "";
+			RaisePropertyChanged(() => FilterByStatus);
+			m_FilterByType = "";
+			RaisePropertyChanged(() => FilterByType);
+			m_FilterByVoicers = "";
+			RaisePropertyChanged(() => FilterByVoicers);
+			m_FilterByYears = "";
+			RaisePropertyChanged(() => FilterByYears);
 
-			var release = m_AllReleases.ElementAtOrDefault ( randomIndex );
-			if ( release == null ) return;
+			Filter();
+			RefreshFilterState();
+		}
 
-			OpenedRelease = MapToReleaseModel ( release );
+		private void ShowRandomRelease()
+		{
+			if (m_AllReleases == null || m_AllReleases.Count() == 0) return;
+
+			var randomIndex = m_Random.Next(m_AllReleases.Count() - 1);
+
+			var release = m_AllReleases.ElementAtOrDefault(randomIndex);
+			if (release == null) return;
+
+			OpenedRelease = MapToReleaseModel(release);
 			IsShowReleaseCard = true;
 		}
 
-		private void OpenCrossRelease ( string releaseUrl ) {
-			var releaseCode = releaseUrl.Replace ( "https://www.anilibria.tv/release/" , "" ).Replace ( "http://www.anilibria.tv/release/" , "" ).Replace ( ".html" , "" );
-			if ( releaseCode.IndexOf ( "?" ) > -1 ) releaseCode = releaseCode.Substring ( 0 , releaseCode.IndexOf ( "?" ) );
-			var release = m_AllReleases.FirstOrDefault ( a => a.Code == releaseCode );
-			if ( release != null ) {
-				OpenedRelease = MapToReleaseModel ( release );
+		private void OpenCrossRelease(string releaseUrl)
+		{
+			var releaseCode = releaseUrl.Replace("https://www.anilibria.tv/release/", "").Replace("http://www.anilibria.tv/release/", "").Replace(".html", "");
+			if (releaseCode.IndexOf("?") > -1) releaseCode = releaseCode.Substring(0, releaseCode.IndexOf("?"));
+			var release = m_AllReleases.FirstOrDefault(a => a.Code == releaseCode);
+			if (release != null)
+			{
+				OpenedRelease = MapToReleaseModel(release);
 			}
 		}
 
-		private void ResetNotification () {
-			if ( m_Changes == null ) return;
+		private void ResetNotification()
+		{
+			if (m_Changes == null) return;
 
-			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+			var collection = m_DataContext.GetCollection<ChangesEntity>();
 
-			m_Changes.NewOnlineSeries?.Clear ();
-			m_Changes.NewReleases = Enumerable.Empty<long> ();
-			m_Changes.NewTorrents?.Clear ();
-			m_Changes.NewTorrentSeries?.Clear ();
+			m_Changes.NewOnlineSeries?.Clear();
+			m_Changes.NewReleases = Enumerable.Empty<long>();
+			m_Changes.NewTorrents?.Clear();
+			m_Changes.NewTorrentSeries?.Clear();
 
-			collection.Update ( m_Changes );
+			collection.Update(m_Changes);
 
-			RefreshNotification ();
+			RefreshNotification();
 		}
 
-		private async void Refresh () {
+		private async void Refresh()
+		{
 			IsRefreshing = true;
-			RaiseCanExecuteChanged ( RefreshCommand );
+			RaiseCanExecuteChanged(RefreshCommand);
 
-			await m_SynchronizeService.SynchronizeReleases ();
+			await m_SynchronizeService.SynchronizeReleases();
 
 			IsRefreshing = false;
-			RaiseCanExecuteChanged ( RefreshCommand );
+			RaiseCanExecuteChanged(RefreshCommand);
 		}
 
-		private void CloseComments () {
+		private void CloseComments()
+		{
 			IsShowComments = false;
 		}
 
-		private void ShowComments () {
-			SetCommentsUrl ( new Uri ( $"https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/{OpenedRelease.Code}.html" ) );
+		private void ShowComments()
+		{
+			SetCommentsUrl(new Uri($"https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/{OpenedRelease.Code}.html"));
 			IsShowComments = true;
 		}
 
-		private int GetNewSeries ( long releaseId , int oldCount , IEnumerable<ReleaseEntity> releaseEntities ) {
-			var release = releaseEntities.FirstOrDefault ( a => a.Id == releaseId );
-			if ( release == null ) return 0;
+		private int GetNewSeries(long releaseId, int oldCount, IEnumerable<ReleaseEntity> releaseEntities)
+		{
+			var release = releaseEntities.FirstOrDefault(a => a.Id == releaseId);
+			if (release == null) return 0;
 
-			var currentCount = release.Playlist?.Count () ?? 0;
-			if ( currentCount == 0 ) return 0;
+			var currentCount = release.Playlist?.Count() ?? 0;
+			if (currentCount == 0) return 0;
 
 			return currentCount - oldCount;
 		}
 
-		private int GetCountOnlineSeries ( IEnumerable<ReleaseEntity> onlineSeriesReleases ) {
-			if ( !m_Changes.NewOnlineSeries.Any () ) return 0;
+		private int GetCountOnlineSeries(IEnumerable<ReleaseEntity> onlineSeriesReleases)
+		{
+			if (!m_Changes.NewOnlineSeries.Any()) return 0;
 
-			return m_Changes.NewOnlineSeries.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Select ( a => GetNewSeries ( a.Key , a.Value , onlineSeriesReleases ) ).Sum ();
+			return m_Changes.NewOnlineSeries.Where(a => IsFavoriteNotifications ? m_Favorites.Contains(a.Key) : true).Select(a => GetNewSeries(a.Key, a.Value, onlineSeriesReleases)).Sum();
 		}
 
-		private int GetCountTorrentSeries () {
-			if ( !m_Changes.NewTorrentSeries.Any () ) return 0;
+		private int GetCountTorrentSeries()
+		{
+			if (!m_Changes.NewTorrentSeries.Any()) return 0;
 
-			return m_Changes.NewTorrentSeries.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Count ();
+			return m_Changes.NewTorrentSeries.Where(a => IsFavoriteNotifications ? m_Favorites.Contains(a.Key) : true).Count();
 		}
 
-		private void RefreshNotification () {
-			var collection = m_DataContext.GetCollection<ChangesEntity> ();
-			m_Changes = collection.FirstOrDefault ();
-			if ( m_Changes == null ) return;
+		private void RefreshNotification()
+		{
+			var collection = m_DataContext.GetCollection<ChangesEntity>();
+			m_Changes = collection.FirstOrDefault();
+			if (m_Changes == null) return;
 
-			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
-			if ( m_Changes.NewOnlineSeries.Any () ) {
-				var ids = m_Changes.NewOnlineSeries.Select ( a => a.Key ).ToArray ();
-				onlineSeriesReleases = m_AllReleases.Where ( a => ids.Contains ( a.Id ) );
+			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity>();
+			if (m_Changes.NewOnlineSeries.Any())
+			{
+				var ids = m_Changes.NewOnlineSeries.Select(a => a.Key).ToArray();
+				onlineSeriesReleases = m_AllReleases.Where(a => ids.Contains(a.Id));
 			}
 
-			NewReleasesCount = m_Changes.NewReleases.Count ();
-			NewOnlineSeriesCount = GetCountOnlineSeries ( onlineSeriesReleases );
-			NewTorrentSeriesCount = GetCountTorrentSeries ();
+			NewReleasesCount = m_Changes.NewReleases.Count();
+			NewOnlineSeriesCount = GetCountOnlineSeries(onlineSeriesReleases);
+			NewTorrentSeriesCount = GetCountTorrentSeries();
 			IsNewReleases = NewReleasesCount > 0;
 			IsNewOnlineSeries = NewOnlineSeriesCount > 0;
 			IsNewTorrentSeries = NewTorrentSeriesCount > 0;
 			IsShowNotification = NewReleasesCount > 0 || NewOnlineSeriesCount > 0 || NewTorrentSeriesCount > 0;
 		}
 
-		private LocalFavoriteEntity GetLocalFavorites ( IEntityCollection<LocalFavoriteEntity> collection ) {
-			var favorites = collection.FirstOrDefault ();
+		private LocalFavoriteEntity GetLocalFavorites(IEntityCollection<LocalFavoriteEntity> collection)
+		{
+			var favorites = collection.FirstOrDefault();
 
-			if ( favorites == null ) {
-				favorites = new LocalFavoriteEntity {
-					Releases = new List<long> ()
+			if (favorites == null)
+			{
+				favorites = new LocalFavoriteEntity
+				{
+					Releases = new List<long>()
 				};
-				collection.Add ( favorites );
+				collection.Add(favorites);
 			}
 
 			return favorites;
 		}
 
-		private async void RemoveFromLocalFavorites () {
-			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
-			var favorites = GetLocalFavorites ( collection );
+		private async void RemoveFromLocalFavorites()
+		{
+			var collection = m_DataContext.GetCollection<LocalFavoriteEntity>();
+			var favorites = GetLocalFavorites(collection);
 
-			foreach ( var id in GetSelectedReleases ().Select ( a => a.Id ) ) favorites.Releases.Remove ( id );
+			foreach (var id in GetSelectedReleases().Select(a => a.Id)) favorites.Releases.Remove(id);
 
-			favorites.Releases = favorites.Releases.Distinct ().ToList ();
-			collection.Update ( favorites );
+			favorites.Releases = favorites.Releases.Distinct().ToList();
+			collection.Update(favorites);
 
-			await RefreshFavorites ();
+			await RefreshFavorites();
 
-			RefreshSelectedReleases ();
+			RefreshSelectedReleases();
 		}
 
-		private async void AddToLocalFavorites () {
-			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
-			var favorites = GetLocalFavorites ( collection );
+		private async void AddToLocalFavorites()
+		{
+			var collection = m_DataContext.GetCollection<LocalFavoriteEntity>();
+			var favorites = GetLocalFavorites(collection);
 
-			foreach ( var id in GetSelectedReleases ().Select ( a => a.Id ) ) favorites.Releases.Add ( id );
+			foreach (var id in GetSelectedReleases().Select(a => a.Id)) favorites.Releases.Add(id);
 
-			favorites.Releases = favorites.Releases.Distinct ().ToList ();
-			collection.Update ( favorites );
+			favorites.Releases = favorites.Releases.Distinct().ToList();
+			collection.Update(favorites);
 
-			await RefreshFavorites ();
+			await RefreshFavorites();
 
-			RefreshSelectedReleases ();
+			RefreshSelectedReleases();
 		}
 
-		private void RefreshCardFavorite () => OpenedReleaseInFavorite = m_Favorites.Any ( a => a == OpenedRelease.Id );
+		private void RefreshCardFavorite() => OpenedReleaseInFavorite = m_Favorites.Any(a => a == OpenedRelease.Id);
 
-		private async void RemoveCardFavorite () {
-			await m_AnilibriaApiService.RemoveUserFavorites ( OpenedRelease.Id );
+		private async void RemoveCardFavorite()
+		{
+			await m_AnilibriaApiService.RemoveUserFavorites(OpenedRelease.Id);
 
-			await RefreshFavorites ();
-			RefreshCardFavorite ();
+			await RefreshFavorites();
+			RefreshCardFavorite();
 		}
 
-		private async void AddCardFavorite () {
-			await m_AnilibriaApiService.AddUserFavorites ( OpenedRelease.Id );
+		private async void AddCardFavorite()
+		{
+			await m_AnilibriaApiService.AddUserFavorites(OpenedRelease.Id);
 
-			await RefreshFavorites ();
-			RefreshCardFavorite ();
+			await RefreshFavorites();
+			RefreshCardFavorite();
 		}
 
-		public async void OpenTorrent ( string torrent ) {
-			var file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
+		public async void OpenTorrent(string torrent)
+		{
+			var file = await m_AnilibriaApiService.DownloadTorrent(torrent);
 			var mode = SelectedTorrentDownloadMode?.Mode ?? TorrentDownloadMode.OpenInTorrentClient;
 
-			switch ( mode ) {
+			switch (mode)
+			{
 				case TorrentDownloadMode.OpenInTorrentClient:
-					await Launcher.LaunchFileAsync ( file );
+					await Launcher.LaunchFileAsync(file);
 					break;
 				case TorrentDownloadMode.SaveAsFile:
-					var savePicker = new FileSavePicker {
-						SuggestedStartLocation = PickerLocationId.Downloads ,
-						SuggestedFileName = Path.GetFileName ( torrent )
+					var savePicker = new FileSavePicker
+					{
+						SuggestedStartLocation = PickerLocationId.Downloads,
+						SuggestedFileName = Path.GetFileName(torrent)
 					};
-					savePicker.FileTypeChoices.Add ( "Torrent file" , new List<string> () { ".torrent" } );
-					var savedFileLocation = await savePicker.PickSaveFileAsync ();
-					if ( savedFileLocation != null ) {
-						CachedFileManager.DeferUpdates ( savedFileLocation );
-						try {
-							using ( var sourceFile = await file.OpenStreamForReadAsync () )
-							using ( var targetFile = await savedFileLocation.OpenStreamForWriteAsync () ) {
-								await sourceFile.CopyToAsync ( targetFile );
+					savePicker.FileTypeChoices.Add("Torrent file", new List<string>() { ".torrent" });
+					var savedFileLocation = await savePicker.PickSaveFileAsync();
+					if (savedFileLocation != null)
+					{
+						CachedFileManager.DeferUpdates(savedFileLocation);
+						try
+						{
+							using (var sourceFile = await file.OpenStreamForReadAsync())
+							using (var targetFile = await savedFileLocation.OpenStreamForWriteAsync())
+							{
+								await sourceFile.CopyToAsync(targetFile);
 							}
-							var status = await CachedFileManager.CompleteUpdatesAsync ( savedFileLocation );
-							if ( status == FileUpdateStatus.Complete ) {
-								ObserverEvents.FireEvent (
-									"showMessage" ,
-									new MessageModel {
-										Header = "Сохранение торрента" ,
+							var status = await CachedFileManager.CompleteUpdatesAsync(savedFileLocation);
+							if (status == FileUpdateStatus.Complete)
+							{
+								ObserverEvents.FireEvent(
+									"showMessage",
+									new MessageModel
+									{
+										Header = "Сохранение торрента",
 										Message = "Сохранение успешно выполнено"
 									}
 								);
 							}
-							else {
-								ObserverEvents.FireEvent (
-									"showMessage" ,
-									new MessageModel {
-										Header = "Сохранение торрента" ,
+							else
+							{
+								ObserverEvents.FireEvent(
+									"showMessage",
+									new MessageModel
+									{
+										Header = "Сохранение торрента",
 										Message = "Не удалось сохранить торрент файл"
 									}
 								);
 							}
 						}
-						catch {
-							ObserverEvents.FireEvent (
-								"showMessage" ,
-								new MessageModel {
-									Header = "Сохранение торрента" ,
+						catch
+						{
+							ObserverEvents.FireEvent(
+								"showMessage",
+								new MessageModel
+								{
+									Header = "Сохранение торрента",
 									Message = "Ошибка при сохранении торрент файл"
 								}
 							);
@@ -505,162 +577,185 @@ namespace Anilibria.Pages.Releases {
 					}
 					break;
 				case TorrentDownloadMode.DownloadToDownloadManager:
-				default: throw new NotSupportedException ( $"Download Mode {SelectedTorrentDownloadMode.Mode} not supported." );
+				default: throw new NotSupportedException($"Download Mode {SelectedTorrentDownloadMode.Mode} not supported.");
 			}
 
 		}
 
-		private async Task RefreshFavorites () {
-			var favorites = new List<long> ();
-			if ( m_AnilibriaApiService.IsAuthorized () ) {
-				await m_SynchronizeService.SynchronizeFavorites ();
+		private async Task RefreshFavorites()
+		{
+			var favorites = new List<long>();
+			if (m_AnilibriaApiService.IsAuthorized())
+			{
+				await m_SynchronizeService.SynchronizeFavorites();
 
-				var userFavoritesCollection = m_DataContext.GetCollection<UserFavoriteEntity> ();
-				var userModel = m_AnilibriaApiService.GetUserModel ();
-				if ( userModel != null ) {
-					var userFavorite = userFavoritesCollection.FirstOrDefault ( a => a.Id == userModel.Id );
-					if ( userFavorite != null ) favorites.AddRange ( userFavorite.Releases );
-					userModel.ImageUrl = m_AnilibriaApiService.GetUrl ( userModel.Avatar );
+				var userFavoritesCollection = m_DataContext.GetCollection<UserFavoriteEntity>();
+				var userModel = m_AnilibriaApiService.GetUserModel();
+				if (userModel != null)
+				{
+					var userFavorite = userFavoritesCollection.FirstOrDefault(a => a.Id == userModel.Id);
+					if (userFavorite != null) favorites.AddRange(userFavorite.Releases);
+					userModel.ImageUrl = m_AnilibriaApiService.GetUrl(userModel.Avatar);
 				}
 				UserModel = userModel;
 			}
 
-			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
-			var localFavorites = GetLocalFavorites ( collection );
+			var collection = m_DataContext.GetCollection<LocalFavoriteEntity>();
+			var localFavorites = GetLocalFavorites(collection);
 
-			m_Favorites = favorites.Concat ( localFavorites.Releases );
-			if ( GroupedGridVisible ) {
-				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+			m_Favorites = favorites.Concat(localFavorites.Releases);
+			if (GroupedGridVisible)
+			{
+				foreach (var release in m_GroupingCollection.SelectMany(a => a)) release.AddToFavorite = m_Favorites.Contains(release.Id);
 			}
-			else {
-				foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+			else
+			{
+				foreach (var release in m_Collection) release.AddToFavorite = m_Favorites.Contains(release.Id);
 			}
 
-			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
+			IsAuthorized = m_AnilibriaApiService.IsAuthorized();
 		}
 
-		public async Task SynchronizeFavorites () {
-			await RefreshFavorites ();
-			RefreshNotification ();
+		public async Task SynchronizeFavorites()
+		{
+			await RefreshFavorites();
+			RefreshNotification();
 		}
 
-		private async void RemoveFromFavorites () {
-			var ids = GetSelectedReleases ().Select ( a => a.Id ).ToList ();
+		private async void RemoveFromFavorites()
+		{
+			var ids = GetSelectedReleases().Select(a => a.Id).ToList();
 
-			var tasks = ids.Select ( a => m_AnilibriaApiService.RemoveUserFavorites ( a ) );
+			var tasks = ids.Select(a => m_AnilibriaApiService.RemoveUserFavorites(a));
 
-			await Task.WhenAll ( tasks );
+			await Task.WhenAll(tasks);
 
-			await RefreshFavorites ();
+			await RefreshFavorites();
 
-			RefreshSelectedReleases ();
+			RefreshSelectedReleases();
 		}
 
-		private async void AddToFavorites () {
-			var ids = GetSelectedReleases ().Select ( a => a.Id ).ToList ();
+		private async void AddToFavorites()
+		{
+			var ids = GetSelectedReleases().Select(a => a.Id).ToList();
 
-			var tasks = ids.Select ( a => m_AnilibriaApiService.AddUserFavorites ( a ) );
+			var tasks = ids.Select(a => m_AnilibriaApiService.AddUserFavorites(a));
 
-			await Task.WhenAll ( tasks );
+			await Task.WhenAll(tasks);
 
-			await RefreshFavorites ();
+			await RefreshFavorites();
 
-			RefreshSelectedReleases ();
+			RefreshSelectedReleases();
 		}
 
-		private void OpenOnlineVideo () {
+		private void OpenOnlineVideo()
+		{
 			IsShowReleaseCard = false;
-			ChangePage ( "Player" , new List<ReleaseModel> { OpenedRelease } );
+			ChangePage("Player", new List<ReleaseModel> { OpenedRelease });
 		}
 
-		private void Filter () => RefreshReleases ();
+		private void Filter() => RefreshReleases();
 
-		private void HideReleaseCard () {
+		private void HideReleaseCard()
+		{
 			IsShowReleaseCard = false;
-			if ( SelectedReleases.Count == 1 || SelectedGroupedReleases.Count == 1 ) RefreshSelectedReleases ();
+			if (SelectedReleases.Count == 1 || SelectedGroupedReleases.Count == 1) RefreshSelectedReleases();
 		}
 
-		private void ToggleSidebar () {
-			ShowSidebar?.Invoke ();
+		private void ToggleSidebar()
+		{
+			ShowSidebar?.Invoke();
 		}
 
-		private ObservableCollection<ReleaseModel> GetSelectedReleases () => GroupedGridVisible ? SelectedGroupedReleases : SelectedReleases;
+		private ObservableCollection<ReleaseModel> GetSelectedReleases() => GroupedGridVisible ? SelectedGroupedReleases : SelectedReleases;
 
-		private void RefreshSelectedReleases () {
-			RaiseCommands ();
+		private void RefreshSelectedReleases()
+		{
+			RaiseCommands();
 
-			SelectedReleases = new ObservableCollection<ReleaseModel> ();
+			SelectedReleases = new ObservableCollection<ReleaseModel>();
 			SelectedReleases.CollectionChanged += SelectedReleasesChanged;
 
-			SelectedGroupedReleases = new ObservableCollection<ReleaseModel> ();
+			SelectedGroupedReleases = new ObservableCollection<ReleaseModel>();
 			SelectedGroupedReleases.CollectionChanged += SelectedGroupedReleasesChanged;
 		}
 
-		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
-			RaiseCommands ();
+		private void SelectedReleasesChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			RaiseCommands();
 
-			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
-				OpenedRelease = SelectedReleases.First ();
+			if (!IsMultipleSelect && SelectedReleases.Count == 1)
+			{
+				OpenedRelease = SelectedReleases.First();
 				IsShowReleaseCard = true;
-				ClearReleaseNotification ( OpenedRelease.Id );
-				RefreshSelectedReleases ();
+				ClearReleaseNotification(OpenedRelease.Id);
+				RefreshSelectedReleases();
 			}
 		}
 
-		private void SelectedGroupedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
-			RaiseCommands ();
+		private void SelectedGroupedReleasesChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			RaiseCommands();
 
-			if ( !IsMultipleSelect && SelectedGroupedReleases.Count == 1 ) {
-				OpenedRelease = SelectedGroupedReleases.First ();
+			if (!IsMultipleSelect && SelectedGroupedReleases.Count == 1)
+			{
+				OpenedRelease = SelectedGroupedReleases.First();
 				IsShowReleaseCard = true;
-				ClearReleaseNotification ( OpenedRelease.Id );
-				RefreshSelectedReleases ();
+				ClearReleaseNotification(OpenedRelease.Id);
+				RefreshSelectedReleases();
 			}
 		}
 
-		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode () {
-			var context = m_DataContext.GetCollection<ReleaseEntity> ();
+		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode()
+		{
+			var context = m_DataContext.GetCollection<ReleaseEntity>();
 
 			return context
-				.Find ( a => !a.Blocked ) // All blocking releases not showed on releases page!!!
-				.ToList ();
+				.Find(a => !a.Blocked) // All blocking releases not showed on releases page!!!
+				.ToList();
 		}
 
-		private ObservableCollection<IGrouping<string , ReleaseModel>> GetGroupedReleases () {
-			var releases = FilteringReleases ( m_AllReleases );
-			releases = FilteringBySection ( releases );
-			releases = OrderReleases ( releases );
+		private ObservableCollection<IGrouping<string, ReleaseModel>> GetGroupedReleases()
+		{
+			var releases = FilteringReleases(m_AllReleases);
+			releases = FilteringBySection(releases);
+			releases = OrderReleases(releases);
 
-			return new ObservableCollection<IGrouping<string , ReleaseModel>> ( releases.Select ( MapToReleaseModel ).GroupBy ( a => a.ScheduledOnDay ) );
+			return new ObservableCollection<IGrouping<string, ReleaseModel>>(releases.Select(MapToReleaseModel).GroupBy(a => a.ScheduledOnDay));
 		}
 
 		/// <summary>
 		/// Refresh releases.
 		/// </summary>
-		private void RefreshReleases () {
-			m_AllReleases = GetReleasesByCurrentMode ();
-			m_SchedulesReleases = GetScheduleReleases ();
-			EmptyReleases = m_AllReleases.Count () == 0;
+		private void RefreshReleases()
+		{
+			m_AllReleases = GetReleasesByCurrentMode();
+			m_SchedulesReleases = GetScheduleReleases();
+			EmptyReleases = m_AllReleases.Count() == 0;
 
-			if ( GroupedGridVisible ) {
-				GroupingCollection = GetGroupedReleases ();
-				HideReleaseCard (); //WORKAROUND: other hand selcted items will be first item, I don't know why.
+			if (GroupedGridVisible)
+			{
+				GroupingCollection = GetGroupedReleases();
+				HideReleaseCard(); //WORKAROUND: other hand selcted items will be first item, I don't know why.
 			}
-			else {
-				m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
-					PageSize = 20 ,
+			else
+			{
+				m_Collection = new IncrementalLoadingCollection<ReleaseModel>
+				{
+					PageSize = 20,
 					GetPageFunction = GetItemsPageAsync
 				};
-				RaisePropertyChanged ( () => Collection );
+				RaisePropertyChanged(() => Collection);
 			}
 		}
 
-		private IDictionary<int , IEnumerable<long>> GetScheduleReleases () {
-			var scheduleCollection = m_DataContext.GetCollection<ScheduleEntity> ();
-			var entity = scheduleCollection.FirstOrDefault ();
-			if ( entity == null ) return new Dictionary<int , IEnumerable<long>> ();
+		private IDictionary<int, IEnumerable<long>> GetScheduleReleases()
+		{
+			var scheduleCollection = m_DataContext.GetCollection<ScheduleEntity>();
+			var entity = scheduleCollection.FirstOrDefault();
+			if (entity == null) return new Dictionary<int, IEnumerable<long>>();
 
-			return entity.Days ?? new Dictionary<int , IEnumerable<long>> ();
+			return entity.Days ?? new Dictionary<int, IEnumerable<long>>();
 		}
 
 		/// <summary>
@@ -668,85 +763,97 @@ namespace Anilibria.Pages.Releases {
 		/// </summary>
 		/// <param name="size">Size.</param>
 		/// <returns>Readable size.</returns>
-		private string GetFileSize ( long size ) {
+		private string GetFileSize(long size)
+		{
 			var readableSize = size;
 			int order = 0;
-			while ( readableSize >= 1024 && order < m_FileSizes.Length - 1 ) {
+			while (readableSize >= 1024 && order < m_FileSizes.Length - 1)
+			{
 				order++;
 				readableSize = readableSize / 1024;
 			}
 			return readableSize + " " + m_FileSizes[order];
 		}
 
-		private IOrderedEnumerable<ReleaseEntity> OrderReleases ( IEnumerable<ReleaseEntity> releases ) {
-			switch ( m_SelectedSortingItem.Type ) {
+		private IOrderedEnumerable<ReleaseEntity> OrderReleases(IEnumerable<ReleaseEntity> releases)
+		{
+			switch (m_SelectedSortingItem.Type)
+			{
 				case SortingItemType.DateLastUpdate:
-					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Timestamp ) : releases.OrderByDescending ( a => a.Timestamp );
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy(a => a.Timestamp) : releases.OrderByDescending(a => a.Timestamp);
 				case SortingItemType.Name:
-					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Names.First () ) : releases.OrderByDescending ( a => a.Names.First () );
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy(a => a.Names.First()) : releases.OrderByDescending(a => a.Names.First());
 				case SortingItemType.OriginalName:
-					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Names.Last () ) : releases.OrderByDescending ( a => a.Names.Last () );
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy(a => a.Names.Last()) : releases.OrderByDescending(a => a.Names.Last());
 				case SortingItemType.Status:
-					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Status ) : releases.OrderByDescending ( a => a.Status );
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy(a => a.Status) : releases.OrderByDescending(a => a.Status);
 				case SortingItemType.Year:
-					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Year ) : releases.OrderByDescending ( a => a.Year );
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy(a => a.Year) : releases.OrderByDescending(a => a.Year);
 				case SortingItemType.Rating:
-					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Rating ) : releases.OrderByDescending ( a => a.Rating );
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy(a => a.Rating) : releases.OrderByDescending(a => a.Rating);
 				case SortingItemType.ScheduleDay:
-					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => GetScheduleDayIndexOnRelease ( a ) ) : releases.OrderByDescending ( a => GetScheduleDayIndexOnRelease ( a ) );
-				default: throw new NotSupportedException ( $"Sorting sorting item {m_SelectedSortingItem}." );
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy(a => GetScheduleDayIndexOnRelease(a)) : releases.OrderByDescending(a => GetScheduleDayIndexOnRelease(a));
+				default: throw new NotSupportedException($"Sorting sorting item {m_SelectedSortingItem}.");
 			}
 		}
 
-		private bool ContainsInArrayCaseSensitive ( string filter , IEnumerable<string> values ) {
-			return values?.Where ( a => a != null ).Select ( a => a.ToLowerInvariant () ).Any ( a => a.Contains ( filter.ToLowerInvariant () ) ) ?? false;
+		private bool ContainsInArrayCaseSensitive(string filter, IEnumerable<string> values)
+		{
+			return values?.Where(a => a != null).Select(a => a.ToLowerInvariant()).Any(a => a.Contains(filter.ToLowerInvariant())) ?? false;
 		}
 
-		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
-			if ( releases == null ) return Enumerable.Empty<ReleaseEntity> ();
+		private IEnumerable<ReleaseEntity> FilteringReleases(IEnumerable<ReleaseEntity> releases)
+		{
+			if (releases == null) return Enumerable.Empty<ReleaseEntity>();
 
-			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => ContainsInArrayCaseSensitive ( FilterByName , a.Names ) );
-			if ( !string.IsNullOrEmpty ( FilterByType ) ) releases = releases.Where ( a => a.Type?.ToLowerInvariant ().Contains ( FilterByType.ToLowerInvariant () ) ?? false );
-			if ( !string.IsNullOrEmpty ( FilterByStatus ) ) {
-				var statuses = FilterByStatus.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => statuses?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { a.Status } ) ) ?? false );
+			if (!string.IsNullOrEmpty(FilterByName)) releases = releases.Where(a => ContainsInArrayCaseSensitive(FilterByName, a.Names));
+			if (!string.IsNullOrEmpty(FilterByType)) releases = releases.Where(a => a.Type?.ToLowerInvariant().Contains(FilterByType.ToLowerInvariant()) ?? false);
+			if (!string.IsNullOrEmpty(FilterByStatus))
+			{
+				var statuses = FilterByStatus.Split(',').Select(a => a.Trim()).Where(a => !string.IsNullOrEmpty(a)).ToList();
+				releases = releases.Where(a => statuses?.Any(b => ContainsInArrayCaseSensitive(b, new string[] { a.Status })) ?? false);
 			}
-			if ( !string.IsNullOrEmpty ( FilterByGenres ) ) {
-				var genres = FilterByGenres.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
+			if (!string.IsNullOrEmpty(FilterByGenres))
+			{
+				var genres = FilterByGenres.Split(',').Select(a => a.Trim()).Where(a => !string.IsNullOrEmpty(a)).ToList();
+				releases = releases.Where(a => a.Genres?.Any(genre => genres?.Any(b => ContainsInArrayCaseSensitive(b, new string[] { genre })) ?? false) ?? false);
 			}
-			if ( !string.IsNullOrEmpty ( FilterByYears ) ) {
-				var years = FilterByYears.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Year != null && years.Contains ( a.Year ) );
+			if (!string.IsNullOrEmpty(FilterByYears))
+			{
+				var years = FilterByYears.Split(',').Select(a => a.Trim()).Where(a => !string.IsNullOrEmpty(a)).ToList();
+				releases = releases.Where(a => a.Year != null && years.Contains(a.Year));
 			}
-			if ( !string.IsNullOrEmpty ( FilterByVoicers ) ) {
-				var voicers = FilterByVoicers.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
+			if (!string.IsNullOrEmpty(FilterByVoicers))
+			{
+				var voicers = FilterByVoicers.Split(',').Select(a => a.Trim()).Where(a => !string.IsNullOrEmpty(a)).ToList();
+				releases = releases.Where(a => a.Voices?.Any(voice => voicers?.Any(b => ContainsInArrayCaseSensitive(b, new string[] { voice })) ?? false) ?? false);
 			}
 
 			return releases;
 		}
 
-		private IEnumerable<ReleaseEntity> FilteringBySection ( IEnumerable<ReleaseEntity> releases ) {
+		private IEnumerable<ReleaseEntity> FilteringBySection(IEnumerable<ReleaseEntity> releases)
+		{
 			var sectionType = SelectedSection.Type;
 
-			switch ( sectionType ) {
+			switch (sectionType)
+			{
 				case SectionType.All:
 					return releases;
 				case SectionType.Favorite:
-					return releases.Where ( a => m_Favorites.Contains ( a.Id ) );
+					return releases.Where(a => m_Favorites.Contains(a.Id));
 				case SectionType.Schedule:
-					return releases.Where ( a => m_SchedulesReleases?.SelectMany ( b => b.Value )?.Contains ( a.Id ) ?? true );
+					return releases.Where(a => m_SchedulesReleases?.SelectMany(b => b.Value)?.Contains(a.Id) ?? true);
 				case SectionType.NewReleases:
-					var newReleases = m_Changes?.NewReleases ?? Enumerable.Empty<long> ();
-					return releases.Where ( a => newReleases.Contains ( a.Id ) );
+					var newReleases = m_Changes?.NewReleases ?? Enumerable.Empty<long>();
+					return releases.Where(a => newReleases.Contains(a.Id));
 				case SectionType.NewOnlineSeries:
-					var newSeries = m_Changes?.NewOnlineSeries?.Keys.Where ( a => IsFavoriteNotifications ? m_Favorites?.Contains ( a ) ?? true : true ) ?? Enumerable.Empty<long> ();
-					return releases.Where ( a => newSeries.Contains ( a.Id ) );
+					var newSeries = m_Changes?.NewOnlineSeries?.Keys.Where(a => IsFavoriteNotifications ? m_Favorites?.Contains(a) ?? true : true) ?? Enumerable.Empty<long>();
+					return releases.Where(a => newSeries.Contains(a.Id));
 				case SectionType.NewTorrentSeries:
-					var newTorrents = m_Changes?.NewTorrentSeries?.Keys.Where ( a => IsFavoriteNotifications ? m_Favorites?.Contains ( a ) ?? true : true ) ?? Enumerable.Empty<long> ();
-					return releases.Where ( a => newTorrents.Contains ( a.Id ) );
-				default: throw new NotSupportedException ( "Section type not supported." );
+					var newTorrents = m_Changes?.NewTorrentSeries?.Keys.Where(a => IsFavoriteNotifications ? m_Favorites?.Contains(a) ?? true : true) ?? Enumerable.Empty<long>();
+					return releases.Where(a => newTorrents.Contains(a.Id));
+				default: throw new NotSupportedException("Section type not supported.");
 			}
 		}
 
@@ -756,141 +863,156 @@ namespace Anilibria.Pages.Releases {
 		/// <param name="page">Page.</param>
 		/// <param name="pageSize">Page size.</param>
 		/// <returns>Items on current page.</returns>
-		private Task<IEnumerable<ReleaseModel>> GetItemsPageAsync ( int page , int pageSize ) {
-			var releases = FilteringReleases ( m_AllReleases );
+		private Task<IEnumerable<ReleaseModel>> GetItemsPageAsync(int page, int pageSize)
+		{
+			var releases = FilteringReleases(m_AllReleases);
 
-			releases = FilteringBySection ( releases );
+			releases = FilteringBySection(releases);
 
-			releases = OrderReleases ( releases );
+			releases = OrderReleases(releases);
 
 			var result = releases
-				.Skip ( ( page - 1 ) * pageSize )
-				.Take ( pageSize )
-				.Select ( MapToReleaseModel );
+				.Skip((page - 1) * pageSize)
+				.Take(pageSize)
+				.Select(MapToReleaseModel);
 
-			return Task.FromResult ( result );
+			return Task.FromResult(result);
 		}
 
-		private readonly Dictionary<int , string> m_DayNames = new Dictionary<int , string> {
-			[1] = "Понедельник" ,
-			[2] = "Вторник" ,
-			[3] = "Среда" ,
-			[4] = "Четверг" ,
-			[5] = "Пятница" ,
-			[6] = "Суббота" ,
+		private readonly Dictionary<int, string> m_DayNames = new Dictionary<int, string>
+		{
+			[1] = "Понедельник",
+			[2] = "Вторник",
+			[3] = "Среда",
+			[4] = "Четверг",
+			[5] = "Пятница",
+			[6] = "Суббота",
 			[7] = "Воскресенье"
 		};
 
-		private string GetScheduleDayOnRelease ( ReleaseEntity releaseEntity ) {
-			if ( m_SchedulesReleases == null ) return "";
+		private string GetScheduleDayOnRelease(ReleaseEntity releaseEntity)
+		{
+			if (m_SchedulesReleases == null) return "";
 
 			int day = m_SchedulesReleases
-				.Where ( a => a.Value.Any ( releaseId => releaseId == releaseEntity.Id ) )
-				.Select ( a => a.Key )
-				.FirstOrDefault ();
-			if ( day == 0 ) return "";
+				.Where(a => a.Value.Any(releaseId => releaseId == releaseEntity.Id))
+				.Select(a => a.Key)
+				.FirstOrDefault();
+			if (day == 0) return "";
 
-			m_DayNames.TryGetValue ( day , out var dayTitle );
+			m_DayNames.TryGetValue(day, out var dayTitle);
 			return dayTitle;
 		}
 
-		private int GetScheduleDayIndexOnRelease ( ReleaseEntity releaseEntity ) {
-			if ( m_SchedulesReleases == null ) return 10;
+		private int GetScheduleDayIndexOnRelease(ReleaseEntity releaseEntity)
+		{
+			if (m_SchedulesReleases == null) return 10;
 
 			var day = m_SchedulesReleases
-				.Where ( a => a.Value.Any ( releaseId => releaseId == releaseEntity.Id ) )
-				.Select ( a => a.Key )
-				.FirstOrDefault ();
+				.Where(a => a.Value.Any(releaseId => releaseId == releaseEntity.Id))
+				.Select(a => a.Key)
+				.FirstOrDefault();
 			return day == 0 ? 10 : day;
 		}
 
-		private ReleaseModel MapToReleaseModel ( ReleaseEntity a ) {
-			var releaseModel = new ReleaseModel {
-				Id = a.Id ,
-				AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
-				Code = a.Code ,
-				Announce = a.Announce ,
-				Description = a.Description ,
-				Genres = a.Genres != null ? string.Join ( ", " , a.Genres ) : "" ,
-				Title = a.Names != null ? a.Names.FirstOrDefault () : "" ,
-				Names = a.Names ,
-				Poster = m_AnilibriaApiService.GetUrl ( a.Poster ) ,
-				Rating = a.Rating ,
-				Series = a.Series ,
-				Status = a.Status ,
-				Type = a.Type ,
-				ScheduledOnDay = GetScheduleDayOnRelease ( a ) ,
-				Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
-				Year = a.Year ,
-				CountVideoOnline = a.Playlist?.Count () ?? 0 ,
-				Torrents = a?.Torrents?.Select (
+		private ReleaseModel MapToReleaseModel(ReleaseEntity a)
+		{
+			var releaseModel = new ReleaseModel
+			{
+				Id = a.Id,
+				AddToFavorite = m_Favorites?.Contains(a.Id) ?? false,
+				Code = a.Code,
+				Announce = a.Announce,
+				Description = a.Description,
+				Genres = a.Genres != null ? string.Join(", ", a.Genres) : "",
+				Title = a.Names != null ? a.Names.FirstOrDefault() : "",
+				Names = a.Names,
+				Poster = m_AnilibriaApiService.GetUrl(a.Poster),
+				Rating = a.Rating,
+				Series = a.Series,
+				Status = a.Status,
+				Type = a.Type,
+				ScheduledOnDay = GetScheduleDayOnRelease(a),
+				Voices = a.Voices != null ? string.Join(", ", a.Voices) : "",
+				Year = a.Year,
+				CountVideoOnline = a.Playlist?.Count() ?? 0,
+				Torrents = a?.Torrents?.Select(
 					torrent =>
-						new TorrentModel {
-							Completed = torrent.Completed ,
-							Quality = $"[{torrent.Quality}]" ,
-							Series = torrent.Series ,
-							Size = GetFileSize ( torrent.Size ) ,
+						new TorrentModel
+						{
+							Completed = torrent.Completed,
+							Quality = $"[{torrent.Quality}]",
+							Series = torrent.Series,
+							Size = GetFileSize(torrent.Size),
 							Url = torrent.Url
 						}
-					)?.ToList () ?? Enumerable.Empty<TorrentModel> () ,
+					)?.ToList() ?? Enumerable.Empty<TorrentModel>(),
 				OnlineVideos = a.Playlist?
-					.Select (
+					.Select(
 					videoOnline =>
-						new OnlineVideoModel {
-							Order = videoOnline.Id ,
-							Title = videoOnline.Title ,
-							HDQuality = videoOnline.HD ,
-							SDQuality = videoOnline.SD ,
-							FullHDQuality = videoOnline.FullHD ,
+						new OnlineVideoModel
+						{
+							Order = videoOnline.Id,
+							Title = videoOnline.Title,
+							HDQuality = videoOnline.HD,
+							SDQuality = videoOnline.SD,
+							FullHDQuality = videoOnline.FullHD,
 
 						}
-					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
+					)?.ToList() ?? Enumerable.Empty<OnlineVideoModel>()
 			};
-			releaseModel.IsExistsScheduledOnDay = !string.IsNullOrEmpty ( releaseModel.ScheduledOnDay );
+			releaseModel.IsExistsScheduledOnDay = !string.IsNullOrEmpty(releaseModel.ScheduledOnDay);
 
 			return releaseModel;
 		}
 
-		private void ClearReleaseNotification ( long releaseId ) {
-			if ( m_Changes == null ) return;
+		private void ClearReleaseNotification(long releaseId)
+		{
+			if (m_Changes == null) return;
 
-			if ( m_Changes.NewReleases != null && m_Changes.NewReleases.Any () && m_Changes.NewReleases.Any ( a => a == releaseId ) ) {
-				m_Changes.NewReleases = m_Changes.NewReleases.Where ( a => a != releaseId ).ToList ();
+			if (m_Changes.NewReleases != null && m_Changes.NewReleases.Any() && m_Changes.NewReleases.Any(a => a == releaseId))
+			{
+				m_Changes.NewReleases = m_Changes.NewReleases.Where(a => a != releaseId).ToList();
 			}
 
-			if ( m_Changes.NewOnlineSeries != null && m_Changes.NewOnlineSeries.Any () && m_Changes.NewOnlineSeries.Any ( a => a.Key == releaseId ) ) {
-				m_Changes.NewOnlineSeries.Remove ( releaseId );
+			if (m_Changes.NewOnlineSeries != null && m_Changes.NewOnlineSeries.Any() && m_Changes.NewOnlineSeries.Any(a => a.Key == releaseId))
+			{
+				m_Changes.NewOnlineSeries.Remove(releaseId);
 			}
 
-			if ( m_Changes.NewTorrentSeries != null && m_Changes.NewTorrentSeries.Any () && m_Changes.NewTorrentSeries.Any ( a => a.Key == releaseId ) ) {
-				m_Changes.NewTorrentSeries.Remove ( releaseId );
+			if (m_Changes.NewTorrentSeries != null && m_Changes.NewTorrentSeries.Any() && m_Changes.NewTorrentSeries.Any(a => a.Key == releaseId))
+			{
+				m_Changes.NewTorrentSeries.Remove(releaseId);
 			}
 
-			var collection = m_DataContext.GetCollection<ChangesEntity> ();
-			collection.Update ( m_Changes );
-			RefreshNotification ();
+			var collection = m_DataContext.GetCollection<ChangesEntity>();
+			collection.Update(m_Changes);
+			RefreshNotification();
 		}
 
 		/// <summary>
 		/// Initialize view model.
 		/// </summary>
-		public void Initialize () {
-			RefreshReleases ();
-			RefreshNotification ();
+		public void Initialize()
+		{
+			RefreshReleases();
+			RefreshNotification();
 		}
 
 		/// <summary>
 		/// Start navigate to page.
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
-		public void NavigateTo ( object parameter ) {
-			m_AnalyticsService.TrackEvent ( "Releases" , "NavigatedTo" , "Simple" );
+		public void NavigateTo(object parameter)
+		{
+			m_AnalyticsService.TrackEvent("Releases", "NavigatedTo", "Simple");
 		}
 
 		/// <summary>
 		/// End navigate to page.
 		/// </summary>
-		public void NavigateFrom () {
+		public void NavigateFrom()
+		{
 
 		}
 
@@ -900,7 +1022,7 @@ namespace Anilibria.Pages.Releases {
 		public bool IsRefreshing
 		{
 			get => m_IsRefreshing;
-			set => Set ( ref m_IsRefreshing , value );
+			set => Set(ref m_IsRefreshing, value);
 		}
 
 		/// <summary>
@@ -909,7 +1031,7 @@ namespace Anilibria.Pages.Releases {
 		public ObservableCollection<SortingItemModel> SortingItems
 		{
 			get => m_SortingItems;
-			set => Set ( ref m_SortingItems , value );
+			set => Set(ref m_SortingItems, value);
 		}
 
 		/// <summary>
@@ -920,10 +1042,10 @@ namespace Anilibria.Pages.Releases {
 			get => m_SelectedSortingItem;
 			set
 			{
-				if ( !Set ( ref m_SelectedSortingItem , value ) ) return;
+				if (!Set(ref m_SelectedSortingItem, value)) return;
 
-				RefreshSelectedReleases ();
-				RefreshReleases ();
+				RefreshSelectedReleases();
+				RefreshReleases();
 			}
 		}
 
@@ -933,7 +1055,7 @@ namespace Anilibria.Pages.Releases {
 		public ObservableCollection<SortingDirectionModel> SortingDirections
 		{
 			get => m_SortingDirections;
-			set => Set ( ref m_SortingDirections , value );
+			set => Set(ref m_SortingDirections, value);
 		}
 
 		/// <summary>
@@ -944,10 +1066,10 @@ namespace Anilibria.Pages.Releases {
 			get => m_SelectedSortingDirection;
 			set
 			{
-				if ( !Set ( ref m_SelectedSortingDirection , value ) ) return;
+				if (!Set(ref m_SelectedSortingDirection, value)) return;
 
-				RefreshSelectedReleases ();
-				RefreshReleases ();
+				RefreshSelectedReleases();
+				RefreshReleases();
 			}
 		}
 
@@ -957,16 +1079,16 @@ namespace Anilibria.Pages.Releases {
 		public IncrementalLoadingCollection<ReleaseModel> Collection
 		{
 			get => m_Collection;
-			set => Set ( ref m_Collection , value );
+			set => Set(ref m_Collection, value);
 		}
 
 		/// <summary>
 		/// Grouping collection.
 		/// </summary>
-		public ObservableCollection<IGrouping<string , ReleaseModel>> GroupingCollection
+		public ObservableCollection<IGrouping<string, ReleaseModel>> GroupingCollection
 		{
 			get => m_GroupingCollection;
-			set => Set ( ref m_GroupingCollection , value );
+			set => Set(ref m_GroupingCollection, value);
 		}
 
 		/// <summary>
@@ -989,7 +1111,7 @@ namespace Anilibria.Pages.Releases {
 		public bool ShowAnnounce
 		{
 			get => m_ShowAnnounce;
-			set => Set ( ref m_ShowAnnounce , value );
+			set => Set(ref m_ShowAnnounce, value);
 		}
 
 		/// <summary>
@@ -1000,10 +1122,10 @@ namespace Anilibria.Pages.Releases {
 			get => m_OpenedRelease;
 			set
 			{
-				if ( !Set ( ref m_OpenedRelease , value ) ) return;
+				if (!Set(ref m_OpenedRelease, value)) return;
 
-				RefreshCardFavorite ();
-				ShowAnnounce = value != null ? !string.IsNullOrEmpty ( value.Announce ) : false;
+				RefreshCardFavorite();
+				ShowAnnounce = value != null ? !string.IsNullOrEmpty(value.Announce) : false;
 			}
 		}
 
@@ -1013,7 +1135,7 @@ namespace Anilibria.Pages.Releases {
 		public Uri CommentsUri
 		{
 			get => m_CommentsUri;
-			set => Set ( ref m_CommentsUri , value );
+			set => Set(ref m_CommentsUri, value);
 		}
 
 		/// <summary>
@@ -1022,7 +1144,7 @@ namespace Anilibria.Pages.Releases {
 		public bool IsShowComments
 		{
 			get => m_IsShowComments;
-			set => Set ( ref m_IsShowComments , value );
+			set => Set(ref m_IsShowComments, value);
 		}
 
 		/// <summary>
@@ -1031,7 +1153,7 @@ namespace Anilibria.Pages.Releases {
 		public bool IsAuthorized
 		{
 			get => m_IsAuthorized;
-			set => Set ( ref m_IsAuthorized , value );
+			set => Set(ref m_IsAuthorized, value);
 		}
 
 		/// <summary>
@@ -1040,7 +1162,7 @@ namespace Anilibria.Pages.Releases {
 		public bool OpenedReleaseInFavorite
 		{
 			get => m_OpenedReleaseInFavorite;
-			set => Set ( ref m_OpenedReleaseInFavorite , value );
+			set => Set(ref m_OpenedReleaseInFavorite, value);
 		}
 
 		/// <summary>
@@ -1051,9 +1173,9 @@ namespace Anilibria.Pages.Releases {
 			get => m_IsShowReleaseCard;
 			set
 			{
-				if ( !Set ( ref m_IsShowReleaseCard , value ) ) return;
+				if (!Set(ref m_IsShowReleaseCard, value)) return;
 
-				if ( !value ) IsShowComments = false;
+				if (!value) IsShowComments = false;
 			}
 		}
 
@@ -1063,7 +1185,7 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByName
 		{
 			get => m_FilterByName;
-			set => Set ( ref m_FilterByName , value );
+			set => Set(ref m_FilterByName, value);
 		}
 
 		/// <summary>
@@ -1072,7 +1194,12 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByGenres
 		{
 			get => m_FilterByGenres;
-			set => Set ( ref m_FilterByGenres , value );
+			set
+			{
+				if (!Set(ref m_FilterByGenres, value)) return;
+
+				RefreshFilterState();
+			}
 		}
 
 		/// <summary>
@@ -1081,7 +1208,12 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByYears
 		{
 			get => m_FilterByYears;
-			set => Set ( ref m_FilterByYears , value );
+			set
+			{
+				if (!Set(ref m_FilterByYears, value)) return;
+
+				RefreshFilterState();
+			}
 		}
 
 		/// <summary>
@@ -1090,7 +1222,12 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByVoicers
 		{
 			get => m_FilterByVoicers;
-			set => Set ( ref m_FilterByVoicers , value );
+			set
+			{
+				if (!Set(ref m_FilterByVoicers, value)) return;
+
+				RefreshFilterState();
+			}
 		}
 
 		/// <summary>
@@ -1099,7 +1236,12 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByType
 		{
 			get => m_FilterByType;
-			set => Set ( ref m_FilterByType , value );
+			set
+			{
+				if (!Set(ref m_FilterByType, value)) return;
+
+				RefreshFilterState();
+			}
 		}
 
 		/// <summary>
@@ -1108,7 +1250,12 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByStatus
 		{
 			get => m_FilterByStatus;
-			set => Set ( ref m_FilterByStatus , value );
+			set
+			{
+				if (!Set(ref m_FilterByStatus, value)) return;
+
+				RefreshFilterState();
+			}
 		}
 
 		/// <summary>
@@ -1117,7 +1264,7 @@ namespace Anilibria.Pages.Releases {
 		public bool IsShowNotification
 		{
 			get => m_IsShowNotification;
-			set => Set ( ref m_IsShowNotification , value );
+			set => Set(ref m_IsShowNotification, value);
 		}
 
 		/// <summary>
@@ -1126,7 +1273,7 @@ namespace Anilibria.Pages.Releases {
 		public ObservableCollection<SectionModel> Sections
 		{
 			get => m_Sections;
-			set => Set ( ref m_Sections , value );
+			set => Set(ref m_Sections, value);
 		}
 
 		/// <summary>
@@ -1138,28 +1285,31 @@ namespace Anilibria.Pages.Releases {
 			set
 			{
 				var oldSection = m_SelectedSection;
-				if ( !Set ( ref m_SelectedSection , value ) ) return;
+				if (!Set(ref m_SelectedSection, value)) return;
 
-				if ( value == null ) return;
+				if (value == null) return;
 
-				if ( oldSection != null ) {
+				if (oldSection != null)
+				{
 					oldSection.SortingMode = m_SelectedSortingItem.Type;
 					oldSection.SortingDirection = m_SelectedSortingDirection.Type;
 				}
 
-				if ( m_SelectedSortingItem.Type != value.SortingMode ) {
-					m_SelectedSortingItem = m_SortingItems.First ( a => a.Type == value.SortingMode );
-					RaisePropertyChanged ( () => SelectedSortingItem );
+				if (m_SelectedSortingItem.Type != value.SortingMode)
+				{
+					m_SelectedSortingItem = m_SortingItems.First(a => a.Type == value.SortingMode);
+					RaisePropertyChanged(() => SelectedSortingItem);
 				}
-				if ( m_SelectedSortingDirection.Type != value.SortingDirection ) {
-					m_SelectedSortingDirection = m_SortingDirections.First ( a => a.Type == value.SortingDirection );
-					RaisePropertyChanged ( () => SelectedSortingDirection );
+				if (m_SelectedSortingDirection.Type != value.SortingDirection)
+				{
+					m_SelectedSortingDirection = m_SortingDirections.First(a => a.Type == value.SortingDirection);
+					RaisePropertyChanged(() => SelectedSortingDirection);
 				}
 
 				GroupedGridVisible = value.Type == SectionType.Schedule;
 
-				RefreshReleases ();
-				RefreshSelectedReleases ();
+				RefreshReleases();
+				RefreshSelectedReleases();
 			}
 		}
 
@@ -1169,7 +1319,7 @@ namespace Anilibria.Pages.Releases {
 		public bool IsNewReleases
 		{
 			get => m_IsNewReleases;
-			set => Set ( ref m_IsNewReleases , value );
+			set => Set(ref m_IsNewReleases, value);
 		}
 
 		/// <summary>
@@ -1178,7 +1328,7 @@ namespace Anilibria.Pages.Releases {
 		public bool IsNewOnlineSeries
 		{
 			get => m_IsNewOnlineSeries;
-			set => Set ( ref m_IsNewOnlineSeries , value );
+			set => Set(ref m_IsNewOnlineSeries, value);
 		}
 
 		/// <summary>
@@ -1187,7 +1337,7 @@ namespace Anilibria.Pages.Releases {
 		public bool IsNewTorrentSeries
 		{
 			get => m_IsNewTorrentSeries;
-			set => Set ( ref m_IsNewTorrentSeries , value );
+			set => Set(ref m_IsNewTorrentSeries, value);
 		}
 
 		/// <summary>
@@ -1196,7 +1346,7 @@ namespace Anilibria.Pages.Releases {
 		public int NewReleasesCount
 		{
 			get => m_NewReleasesCount;
-			set => Set ( ref m_NewReleasesCount , value );
+			set => Set(ref m_NewReleasesCount, value);
 		}
 
 		/// <summary>
@@ -1205,7 +1355,7 @@ namespace Anilibria.Pages.Releases {
 		public int NewOnlineSeriesCount
 		{
 			get => m_NewOnlineSeriesCount;
-			set => Set ( ref m_NewOnlineSeriesCount , value );
+			set => Set(ref m_NewOnlineSeriesCount, value);
 		}
 
 		/// <summary>
@@ -1214,7 +1364,7 @@ namespace Anilibria.Pages.Releases {
 		public int NewTorrentSeriesCount
 		{
 			get => m_NewTorrentSeriesCount;
-			set => Set ( ref m_NewTorrentSeriesCount , value );
+			set => Set(ref m_NewTorrentSeriesCount, value);
 		}
 
 
@@ -1224,7 +1374,7 @@ namespace Anilibria.Pages.Releases {
 		public ObservableCollection<ReleaseModel> SelectedReleases
 		{
 			get => m_SelectedReleases;
-			set => Set ( ref m_SelectedReleases , value );
+			set => Set(ref m_SelectedReleases, value);
 		}
 
 		/// <summary>
@@ -1233,7 +1383,7 @@ namespace Anilibria.Pages.Releases {
 		public ObservableCollection<ReleaseModel> SelectedGroupedReleases
 		{
 			get => m_SelectedGroupedReleases;
-			set => Set ( ref m_SelectedGroupedReleases , value );
+			set => Set(ref m_SelectedGroupedReleases, value);
 		}
 
 		/// <summary>
@@ -1242,7 +1392,7 @@ namespace Anilibria.Pages.Releases {
 		public bool EmptyReleases
 		{
 			get => m_EmptyReleases;
-			set => Set ( ref m_EmptyReleases , value );
+			set => Set(ref m_EmptyReleases, value);
 		}
 
 		/// <summary>
@@ -1251,7 +1401,7 @@ namespace Anilibria.Pages.Releases {
 		public UserModel UserModel
 		{
 			get => m_UserModel;
-			set => Set ( ref m_UserModel , value );
+			set => Set(ref m_UserModel, value);
 		}
 
 		/// <summary>
@@ -1262,11 +1412,11 @@ namespace Anilibria.Pages.Releases {
 			get => m_isFavoriteNotifications;
 			set
 			{
-				if ( !Set ( ref m_isFavoriteNotifications , value ) ) return;
+				if (!Set(ref m_isFavoriteNotifications, value)) return;
 
 				ApplicationData.Current.RoamingSettings.Values[IsFavoriteNotificationsSettings] = value;
 
-				RefreshNotification ();
+				RefreshNotification();
 			}
 		}
 
@@ -1278,9 +1428,9 @@ namespace Anilibria.Pages.Releases {
 			get => m_SelectedTorrentDownloadMode;
 			set
 			{
-				if ( !Set ( ref m_SelectedTorrentDownloadMode , value ) ) return;
+				if (!Set(ref m_SelectedTorrentDownloadMode, value)) return;
 
-				ApplicationData.Current.RoamingSettings.Values[TorrentModeSettings] = (int) value.Mode;
+				ApplicationData.Current.RoamingSettings.Values[TorrentModeSettings] = (int)value.Mode;
 			}
 		}
 
@@ -1290,7 +1440,7 @@ namespace Anilibria.Pages.Releases {
 		public ObservableCollection<TorrentDownloadModeModel> TorrentDownloadModes
 		{
 			get => m_TorrentDownloadModes;
-			set => Set ( ref m_TorrentDownloadModes , value );
+			set => Set(ref m_TorrentDownloadModes, value);
 		}
 
 		/// <summary>
@@ -1299,7 +1449,21 @@ namespace Anilibria.Pages.Releases {
 		public bool GroupedGridVisible
 		{
 			get => m_GroupedGridVisible;
-			set => Set ( ref m_GroupedGridVisible , value );
+			set => Set(ref m_GroupedGridVisible, value);
+		}
+
+		/// <summary>
+		/// Filter is filled.
+		/// </summary>
+		public bool FilterIsFilled
+		{
+			get => m_FilterIsFilled;
+			set
+			{
+				if (!Set(ref m_FilterIsFilled, value)) return;
+
+
+			}
 		}
 
 		/// <summary>
@@ -1314,7 +1478,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Change page handler.
 		/// </summary>
-		public Action<string , object> ChangePage
+		public Action<string, object> ChangePage
 		{
 			get;
 			set;
@@ -1486,6 +1650,15 @@ namespace Anilibria.Pages.Releases {
 		/// Show random release command.
 		/// </summary>
 		public ICommand ShowRandomReleaseCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Clear filters command.
+		/// </summary>
+		public ICommand ClearFiltersCommands
 		{
 			get;
 			set;

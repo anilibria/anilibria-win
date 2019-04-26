@@ -360,7 +360,7 @@
 												<DiscreteObjectKeyFrame KeyTime="0" Value="#881919"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
 											</ObjectAnimationUsingKeyFrames>
 											<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
 										</Storyboard>
@@ -371,7 +371,7 @@
 												<DiscreteObjectKeyFrame KeyTime="0" Value="#881919"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
 											</ObjectAnimationUsingKeyFrames>
 											<PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
 										</Storyboard>
