@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Anilibria.Collections;
+﻿using Anilibria.Collections;
 using Anilibria.MVVM;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
@@ -15,6 +7,14 @@ using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
@@ -141,6 +141,8 @@ namespace Anilibria.Pages.Releases {
 		private TorrentDownloadModeModel m_SelectedTorrentDownloadMode;
 
 		private bool m_GroupedGridVisible;
+
+		private bool m_FilterIsFilled;
 
 		/// <summary>
 		/// Constructor injection.
@@ -295,6 +297,32 @@ namespace Anilibria.Pages.Releases {
 			ResetNotificationCommand = CreateCommand ( ResetNotification );
 			OpenCrossReleaseCommand = CreateCommand<string> ( OpenCrossRelease );
 			ShowRandomReleaseCommand = CreateCommand ( ShowRandomRelease );
+			ClearFiltersCommands = CreateCommand ( ClearFilters );
+		}
+
+		private void RefreshFilterState () {
+			var allEmpties = string.IsNullOrEmpty ( m_FilterByGenres ) &&
+			string.IsNullOrEmpty ( m_FilterByStatus ) &&
+			string.IsNullOrEmpty ( m_FilterByType ) &&
+			string.IsNullOrEmpty ( m_FilterByVoicers ) &&
+			string.IsNullOrEmpty ( m_FilterByYears );
+			FilterIsFilled = !allEmpties;
+		}
+
+		private void ClearFilters () {
+			m_FilterByGenres = "";
+			RaisePropertyChanged ( () => FilterByGenres );
+			m_FilterByStatus = "";
+			RaisePropertyChanged ( () => FilterByStatus );
+			m_FilterByType = "";
+			RaisePropertyChanged ( () => FilterByType );
+			m_FilterByVoicers = "";
+			RaisePropertyChanged ( () => FilterByVoicers );
+			m_FilterByYears = "";
+			RaisePropertyChanged ( () => FilterByYears );
+
+			Filter ();
+			RefreshFilterState ();
 		}
 
 		private void ShowRandomRelease () {
@@ -977,7 +1005,7 @@ namespace Anilibria.Pages.Releases {
 			get => m_IsMultipleSelect;
 			set
 			{
-				if (!Set(ref m_IsMultipleSelect, value)) return;
+				if ( !Set ( ref m_IsMultipleSelect , value ) ) return;
 
 				IsShowReleaseCard = false;
 			}
@@ -1072,7 +1100,11 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByGenres
 		{
 			get => m_FilterByGenres;
-			set => Set ( ref m_FilterByGenres , value );
+			set {
+				if ( !Set ( ref m_FilterByGenres , value ) ) return;
+
+				RefreshFilterState ();
+			}
 		}
 
 		/// <summary>
@@ -1081,7 +1113,11 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByYears
 		{
 			get => m_FilterByYears;
-			set => Set ( ref m_FilterByYears , value );
+			set {
+				if ( !Set ( ref m_FilterByYears , value ) ) return;
+
+				RefreshFilterState ();
+			}
 		}
 
 		/// <summary>
@@ -1090,7 +1126,11 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByVoicers
 		{
 			get => m_FilterByVoicers;
-			set => Set ( ref m_FilterByVoicers , value );
+			set {
+				if ( !Set ( ref m_FilterByVoicers , value ) ) return;
+
+				RefreshFilterState ();
+			}
 		}
 
 		/// <summary>
@@ -1099,7 +1139,11 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByType
 		{
 			get => m_FilterByType;
-			set => Set ( ref m_FilterByType , value );
+			set {
+				if ( !Set ( ref m_FilterByType , value ) ) return;
+
+				RefreshFilterState ();
+			}
 		}
 
 		/// <summary>
@@ -1108,7 +1152,11 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByStatus
 		{
 			get => m_FilterByStatus;
-			set => Set ( ref m_FilterByStatus , value );
+			set {
+				if ( !Set ( ref m_FilterByStatus , value ) ) return;
+
+				RefreshFilterState ();
+			}
 		}
 
 		/// <summary>
@@ -1303,6 +1351,15 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Filter is filled.
+		/// </summary>
+		public bool FilterIsFilled
+		{
+			get => m_FilterIsFilled;
+			set => Set ( ref m_FilterIsFilled , value );
+		}
+
+		/// <summary>
 		/// Set comments url in web view.
 		/// </summary>
 		public Action<Uri> SetCommentsUrl
@@ -1486,6 +1543,15 @@ namespace Anilibria.Pages.Releases {
 		/// Show random release command.
 		/// </summary>
 		public ICommand ShowRandomReleaseCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Clear filters command.
+		/// </summary>
+		public ICommand ClearFiltersCommands
 		{
 			get;
 			set;
