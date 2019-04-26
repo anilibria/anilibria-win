@@ -57,7 +57,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ChangeVolumeHandler = ChangeVolumeHandler ,
 				ChangePlayback = ChangePlaybackHandler ,
 				ChangePosition = ChangePosition,
-				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist
+				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist,
+				SetVisiblePlaybackButtons = SetVisiblePlaybackButtons
 			};
 			DataContext = m_ViewModel;
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
@@ -102,6 +103,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
 			Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+		}
+
+		private void SetVisiblePlaybackButtons (bool visible) {
+			OnlinePlayer.TransportControls.IsFastForwardButtonVisible = visible;
+			OnlinePlayer.TransportControls.IsFastRewindButtonVisible = visible;
+			OnlinePlayer.TransportControls.IsSkipBackwardButtonVisible = visible;
+			OnlinePlayer.TransportControls.IsSkipForwardButtonVisible = visible;
+			OnlinePlayer.TransportControls.IsZoomButtonVisible = visible;
 		}
 
 		private async void MediaPlayer_VolumeChanged ( MediaPlayer sender , object args ) {

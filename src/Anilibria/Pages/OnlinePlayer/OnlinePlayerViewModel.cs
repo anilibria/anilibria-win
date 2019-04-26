@@ -93,6 +93,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsAutoTransition;
 
+		private bool m_IsSupportedCompactOverlay;
+
+		private bool m_IsCompactOverlayEnabled;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -125,6 +129,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 
 			m_ReleaseStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
+			m_IsSupportedCompactOverlay = ApplicationView.GetForCurrentView ().IsViewModeSupported ( ApplicationViewMode.CompactOverlay );
 		}
 
 		private void RestoreSettings () {
@@ -149,6 +154,18 @@ namespace Anilibria.Pages.OnlinePlayer {
 			ShowPlaylistCommand = CreateCommand ( ShowPlaylist );
 			NextTrackCommand = CreateCommand ( NextTrack );
 			PreviousTrackCommand = CreateCommand ( PreviousTrack );
+			EnableCompactModeCommand = CreateCommand ( EnableCompactMode );
+			LeaveCompactModeCommand = CreateCommand ( LeaveCompactMode );
+		}
+
+		private async void LeaveCompactMode () {
+			await ApplicationView.GetForCurrentView ().TryEnterViewModeAsync ( ApplicationViewMode.Default );
+			IsCompactOverlayEnabled = false;
+		}
+
+		private async void EnableCompactMode () {
+			var enabled = await ApplicationView.GetForCurrentView ().TryEnterViewModeAsync ( ApplicationViewMode.CompactOverlay );
+			IsCompactOverlayEnabled = enabled;
 		}
 
 		private void PreviousTrack () {
@@ -420,7 +437,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				}
 
 				SelectedRelease = release;
-				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.LastOrDefault ()  : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
+				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.LastOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
 				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 			}
@@ -429,7 +446,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
 
-			if (SelectedOnlineVideo != null) ScrollToSelectedPlaylist ();
+			if ( SelectedOnlineVideo != null ) ScrollToSelectedPlaylist ();
 		}
 
 		/// <summary>
@@ -750,6 +767,29 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Is supported compact overlay.
+		/// </summary>
+		public bool IsCompactOverlayEnabled
+		{
+			get => m_IsCompactOverlayEnabled;
+			set
+			{
+				if ( !Set ( ref m_IsCompactOverlayEnabled , value ) ) return;
+
+				SetVisiblePlaybackButtons ( !value );
+			}
+		}
+
+		/// <summary>
+		/// Is supported compact overlay.
+		/// </summary>
+		public bool IsSupportedCompactOverlay
+		{
+			get => m_IsSupportedCompactOverlay;
+			set => Set ( ref m_IsSupportedCompactOverlay , value );
+		}
+
+		/// <summary>
 		/// Change page handler.
 		/// </summary>
 		public Action<string , object> ChangePage
@@ -784,7 +824,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 			get;
 			set;
 		}
-		
+
+		/// <summary>
+		/// Set visible playback buttons.
+		/// </summary>
+		public Action<bool> SetVisiblePlaybackButtons
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Change volume.
 		/// </summary>
@@ -843,6 +892,24 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Open previous track in playlist command.
 		/// </summary>
 		public ICommand PreviousTrackCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Enable compact mode command.
+		/// </summary>
+		public ICommand EnableCompactModeCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Leave compact mode command.
+		/// </summary>
+		public ICommand LeaveCompactModeCommand
 		{
 			get;
 			set;

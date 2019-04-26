@@ -38,6 +38,7 @@ Source: "Dependencies\*"; DestDir: "{app}/Dependencies"; Flags: ignoreversion re
 Source: "preinstall.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Anilibria_{#MyAppVersion}_x86_x64_arm.appxbundle"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Anilibria_{#MyAppVersion}_x86_x64_arm.cer"; DestDir: "{app}"; Flags: ignoreversion
+Source: "AnilibriaInstaller.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Add-AppDevPackage.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "runinstaller.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppIcoName}"; DestDir: "{app}"

@@ -1090,6 +1090,7 @@
 														HorizontalAlignment='Left'
 														Visibility="Collapsed"/>
 													<TextBlock
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 														Style="{StaticResource MediaTextBlockStyle}"
 														Margin="6 0 0 0"
 														HorizontalAlignment='Left'>
@@ -1176,6 +1177,7 @@
 												Orientation="Horizontal"
 												Margin='0,0,0,9'>
 												<Button
+													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													VerticalAlignment="Top"
 													ToolTipService.ToolTip="Открыть меню"
 													Width="50"
@@ -1234,6 +1236,7 @@
 													<SymbolIcon x:Name='VolumeMuteSymbol' Symbol='Volume' />
 												</Button>
 												<Button
+													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													ToolTipService.ToolTip="Настройки"
 													Style='{StaticResource PlayerFlyoutButtonStyle}'
 													Width="50"
@@ -1266,6 +1269,20 @@
 																	FontSize="12"
 																	IsOn="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsAutoTransition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 																</ToggleSwitch>
+																<TextBlock
+																	Margin="0 4 0 0"
+																	Foreground="Black"
+																	FontSize="14">
+																	Картинка в картинке
+																</TextBlock>
+																<Button
+																	Margin="0 4 0 4"
+																	Visibility="{Binding IsSupportedCompactOverlay}"
+																	HorizontalAlignment="Left"
+																	Style="{StaticResource ActionButtonStyle}"
+																	Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.EnableCompactModeCommand}">
+																	Включить
+																</Button>
 															</StackPanel>
 														</Flyout>
 													</Button.Flyout>
@@ -1369,7 +1386,9 @@
 												Margin='0,0,0,9'
 												Style='{StaticResource CommandBarStyle}'
 												OverflowButtonVisibility="Collapsed">
-												<AppBarButton x:Name='CastButton'
+												<AppBarButton
+													x:Name='CastButton'
+													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
 													MediaTransportControlsHelper.DropoutOrder='7'>
@@ -1377,7 +1396,9 @@
 														<FontIcon Glyph="&#xEC15;"/>
 													</AppBarButton.Icon>
 												</AppBarButton>
-												<AppBarButton x:Name='ZoomButton'
+												<AppBarButton
+													x:Name='ZoomButton'
+													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
 													MediaTransportControlsHelper.DropoutOrder='6'>
@@ -1386,11 +1407,21 @@
 													</AppBarButton.Icon>
 												</AppBarButton>
 												<AppBarButton
+													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
 													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ToggleFullScreenCommand}">
 													<AppBarButton.Icon>
 														<SymbolIcon Symbol='FullScreen' />
+													</AppBarButton.Icon>
+												</AppBarButton>
+												<AppBarButton
+													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled}"
+													IsTabStop="False"
+													Style='{StaticResource AppBarButtonStyle}'
+													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.LeaveCompactModeCommand}">
+													<AppBarButton.Icon>
+														<FontIcon Glyph="&#xE746;"/>
 													</AppBarButton.Icon>
 												</AppBarButton>
 												<AppBarButton x:Name='FullWindowButton'
@@ -1463,50 +1494,45 @@
 					DisplayMemberPath="Title"
 					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
 				</ListView>
-				<Button
-					Background="LightGray"
-					Style="{StaticResource PlayerFlyoutButtonStyle}"
-					VerticalAlignment="Center"
-					Command="{Binding ShowPlaylistCommand}"
-					Visibility="{Binding ShowPlaylistButton}">
-					<FontIcon Glyph="&#xEE40;" />
-				</Button>
+				<Grid Visibility="{Binding IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}">
+					<Button
+						Background="LightGray"
+						Style="{StaticResource PlayerFlyoutButtonStyle}"
+						VerticalAlignment="Center"
+						Command="{Binding ShowPlaylistCommand}"
+						Visibility="{Binding ShowPlaylistButton}">
+						<FontIcon Glyph="&#xEE40;" />
+					</Button>
+				</Grid>
 			</Grid>
-			<Border
-				x:Name="ControlPanel"
-				Grid.Row="0"
-				Grid.ColumnSpan="3"
-				Background="#b32121"
-				BorderBrush="#881919"
-				BorderThickness="0 0 0 2"
-				Visibility="Collapsed">
-			</Border>
-			<StackPanel
-				x:Name="CurrentReleaseInfo"
-				Visibility="{Binding IsShowReleaseInfo, UpdateSourceTrigger=PropertyChanged}"
+			<Grid
 				Grid.Row="0"
 				Grid.Column="2"
+				Visibility="{Binding IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}">
+				<StackPanel
+				x:Name="CurrentReleaseInfo"
+				Visibility="{Binding IsShowReleaseInfo, UpdateSourceTrigger=PropertyChanged}"
 				Background="Transparent">
-				<Border
+					<Border
 					BorderBrush="#881919"
 					BorderThickness="2"
 					HorizontalAlignment="Right"
 					CornerRadius="8">
-					<Grid
+						<Grid
 						CornerRadius="8">
-						<Rectangle
+							<Rectangle
 							Fill="White"
 						/>
-						<StackPanel Margin="2 0 2 0" Orientation="Horizontal">
-							<Grid>
-								<Grid.RowDefinitions>
-									<RowDefinition />
-									<RowDefinition Height="Auto" />
-								</Grid.RowDefinitions>
-								<StackPanel
+							<StackPanel Margin="2 0 2 0" Orientation="Horizontal">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition />
+										<RowDefinition Height="Auto" />
+									</Grid.RowDefinitions>
+									<StackPanel
 									Grid.Row="0"
 									Orientation="Vertical">
-									<TextBlock
+										<TextBlock
 										x:Name="CurrentReleaseTitle"
 										FontSize="20"
 										Foreground="#b32121"
@@ -1515,20 +1541,20 @@
 										TextTrimming="CharacterEllipsis"
 										MaxLines="5"
 										Text="{Binding SelectedRelease.Title}">
-									</TextBlock>
-									<TextBlock
+										</TextBlock>
+										<TextBlock
 										x:Name="CurrentVideoTitle"
 										FontSize="20"
 										Foreground="Black"
 										TextTrimming="CharacterEllipsis"
 										HorizontalAlignment="Right"
 										Text="{Binding SelectedOnlineVideo.Title}">
-									</TextBlock>
-								</StackPanel>
-								<StackPanel
+										</TextBlock>
+									</StackPanel>
+									<StackPanel
 									Grid.Row="1"
 									Orientation="Vertical">
-									<TextBlock
+										<TextBlock
 										x:Name="CurrentVideoPosition"
 										FontSize="20"
 										Foreground="Black"
@@ -1536,8 +1562,8 @@
 										VerticalAlignment="Bottom">
 										<Run Text="{Binding DisplayPosition}"></Run>
 										<Run Text="{Binding DisplayPositionPercent}"></Run>
-									</TextBlock>
-									<TextBlock
+										</TextBlock>
+										<TextBlock
 										x:Name="CurrentVideoDuration"
 										FontSize="20"
 										Foreground="Black"
@@ -1545,9 +1571,9 @@
 										HorizontalAlignment="Right"
 										Text="{Binding DisplayDuration}"
 									/>
-								</StackPanel>
-							</Grid>
-							<Image
+									</StackPanel>
+								</Grid>
+								<Image
 								x:Name="PosterImage"
 								Margin="3 3 1 3"
 								Tag="{Binding SelectedRelease.Id}"
@@ -1556,10 +1582,11 @@
 								Stretch="Uniform"
 								Height="200"
 							/>
-						</StackPanel>
-					</Grid>
-				</Border>
-			</StackPanel>
+							</StackPanel>
+						</Grid>
+					</Border>
+				</StackPanel>
+			</Grid>
 		</Grid>
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup>
