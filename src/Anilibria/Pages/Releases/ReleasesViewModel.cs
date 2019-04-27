@@ -325,6 +325,22 @@ namespace Anilibria.Pages.Releases {
 			ClearFiltersCommands = CreateCommand ( ClearFilters );
 			AddStatusToFilterCommand = CreateCommand ( AddStatusToFilter );
 			AddYearToFilterCommand = CreateCommand ( AddYearToFilter );
+			AddGenreToFilterCommand = CreateCommand<string> ( AddGenreToFilter );
+			AddVoicesToFilterCommand = CreateCommand<string> ( AddVoicesToFilter );
+		}
+
+		private void AddVoicesToFilter ( string voice ) {
+			FilterByVoicers = voice;
+
+			Filter ();
+			HideReleaseCard ();
+		}
+
+		private void AddGenreToFilter ( string genre ) {
+			FilterByGenres = genre;
+
+			Filter ();
+			HideReleaseCard ();
 		}
 
 		private void AddYearToFilter () {
@@ -1626,9 +1642,27 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
-		/// Attach year to filters.
+		/// Add year to filters.
 		/// </summary>
 		public ICommand AddYearToFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add genre to filters.
+		/// </summary>
+		public ICommand AddGenreToFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add voices to filter.
+		/// </summary>
+		public ICommand AddVoicesToFilterCommand
 		{
 			get;
 			set;

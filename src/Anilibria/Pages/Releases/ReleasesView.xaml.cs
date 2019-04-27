@@ -141,6 +141,40 @@ namespace Anilibria.Pages.Releases {
 			e.Handled = true;
 		}
 
+		private void GenresFiltersMenuTextBlock_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
+			GenresFiltersMenu.Items.Clear ();
+
+			var genres = m_ViewModel.OpenedRelease.Genres.Split ( ", " );
+			foreach ( var genre in genres ) {
+				var option = new MenuFlyoutItem ();
+				option.Text = "Фильтровать по " + genre;
+				option.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+				option.Command = m_ViewModel.AddGenreToFilterCommand;
+				option.CommandParameter = genre;
+				GenresFiltersMenu.Items.Add ( option );
+			}
+
+			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			e.Handled = true;
+		}
+
+		private void VoicesFiltersMenuTextBlock_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
+			VoicesFiltersMenu.Items.Clear ();
+
+			var voices = m_ViewModel.OpenedRelease.Voices.Split ( ", " );
+			foreach ( var voice in voices ) {
+				var option = new MenuFlyoutItem ();
+				option.Text = "Фильтровать по " + voice;
+				option.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+				option.Command = m_ViewModel.AddVoicesToFilterCommand;
+				option.CommandParameter = voice;
+				VoicesFiltersMenu.Items.Add ( option );
+			}
+
+			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			e.Handled = true;
+		}
+
 	}
 
 }

@@ -187,6 +187,7 @@
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition />
 							</Grid.ColumnDefinitions>
 							<Grid Grid.Column="0" VerticalAlignment="Center">
@@ -216,9 +217,21 @@
 									Height="20"
 									FontFamily="Segoe MDL2 Assets"
 									FontSize="18"
-									Foreground="Black">
+									Foreground="#a32727">
 									&#xE734;
 								</TextBlock>
+							</Grid>
+							<Grid
+								Grid.Column="3"
+								VerticalAlignment="Top"
+								Visibility="{Binding AddToFavorite}">
+								<TextBlock
+									Height="24"
+									Margin="4 0 0 0"
+									FontSize="16"
+									Text="В избранном"
+									Foreground="#a32727"
+								/>
 							</Grid>
 						</Grid>
 					</Grid>
@@ -1354,8 +1367,22 @@
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
+							x:Name="GenresFiltersMenuTextBlock"
 							TextWrapping="WrapWholeWords"
-							Foreground="Black">
+							Foreground="Black"
+							RightTapped="GenresFiltersMenuTextBlock_RightTapped">
+							<FlyoutBase.AttachedFlyout>
+								<MenuFlyout
+									x:Name="GenresFiltersMenu">
+									<MenuFlyout.MenuFlyoutPresenterStyle>
+										<Style TargetType="MenuFlyoutPresenter">
+											<Setter Property="Background" Value="#e6e6e6" />
+											<Setter Property="BorderThickness" Value="1" />
+											<Setter Property="BorderBrush" Value="Black" />
+										</Style>
+									</MenuFlyout.MenuFlyoutPresenterStyle>
+								</MenuFlyout>
+							</FlyoutBase.AttachedFlyout>
 							<Run
 								Text="Жанры"
 								FontWeight="Bold"
@@ -1367,8 +1394,22 @@
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
+							x:Name="VoicesFiltersMenuTextBlock"
 							TextWrapping="WrapWholeWords"
-							Foreground="Black">
+							Foreground="Black"
+							RightTapped="VoicesFiltersMenuTextBlock_RightTapped">
+							<FlyoutBase.AttachedFlyout>
+								<MenuFlyout
+									x:Name="VoicesFiltersMenu">
+									<MenuFlyout.MenuFlyoutPresenterStyle>
+										<Style TargetType="MenuFlyoutPresenter">
+											<Setter Property="Background" Value="#e6e6e6" />
+											<Setter Property="BorderThickness" Value="1" />
+											<Setter Property="BorderBrush" Value="Black" />
+										</Style>
+									</MenuFlyout.MenuFlyoutPresenterStyle>
+								</MenuFlyout>
+							</FlyoutBase.AttachedFlyout>
 							<Run
 								Text="Озвучка"
 								FontWeight="Bold"
