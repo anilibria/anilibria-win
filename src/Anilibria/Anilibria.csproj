@@ -177,6 +177,8 @@
     <Compile Include="Pages\OnlinePlayer\VideoTimeFormatter.cs" />
     <Compile Include="Pages\PresentationClasses\MessageModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\OpenVideoMode.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\OpenVideoModeModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\ReleaseModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SectionModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SectionType.cs" />

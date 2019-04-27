@@ -7,6 +7,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
 namespace Anilibria.Pages.Releases {
@@ -111,6 +112,35 @@ namespace Anilibria.Pages.Releases {
 		private void CommentsWebView_NavigationCompleted ( WebView sender , WebViewNavigationCompletedEventArgs args ) {
 			m_CurrentUri = args.Uri;
 		}
+
+		private void Button_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
+			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			e.Handled = true;
+		}
+
+		private void PrefferedOnlineVideoSelector_SelectionChanged ( object sender , SelectionChangedEventArgs e ) {
+			if ( PrefferedOnlineVideoSelector.SelectedItem == null ) return;
+
+			m_ViewModel.OpenOnlineVideoCommand.Execute ( null );
+		}
+
+		private void Button_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			switch ( m_ViewModel.SelectedOpenVideoMode.Mode ) {
+				case OpenVideoMode.SelectOnlineVideo:
+					FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+					break;
+				case OpenVideoMode.ImmediatlyOpenVideoPlayer:
+				default:
+					m_ViewModel.OpenOnlineVideoCommand.Execute ( null );
+					break;
+			}
+		}
+
+		private void StatusLabel_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
+			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			e.Handled = true;
+		}
+
 	}
 
 }

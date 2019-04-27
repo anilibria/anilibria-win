@@ -429,8 +429,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				Releases = parameter as IEnumerable<ReleaseModel>;
 				var release = Releases.First ();
 				m_ReleaseVideoStateEntity = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id );
-				int onlineVideoIndex = -1;
-				if ( m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
+				int onlineVideoIndex = release.PrefferedOpenedVideo == null ? -1 : release.PrefferedOpenedVideo.Order;
+				if ( onlineVideoIndex == -1 && m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
 					onlineVideoIndex = m_ReleaseVideoStateEntity.VideoStates.Max ( a => a.Id );
 					var lastVideo = m_ReleaseVideoStateEntity.VideoStates.First ( a => a.Id == onlineVideoIndex );
 					m_RestorePosition = lastVideo.LastPosition;
@@ -440,6 +440,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.LastOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
 				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
+
+				if ( release != null ) release.PrefferedOpenedVideo = null;
 			}
 
 			ShowPlaylistButton = true;

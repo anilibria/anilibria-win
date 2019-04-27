@@ -11,6 +11,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 
 		private bool m_AddToFavorite;
 
+		private OnlineVideoModel m_PrefferedOpenedVideo;
+
 		/// <summary>
 		/// Identifier.
 		/// </summary>
@@ -189,6 +191,15 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		{
 			get;
 			set;
+		}
+
+		/// <summary>
+		/// Preffered opened video.
+		/// </summary>
+		public OnlineVideoModel PrefferedOpenedVideo
+		{
+			get => m_PrefferedOpenedVideo;
+			set => Set ( ref m_PrefferedOpenedVideo , value );
 		}
 
 	}

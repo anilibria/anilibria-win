@@ -681,7 +681,7 @@
 								<Style TargetType="MenuFlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
 									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="#f0f0f0" />
+									<Setter Property="BorderBrush" Value="Black" />
 								</Style>
 							</MenuFlyout.MenuFlyoutPresenterStyle>
 							<MenuFlyoutItem
@@ -694,6 +694,7 @@
 								Text="Удалить из избранного"
 								Command="{Binding RemoveFromFavoritesCommand}"
 							/>
+							<MenuFlyoutSeparator />
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Добавить в локальное избранное"
@@ -723,7 +724,7 @@
 									<Style TargetType="FlyoutPresenter">
 										<Setter Property="Background" Value="#e6e6e6" />
 										<Setter Property="BorderThickness" Value="1" />
-										<Setter Property="BorderBrush" Value="#f0f0f0" />
+										<Setter Property="BorderBrush" Value="Black" />
 									</Style>
 								</Flyout.FlyoutPresenterStyle>
 								<StackPanel HorizontalAlignment="Stretch">
@@ -748,60 +749,60 @@
 										TimeoutCommand="{Binding FilterCommand}"
 									/>
 									<TextBlock
-									Margin="4 0 4 4"
-									Foreground="Black">
-									Года
+										Margin="4 0 4 4"
+										Foreground="Black">
+										Года
 									</TextBlock>
 									<controls:TimingTextBox
-									Style="{StaticResource AnilibriaTextBox}"
-									Width="200"
-									Margin="4 0 4 4"
-									IsSpellCheckEnabled="False"
-									Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-									PlaceholderText="Вводите через запятую"
-									TimeoutCommand="{Binding FilterCommand}"
-								/>
+										Style="{StaticResource AnilibriaTextBox}"
+										Width="200"
+										Margin="4 0 4 4"
+										IsSpellCheckEnabled="False"
+										Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										PlaceholderText="Вводите через запятую"
+										TimeoutCommand="{Binding FilterCommand}"
+									/>
 									<TextBlock
-									Margin="4 0 4 4"
-									Foreground="Black">
-									Озвучка
-									</TextBlock>
-									<controls:TimingTextBox
-									Style="{StaticResource AnilibriaTextBox}"
-									Width="200"
-									Margin="4 0 4 4"
-									IsSpellCheckEnabled="False"
-									Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-									PlaceholderText="Вводите через запятую"
-									TimeoutCommand="{Binding FilterCommand}"
-								/>
+										Margin="4 0 4 4"
+										Foreground="Black">
+										Озвучка
+										</TextBlock>
+										<controls:TimingTextBox
+										Style="{StaticResource AnilibriaTextBox}"
+										Width="200"
+										Margin="4 0 4 4"
+										IsSpellCheckEnabled="False"
+										Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										PlaceholderText="Вводите через запятую"
+										TimeoutCommand="{Binding FilterCommand}"
+									/>
 									<TextBlock
-									Margin="4 0 4 4"
-									Foreground="Black">
-									Тип
+										Margin="4 0 4 4"
+										Foreground="Black">
+										Тип
 									</TextBlock>
 									<controls:TimingTextBox
-									Style="{StaticResource AnilibriaTextBox}"
-									Width="200"
-									Margin="4 0 4 4"
-									IsSpellCheckEnabled="False"
-									Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-									TimeoutCommand="{Binding FilterCommand}"
-								/>
+										Style="{StaticResource AnilibriaTextBox}"
+										Width="200"
+										Margin="4 0 4 4"
+										IsSpellCheckEnabled="False"
+										Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										TimeoutCommand="{Binding FilterCommand}"
+									/>
 									<TextBlock
-									Margin="4 0 4 4"
-									Foreground="Black">
-									Статусы
+										Margin="4 0 4 4"
+										Foreground="Black">
+										Статусы
 									</TextBlock>
 									<controls:TimingTextBox
-									Style="{StaticResource AnilibriaTextBox}"
-									Width="200"
-									Margin="4 0 4 4"
-									IsSpellCheckEnabled="False"
-									Text="{Binding FilterByStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-									PlaceholderText="Вводите через запятую"
-									TimeoutCommand="{Binding FilterCommand}"
-								/>
+										Style="{StaticResource AnilibriaTextBox}"
+										Width="200"
+										Margin="4 0 4 4"
+										IsSpellCheckEnabled="False"
+										Text="{Binding FilterByStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										PlaceholderText="Вводите через запятую"
+										TimeoutCommand="{Binding FilterCommand}"
+									/>
 								</StackPanel>
 							</Flyout>
 						</Button.Flyout>
@@ -836,7 +837,7 @@
 								<Style TargetType="FlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
 									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="#f0f0f0" />
+									<Setter Property="BorderBrush" Value="Black" />
 								</Style>
 							</Flyout.FlyoutPresenterStyle>
 							<StackPanel>
@@ -884,7 +885,7 @@
 									<Style TargetType="FlyoutPresenter">
 										<Setter Property="Background" Value="#e6e6e6" />
 										<Setter Property="BorderThickness" Value="1" />
-										<Setter Property="BorderBrush" Value="#f0f0f0" />
+										<Setter Property="BorderBrush" Value="Black" />
 									</Style>
 								</Flyout.FlyoutPresenterStyle>
 								<StackPanel>
@@ -1017,7 +1018,7 @@
 								<Style TargetType="FlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
 									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="#f0f0f0" />
+									<Setter Property="BorderBrush" Value="Black" />
 								</Style>
 							</Flyout.FlyoutPresenterStyle>
 							<StackPanel
@@ -1045,6 +1046,19 @@
 									Style="{StaticResource AnilibriaComboBox}"
 									ItemsSource="{Binding TorrentDownloadModes}"
 									SelectedItem="{Binding SelectedTorrentDownloadMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									Width="250"
+									DisplayMemberPath="Title"
+								/>
+								<TextBlock
+									Margin="0 4 0 0"
+									Foreground="Black">
+									Смотреть в карточке
+								</TextBlock>
+								<ComboBox
+									Margin="0 4 0 0"
+									Style="{StaticResource AnilibriaComboBox}"
+									ItemsSource="{Binding OpenVideoModes}"
+									SelectedItem="{Binding SelectedOpenVideoMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									Width="250"
 									DisplayMemberPath="Title"
 								/>
@@ -1267,25 +1281,56 @@
 						TextWrapping="Wrap"
 						FontWeight="SemiBold"
 					/>
-					<StackPanel Orientation="Vertical">
+					<StackPanel Orientation="Horizontal">
 						<TextBlock
+							x:Name="StatusLabel"
 							Foreground="Black"
-							converters:TextBlockHighlight.HyperLinkHightlight="True">
+							RightTapped="StatusLabel_RightTapped">
+							<FlyoutBase.AttachedFlyout>
+								<MenuFlyout>
+									<MenuFlyout.MenuFlyoutPresenterStyle>
+										<Style TargetType="MenuFlyoutPresenter">
+											<Setter Property="Background" Value="#e6e6e6" />
+											<Setter Property="BorderThickness" Value="1" />
+											<Setter Property="BorderBrush" Value="Black" />
+										</Style>
+									</MenuFlyout.MenuFlyoutPresenterStyle>
+									<MenuFlyoutItem
+										Style="{StaticResource AnilibriaMenuFlyoutItem}"
+										Text="Фильтровать по этому статусу"
+										Command="{Binding AddStatusToFilterCommand}"
+									/>
+								</MenuFlyout>
+							</FlyoutBase.AttachedFlyout>
 							<Run
 								Text="Статус"
 								FontWeight="Bold"
 							/>
-							<Hyperlink
-								Foreground="#a32727">
-								<Run
-									Text="{Binding OpenedRelease.Status}"
-								/>
-							</Hyperlink>
+							<Run
+								Text="{Binding OpenedRelease.Status}"
+							/>
 						</TextBlock>
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							Foreground="Black">
+							Foreground="Black"
+							RightTapped="StatusLabel_RightTapped">
+							<FlyoutBase.AttachedFlyout>
+								<MenuFlyout>
+									<MenuFlyout.MenuFlyoutPresenterStyle>
+										<Style TargetType="MenuFlyoutPresenter">
+											<Setter Property="Background" Value="#e6e6e6" />
+											<Setter Property="BorderThickness" Value="1" />
+											<Setter Property="BorderBrush" Value="Black" />
+										</Style>
+									</MenuFlyout.MenuFlyoutPresenterStyle>
+									<MenuFlyoutItem
+										Style="{StaticResource AnilibriaMenuFlyoutItem}"
+										Text="Фильтровать по этому году"
+										Command="{Binding AddYearToFilterCommand}"
+									/>
+								</MenuFlyout>
+							</FlyoutBase.AttachedFlyout>
 							<Run
 								Text="Год"
 								FontWeight="Bold"
@@ -1483,8 +1528,31 @@
 							<Button
 								HorizontalAlignment="Right"
 								Grid.Column="1"
-								Command="{Binding OpenOnlineVideoCommand}"
-								Style="{StaticResource ActionButtonStyle}">
+								Style="{StaticResource ActionButtonStyle}"
+								RightTapped="Button_RightTapped"
+								Tapped="Button_Tapped">
+								<FlyoutBase.AttachedFlyout>
+									<Flyout>
+										<Flyout.FlyoutPresenterStyle>
+											<Style TargetType="FlyoutPresenter">
+												<Setter Property="Background" Value="#e6e6e6" />
+												<Setter Property="BorderThickness" Value="1" />
+												<Setter Property="BorderBrush" Value="Black" />
+											</Style>
+										</Flyout.FlyoutPresenterStyle>
+										<ListView
+											x:Name="PrefferedOnlineVideoSelector"
+											ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
+											Width="160"
+											Height="280"
+											HorizontalAlignment="Left"
+											ItemsSource="{Binding OpenedRelease.OnlineVideos}"
+											SelectedItem="{Binding OpenedRelease.PrefferedOpenedVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											SelectionChanged="PrefferedOnlineVideoSelector_SelectionChanged"
+											DisplayMemberPath="Title"
+										/>
+									</Flyout>
+								</FlyoutBase.AttachedFlyout>
 								Смотреть
 							</Button>
 						</Grid>

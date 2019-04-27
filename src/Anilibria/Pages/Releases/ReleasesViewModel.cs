@@ -31,6 +31,8 @@ namespace Anilibria.Pages.Releases {
 
 		private const string TorrentModeSettings = "TorrentMode";
 
+		private const string OpenVideoSettings = "OpenVideo";
+
 		private Random m_Random = new Random ( Guid.NewGuid ().GetHashCode () );
 
 		private bool m_IsMultipleSelect;
@@ -92,6 +94,19 @@ namespace Anilibria.Pages.Releases {
 			}
 		);
 
+		private ObservableCollection<OpenVideoModeModel> m_OpenVideoModes = new ObservableCollection<OpenVideoModeModel> (
+			new List<OpenVideoModeModel> {
+				new OpenVideoModeModel {
+					Mode = OpenVideoMode.ImmediatlyOpenVideoPlayer,
+					Title = "Сразу открыть видеоплеер"
+				},
+				new OpenVideoModeModel {
+					Mode = OpenVideoMode.SelectOnlineVideo,
+					Title = "Выбрать онлайн видео"
+				}
+			}
+		);
+
 		private IEnumerable<long> m_Favorites = Enumerable.Empty<long> ();
 
 		private bool m_OpenedReleaseInFavorite;
@@ -144,6 +159,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_FilterIsFilled;
 
+		private OpenVideoModeModel m_SelectedOpenVideoMode;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -175,6 +192,14 @@ namespace Anilibria.Pages.Releases {
 			}
 			else {
 				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.First ();
+			}
+
+			if ( values.ContainsKey ( OpenVideoSettings ) ) {
+				var openVideoMode = (OpenVideoMode) ( (int) values[OpenVideoSettings] );
+				m_SelectedOpenVideoMode = m_OpenVideoModes.FirstOrDefault ( a => a.Mode == openVideoMode ) ?? m_OpenVideoModes.First ();
+			}
+			else {
+				m_SelectedOpenVideoMode = m_OpenVideoModes.First ();
 			}
 		}
 
@@ -298,6 +323,22 @@ namespace Anilibria.Pages.Releases {
 			OpenCrossReleaseCommand = CreateCommand<string> ( OpenCrossRelease );
 			ShowRandomReleaseCommand = CreateCommand ( ShowRandomRelease );
 			ClearFiltersCommands = CreateCommand ( ClearFilters );
+			AddStatusToFilterCommand = CreateCommand ( AddStatusToFilter );
+			AddYearToFilterCommand = CreateCommand ( AddYearToFilter );
+		}
+
+		private void AddYearToFilter () {
+			FilterByYears = OpenedRelease.Year;
+
+			Filter ();
+			HideReleaseCard ();
+		}
+
+		private void AddStatusToFilter () {
+			FilterByStatus = OpenedRelease.Status;
+			
+			Filter ();
+			HideReleaseCard ();
 		}
 
 		private void RefreshFilterState () {
@@ -1360,6 +1401,24 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Open video modes.
+		/// </summary>
+		public ObservableCollection<OpenVideoModeModel> OpenVideoModes
+		{
+			get => m_OpenVideoModes;
+			set => Set ( ref m_OpenVideoModes , value );
+		}
+
+		/// <summary>
+		/// Selected open video mode.
+		/// </summary>
+		public OpenVideoModeModel SelectedOpenVideoMode
+		{
+			get => m_SelectedOpenVideoMode;
+			set => Set ( ref m_SelectedOpenVideoMode , value );
+		}
+
+		/// <summary>
 		/// Set comments url in web view.
 		/// </summary>
 		public Action<Uri> SetCommentsUrl
@@ -1552,6 +1611,24 @@ namespace Anilibria.Pages.Releases {
 		/// Clear filters command.
 		/// </summary>
 		public ICommand ClearFiltersCommands
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add status to filters.
+		/// </summary>
+		public ICommand AddStatusToFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Attach year to filters.
+		/// </summary>
+		public ICommand AddYearToFilterCommand
 		{
 			get;
 			set;
