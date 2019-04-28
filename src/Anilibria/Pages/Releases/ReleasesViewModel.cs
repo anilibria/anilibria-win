@@ -224,6 +224,18 @@ namespace Anilibria.Pages.Releases {
 					SortingDirection = SortingDirectionType.Ascending,
 				},
 				new SectionModel {
+					Title = "История",
+					Type = SectionType.HistoryViews,
+					SortingMode = SortingItemType.HistoryView,
+					SortingDirection = SortingDirectionType.Descending,
+				},
+				new SectionModel {
+					Title = "История просмотров",
+					Type = SectionType.HistoryWatch,
+					SortingMode = SortingItemType.HistoryWatch,
+					SortingDirection = SortingDirectionType.Descending,
+				},
+				new SectionModel {
 					Title = "Новые релизы",
 					Type = SectionType.NewReleases,
 					SortingMode = SortingItemType.DateLastUpdate,
@@ -276,6 +288,14 @@ namespace Anilibria.Pages.Releases {
 					new SortingItemModel {
 						Name = "Оригинальному имени",
 						Type = SortingItemType.OriginalName,
+					},
+					new SortingItemModel {
+						Name = "История",
+						Type = SortingItemType.HistoryView,
+					},
+					new SortingItemModel {
+						Name = "История просмотра",
+						Type = SortingItemType.HistoryWatch,
 					},
 				}
 			);
@@ -352,7 +372,7 @@ namespace Anilibria.Pages.Releases {
 
 		private void AddStatusToFilter () {
 			FilterByStatus = OpenedRelease.Status;
-			
+
 			Filter ();
 			HideReleaseCard ();
 		}
@@ -392,6 +412,7 @@ namespace Anilibria.Pages.Releases {
 
 			OpenedRelease = MapToReleaseModel ( release );
 			IsShowReleaseCard = true;
+			SaveReleaseViewTimestamp ( OpenedRelease.Id );
 		}
 
 		private void OpenCrossRelease ( string releaseUrl ) {
@@ -400,6 +421,7 @@ namespace Anilibria.Pages.Releases {
 			var release = m_AllReleases.FirstOrDefault ( a => a.Code == releaseCode );
 			if ( release != null ) {
 				OpenedRelease = MapToReleaseModel ( release );
+				SaveReleaseViewTimestamp ( OpenedRelease.Id );
 			}
 		}
 
@@ -689,6 +711,7 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
 				RefreshSelectedReleases ();
+				SaveReleaseViewTimestamp ( OpenedRelease.Id );
 			}
 		}
 
@@ -700,7 +723,17 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
 				RefreshSelectedReleases ();
+				SaveReleaseViewTimestamp ( OpenedRelease.Id );
 			}
+		}
+
+		private void SaveReleaseViewTimestamp ( long releaseId ) {
+			var collection = m_DataContext.GetCollection<ReleaseEntity> ();
+			var release = collection.FirstOrDefault ( a => a.Id == releaseId );
+			if ( release == null ) return;
+
+			release.LastViewTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
+			collection.Update ( release );
 		}
 
 		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode () {
@@ -779,6 +812,10 @@ namespace Anilibria.Pages.Releases {
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Rating ) : releases.OrderByDescending ( a => a.Rating );
 				case SortingItemType.ScheduleDay:
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => GetScheduleDayIndexOnRelease ( a ) ) : releases.OrderByDescending ( a => GetScheduleDayIndexOnRelease ( a ) );
+				case SortingItemType.HistoryView:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.LastViewTimestamp ) : releases.OrderByDescending ( a => a.LastViewTimestamp );
+				case SortingItemType.HistoryWatch:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.LastWatchTimestamp ) : releases.OrderByDescending ( a => a.LastWatchTimestamp );
 				default: throw new NotSupportedException ( $"Sorting sorting item {m_SelectedSortingItem}." );
 			}
 		}
@@ -831,6 +868,10 @@ namespace Anilibria.Pages.Releases {
 				case SectionType.NewTorrentSeries:
 					var newTorrents = m_Changes?.NewTorrentSeries?.Keys.Where ( a => IsFavoriteNotifications ? m_Favorites?.Contains ( a ) ?? true : true ) ?? Enumerable.Empty<long> ();
 					return releases.Where ( a => newTorrents.Contains ( a.Id ) );
+				case SectionType.HistoryViews:
+					return releases.Where ( a => a.LastViewTimestamp > 0 );
+				case SectionType.HistoryWatch:
+					return releases.Where ( a => a.LastWatchTimestamp > 0 );
 				default: throw new NotSupportedException ( "Section type not supported." );
 			}
 		}

@@ -143,6 +143,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( values.ContainsKey ( AutoTransitionSettings ) ) m_IsAutoTransition = (bool) values[AutoTransitionSettings];
 		}
 
+		private void SaveReleaseWatchTimestamp ( long releaseId ) {
+			var collection = m_DataContext.GetCollection<ReleaseEntity> ();
+			var release = collection.FirstOrDefault ( a => a.Id == releaseId );
+			if ( release == null ) return;
+
+			release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
+			collection.Update ( release );
+		}
+
 		/// <summary>
 		/// Create commands.
 		/// </summary>
@@ -421,6 +430,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 
 							ChangePlayback ( PlaybackState.Play , false );
+							if ( SelectedRelease != null ) SaveReleaseWatchTimestamp ( SelectedRelease.Id );
 						}
 					}
 				}
@@ -441,7 +451,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 
-				if ( release != null ) release.PrefferedOpenedVideo = null;
+				if ( release != null ) {
+					release.PrefferedOpenedVideo = null;
+					SaveReleaseWatchTimestamp ( release.Id );
+				}
 			}
 
 			ShowPlaylistButton = true;

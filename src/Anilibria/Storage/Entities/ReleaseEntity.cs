@@ -171,6 +171,24 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
+		/// Last view timestamp.
+		/// </summary>
+		public long LastViewTimestamp
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Last watch timestamp.
+		/// </summary>
+		public long LastWatchTimestamp
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Playlist.
 		/// </summary>
 		public IEnumerable<PlaylistItemEntity> Playlist

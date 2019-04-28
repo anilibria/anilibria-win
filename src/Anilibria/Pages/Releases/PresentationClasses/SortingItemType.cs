@@ -17,7 +17,12 @@
 
 		Rating,
 
-		ScheduleDay
+		ScheduleDay,
+
+		HistoryView,
+
+		HistoryWatch,
+
 	};
 
 }

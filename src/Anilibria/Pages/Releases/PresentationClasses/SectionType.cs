@@ -17,7 +17,9 @@
 
 		Schedule,
 
-		//Seens,
+		HistoryViews,
+
+		HistoryWatch,
 
 	};
 
