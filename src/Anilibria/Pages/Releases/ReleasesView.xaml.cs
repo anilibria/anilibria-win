@@ -144,6 +144,13 @@ namespace Anilibria.Pages.Releases {
 		private void GenresFiltersMenuTextBlock_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
 			GenresFiltersMenu.Items.Clear ();
 
+			var allOption = new MenuFlyoutItem ();
+			allOption.Text = "Фильтровать по всем";
+			allOption.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+			allOption.Command = m_ViewModel.AddGenreToFilterCommand;
+			allOption.CommandParameter = m_ViewModel.OpenedRelease.Genres;
+			GenresFiltersMenu.Items.Add ( allOption );
+
 			var genres = m_ViewModel.OpenedRelease.Genres.Split ( ", " );
 			foreach ( var genre in genres ) {
 				var option = new MenuFlyoutItem ();
@@ -160,6 +167,13 @@ namespace Anilibria.Pages.Releases {
 
 		private void VoicesFiltersMenuTextBlock_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
 			VoicesFiltersMenu.Items.Clear ();
+
+			var allOption = new MenuFlyoutItem ();
+			allOption.Text = "Фильтровать по всем";
+			allOption.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+			allOption.Command = m_ViewModel.AddVoicesToFilterCommand;
+			allOption.CommandParameter = m_ViewModel.OpenedRelease.Voices;
+			VoicesFiltersMenu.Items.Add ( allOption );
 
 			var voices = m_ViewModel.OpenedRelease.Voices.Split ( ", " );
 			foreach ( var voice in voices ) {

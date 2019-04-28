@@ -781,14 +781,14 @@
 										Озвучка
 										</TextBlock>
 										<controls:TimingTextBox
-										Style="{StaticResource AnilibriaTextBox}"
-										Width="200"
-										Margin="4 0 4 4"
-										IsSpellCheckEnabled="False"
-										Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-										PlaceholderText="Вводите через запятую"
-										TimeoutCommand="{Binding FilterCommand}"
-									/>
+											Style="{StaticResource AnilibriaTextBox}"
+											Width="200"
+											Margin="4 0 4 4"
+											IsSpellCheckEnabled="False"
+											Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											PlaceholderText="Вводите через запятую"
+											TimeoutCommand="{Binding FilterCommand}"
+										/>
 									<TextBlock
 										Margin="4 0 4 4"
 										Foreground="Black">
