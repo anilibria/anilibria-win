@@ -12,12 +12,14 @@ using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI.ViewManagement;
 
-namespace Anilibria.Pages.OnlinePlayer {
+namespace Anilibria.Pages.OnlinePlayer
+{
 
 	/// <summary>
 	/// View model.
 	/// </summary>
-	public class OnlinePlayerViewModel : ViewModel, INavigation {
+	public class OnlinePlayerViewModel : ViewModel, INavigation
+	{
 
 		private const string PlayerQualitySettings = "PlayerQuality";
 
@@ -26,6 +28,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private const string AutoTransitionSettings = "AutoTransition";
 
 		private const string NeedShowReleaseInfoSettings = "NeedShowReleaseInfo";
+
+		private const string ControlPanelOpacitySettings = "ControlPanelOpacity";
 
 		private double m_Volume;
 
@@ -100,7 +104,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private bool m_IsCompactOverlayEnabled;
 
 		private bool m_IsNeedShowReleaseInfo;
-		
+
+		private double m_ControlPanelOpacity;
 
 		/// <summary>
 		/// Constructor injection.
@@ -138,6 +143,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void RestoreSettings () {
+			m_ControlPanelOpacity = 1;
 			var values = ApplicationData.Current.RoamingSettings.Values;
 			if ( values.ContainsKey ( PlayerQualitySettings ) ) {
 				var isHD = (bool) values[PlayerQualitySettings];
@@ -146,7 +152,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			if ( values.ContainsKey ( PlayerVolumeSettings ) ) m_Volume = (double) values[PlayerVolumeSettings];
 			if ( values.ContainsKey ( AutoTransitionSettings ) ) m_IsAutoTransition = (bool) values[AutoTransitionSettings];
-			if ( values.ContainsKey ( NeedShowReleaseInfoSettings ) ) m_IsNeedShowReleaseInfo = (bool)values[NeedShowReleaseInfoSettings];
+			if ( values.ContainsKey ( NeedShowReleaseInfoSettings ) ) m_IsNeedShowReleaseInfo = (bool) values[NeedShowReleaseInfoSettings];
+			if ( values.ContainsKey ( ControlPanelOpacitySettings ) ) m_ControlPanelOpacity = (double) values[ControlPanelOpacitySettings];
 		}
 
 		private void SaveReleaseWatchTimestamp ( long releaseId ) {
@@ -749,11 +756,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is need show release info.
 		/// </summary>
-		public bool IsNeedShowReleaseInfo {
+		public bool IsNeedShowReleaseInfo
+		{
 			get => m_IsNeedShowReleaseInfo;
 			set
 			{
-				if (!Set(ref m_IsNeedShowReleaseInfo, value)) return;
+				if ( !Set ( ref m_IsNeedShowReleaseInfo , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[NeedShowReleaseInfoSettings] = value;
 			}
@@ -821,6 +829,20 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get => m_IsSupportedCompactOverlay;
 			set => Set ( ref m_IsSupportedCompactOverlay , value );
+		}
+
+		/// <summary>
+		/// Control panel opacity.
+		/// </summary>
+		public double ControlPanelOpacity
+		{
+			get => m_ControlPanelOpacity;
+			set
+			{
+				if ( !Set ( ref m_ControlPanelOpacity , value ) ) return;
+
+				ApplicationData.Current.RoamingSettings.Values[ControlPanelOpacitySettings] = value;
+			}
 		}
 
 		/// <summary>
