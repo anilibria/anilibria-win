@@ -430,6 +430,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			m_TapCount++;
 
+			if (m_ViewModel.IsCompactOverlayEnabled) return;
+
 			m_ViewModel.ToggleFullScreenCommand.Execute ( null );
 		}
 
@@ -467,6 +469,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			m_TransportControlsCaptured = false;
 		}
+
 	}
 
 }

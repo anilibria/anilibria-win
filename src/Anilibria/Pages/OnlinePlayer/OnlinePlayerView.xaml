@@ -118,7 +118,7 @@
 			</Setter>
 		</Style>
 		<Style x:Key="IconSliderStyle" TargetType="Slider">
-			<Setter Property="Background" Value="{ThemeResource SliderTrackFill}"/>
+			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}"/>
 			<Setter Property="Foreground" Value="{ThemeResource SliderTrackValueFill}"/>
 			<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
@@ -134,7 +134,7 @@
 							<Grid.Resources>
 								<Style x:Key="SliderThumbStyle" TargetType="Thumb">
 									<Setter Property="BorderThickness" Value="0"/>
-									<Setter Property="Background" Value="{ThemeResource SliderThumbBackground}"/>
+									<Setter Property="Background" Value="Transparent"/>
 									<Setter Property="Template">
 										<Setter.Value>
 											<ControlTemplate TargetType="Thumb">
@@ -267,7 +267,7 @@
 								</VisualStateGroup>
 							</VisualStateManager.VisualStateGroups>
 							<ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" FontWeight="{ThemeResource SliderHeaderThemeFontWeight}" Foreground="{ThemeResource SliderHeaderForeground}" Margin="{ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
-							<Grid x:Name="SliderContainer" Background="#e6e6e6" Control.IsTemplateFocusTarget="True" Grid.Row="1">
+							<Grid x:Name="SliderContainer" Background="Transparent" Control.IsTemplateFocusTarget="True" Grid.Row="1">
 								<Grid x:Name="HorizontalTemplate" MinHeight="44">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition Width="Auto"/>
@@ -1025,7 +1025,7 @@
 
 							<Border x:Name='ControlPanel_ControlPanelVisibilityStates_Border' Loaded="ControlPanel_ControlPanelVisibilityStates_Border_Loaded">
 								<Grid x:Name='ControlPanelGrid'
-									Background='#e6e6e6'
+									Background="#e6e6e6"
 									VerticalAlignment='Bottom'
 									RenderTransformOrigin='0.5,0.5'
 									PointerEntered="RootGrid_PointerEntered" PointerExited="RootGrid_PointerExited">
@@ -1042,6 +1042,13 @@
 										<RowDefinition Height='*' />
 										<RowDefinition Height='Auto'/>
 									</Grid.RowDefinitions>
+									<!-- TODO: Added transparency for control panel-->
+									<!--<Rectangle
+										Grid.ColumnSpan="3"
+										Grid.RowSpan="3"
+										Fill="#e6e6e6"
+										Opacity=".8"
+									/>-->
 									<Border x:Name="ErrorBorder"  Width='320' Height='96'
 										Grid.ColumnSpan='3'
 										HorizontalAlignment="Center" Background='#e6e6e6'
@@ -1071,7 +1078,9 @@
 												VerticalAlignment='Center'
 												IsTabStop="False"
 												IsThumbToolTipEnabled='False'/>
-											<ProgressBar x:Name='BufferingProgressBar'
+											<ProgressBar
+												x:Name='BufferingProgressBar'
+												Style="{StaticResource AnilibriaProgressBarStyle}"
 												Height='4'
 												IsIndeterminate='True'
 												IsHitTestVisible='False'
@@ -1273,9 +1282,24 @@
 																	IsOn="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsAutoTransition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 																</ToggleSwitch>
 																<TextBlock
-																	Margin="0 4 0 0"
 																	Foreground="Black"
 																	FontSize="14">
+																	Информация о релизе
+																</TextBlock>
+																<ToggleSwitch
+																	Style="{StaticResource AnilibriaToggleSwitch}"
+																	IsTabStop="False"
+																	Margin="0 4 0 0"
+																	OnContent="Показывается"
+																	OffContent="Скрывается"
+																	FontSize="12"
+																	IsOn="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsNeedShowReleaseInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+																</ToggleSwitch>
+																<TextBlock
+																	Margin="0 4 0 0"
+																	Foreground="Black"
+																	FontSize="14"
+																	Visibility="{Binding IsSupportedCompactOverlay}">
 																	Картинка в картинке
 																</TextBlock>
 																<Button
@@ -1513,83 +1537,88 @@
 				Grid.Row="0"
 				Grid.Column="2"
 				Visibility="{Binding IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}">
-				<StackPanel
-				x:Name="CurrentReleaseInfo"
-				Visibility="{Binding IsShowReleaseInfo, UpdateSourceTrigger=PropertyChanged}"
-				Background="Transparent">
-					<Border
-					BorderBrush="#881919"
-					BorderThickness="2"
-					HorizontalAlignment="Right"
-					CornerRadius="8">
-						<Grid
-						CornerRadius="8">
-							<Rectangle
-							Fill="White"
-						/>
-							<StackPanel Margin="2 0 2 0" Orientation="Horizontal">
-								<Grid>
-									<Grid.RowDefinitions>
-										<RowDefinition />
-										<RowDefinition Height="Auto" />
-									</Grid.RowDefinitions>
-									<StackPanel
-									Grid.Row="0"
-									Orientation="Vertical">
-										<TextBlock
-										x:Name="CurrentReleaseTitle"
-										FontSize="20"
-										Foreground="#b32121"
-										HorizontalAlignment="Right"
-										TextWrapping="WrapWholeWords"
-										TextTrimming="CharacterEllipsis"
-										MaxLines="5"
-										Text="{Binding SelectedRelease.Title}">
-										</TextBlock>
-										<TextBlock
-										x:Name="CurrentVideoTitle"
-										FontSize="20"
-										Foreground="Black"
-										TextTrimming="CharacterEllipsis"
-										HorizontalAlignment="Right"
-										Text="{Binding SelectedOnlineVideo.Title}">
-										</TextBlock>
-									</StackPanel>
-									<StackPanel
-									Grid.Row="1"
-									Orientation="Vertical">
-										<TextBlock
-										x:Name="CurrentVideoPosition"
-										FontSize="20"
-										Foreground="Black"
-										HorizontalAlignment="Right"
-										VerticalAlignment="Bottom">
-										<Run Text="{Binding DisplayPosition}"></Run>
-										<Run Text="{Binding DisplayPositionPercent}"></Run>
-										</TextBlock>
-										<TextBlock
-										x:Name="CurrentVideoDuration"
-										FontSize="20"
-										Foreground="Black"
-										VerticalAlignment="Bottom"
-										HorizontalAlignment="Right"
-										Text="{Binding DisplayDuration}"
+				<Grid
+					Visibility="{Binding IsNeedShowReleaseInfo}">
+					<StackPanel
+						x:Name="CurrentReleaseInfo"
+						Visibility="{Binding IsShowReleaseInfo, UpdateSourceTrigger=PropertyChanged}"
+						Background="Transparent">
+						<Border
+							BorderBrush="#881919"
+							BorderThickness="2"
+							HorizontalAlignment="Right"
+							CornerRadius="8">
+							<Grid
+								CornerRadius="8">
+										<Rectangle
+									Fill="White"
+								/>
+								<StackPanel Margin="2 0 2 0" Orientation="Horizontal">
+									<Grid>
+										<Grid.RowDefinitions>
+											<RowDefinition />
+											<RowDefinition Height="Auto" />
+										</Grid.RowDefinitions>
+										<StackPanel
+										Grid.Row="0"
+										Orientation="Vertical"
+										MaxWidth="200">
+											<TextBlock
+											x:Name="CurrentReleaseTitle"
+											FontSize="20"
+											Foreground="#b32121"
+											HorizontalAlignment="Right"
+											TextWrapping="WrapWholeWords"
+											TextTrimming="CharacterEllipsis"
+											TextAlignment="Right"
+											MaxLines="5"
+											Text="{Binding SelectedRelease.Title}">
+											</TextBlock>
+											<TextBlock
+											x:Name="CurrentVideoTitle"
+											FontSize="20"
+											Foreground="Black"
+											TextTrimming="CharacterEllipsis"
+											HorizontalAlignment="Right"
+											Text="{Binding SelectedOnlineVideo.Title}">
+											</TextBlock>
+										</StackPanel>
+										<StackPanel
+											Grid.Row="1"
+											Orientation="Vertical">
+											<TextBlock
+												x:Name="CurrentVideoPosition"
+												FontSize="20"
+												Foreground="Black"
+												HorizontalAlignment="Right"
+												VerticalAlignment="Bottom">
+												<Run Text="{Binding DisplayPosition}"></Run>
+												<Run Text="{Binding DisplayPositionPercent}"></Run>
+											</TextBlock>
+											<TextBlock
+												x:Name="CurrentVideoDuration"
+												FontSize="20"
+												Foreground="Black"
+												VerticalAlignment="Bottom"
+												HorizontalAlignment="Right"
+												Text="{Binding DisplayDuration}"
+											/>
+										</StackPanel>
+									</Grid>
+									<Image
+										x:Name="PosterImage"
+										Margin="3 3 1 3"
+										Tag="{Binding SelectedRelease.Id}"
+										converters:CacheImageConverter.ImageGroup="Poster"
+										converters:CacheImageConverter.ImagePath="{Binding SelectedRelease.Poster}"
+										Stretch="Uniform"
+										Height="200"
 									/>
-									</StackPanel>
-								</Grid>
-								<Image
-								x:Name="PosterImage"
-								Margin="3 3 1 3"
-								Tag="{Binding SelectedRelease.Id}"
-								converters:CacheImageConverter.ImageGroup="Poster"
-								converters:CacheImageConverter.ImagePath="{Binding SelectedRelease.Poster}"
-								Stretch="Uniform"
-								Height="200"
-							/>
-							</StackPanel>
-						</Grid>
-					</Border>
-				</StackPanel>
+								</StackPanel>
+							</Grid>
+						</Border>
+					</StackPanel>
+				</Grid>
 			</Grid>
 		</Grid>
 		<VisualStateManager.VisualStateGroups>

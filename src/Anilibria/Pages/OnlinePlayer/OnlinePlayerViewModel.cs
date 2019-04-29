@@ -25,6 +25,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private const string AutoTransitionSettings = "AutoTransition";
 
+		private const string NeedShowReleaseInfoSettings = "NeedShowReleaseInfo";
+
 		private double m_Volume;
 
 		private string m_DisplayVolume;
@@ -97,6 +99,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsCompactOverlayEnabled;
 
+		private bool m_IsNeedShowReleaseInfo;
+		
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -141,6 +146,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			if ( values.ContainsKey ( PlayerVolumeSettings ) ) m_Volume = (double) values[PlayerVolumeSettings];
 			if ( values.ContainsKey ( AutoTransitionSettings ) ) m_IsAutoTransition = (bool) values[AutoTransitionSettings];
+			if ( values.ContainsKey ( NeedShowReleaseInfoSettings ) ) m_IsNeedShowReleaseInfo = (bool)values[NeedShowReleaseInfoSettings];
 		}
 
 		private void SaveReleaseWatchTimestamp ( long releaseId ) {
@@ -738,6 +744,19 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get => m_IsShowReleaseInfo;
 			set => Set ( ref m_IsShowReleaseInfo , value );
+		}
+
+		/// <summary>
+		/// Is need show release info.
+		/// </summary>
+		public bool IsNeedShowReleaseInfo {
+			get => m_IsNeedShowReleaseInfo;
+			set
+			{
+				if (!Set(ref m_IsNeedShowReleaseInfo, value)) return;
+
+				ApplicationData.Current.RoamingSettings.Values[NeedShowReleaseInfoSettings] = value;
+			}
 		}
 
 		/// <summary>
