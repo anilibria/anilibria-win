@@ -1586,7 +1586,7 @@
 								RightTapped="Button_RightTapped"
 								Tapped="Button_Tapped">
 								<FlyoutBase.AttachedFlyout>
-									<Flyout>
+									<Flyout x:Name="OnlineVideoAttachFlyout">
 										<Flyout.FlyoutPresenterStyle>
 											<Style TargetType="FlyoutPresenter">
 												<Setter Property="Background" Value="#e6e6e6" />

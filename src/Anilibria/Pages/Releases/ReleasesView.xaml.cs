@@ -114,14 +114,23 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void Button_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
-			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
-			e.Handled = true;
+			switch ( m_ViewModel.SelectedOpenVideoMode.Mode ) {
+				case OpenVideoMode.SelectOnlineVideo:
+					m_ViewModel.OpenOnlineVideoCommand.Execute ( null );
+					break;
+				case OpenVideoMode.ImmediatlyOpenVideoPlayer:
+					FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+					e.Handled = true;
+					break;
+			}
 		}
 
 		private void PrefferedOnlineVideoSelector_SelectionChanged ( object sender , SelectionChangedEventArgs e ) {
 			if ( PrefferedOnlineVideoSelector.SelectedItem == null ) return;
 
 			m_ViewModel.OpenOnlineVideoCommand.Execute ( null );
+
+			OnlineVideoAttachFlyout.Hide ();
 		}
 
 		private void Button_Tapped ( object sender , TappedRoutedEventArgs e ) {
