@@ -1048,7 +1048,7 @@
 										Fill="#e6e6e6"
 										Opacity="{Binding ControlPanelOpacity}"
 									/>
-									<Border x:Name="ErrorBorder"  Width='320' Height='96'
+									<Border x:Name="ErrorBorder" Width='320' Height='96'
 										Grid.ColumnSpan='3'
 										HorizontalAlignment="Center" Background='#e6e6e6'
 										Visibility='Collapsed'>
@@ -1308,6 +1308,33 @@
 																	StepFrequency=".1"
 																	Maximum="1"
 																	Value="{Binding ControlPanelOpacity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+																/>
+																<TextBlock
+																	Foreground="Black"
+																	FontSize="14">
+																	Сортировка плейлиста
+																</TextBlock>
+																<ToggleSwitch
+																	Style="{StaticResource AnilibriaToggleSwitch}"
+																	IsTabStop="False"
+																	Margin="0 4 0 0"
+																	OnContent="Нисходящая"
+																	OffContent="Восходящая"
+																	FontSize="12"
+																	IsOn="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.AscendingSortingInPlaylist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+																</ToggleSwitch>
+																<TextBlock
+																	Foreground="Black"
+																	FontSize="14">
+																	Кнопка открытия плейлиста
+																</TextBlock>
+																<ComboBox
+																	Style="{StaticResource AnilibriaComboBox}"
+																	SelectedItem="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.SelectedPlaylistButtonPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+																	ItemsSource="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.PlaylistButtonPositions}"
+																	DisplayMemberPath="Title"
+																	Width="120"
+																	Margin="0 2 0 10"
 																/>
 																<TextBlock
 																	Foreground="Black"

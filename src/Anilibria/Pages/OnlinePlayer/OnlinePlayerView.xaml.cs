@@ -9,6 +9,7 @@ using Windows.Media.Casting;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -212,6 +213,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 						break;
 				}
 			}
+			if (args.VirtualKey == VirtualKey.Escape)
+			{
+				var view = ApplicationView.GetForCurrentView();
+				if (view.IsFullScreenMode) view.ExitFullScreenMode();
+			}
+			if (args.VirtualKey == VirtualKey.F11) m_ViewModel.ToggleFullScreenCommand.Execute(null);
+			if (args.VirtualKey == VirtualKey.PageUp) m_ViewModel.NextTrackCommand.Execute(null);
+			if (args.VirtualKey == VirtualKey.PageDown) m_ViewModel.PreviousTrackCommand.Execute(null);
+			if (args.VirtualKey == VirtualKey.Home) m_ViewModel.ShowPlaylistCommand.Execute(null);
+			if (args.VirtualKey == VirtualKey.End) m_ViewModel.ShowPlaylistButton = false;
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {

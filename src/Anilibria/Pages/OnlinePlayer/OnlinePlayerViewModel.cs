@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Anilibria.MVVM;
+using Anilibria.Pages.OnlinePlayer.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Storage;
@@ -30,6 +32,10 @@ namespace Anilibria.Pages.OnlinePlayer
 		private const string NeedShowReleaseInfoSettings = "NeedShowReleaseInfo";
 
 		private const string ControlPanelOpacitySettings = "ControlPanelOpacity";
+
+		private const string PlaylistButtonPositionSettings = "PlaylistButtonPosition";
+
+		private const string PlaylistSortSettings = "PlaylistSorting";
 
 		private double m_Volume;
 
@@ -107,6 +113,29 @@ namespace Anilibria.Pages.OnlinePlayer
 
 		private double m_ControlPanelOpacity;
 
+		private ObservableCollection<PlaylistButtonPositionItem> m_PlaylistButtonPositions = new ObservableCollection<PlaylistButtonPositionItem>
+		{
+			new PlaylistButtonPositionItem
+			{
+				Position = PlaylistButtonPosition.Top,
+				Title = "Сверху"
+			},
+			new PlaylistButtonPositionItem
+			{
+				Position = PlaylistButtonPosition.Center,
+				Title = "В центре"
+			},
+			new PlaylistButtonPositionItem
+			{
+				Position = PlaylistButtonPosition.Bottom,
+				Title = "Снизу"
+			}
+		};
+
+		private PlaylistButtonPositionItem m_SelectedPlaylistButtonPosition;
+
+		private bool m_AscendingSortingInPlaylist;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -144,6 +173,7 @@ namespace Anilibria.Pages.OnlinePlayer
 
 		private void RestoreSettings () {
 			m_ControlPanelOpacity = 1;
+			m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.First(a => a.Position == PlaylistButtonPosition.Center);
 			var values = ApplicationData.Current.RoamingSettings.Values;
 			if ( values.ContainsKey ( PlayerQualitySettings ) ) {
 				var isHD = (bool) values[PlayerQualitySettings];
@@ -154,6 +184,14 @@ namespace Anilibria.Pages.OnlinePlayer
 			if ( values.ContainsKey ( AutoTransitionSettings ) ) m_IsAutoTransition = (bool) values[AutoTransitionSettings];
 			if ( values.ContainsKey ( NeedShowReleaseInfoSettings ) ) m_IsNeedShowReleaseInfo = (bool) values[NeedShowReleaseInfoSettings];
 			if ( values.ContainsKey ( ControlPanelOpacitySettings ) ) m_ControlPanelOpacity = (double) values[ControlPanelOpacitySettings];
+			if (values.ContainsKey ( PlaylistSortSettings ) ) m_AscendingSortingInPlaylist = (bool)values[PlaylistSortSettings];
+			if (values.ContainsKey ( PlaylistButtonPositionSettings ) )
+			{
+				var indexButtonPosition = (int)values[PlaylistButtonPositionSettings];
+				var position = (PlaylistButtonPosition)indexButtonPosition;
+
+				m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.FirstOrDefault(a => a.Position == position) ?? PlaylistButtonPositions.First(a => a.Position == PlaylistButtonPosition.Center);
+			}
 		}
 
 		private void SaveReleaseWatchTimestamp ( long releaseId ) {
@@ -842,6 +880,43 @@ namespace Anilibria.Pages.OnlinePlayer
 				if ( !Set ( ref m_ControlPanelOpacity , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[ControlPanelOpacitySettings] = value;
+			}
+		}
+
+		/// <summary>
+		/// Playlist buttons positions.
+		/// </summary>
+		public ObservableCollection<PlaylistButtonPositionItem> PlaylistButtonPositions {
+			get => m_PlaylistButtonPositions;
+			set => Set(ref m_PlaylistButtonPositions, value);
+		}
+
+		/// <summary>
+		/// Selected playlist button position.
+		/// </summary>
+		public PlaylistButtonPositionItem SelectedPlaylistButtonPosition {
+			get => m_SelectedPlaylistButtonPosition;
+			set
+			{
+				if (!Set(ref m_SelectedPlaylistButtonPosition, value)) return;
+
+				if (value == null) return;
+
+				ApplicationData.Current.RoamingSettings.Values[PlaylistButtonPositionSettings] = (int)value.Position;
+			}
+		}
+
+		/// <summary>
+		/// Selected playlist button position.
+		/// </summary>
+		public bool AscendingSortingInPlaylist
+		{
+			get => m_AscendingSortingInPlaylist;
+			set
+			{
+				if (!Set(ref m_AscendingSortingInPlaylist, value)) return;
+
+				ApplicationData.Current.RoamingSettings.Values[PlaylistSortSettings] = value;
 			}
 		}
 
