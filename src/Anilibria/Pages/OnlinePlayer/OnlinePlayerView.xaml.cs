@@ -59,7 +59,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ChangePlayback = ChangePlaybackHandler ,
 				ChangePosition = ChangePosition,
 				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist,
-				SetVisiblePlaybackButtons = SetVisiblePlaybackButtons
+				SetVisiblePlaybackButtons = SetVisiblePlaybackButtons,
+				ChangeOpenPlaylistButton = ChangeOpenPlaylistButton
 			};
 			DataContext = m_ViewModel;
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
@@ -222,7 +223,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if (args.VirtualKey == VirtualKey.PageUp) m_ViewModel.NextTrackCommand.Execute(null);
 			if (args.VirtualKey == VirtualKey.PageDown) m_ViewModel.PreviousTrackCommand.Execute(null);
 			if (args.VirtualKey == VirtualKey.Home) m_ViewModel.ShowPlaylistCommand.Execute(null);
-			if (args.VirtualKey == VirtualKey.End) m_ViewModel.ShowPlaylistButton = false;
+			if (args.VirtualKey == VirtualKey.End) m_ViewModel.ShowPlaylistButton = true;
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {
@@ -479,6 +480,31 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void PlaylistListView_PointerExited(object sender, PointerRoutedEventArgs e)
 		{
 			m_TransportControlsCaptured = false;
+		}
+
+		private async void ComboBox_DataContextChanged ( FrameworkElement sender , DataContextChangedEventArgs args ) {
+			var oldPosition = m_ViewModel.SelectedPlaylistButtonPosition;
+			await Task.Delay ( 500 );
+
+			if ( m_ViewModel.SelectedPlaylistButtonPosition == null ) m_ViewModel.SelectedPlaylistButtonPosition = oldPosition;
+		}
+
+		private void ChangeOpenPlaylistButton () {
+			if ( m_ViewModel.SelectedPlaylistButtonPosition == null ) return;
+			switch ( m_ViewModel.SelectedPlaylistButtonPosition.Position ) {
+				case PresentationClasses.PlaylistButtonPosition.Center:
+					OpenPlaylistButton.VerticalAlignment = VerticalAlignment.Center;
+					OpenPlaylistButton.Margin = new Thickness ( 0 , 0 , 0 , 0 );
+					break;
+				case PresentationClasses.PlaylistButtonPosition.Top:
+					OpenPlaylistButton.VerticalAlignment = VerticalAlignment.Top;
+					OpenPlaylistButton.Margin = new Thickness ( 0 , 0 , 0 , 0 );
+					break;
+				case PresentationClasses.PlaylistButtonPosition.Bottom:
+					OpenPlaylistButton.VerticalAlignment = VerticalAlignment.Bottom;
+					OpenPlaylistButton.Margin = new Thickness ( 0 , 0 , 0 , 10 );
+					break;
+			}
 		}
 
 	}

@@ -173,7 +173,7 @@ namespace Anilibria.Pages.OnlinePlayer
 
 		private void RestoreSettings () {
 			m_ControlPanelOpacity = 1;
-			m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.First(a => a.Position == PlaylistButtonPosition.Center);
+			m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.First ( a => a.Position == PlaylistButtonPosition.Center );
 			var values = ApplicationData.Current.RoamingSettings.Values;
 			if ( values.ContainsKey ( PlayerQualitySettings ) ) {
 				var isHD = (bool) values[PlayerQualitySettings];
@@ -184,13 +184,12 @@ namespace Anilibria.Pages.OnlinePlayer
 			if ( values.ContainsKey ( AutoTransitionSettings ) ) m_IsAutoTransition = (bool) values[AutoTransitionSettings];
 			if ( values.ContainsKey ( NeedShowReleaseInfoSettings ) ) m_IsNeedShowReleaseInfo = (bool) values[NeedShowReleaseInfoSettings];
 			if ( values.ContainsKey ( ControlPanelOpacitySettings ) ) m_ControlPanelOpacity = (double) values[ControlPanelOpacitySettings];
-			if (values.ContainsKey ( PlaylistSortSettings ) ) m_AscendingSortingInPlaylist = (bool)values[PlaylistSortSettings];
-			if (values.ContainsKey ( PlaylistButtonPositionSettings ) )
-			{
-				var indexButtonPosition = (int)values[PlaylistButtonPositionSettings];
-				var position = (PlaylistButtonPosition)indexButtonPosition;
+			if ( values.ContainsKey ( PlaylistSortSettings ) ) m_AscendingSortingInPlaylist = (bool) values[PlaylistSortSettings];
+			if ( values.ContainsKey ( PlaylistButtonPositionSettings ) ) {
+				var indexButtonPosition = (int) values[PlaylistButtonPositionSettings];
+				var position = (PlaylistButtonPosition) indexButtonPosition;
 
-				m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.FirstOrDefault(a => a.Position == position) ?? PlaylistButtonPositions.First(a => a.Position == PlaylistButtonPosition.Center);
+				m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.FirstOrDefault ( a => a.Position == position ) ?? PlaylistButtonPositions.First ( a => a.Position == PlaylistButtonPosition.Center );
 			}
 		}
 
@@ -407,6 +406,7 @@ namespace Anilibria.Pages.OnlinePlayer
 							Title = a.Title
 						}
 					)
+					.OrderBy ( a => a.Order )
 					.ToList ()
 			};
 		}
@@ -497,6 +497,7 @@ namespace Anilibria.Pages.OnlinePlayer
 					m_RestorePosition = lastVideo.LastPosition;
 				}
 
+				if ( release != null ) release.OnlineVideos = release.OnlineVideos.OrderBy ( a => a.Order ).ToList ();
 				SelectedRelease = release;
 				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.LastOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
@@ -886,37 +887,26 @@ namespace Anilibria.Pages.OnlinePlayer
 		/// <summary>
 		/// Playlist buttons positions.
 		/// </summary>
-		public ObservableCollection<PlaylistButtonPositionItem> PlaylistButtonPositions {
+		public ObservableCollection<PlaylistButtonPositionItem> PlaylistButtonPositions
+		{
 			get => m_PlaylistButtonPositions;
-			set => Set(ref m_PlaylistButtonPositions, value);
+			set => Set ( ref m_PlaylistButtonPositions , value );
 		}
 
 		/// <summary>
 		/// Selected playlist button position.
 		/// </summary>
-		public PlaylistButtonPositionItem SelectedPlaylistButtonPosition {
+		public PlaylistButtonPositionItem SelectedPlaylistButtonPosition
+		{
 			get => m_SelectedPlaylistButtonPosition;
 			set
 			{
-				if (!Set(ref m_SelectedPlaylistButtonPosition, value)) return;
+				var oldValue = m_SelectedPlaylistButtonPosition;
+				if ( !Set ( ref m_SelectedPlaylistButtonPosition , value ) ) return;
+				if ( value == null ) return;
 
-				if (value == null) return;
-
-				ApplicationData.Current.RoamingSettings.Values[PlaylistButtonPositionSettings] = (int)value.Position;
-			}
-		}
-
-		/// <summary>
-		/// Selected playlist button position.
-		/// </summary>
-		public bool AscendingSortingInPlaylist
-		{
-			get => m_AscendingSortingInPlaylist;
-			set
-			{
-				if (!Set(ref m_AscendingSortingInPlaylist, value)) return;
-
-				ApplicationData.Current.RoamingSettings.Values[PlaylistSortSettings] = value;
+				ChangeOpenPlaylistButton?.Invoke ();
+				ApplicationData.Current.RoamingSettings.Values[PlaylistButtonPositionSettings] = (int) value.Position;
 			}
 		}
 
@@ -960,6 +950,15 @@ namespace Anilibria.Pages.OnlinePlayer
 		/// Set visible playback buttons.
 		/// </summary>
 		public Action<bool> SetVisiblePlaybackButtons
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Change position for playlist button.
+		/// </summary>
+		public Action ChangeOpenPlaylistButton
 		{
 			get;
 			set;

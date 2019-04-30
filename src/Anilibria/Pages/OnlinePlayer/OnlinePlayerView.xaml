@@ -1312,29 +1312,17 @@
 																<TextBlock
 																	Foreground="Black"
 																	FontSize="14">
-																	Сортировка плейлиста
-																</TextBlock>
-																<ToggleSwitch
-																	Style="{StaticResource AnilibriaToggleSwitch}"
-																	IsTabStop="False"
-																	Margin="0 4 0 0"
-																	OnContent="Нисходящая"
-																	OffContent="Восходящая"
-																	FontSize="12"
-																	IsOn="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.AscendingSortingInPlaylist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-																</ToggleSwitch>
-																<TextBlock
-																	Foreground="Black"
-																	FontSize="14">
 																	Кнопка открытия плейлиста
 																</TextBlock>
 																<ComboBox
+																	DataContext="{Binding ElementName=OnlinePlayerContainer, Path=DataContext}"
 																	Style="{StaticResource AnilibriaComboBox}"
-																	SelectedItem="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.SelectedPlaylistButtonPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-																	ItemsSource="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.PlaylistButtonPositions}"
+																	SelectedItem="{Binding SelectedPlaylistButtonPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+																	ItemsSource="{Binding PlaylistButtonPositions}"
 																	DisplayMemberPath="Title"
 																	Width="120"
 																	Margin="0 2 0 10"
+																	DataContextChanged="ComboBox_DataContextChanged"
 																/>
 																<TextBlock
 																	Foreground="Black"
@@ -1565,6 +1553,7 @@
 				</ListView>
 				<Grid Visibility="{Binding IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}">
 					<Button
+						x:Name="OpenPlaylistButton"
 						Background="LightGray"
 						Style="{StaticResource PlayerFlyoutButtonStyle}"
 						VerticalAlignment="Center"

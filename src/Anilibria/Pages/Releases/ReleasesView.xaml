@@ -652,10 +652,11 @@
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowSidebarCommand}">
 				<Image
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/hambergermenu.svg"
-					/>
+					CacheMode="BitmapCache"
+					Width="{StaticResource IconSize}"
+					Height="{StaticResource IconSize}"
+					Source="/Assets/Icons/hambergermenu.svg"
+				/>
 			</Button>
 		</Border>
 		<Border
@@ -673,6 +674,7 @@
 					Command="{Binding RefreshCommand}"
 					ToolTipService.ToolTip="Выполнить синхронизацию релизов">
 					<Image
+						CacheMode="BitmapCache"
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
 						Source="/Assets/Icons/refresh.svg"
@@ -684,6 +686,7 @@
 					Style="{StaticResource IconsButtonStyle}"
 					ToolTipService.ToolTip="Чтобы добавить в избранное необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
 					<Image
+						CacheMode="BitmapCache"
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
 						Source="/Assets/Icons/favorite.svg"
@@ -727,6 +730,7 @@
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
 						<Image
+							CacheMode="BitmapCache"
 							Width="{StaticResource IconSize}"
 							Height="{StaticResource IconSize}"
 							Source="/Assets/Icons/search.svg"
@@ -840,6 +844,7 @@
 					RelativePanel.Below="FilterButton"
 					Style="{StaticResource IconsButtonStyle}">
 					<Image
+						CacheMode="BitmapCache"
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
 						Source="/Assets/Icons/sort.svg"
@@ -888,6 +893,7 @@
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
 						<Image
+							CacheMode="BitmapCache"
 							Width="{StaticResource IconSize}"
 							Height="{StaticResource IconSize}"
 							Source="/Assets/Icons/notification.svg"
@@ -1015,6 +1021,7 @@
 					Command="{Binding ShowRandomReleaseCommand}"
 					ToolTipService.ToolTip="Показать случайный релиз">
 					<Image
+						CacheMode="BitmapCache"
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
 						Source="/Assets/Icons/dice.svg"
@@ -1079,6 +1086,7 @@
 						</Flyout>
 					</Button.Flyout>
 					<Image
+						CacheMode="BitmapCache"
 						Width="{StaticResource IconSize}"
 						Height="{StaticResource IconSize}"
 						Source="/Assets/Icons/options.svg"
@@ -1135,6 +1143,7 @@
 							Width="12"
 							Height="12">
 							<Image
+								CacheMode="BitmapCache"
 								Source="/Assets/Icons/logout.svg"
 								Stretch="Uniform"
 								Width="12"
@@ -1458,11 +1467,12 @@
 								Tapped="Rectangle_Tapped"
 								ToolTipService.ToolTip="Закрыть карточку">
 						<Image
-									Source="/Assets/Icons/close.svg"
-									Stretch="Uniform"
-									Width="20"
-									Height="20"
-								/>
+							CacheMode="BitmapCache"
+							Source="/Assets/Icons/close.svg"
+							Stretch="Uniform"
+							Width="20"
+							Height="20"
+						/>
 					</controls:PointingGridControl>
 					<Grid Visibility="{Binding IsAuthorized}">
 						<controls:PointingGridControl
@@ -1473,11 +1483,12 @@
 									Tapped="PointingGridControl_Tapped"
 									ToolTipService.ToolTip="Добавить в избранное">
 							<Image
-										Source="/Assets/Icons/favoriteblack.svg"
-										Stretch="Uniform"
-										Width="20"
-										Height="20"
-									/>
+								CacheMode="BitmapCache"
+								Source="/Assets/Icons/favoriteblack.svg"
+								Stretch="Uniform"
+								Width="20"
+								Height="20"
+							/>
 						</controls:PointingGridControl>
 						<controls:PointingGridControl
 									Width="20"
@@ -1488,11 +1499,12 @@
 									Tapped="RemoveFavoriteButton_Tapped"
 									ToolTipService.ToolTip="Удалить из избранного">
 							<Image
-										Source="/Assets/Icons/removefavorite.svg"
-										Stretch="Uniform"
-										Width="20"
-										Height="20"
-									/>
+								CacheMode="BitmapCache"
+								Source="/Assets/Icons/removefavorite.svg"
+								Stretch="Uniform"
+								Width="20"
+								Height="20"
+							/>
 						</controls:PointingGridControl>
 					</Grid>
 					<controls:PointingGridControl
@@ -1503,11 +1515,12 @@
 									Tapped="ShowComments_Tapped"
 									ToolTipService.ToolTip="Открыть коментарии">
 						<Image
-										Source="/Assets/Icons/chat.svg"
-										Stretch="Uniform"
-										Width="20"
-										Height="20"
-									/>
+							CacheMode="BitmapCache"
+							Source="/Assets/Icons/chat.svg"
+							Stretch="Uniform"
+							Width="20"
+							Height="20"
+						/>
 					</controls:PointingGridControl>
 				</StackPanel>
 				<Grid
