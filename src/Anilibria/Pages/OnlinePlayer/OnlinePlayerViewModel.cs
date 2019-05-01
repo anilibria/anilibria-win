@@ -497,9 +497,9 @@ namespace Anilibria.Pages.OnlinePlayer
 					m_RestorePosition = lastVideo.LastPosition;
 				}
 
-				if ( release != null ) release.OnlineVideos = release.OnlineVideos.OrderBy ( a => a.Order ).ToList ();
+				if ( release != null ) release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel>();
 				SelectedRelease = release;
-				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.LastOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
+				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
 				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 

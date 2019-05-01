@@ -52,6 +52,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		CastingDevicePicker castingPicker;
 
+		private bool m_isXbox = false;
+
 		public OnlinePlayerView () {
 			InitializeComponent ();
 			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () , StorageService.Current () , ApiService.Current () ) {
@@ -101,6 +103,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_GamepadTimer = new DispatcherTimer ();
 				m_GamepadTimer.Tick += GamepadTimer_Tick;
 				m_GamepadTimer.Start ();
+				m_isXbox = true;
 			}
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
@@ -161,8 +164,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 				OnlinePlayer_Tapped ( null , null );
 				return;
 			}
-			//if ( previousStateButtons.HasFlag ( GamepadButtons.Y ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.Y ) ) {
-			//}
+			if ( previousStateButtons.HasFlag ( GamepadButtons.Y ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.Y ) ) {
+				m_ViewModel.ShowPlaylistButton = !m_ViewModel.ShowPlaylistButton;
+			}
 			if ( previousStateButtons.HasFlag ( GamepadButtons.DPadRight ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.DPadRight ) ) {
 				if ( m_ViewModel.SelectedOnlineVideo != null ) m_ViewModel.IsHD = !m_ViewModel.IsHD;
 				return;
@@ -502,7 +506,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					break;
 				case PresentationClasses.PlaylistButtonPosition.Bottom:
 					OpenPlaylistButton.VerticalAlignment = VerticalAlignment.Bottom;
-					OpenPlaylistButton.Margin = new Thickness ( 0 , 0 , 0 , 10 );
+					OpenPlaylistButton.Margin = new Thickness ( 0 , 0 , 0 , m_isXbox ? 30 : 0 );
 					break;
 			}
 		}
