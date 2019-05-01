@@ -1061,7 +1061,7 @@
 									</Ellipse>
 								</Border>
 							</StackPanel>
-							<Border x:Name="DeterminateRoot" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{TemplateBinding CornerRadius}">
+							<Border x:Name="DeterminateRoot" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="8">
 								<Rectangle x:Name="ProgressBarIndicator" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Margin="{TemplateBinding Padding}"/>
 							</Border>
 						</Grid>
