@@ -1355,7 +1355,8 @@
 						<TextBlock
 							x:Name="StatusLabel"
 							Foreground="Black"
-							RightTapped="StatusLabel_RightTapped">
+							RightTapped="StatusLabel_RightTapped"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout>
 									<MenuFlyout.MenuFlyoutPresenterStyle>
@@ -1373,6 +1374,11 @@
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
 							<Run
+								FontWeight="ExtraBold"
+								Foreground="#a32727">
+								*
+							</Run>
+							<Run
 								Text="Статус"
 								FontWeight="Bold"
 							/>
@@ -1384,7 +1390,8 @@
 					<StackPanel Orientation="Vertical">
 						<TextBlock
 							Foreground="Black"
-							RightTapped="StatusLabel_RightTapped">
+							RightTapped="StatusLabel_RightTapped"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout>
 									<MenuFlyout.MenuFlyoutPresenterStyle>
@@ -1401,6 +1408,11 @@
 									/>
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
+							<Run
+								FontWeight="ExtraBold"
+								Foreground="#a32727">
+								*
+							</Run>
 							<Run
 								Text="Год"
 								FontWeight="Bold"
@@ -1427,7 +1439,8 @@
 							x:Name="GenresFiltersMenuTextBlock"
 							TextWrapping="WrapWholeWords"
 							Foreground="Black"
-							RightTapped="GenresFiltersMenuTextBlock_RightTapped">
+							RightTapped="GenresFiltersMenuTextBlock_RightTapped"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout
 									x:Name="GenresFiltersMenu">
@@ -1440,6 +1453,11 @@
 									</MenuFlyout.MenuFlyoutPresenterStyle>
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
+							<Run
+								FontWeight="ExtraBold"
+								Foreground="#a32727">
+								*
+							</Run>
 							<Run
 								Text="Жанры"
 								FontWeight="Bold"
@@ -1454,7 +1472,8 @@
 							x:Name="VoicesFiltersMenuTextBlock"
 							TextWrapping="WrapWholeWords"
 							Foreground="Black"
-							RightTapped="VoicesFiltersMenuTextBlock_RightTapped">
+							RightTapped="VoicesFiltersMenuTextBlock_RightTapped"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout
 									x:Name="VoicesFiltersMenu">
@@ -1467,6 +1486,11 @@
 									</MenuFlyout.MenuFlyoutPresenterStyle>
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
+							<Run
+								FontWeight="ExtraBold"
+								Foreground="#a32727">
+								*
+							</Run>
 							<Run
 								Text="Озвучка"
 								FontWeight="Bold"
