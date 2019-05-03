@@ -366,9 +366,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					OnlinePlayer.MediaPlayer.PlaybackSession.Position = TimeSpan.FromSeconds ( 0 );
 					break;
 				case PlaybackState.Pause:
-					if ( OnlinePlayer.MediaPlayer.PlaybackSession.CanPause ) {
-						OnlinePlayer.MediaPlayer.Pause ();
-					}
+					if (OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing) OnlinePlayer.MediaPlayer.Pause ();
 					break;
 				case PlaybackState.Play:
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Play ();
