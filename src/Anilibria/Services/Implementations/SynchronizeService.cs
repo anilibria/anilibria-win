@@ -37,7 +37,8 @@ namespace Anilibria.Services.Implementations {
 
 			try {
 				var favorites = await m_AnilibriaApiService.GetUserFavorites ();
-				var userModel = await m_AnilibriaApiService.GetUserData ();
+				var userModel = m_AnilibriaApiService.GetUserModel ();
+				if ( userModel == null ) return;
 
 				var userFavoritesCollection = m_DataContext.GetCollection<UserFavoriteEntity> ();
 				var userFavorite = userFavoritesCollection.FirstOrDefault ( a => a.Id == userModel.Id );
@@ -258,13 +259,14 @@ namespace Anilibria.Services.Implementations {
 		private void saveSchedule ( IDictionary<int , IEnumerable<long>> schedules ) {
 			var collection = m_DataContext.GetCollection<ScheduleEntity> ();
 			var entity = collection.FirstOrDefault ();
-			if (entity == null) {
+			if ( entity == null ) {
 				collection.Add (
 					new ScheduleEntity {
 						Days = schedules
 					}
 				);
-			} else {
+			}
+			else {
 				entity.Days = schedules;
 				collection.Update ( entity );
 			}

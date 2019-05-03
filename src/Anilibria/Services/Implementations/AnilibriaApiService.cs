@@ -212,7 +212,7 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <returns>Information about user profile.</returns>
 		public async Task<UserModel> GetUserData () {
-			if ( m_SessionId == null ) return null; // this request only if user authorized!
+			if ( !IsAuthorized () ) return null; // this request only if user authorized!
 
 			var formContent = new FormUrlEncodedContent (
 				new[]
@@ -228,6 +228,11 @@ namespace Anilibria.Services.Implementations {
 			var content = await result.Content.ReadAsStringAsync ();
 
 			var userModel = JsonConvert.DeserializeObject<ApiResponse<UserModel>> ( content );
+
+			if ( userModel.Error != null ) {
+				SetSession ( null );
+				return null;
+			}
 
 			m_UserModel = userModel.Data;
 
@@ -264,6 +269,11 @@ namespace Anilibria.Services.Implementations {
 			m_SessionId = sessionId;
 			if ( sessionId == null ) m_UserModel = null;
 		}
+
+		/// <summary>
+		/// Clear user session.
+		/// </summary>
+		public void ClearSession () => SetSession ( null );
 
 		/// <summary>
 		/// Logout.

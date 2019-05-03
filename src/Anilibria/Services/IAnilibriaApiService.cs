@@ -101,6 +101,11 @@ namespace Anilibria.Services {
 		/// <returns>Torrent path.</returns>
 		Task<StorageFile> DownloadTorrent ( string torrentUri );
 
+		/// <summary>
+		/// Clear user session.
+		/// </summary>
+		void ClearSession ();
+
 	}
 
 }

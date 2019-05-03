@@ -183,6 +183,7 @@ namespace Anilibria.Pages.HomePage {
 				}
 			}
 			catch {
+				m_AnilibriaApiService.ClearSession (); //paranoic mode: on
 				RefreshOptions ();
 				UserModel = null;
 			}
