@@ -645,17 +645,17 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Background="#ba2d2d"
+			MinHeight="44"
 			Width="44">
 			<Button
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowSidebarCommand}">
-				<Image
-					CacheMode="BitmapCache"
-					Width="{StaticResource IconSize}"
-					Height="{StaticResource IconSize}"
-					Source="/Assets/Icons/hambergermenu.svg"
+				<controls:HumburgerIcon
+					IconWidth="{StaticResource IconSize}"
+					IconHeight="{StaticResource IconSize}"
+					IconColor="White"
 				/>
 			</Button>
 		</Border>
@@ -673,11 +673,10 @@
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding RefreshCommand}"
 					ToolTipService.ToolTip="Выполнить синхронизацию релизов">
-					<Image
-						CacheMode="BitmapCache"
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/refresh.svg"
+					<controls:RefreshIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="{StaticResource IconSize}"
+						IconColor="White"
 					/>
 				</Button>
 				<Button
@@ -685,11 +684,10 @@
 					RelativePanel.Below="RefreshButton"
 					Style="{StaticResource IconsButtonStyle}"
 					ToolTipService.ToolTip="Чтобы добавить в избранное необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
-					<Image
-						CacheMode="BitmapCache"
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/favorite.svg"
+					<controls:FavoriteIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="{StaticResource IconSize}"
+						IconColor="White"
 					/>
 					<Button.Flyout>
 						<MenuFlyout>
@@ -729,11 +727,10 @@
 					RelativePanel.Below="FavoritesButton">
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
-						<Image
-							CacheMode="BitmapCache"
-							Width="{StaticResource IconSize}"
-							Height="{StaticResource IconSize}"
-							Source="/Assets/Icons/search.svg"
+						<controls:SearchIcon
+							IconWidth="{StaticResource IconSize}"
+							IconHeight="{StaticResource IconSize}"
+							IconColor="White"
 						/>
 						<Button.Flyout>
 							<Flyout>
@@ -842,12 +839,12 @@
 				<Button
 					x:Name="SortingButton"
 					RelativePanel.Below="FilterButton"
-					Style="{StaticResource IconsButtonStyle}">
-					<Image
-						CacheMode="BitmapCache"
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/sort.svg"
+					Style="{StaticResource IconsButtonStyle}"
+					ToolTipService.ToolTip="Установить поле для сортировки и порядок сортировки">
+					<controls:SortIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="{StaticResource IconSize}"
+						IconColor="White"
 					/>
 					<Button.Flyout>
 						<Flyout>
@@ -892,11 +889,10 @@
 					RelativePanel.Below="SortingButton">
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
-						<Image
-							CacheMode="BitmapCache"
-							Width="{StaticResource IconSize}"
-							Height="{StaticResource IconSize}"
-							Source="/Assets/Icons/notification.svg"
+						<controls:NotificationIcon
+							IconWidth="{StaticResource IconSize}"
+							IconHeight="{StaticResource IconSize}"
+							IconColor="White"
 						/>
 						<Button.Flyout>
 							<Flyout>
@@ -1020,11 +1016,10 @@
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowRandomReleaseCommand}"
 					ToolTipService.ToolTip="Показать случайный релиз">
-					<Image
-						CacheMode="BitmapCache"
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/dice.svg"
+					<controls:DiceIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="{StaticResource IconSize}"
+						IconColor="White"
 					/>
 				</Button>
 				<Button
@@ -1085,11 +1080,10 @@
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>
-					<Image
-						CacheMode="BitmapCache"
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/options.svg"
+					<controls:SettingsIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="{StaticResource IconSize}"
+						IconColor="White"
 					/>
 				</Button>
 				<Button

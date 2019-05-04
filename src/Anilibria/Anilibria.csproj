@@ -129,9 +129,33 @@
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
+    <Compile Include="Controls\DiceIcon.xaml.cs">
+      <DependentUpon>DiceIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FavoriteIcon.xaml.cs">
+      <DependentUpon>FavoriteIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FlyoutHelpers.cs" />
+    <Compile Include="Controls\HumburgerIcon.xaml.cs">
+      <DependentUpon>HumburgerIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NotificationIcon.xaml.cs">
+      <DependentUpon>NotificationIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerButtonControl.cs" />
     <Compile Include="Controls\PointingGridControl.cs" />
+    <Compile Include="Controls\RefreshIcon.xaml.cs">
+      <DependentUpon>RefreshIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchIcon.xaml.cs">
+      <DependentUpon>SearchIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsIcon.xaml.cs">
+      <DependentUpon>SettingsIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SortIcon.xaml.cs">
+      <DependentUpon>SortIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TimingTextBox.cs" />
     <Compile Include="Converters\CacheImageBrushConverter.cs" />
     <Compile Include="Converters\CacheImageConverter.cs" />
@@ -348,6 +372,38 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\DiceIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FavoriteIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HumburgerIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NotificationIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RefreshIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SearchIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SettingsIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SortIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AboutPage\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

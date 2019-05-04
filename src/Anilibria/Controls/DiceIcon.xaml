@@ -1,0 +1,25 @@
+﻿<UserControl
+    x:Class="Anilibria.Controls.DiceIcon"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+	<Viewbox
+		Margin="0"
+		x:Name="IconViewbox"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
+		<PathIcon
+			VerticalAlignment="Top"
+			x:Name="IconViewboxPath"
+			Data="M0.616,2.148v22.695c0,1.186,0.959,2.146,2.145,2.146h21.467c1.184,0,2.146-0.961,2.146-2.146V2.148
+				C26.374,0.967,25.41,0,24.227,0H2.761C1.575,0,0.616,0.967,0.616,2.148z M8.778,20.824c0,1.531-1.242,2.779-2.777,2.779
+				c-1.533,0-2.777-1.248-2.777-2.779c0-1.533,1.244-2.779,2.777-2.779C7.536,18.045,8.778,19.291,8.778,20.824z M23.695,5.598
+				c0,1.535-1.242,2.777-2.777,2.777c-1.533,0-2.779-1.242-2.779-2.777c0-1.533,1.246-2.777,2.779-2.777
+				C22.453,2.82,23.695,4.064,23.695,5.598z M16.27,13.496c0,1.535-1.242,2.779-2.777,2.779c-1.531,0-2.777-1.244-2.777-2.779
+				c0-1.533,1.246-2.777,2.777-2.777C15.028,10.719,16.27,11.963,16.27,13.496z"
+		/>
+	</Viewbox>
+</UserControl>
