@@ -265,6 +265,7 @@
     <Content Include="Assets\Assets.txt" />
     <Content Include="Assets\donate.jpg" />
     <Content Include="Assets\Icons\AnilibriaLogo.svg" />
+    <Content Include="Assets\Icons\anilibrialogodark.svg" />
     <Content Include="Assets\Icons\authorization.svg" />
     <Content Include="Assets\Icons\cast.svg" />
     <Content Include="Assets\Icons\chat.svg" />
