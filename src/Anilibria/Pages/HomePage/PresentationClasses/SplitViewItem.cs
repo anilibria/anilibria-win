@@ -52,6 +52,51 @@ namespace Anilibria.Pages.HomePage.PresentationClasses {
 			set;
 		}
 
+		/// <summary>
+		/// Is release page.
+		/// </summary>
+		public bool IsReleasePage
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Is online player.
+		/// </summary>
+		public bool IsOnlinePlayer
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Is youtube page.
+		/// </summary>
+		public bool IsYoutubePage
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Is donate page.
+		/// </summary>
+		public bool IsDonatePage
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Is singin page.
+		/// </summary>
+		public bool IsSigninPage
+		{
+			get;
+			set;
+		}
+		
 	}
 
 }

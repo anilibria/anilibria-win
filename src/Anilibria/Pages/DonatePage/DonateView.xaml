@@ -22,6 +22,7 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Background="#ba2d2d"
+			MinHeight="44"
 			Width="48">
 			<Button
 					HorizontalAlignment="Stretch"

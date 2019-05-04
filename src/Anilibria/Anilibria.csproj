@@ -138,6 +138,9 @@
     <Compile Include="Controls\DiceIcon.xaml.cs">
       <DependentUpon>DiceIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DonateIcon.xaml.cs">
+      <DependentUpon>DonateIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FavoriteIcon.xaml.cs">
       <DependentUpon>FavoriteIcon.xaml</DependentUpon>
     </Compile>
@@ -166,6 +169,15 @@
       <DependentUpon>SortIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TimingTextBox.cs" />
+    <Compile Include="Controls\UserIcon.xaml.cs">
+      <DependentUpon>UserIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VideoPlayerIcon.xaml.cs">
+      <DependentUpon>VideoPlayerIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\YoutubeIcon.xaml.cs">
+      <DependentUpon>YoutubeIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\CacheImageBrushConverter.cs" />
     <Compile Include="Converters\CacheImageConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
@@ -393,6 +405,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DonateIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\FavoriteIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -422,6 +438,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SortIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VideoPlayerIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\YoutubeIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

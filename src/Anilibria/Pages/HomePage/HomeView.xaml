@@ -105,11 +105,10 @@
 							Width="40"
 							Height="40"
 							ToolTipService.ToolTip="Выйти из текущего аккаунта">
-							<Image
-								Source="/Assets/Icons/logout.svg"
-								Stretch="Uniform"
-								Width="30"
-								Height="30"
+							<controls:LogoutIcon
+								IconWidth="30"
+								IconHeight="30"
+								IconColor="White"
 							/>
 						</controls:PointingGridControl>
 					</Grid>
@@ -124,11 +123,35 @@
 						<ListView.ItemTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-									<Image
-										Width="28"
-										Height="28"
-										Stretch="Uniform"
-										Source="{Binding IconUri}"
+									<controls:HumburgerIcon
+										IconWidth="28"
+										IconHeight="28"
+										IconColor="White"
+										Visibility="{Binding IsReleasePage}"
+									/>
+									<controls:VideoPlayerIcon
+										IconWidth="28"
+										IconHeight="28"
+										IconColor="White"
+										Visibility="{Binding IsOnlinePlayer}"
+									/>
+									<controls:YoutubeIcon
+										IconWidth="28"
+										IconHeight="28"
+										IconColor="White"
+										Visibility="{Binding IsYoutubePage}"
+									/>
+									<controls:DonateIcon
+										IconWidth="28"
+										IconHeight="28"
+										IconColor="White"
+										Visibility="{Binding IsDonatePage}"
+									/>
+									<controls:UserIcon
+										IconWidth="28"
+										IconHeight="28"
+										IconColor="White"
+										Visibility="{Binding IsSigninPage}"
 									/>
 									<TextBlock
 										Text="{Binding Name}"
@@ -150,6 +173,7 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
+						
 						<Image
 							Height="50"
 							Stretch="Uniform"
