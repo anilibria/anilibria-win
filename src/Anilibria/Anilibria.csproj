@@ -129,6 +129,12 @@
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
+    <Compile Include="Controls\ChatIcon.xaml.cs">
+      <DependentUpon>ChatIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CloseIcon.xaml.cs">
+      <DependentUpon>CloseIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DiceIcon.xaml.cs">
       <DependentUpon>DiceIcon.xaml</DependentUpon>
     </Compile>
@@ -138,6 +144,9 @@
     <Compile Include="Controls\FlyoutHelpers.cs" />
     <Compile Include="Controls\HumburgerIcon.xaml.cs">
       <DependentUpon>HumburgerIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LogoutIcon.xaml.cs">
+      <DependentUpon>LogoutIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NotificationIcon.xaml.cs">
       <DependentUpon>NotificationIcon.xaml</DependentUpon>
@@ -372,6 +381,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ChatIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CloseIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DiceIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -381,6 +398,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\HumburgerIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LogoutIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

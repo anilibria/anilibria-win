@@ -1180,16 +1180,14 @@
 					<Grid>
 						<controls:PointingGridControl
 							VerticalAlignment="Bottom"
-							Margin="3 0 0 2"
+							Margin="3 0 0 3"
 							Tapped="SingoutTapped"
 							Width="12"
 							Height="12">
-							<Image
-								CacheMode="BitmapCache"
-								Source="/Assets/Icons/logout.svg"
-								Stretch="Uniform"
-								Width="12"
-								Height="12"
+							<controls:LogoutIcon
+								IconWidth="12"
+								IconHeight="12"
+								IconColor="White"
 							/>
 						</controls:PointingGridControl>
 					</Grid>
@@ -1532,12 +1530,10 @@
 								Margin="4 0 1 8"
 								Tapped="Rectangle_Tapped"
 								ToolTipService.ToolTip="Закрыть карточку">
-						<Image
-							CacheMode="BitmapCache"
-							Source="/Assets/Icons/close.svg"
-							Stretch="Uniform"
-							Width="20"
-							Height="20"
+						<controls:CloseIcon
+							IconWidth="20"
+							IconHeight="20"
+							IconColor="Black"
 						/>
 					</controls:PointingGridControl>
 					<Grid Visibility="{Binding IsAuthorized}">
@@ -1548,12 +1544,10 @@
 									Visibility="{Binding OpenedReleaseInFavorite, Converter={StaticResource InverseBoolConverter}}"
 									Tapped="PointingGridControl_Tapped"
 									ToolTipService.ToolTip="Добавить в избранное">
-							<Image
-								CacheMode="BitmapCache"
-								Source="/Assets/Icons/favoriteblack.svg"
-								Stretch="Uniform"
-								Width="20"
-								Height="20"
+							<controls:FavoriteIcon
+								IconWidth="20"
+								IconHeight="20"
+								IconColor="Black"
 							/>
 						</controls:PointingGridControl>
 						<controls:PointingGridControl
@@ -1564,12 +1558,10 @@
 									Visibility="{Binding OpenedReleaseInFavorite}"
 									Tapped="RemoveFavoriteButton_Tapped"
 									ToolTipService.ToolTip="Удалить из избранного">
-							<Image
-								CacheMode="BitmapCache"
-								Source="/Assets/Icons/removefavorite.svg"
-								Stretch="Uniform"
-								Width="20"
-								Height="20"
+							<controls:FavoriteIcon
+								IconWidth="20"
+								IconHeight="20"
+								IconColor="#a32727"
 							/>
 						</controls:PointingGridControl>
 					</Grid>
@@ -1580,12 +1572,10 @@
 									x:Name="ShowComments"
 									Tapped="ShowComments_Tapped"
 									ToolTipService.ToolTip="Открыть коментарии">
-						<Image
-							CacheMode="BitmapCache"
-							Source="/Assets/Icons/chat.svg"
-							Stretch="Uniform"
-							Width="20"
-							Height="20"
+						<controls:ChatIcon
+							IconWidth="20"
+							IconHeight="20"
+							IconColor="Black"
 						/>
 					</controls:PointingGridControl>
 				</StackPanel>

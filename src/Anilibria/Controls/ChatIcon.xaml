@@ -1,0 +1,28 @@
+﻿<UserControl
+	x:Class="Anilibria.Controls.ChatIcon"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	d:DesignHeight="300"
+	d:DesignWidth="400">
+
+	<Viewbox
+		Margin="0"
+		x:Name="IconViewbox"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
+		<PathIcon
+			VerticalAlignment="Top"
+			x:Name="IconViewboxPath"
+			Data="M42,15.5H5.93C2.66,15.5,0,18.16,0,21.429V42.57c0,3.27,2.66,5.93,5.93,5.93H12v10c0,0.413,0.254,0.784,0.64,0.933
+				C12.757,59.478,12.879,59.5,13,59.5c0.276,0,0.547-0.115,0.74-0.327L23.442,48.5H42c3.27,0,5.93-2.66,5.93-5.929V21.43
+				C47.93,18.16,45.27,15.5,42,15.5z
+				M54.072,0.57L19.93,0.5C16.66,0.5,14,3.16,14,6.43v6.122c0,0.266,0.105,0.52,0.293,0.708
+				c0.188,0.187,0.442,0.292,0.707,0.292c0,0,0.001,0,0.002,0L40.07,13.5c8.951,0,9.93,2.021,9.93,7.93v21.141
+				c0,0.091-0.01,0.181-0.014,0.271l1.274,1.401c0.193,0.212,0.463,0.327,0.74,0.327c0.121,0,0.243-0.022,0.361-0.067
+				C52.746,44.354,53,43.983,53,43.57v-10h1.07c3.27,0,5.93-2.66,5.93-5.929V6.5C60,3.23,57.34,0.57,54.072,0.57z"
+		/>
+	</Viewbox>
+</UserControl>
