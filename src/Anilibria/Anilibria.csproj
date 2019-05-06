@@ -249,6 +249,7 @@
     <Compile Include="Services\Exceptions\AuthorizeDeletedException.cs" />
     <Compile Include="Services\IAnalyticsService.cs" />
     <Compile Include="Services\IAnilibriaApiService.cs" />
+    <Compile Include="Services\IDownloadService.cs" />
     <Compile Include="Services\ILocalDatabasePath.cs" />
     <Compile Include="Services\Implementations\AnalyticsService.cs" />
     <Compile Include="Services\Implementations\AnilibriaApiService.cs" />
@@ -267,6 +268,7 @@
     <Compile Include="Services\PresentationClasses\BlockedInfo.cs" />
     <Compile Include="Services\PresentationClasses\DeviceFamilyType.cs" />
     <Compile Include="Services\PresentationClasses\DeviceInputType.cs" />
+    <Compile Include="Services\PresentationClasses\DownloadItem.cs" />
     <Compile Include="Services\PresentationClasses\Favorite.cs" />
     <Compile Include="Services\PresentationClasses\FavoriteModel.cs" />
     <Compile Include="Services\PresentationClasses\PagingInfo.cs" />
