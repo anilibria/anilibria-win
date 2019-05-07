@@ -455,17 +455,18 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Background="#ba2d2d"
+			MinHeight="44"
 			Width="48">
 			<Button
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Style="{StaticResource IconsButtonStyle}"
 					Command="{Binding ShowSidebarCommand}">
-				<Image
-						Width="{StaticResource IconSize}"
-						Height="{StaticResource IconSize}"
-						Source="/Assets/Icons/hambergermenu.svg"
-					/>
+				<controls:HumburgerIcon
+					IconWidth="{StaticResource IconSize}"
+					IconHeight="{StaticResource IconSize}"
+					IconColor="White"
+				/>
 			</Button>
 		</Border>
 		<Border
@@ -476,8 +477,10 @@
 			Width="48">
 		</Border>
 		<controls:BindableGridControl
-			Grid.Row="1"
+			Grid.Row="0"
+			Grid.RowSpan="2"
 			Grid.Column="1"
+			Margin="0 4 0 0"
 			Style="{StaticResource GridViewStyle}"
 			ItemsSource="{Binding Collection}"
 			MultipleSelectedItems="{Binding SelectedVideos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

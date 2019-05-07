@@ -1,0 +1,26 @@
+﻿<UserControl
+	x:Class="Anilibria.Controls.NotificationIcon"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	d:DesignHeight="300"
+	d:DesignWidth="400">
+
+	<Viewbox
+		Margin="0"
+		x:Name="IconViewbox"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
+		<PathIcon
+			VerticalAlignment="Top"
+			x:Name="IconViewboxPath"
+			Data="M467.812,431.851l-36.629-61.056c-16.917-28.181-25.856-60.459-25.856-93.312V224c0-67.52-45.056-124.629-106.667-143.04
+			V42.667C298.66,19.136,279.524,0,255.993,0s-42.667,19.136-42.667,42.667V80.96C151.716,99.371,106.66,156.48,106.66,224v53.483
+			c0,32.853-8.939,65.109-25.835,93.291l-36.629,61.056c-1.984,3.307-2.027,7.403-0.128,10.752c1.899,3.349,5.419,5.419,9.259,5.419
+			H458.66c3.84,0,7.381-2.069,9.28-5.397C469.839,439.275,469.775,435.136,467.812,431.851z
+			M188.815,469.333C200.847,494.464,226.319,512,255.993,512s55.147-17.536,67.179-42.667H188.815z"
+		/>
+	</Viewbox>
+</UserControl>

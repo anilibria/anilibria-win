@@ -59,37 +59,37 @@ namespace Anilibria.Pages.HomePage {
 				new SplitViewItem {
 					Name = "Каталог релизов",
 					Page = ReleasesPage,
-					Icon = "\xF168",
 					IconUri = new Uri("ms-appx:///Assets/Icons/hambergermenu.svg"),
-					IsVisible = StubMenuIsVisible
+					IsVisible = StubMenuIsVisible,
+					IsReleasePage = true
 				},
 				new SplitViewItem {
 					Name = "Видеоплеер",
 					Page = PlayerPage,
-					Icon = "\xE714",
 					IconUri = new Uri("ms-appx:///Assets/Icons/videoplayer.svg"),
-					IsVisible = StubMenuIsVisible
+					IsVisible = StubMenuIsVisible,
+					IsOnlinePlayer = true
 				},
 				new SplitViewItem {
 					Name = "Youtube",
 					Page = YoutubePage,
-					Icon = "\xE786",
 					IconUri = new Uri("ms-appx:///Assets/Icons/youtube.svg"),
-					IsVisible = StubMenuIsVisible
+					IsVisible = StubMenuIsVisible,
+					IsYoutubePage = true
 				},
 				new SplitViewItem {
 					Name = "Поддержать проект",
 					Page = DonatePage,
-					Icon = "\xE786",
 					IconUri = new Uri("ms-appx:///Assets/Icons/donate.svg"),
-					IsVisible = StubMenuIsVisible
+					IsVisible = StubMenuIsVisible,
+					IsDonatePage = true
 				},
 				new SplitViewItem {
 					Name = "Войти",
 					Page = AuthorizePage,
-					Icon = "\xE77B",
 					IconUri = new Uri("ms-appx:///Assets/Icons/user.svg"),
-					IsVisible = AuthorizeOptionIsVisible
+					IsVisible = AuthorizeOptionIsVisible,
+					IsSigninPage = true
 				}
 				/*,
 				new SplitViewItem {

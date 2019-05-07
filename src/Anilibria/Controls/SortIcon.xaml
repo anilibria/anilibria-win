@@ -1,0 +1,23 @@
+﻿<UserControl
+	x:Class="Anilibria.Controls.SortIcon"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	d:DesignHeight="300"
+	d:DesignWidth="400">
+
+	<Viewbox
+		Margin="0"
+		x:Name="IconViewbox"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
+		<PathIcon
+			VerticalAlignment="Top"
+			x:Name="IconViewboxPath"
+			Data="M 9 0 C 8.7 0 8.5 0.1 8.3 0.3 L 0.3 8.3 C 0.1 8.5 0 8.7 0 9 C 0 9.3 0.1 9.5 0.3 9.7 L 1.7 11.1 C 1.9 11.3 2.2 11.4 2.4 11.4 C 2.7 11.4 2.9 11.3 3.1 11.1 L 3.1 11.1 L 5.1 9.1 C 5.4 8.8 6 9 6 9.5 L 6 23 C 6 23.5 6.5 24 7 24 L 9 24 C 9.5 24 10 23.5 10 23 L 10 1 C 10 0.7 9.9 0.5 9.7 0.3 C 9.5 0.1 9.3 0 9 0 Z
+				M 23.7 14.3 L 22.3 12.9 C 22.1 12.7 21.8 12.6 21.6 12.6 C 21.3 12.6 21.1 12.7 20.9 12.9 L 18.9 14.9 C 18.6 15.2 18 15 18 14.5 L 18 1 C 18 0.5 17.5 0 17 0 L 15 0 C 14.5 0 14 0.5 14 1 L 14 23 C 14 23.3 14.1 23.5 14.3 23.7 C 14.5 23.9 14.8 24 15 24 C 15.3 24 15.5 23.9 15.7 23.7 L 23.7 15.7 C 23.9 15.5 24 15.3 24 15 C 24 14.7 23.9 14.5 23.7 14.3 Z"
+		/>
+	</Viewbox>
+</UserControl>

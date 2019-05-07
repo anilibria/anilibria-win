@@ -129,10 +129,55 @@
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
+    <Compile Include="Controls\ChatIcon.xaml.cs">
+      <DependentUpon>ChatIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CloseIcon.xaml.cs">
+      <DependentUpon>CloseIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DiceIcon.xaml.cs">
+      <DependentUpon>DiceIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DonateIcon.xaml.cs">
+      <DependentUpon>DonateIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FavoriteIcon.xaml.cs">
+      <DependentUpon>FavoriteIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FlyoutHelpers.cs" />
+    <Compile Include="Controls\HumburgerIcon.xaml.cs">
+      <DependentUpon>HumburgerIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LogoutIcon.xaml.cs">
+      <DependentUpon>LogoutIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NotificationIcon.xaml.cs">
+      <DependentUpon>NotificationIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerButtonControl.cs" />
     <Compile Include="Controls\PointingGridControl.cs" />
+    <Compile Include="Controls\RefreshIcon.xaml.cs">
+      <DependentUpon>RefreshIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchIcon.xaml.cs">
+      <DependentUpon>SearchIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsIcon.xaml.cs">
+      <DependentUpon>SettingsIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SortIcon.xaml.cs">
+      <DependentUpon>SortIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TimingTextBox.cs" />
+    <Compile Include="Controls\UserIcon.xaml.cs">
+      <DependentUpon>UserIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VideoPlayerIcon.xaml.cs">
+      <DependentUpon>VideoPlayerIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\YoutubeIcon.xaml.cs">
+      <DependentUpon>YoutubeIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\CacheImageBrushConverter.cs" />
     <Compile Include="Converters\CacheImageConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
@@ -204,6 +249,7 @@
     <Compile Include="Services\Exceptions\AuthorizeDeletedException.cs" />
     <Compile Include="Services\IAnalyticsService.cs" />
     <Compile Include="Services\IAnilibriaApiService.cs" />
+    <Compile Include="Services\IDownloadService.cs" />
     <Compile Include="Services\ILocalDatabasePath.cs" />
     <Compile Include="Services\Implementations\AnalyticsService.cs" />
     <Compile Include="Services\Implementations\AnilibriaApiService.cs" />
@@ -222,6 +268,7 @@
     <Compile Include="Services\PresentationClasses\BlockedInfo.cs" />
     <Compile Include="Services\PresentationClasses\DeviceFamilyType.cs" />
     <Compile Include="Services\PresentationClasses\DeviceInputType.cs" />
+    <Compile Include="Services\PresentationClasses\DownloadItem.cs" />
     <Compile Include="Services\PresentationClasses\Favorite.cs" />
     <Compile Include="Services\PresentationClasses\FavoriteModel.cs" />
     <Compile Include="Services\PresentationClasses\PagingInfo.cs" />
@@ -265,6 +312,7 @@
     <Content Include="Assets\Assets.txt" />
     <Content Include="Assets\donate.jpg" />
     <Content Include="Assets\Icons\AnilibriaLogo.svg" />
+    <Content Include="Assets\Icons\anilibrialogodark.svg" />
     <Content Include="Assets\Icons\authorization.svg" />
     <Content Include="Assets\Icons\cast.svg" />
     <Content Include="Assets\Icons\chat.svg" />
@@ -347,6 +395,66 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ChatIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CloseIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DiceIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DonateIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FavoriteIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HumburgerIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LogoutIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NotificationIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RefreshIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SearchIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SettingsIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SortIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VideoPlayerIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\YoutubeIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AboutPage\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
