@@ -14,14 +14,12 @@ using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI.ViewManagement;
 
-namespace Anilibria.Pages.OnlinePlayer
-{
+namespace Anilibria.Pages.OnlinePlayer {
 
 	/// <summary>
 	/// View model.
 	/// </summary>
-	public class OnlinePlayerViewModel : ViewModel, INavigation
-	{
+	public class OnlinePlayerViewModel : ViewModel, INavigation {
 
 		private const string PlayerQualitySettings = "PlayerQuality";
 
@@ -340,9 +338,12 @@ namespace Anilibria.Pages.OnlinePlayer
 		/// </summary>
 		public void MediaEnded () {
 			IsMediaOpened = false;
-			var currentIndex = SelectedRelease.OnlineVideos.ToList ().IndexOf ( SelectedOnlineVideo );
+			var order = SelectedOnlineVideo?.Order ?? -1;
 
-			if ( currentIndex > 0 && m_IsAutoTransition ) SelectedOnlineVideo = SelectedRelease.OnlineVideos.ElementAt ( currentIndex - 1 );
+			if ( order > -1 && m_IsAutoTransition ) {
+				var newSeria = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == order + 1 );
+				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+			}
 		}
 
 		public void MediaStateChanged ( MediaPlaybackState playbackState ) {
@@ -497,7 +498,7 @@ namespace Anilibria.Pages.OnlinePlayer
 					m_RestorePosition = lastVideo.LastPosition;
 				}
 
-				if ( release != null ) release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel>();
+				if ( release != null ) release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
 				SelectedRelease = release;
 				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
