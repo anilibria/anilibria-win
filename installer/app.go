@@ -5,6 +5,8 @@ import (
 )
 
 func main() {
-	exec.Command("runinstaller.bat").Start()
+	cmd := exec.Command("runinstaller.bat")
+	cmd.Start()
+	cmd.Wait()
 }
 
