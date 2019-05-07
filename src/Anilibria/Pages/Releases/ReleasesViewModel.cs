@@ -1472,7 +1472,12 @@ namespace Anilibria.Pages.Releases {
 		public OpenVideoModeModel SelectedOpenVideoMode
 		{
 			get => m_SelectedOpenVideoMode;
-			set => Set ( ref m_SelectedOpenVideoMode , value );
+			set
+			{
+				if ( !Set ( ref m_SelectedOpenVideoMode , value ) ) return;
+
+				ApplicationData.Current.RoamingSettings.Values[OpenVideoSettings] = (int) value.Mode;
+			}
 		}
 
 		/// <summary>
