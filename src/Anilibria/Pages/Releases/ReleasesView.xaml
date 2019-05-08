@@ -37,13 +37,14 @@
 						<StackPanel
 							BorderBrush="Green"
 							BorderThickness="0"
-							Background="{TemplateBinding Background}">
+							CornerRadius="8"
+							Background="#a32727">
 							<ContentPresenter
 								x:Name="ContentPresenter"
 								ContentTemplate="{TemplateBinding ContentTemplate}"
 								ContentTransitions="{TemplateBinding ContentTransitions}"
 								Content="{TemplateBinding Content}"
-								HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+								HorizontalContentAlignment="Center"
 								Margin="{TemplateBinding Padding}"
 								VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
 						</StackPanel>
@@ -1275,7 +1276,7 @@
 							<StackPanel
 								Background="Transparent">
 								<TextBlock
-									Foreground="Black"
+									Foreground="White"
 									Text="{Binding Key}"
 								/>
 							</StackPanel>
@@ -1626,15 +1627,27 @@
 								<ColumnDefinition />
 								<ColumnDefinition Width="Auto" />
 							</Grid.ColumnDefinitions>
-							<TextBlock
-								VerticalAlignment="Center"
+							<StackPanel
+								Orientation="Horizontal"
 								HorizontalAlignment="Right"
-								Margin="0 0 20 0"
-								Foreground="Black">
-								<Run>Доступно</Run>
-								<Run Text="{Binding OpenedRelease.CountVideoOnline}" />
-								<Run>видео</Run>
-							</TextBlock>
+								Margin="0 0 20 0">
+								<TextBlock
+									Margin="5 0 0 0"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Right"
+									Foreground="Black">
+									<Run
+										Text="{Binding OpenedRelease.CountVideoOnline}"
+									/>
+									<Run
+										Text="{Binding OpenedRelease.DisplaySeenVideoOnline}"
+										Foreground="#a32727"
+									/>
+									<Run>
+										онлайн видео
+									</Run>
+								</TextBlock>
+							</StackPanel>
 							<Button
 								HorizontalAlignment="Right"
 								Grid.Column="1"

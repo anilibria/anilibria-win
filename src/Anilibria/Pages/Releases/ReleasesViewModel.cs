@@ -161,6 +161,8 @@ namespace Anilibria.Pages.Releases {
 
 		private OpenVideoModeModel m_SelectedOpenVideoMode;
 
+		private IEntityCollection<ReleaseVideoStateEntity> m_VideoStateCollection;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -179,6 +181,8 @@ namespace Anilibria.Pages.Releases {
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 
 			m_AnalyticsService.TrackEvent ( "Releases" , "Opened" , "Simple start" );
+
+			m_VideoStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
 		}
 
 		private void RestoreSettings () {
@@ -402,6 +406,14 @@ namespace Anilibria.Pages.Releases {
 			RefreshFilterState ();
 		}
 
+		private int SeensVideos ( long releaseId ) {
+			var videoState = m_VideoStateCollection.FirstOrDefault ( a => a.ReleaseId == releaseId );
+
+			if ( videoState == null ) return 0;
+
+			return videoState.VideoStates?.Where ( a => a.IsSeen ).Count () ?? 0;
+		}
+
 		private void ShowRandomRelease () {
 			if ( m_AllReleases == null || m_AllReleases.Count () == 0 ) return;
 
@@ -410,7 +422,9 @@ namespace Anilibria.Pages.Releases {
 			var release = m_AllReleases.ElementAtOrDefault ( randomIndex );
 			if ( release == null ) return;
 
-			OpenedRelease = MapToReleaseModel ( release );
+			var openedRelease = MapToReleaseModel ( release );
+			FillSeenFields ( openedRelease );
+
 			IsShowReleaseCard = true;
 			SaveReleaseViewTimestamp ( OpenedRelease.Id );
 		}
@@ -707,6 +721,9 @@ namespace Anilibria.Pages.Releases {
 			RaiseCommands ();
 
 			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
+				var openedRelease = SelectedReleases.First ();
+				FillSeenFields ( openedRelease );
+
 				OpenedRelease = SelectedReleases.First ();
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
@@ -715,11 +732,19 @@ namespace Anilibria.Pages.Releases {
 			}
 		}
 
+		private void FillSeenFields ( ReleaseModel openedRelease ) {
+			openedRelease.CountSeenVideoOnline = SeensVideos ( openedRelease.Id );
+			openedRelease.DisplaySeenVideoOnline = openedRelease.CountSeenVideoOnline > 0 ? $"({openedRelease.CountSeenVideoOnline})" : "";
+		}
+
 		private void SelectedGroupedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
 			RaiseCommands ();
 
 			if ( !IsMultipleSelect && SelectedGroupedReleases.Count == 1 ) {
-				OpenedRelease = SelectedGroupedReleases.First ();
+				var openedRelease = SelectedGroupedReleases.First ();
+				FillSeenFields ( openedRelease );
+				
+				OpenedRelease = openedRelease;
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
 				RefreshSelectedReleases ();
@@ -1198,7 +1223,8 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByGenres
 		{
 			get => m_FilterByGenres;
-			set {
+			set
+			{
 				if ( !Set ( ref m_FilterByGenres , value ) ) return;
 
 				RefreshFilterState ();
@@ -1211,7 +1237,8 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByYears
 		{
 			get => m_FilterByYears;
-			set {
+			set
+			{
 				if ( !Set ( ref m_FilterByYears , value ) ) return;
 
 				RefreshFilterState ();
@@ -1224,7 +1251,8 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByVoicers
 		{
 			get => m_FilterByVoicers;
-			set {
+			set
+			{
 				if ( !Set ( ref m_FilterByVoicers , value ) ) return;
 
 				RefreshFilterState ();
@@ -1237,7 +1265,8 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByType
 		{
 			get => m_FilterByType;
-			set {
+			set
+			{
 				if ( !Set ( ref m_FilterByType , value ) ) return;
 
 				RefreshFilterState ();
@@ -1250,7 +1279,8 @@ namespace Anilibria.Pages.Releases {
 		public string FilterByStatus
 		{
 			get => m_FilterByStatus;
-			set {
+			set
+			{
 				if ( !Set ( ref m_FilterByStatus , value ) ) return;
 
 				RefreshFilterState ();

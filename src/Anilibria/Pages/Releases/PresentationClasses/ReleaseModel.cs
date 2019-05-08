@@ -185,6 +185,24 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		}
 
 		/// <summary>
+		/// Count seen video online.
+		/// </summary>
+		public int CountSeenVideoOnline
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Display seen video online.
+		/// </summary>
+		public string DisplaySeenVideoOnline
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Online videos.
 		/// </summary>
 		public IEnumerable<OnlineVideoModel> OnlineVideos
