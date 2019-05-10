@@ -1507,8 +1507,7 @@
 						Visibility="{Binding ShowAnnounce}"
 						Text="{Binding OpenedRelease.Announce}"
 					/>
-					<StackPanel
-						Orientation="Vertical"
+					<Grid
 						Margin="0 2 0 0">
 						<ScrollViewer
 							x:Name="CardDescription"
@@ -1522,7 +1521,7 @@
 								converters:TextBlockHighlight.HyperLinkHightlight="True">
 							</TextBlock>
 						</ScrollViewer>
-					</StackPanel>
+					</Grid>
 				</StackPanel>
 				<StackPanel
 					Grid.Row="0"
