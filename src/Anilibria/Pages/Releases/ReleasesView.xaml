@@ -709,6 +709,11 @@
 								Text="Удалить из избранного"
 								Command="{Binding RemoveFromFavoritesCommand}"
 							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Удалить просмотренные релизы из избранного"
+								Command="{Binding RemoveSeensFavoritesCommand}"
+							/>
 							<MenuFlyoutSeparator />
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"

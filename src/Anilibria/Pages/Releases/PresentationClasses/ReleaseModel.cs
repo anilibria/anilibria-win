@@ -12,6 +12,10 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		private bool m_AddToFavorite;
 
 		private OnlineVideoModel m_PrefferedOpenedVideo;
+		
+		private int m_CountSeenVideoOnline;
+		
+		private string m_DisplaySeenVideoOnline;
 
 		/// <summary>
 		/// Identifier.
@@ -189,8 +193,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		/// </summary>
 		public int CountSeenVideoOnline
 		{
-			get;
-			set;
+			get => m_CountSeenVideoOnline;
+			set => Set ( ref m_CountSeenVideoOnline , value );
 		}
 
 		/// <summary>
@@ -198,8 +202,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		/// </summary>
 		public string DisplaySeenVideoOnline
 		{
-			get;
-			set;
+			get => m_DisplaySeenVideoOnline;
+			set => Set ( ref m_DisplaySeenVideoOnline , value );
 		}
 
 		/// <summary>

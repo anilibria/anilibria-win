@@ -19,6 +19,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 
 namespace Anilibria.Pages.Releases {
 
@@ -351,6 +352,28 @@ namespace Anilibria.Pages.Releases {
 			AddYearToFilterCommand = CreateCommand ( AddYearToFilter );
 			AddGenreToFilterCommand = CreateCommand<string> ( AddGenreToFilter );
 			AddVoicesToFilterCommand = CreateCommand<string> ( AddVoicesToFilter );
+			RemoveSeensFavoritesCommand = CreateCommand ( RemoveSeensFavorites );
+		}
+
+		private async void RemoveSeensFavorites () {
+			if (!m_Favorites.Any()) {
+				await new ContentDialog {
+					Title = "Удаление просмотренных релизов из избранного" ,
+					Content = "У Вас нет релизов в избранном!" ,
+					CloseButtonText = "Понятно"
+				}.ShowAsync ();
+				return;
+			}
+
+			var result = await new ContentDialog {
+				Title = "Удаление просмотренных релизов из избранного" ,
+				Content = "Вы уверены что хотите удалить просмотренные релизы из избранного? \nБудут удалены все релизы в которых количество просмотренных серий равно общему количеству вне зависимости от статуса релиза,\n но учтите что релизы могут продолжаться и новые серии могут добавляться! Все равно удалить просмотренные релизы из избранного?" ,
+				PrimaryButtonText = "Удалить" ,
+				CloseButtonText = "Отмена"
+			}.ShowAsync ();
+			if ( result != ContentDialogResult.Primary ) return;
+
+			//TODO: remove all seen series
 		}
 
 		private void AddVoicesToFilter ( string voice ) {
@@ -1739,6 +1762,15 @@ namespace Anilibria.Pages.Releases {
 		/// Add voices to filter.
 		/// </summary>
 		public ICommand AddVoicesToFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove seen favorites command.
+		/// </summary>
+		public ICommand RemoveSeensFavoritesCommand
 		{
 			get;
 			set;
