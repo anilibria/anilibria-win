@@ -373,7 +373,48 @@ namespace Anilibria.Pages.Releases {
 			}.ShowAsync ();
 			if ( result != ContentDialogResult.Primary ) return;
 
-			//TODO: remove all seen series
+			var states = m_VideoStateCollection
+				.Find ( a => true )
+				.Where ( a => a.VideoStates != null )
+				.ToList ();
+			var statesDictionary = states.ToDictionary ( a => a.ReleaseId );
+
+			var needRemoveFavorites = new List<long> ();
+
+			foreach ( var favoriteId in m_Favorites ) {
+				if ( !statesDictionary.ContainsKey ( favoriteId ) ) continue;
+
+				var release = m_AllReleases.FirstOrDefault ( a => a.Id == favoriteId );
+				if ( release.Playlist == null || !release.Playlist.Any () ) continue;
+
+				var statesSeenCount = statesDictionary[favoriteId].VideoStates.Count ( a => a.IsSeen );
+				if ( release.Playlist.Count () == statesSeenCount ) needRemoveFavorites.Add ( favoriteId );
+			}
+
+			if ( !needRemoveFavorites.Any () ) {
+				ObserverEvents.FireEvent (
+					"showMessage" ,
+					new MessageModel {
+						Header = "Удаление просмотренного избранного" ,
+						Message = $"У Вас нет просмотренных релизов."
+					}
+				);
+				return;
+			}
+
+			var tasks = needRemoveFavorites.Select ( a => m_AnilibriaApiService.RemoveUserFavorites ( a ) );
+			await Task.WhenAll ( tasks );
+
+			await RefreshFavorites ();
+			RefreshCardFavorite ();
+
+			ObserverEvents.FireEvent (
+				"showMessage" ,
+				new MessageModel {
+					Header = "Удаление просмотренного избранного" ,
+					Message = $"Удаление успешно завершено, удалено {needRemoveFavorites.Count} релизов из избранного."
+				}
+			);
 		}
 
 		private void AddVoicesToFilter ( string voice ) {
