@@ -1,11 +1,14 @@
 ﻿using System;
+using Anilibria.MVVM;
 
 namespace Anilibria.Pages.Releases.PresentationClasses {
 
 	/// <summary>
 	/// Online video model.
 	/// </summary>
-	public class OnlineVideoModel {
+	public class OnlineVideoModel : ViewModel {
+		
+		private bool m_IsSeen;
 
 		/// <summary>
 		/// Order.
@@ -50,6 +53,15 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		{
 			get;
 			set;
+		}
+
+		/// <summary>
+		/// Is seen.
+		/// </summary>
+		public bool IsSeen
+		{
+			get => m_IsSeen;
+			set => Set ( ref m_IsSeen , value );
 		}
 
 	}

@@ -213,6 +213,28 @@ namespace Anilibria.Pages.OnlinePlayer {
 			PreviousTrackCommand = CreateCommand ( PreviousTrack );
 			EnableCompactModeCommand = CreateCommand ( EnableCompactMode );
 			LeaveCompactModeCommand = CreateCommand ( LeaveCompactMode );
+			ToggleSeenMarkCommand = CreateCommand<OnlineVideoModel> ( ToggleSeenMark );
+		}
+
+		private void ToggleSeenMark ( OnlineVideoModel onlineVideo ) {
+			FillReleaseVideoState ();
+
+			var videoState = m_ReleaseVideoStateEntity.VideoStates.FirstOrDefault ( a => a.Id == onlineVideo.Order );
+			if ( videoState == null ) {
+				m_ReleaseVideoStateEntity.VideoStates.Add (
+					new VideoStateEntity {
+						Id = onlineVideo.Order ,
+						IsSeen = true
+					}
+				);
+				onlineVideo.IsSeen = true;
+			}
+			else {
+				onlineVideo.IsSeen = !onlineVideo.IsSeen;
+				videoState.IsSeen = onlineVideo.IsSeen;
+			}
+
+			m_ReleaseStateCollection.Update ( m_ReleaseVideoStateEntity );
 		}
 
 		private async void LeaveCompactMode () {
@@ -424,18 +446,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( !isNotNeedUpdatePosition ) m_PlayerRestoreEntity.VideoPosition = Position;
 			m_RestoreCollection.Update ( m_PlayerRestoreEntity );
 
-			if ( m_ReleaseVideoStateEntity == null || m_ReleaseVideoStateEntity.ReleaseId != SelectedRelease.Id ) {
-				m_ReleaseVideoStateEntity = m_ReleaseStateCollection.FirstOrDefault ( a => a.ReleaseId == SelectedRelease.Id );
-				if ( m_ReleaseVideoStateEntity == null ) {
-					m_ReleaseVideoStateEntity = new ReleaseVideoStateEntity {
-						ReleaseId = SelectedRelease.Id ,
-						VideoStates = new List<VideoStateEntity> ()
-					};
-					m_ReleaseStateCollection.Add ( m_ReleaseVideoStateEntity );
-				}
-			}
-
-			if ( m_ReleaseVideoStateEntity.VideoStates == null ) m_ReleaseVideoStateEntity.VideoStates = new List<VideoStateEntity> ();
+			FillReleaseVideoState ();
 
 			var videoState = m_ReleaseVideoStateEntity.VideoStates.FirstOrDefault ( a => a.Id == SelectedOnlineVideo.Order );
 			if ( videoState == null ) {
@@ -449,10 +460,28 @@ namespace Anilibria.Pages.OnlinePlayer {
 			else {
 				videoState.LastPosition = Position == 0 && videoState.LastPosition > 0 ? videoState.LastPosition : Position;
 
-				if ( !videoState.IsSeen && PositionPercent >= 90 && PositionPercent <= 100 ) videoState.IsSeen = true;
+				if ( !videoState.IsSeen && PositionPercent >= 90 && PositionPercent <= 100 ) {
+					videoState.IsSeen = true;
+					SelectedOnlineVideo.IsSeen = true;
+				}
 			}
 
 			m_ReleaseStateCollection.Update ( m_ReleaseVideoStateEntity );
+		}
+
+		private void FillReleaseVideoState () {
+			if ( m_ReleaseVideoStateEntity == null || m_ReleaseVideoStateEntity.ReleaseId != SelectedRelease.Id ) {
+				m_ReleaseVideoStateEntity = m_ReleaseStateCollection.FirstOrDefault ( a => a.ReleaseId == SelectedRelease.Id );
+				if ( m_ReleaseVideoStateEntity == null ) {
+					m_ReleaseVideoStateEntity = new ReleaseVideoStateEntity {
+						ReleaseId = SelectedRelease.Id ,
+						VideoStates = new List<VideoStateEntity> ()
+					};
+					m_ReleaseStateCollection.Add ( m_ReleaseVideoStateEntity );
+				}
+			}
+
+			if ( m_ReleaseVideoStateEntity.VideoStates == null ) m_ReleaseVideoStateEntity.VideoStates = new List<VideoStateEntity> ();
 		}
 
 		/// <summary>
@@ -491,6 +520,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 				Releases = parameter as IEnumerable<ReleaseModel>;
 				var release = Releases.First ();
 				m_ReleaseVideoStateEntity = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id );
+				
+				m_Position = 0;
+				m_RestorePosition = 0;
+				RaisePropertyChanged ( () => Position );
+				
 				int onlineVideoIndex = release.PrefferedOpenedVideo == null ? -1 : release.PrefferedOpenedVideo.Order;
 				if ( onlineVideoIndex == -1 && m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
 					onlineVideoIndex = m_ReleaseVideoStateEntity.VideoStates.Max ( a => a.Id );
@@ -515,6 +549,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
 
 			if ( SelectedOnlineVideo != null ) ScrollToSelectedPlaylist ();
+
+			if ( SelectedRelease != null ) {
+				FillReleaseVideoState ();
+				var states = m_ReleaseVideoStateEntity.VideoStates?.ToList ();
+				foreach ( var onlinevideo in SelectedRelease.OnlineVideos ) {
+					onlinevideo.IsSeen = states?.FirstOrDefault ( a => a.Id == onlinevideo.Order )?.IsSeen ?? false;
+				}
+			}
 		}
 
 		/// <summary>
@@ -1041,6 +1083,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Leave compact mode command.
 		/// </summary>
 		public ICommand LeaveCompactModeCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Toggle seen mark command.
+		/// </summary>
+		public ICommand ToggleSeenMarkCommand
 		{
 			get;
 			set;

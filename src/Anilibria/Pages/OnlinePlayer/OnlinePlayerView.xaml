@@ -1545,12 +1545,59 @@
 					PointerEntered="PlaylistListView_PointerEntered"
 					PointerExited="PlaylistListView_PointerExited"
 					ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
-					Width="160"
+					MinWidth="170"
+					Width="170"
+					MaxWidth="190"
 					HorizontalAlignment="Left"
 					ItemsSource="{Binding SelectedRelease.OnlineVideos}"
 					SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-					DisplayMemberPath="Title"
 					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<Grid
+								HorizontalAlignment="Stretch"
+								Width="145">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition />
+									<ColumnDefinition
+										Width="Auto"
+									/>
+								</Grid.ColumnDefinitions>
+								<TextBlock
+									Grid.Column="0"
+									Foreground="Black"
+									VerticalAlignment="Center"
+									Text="{Binding Title}"
+								/>
+								<Button
+									Style="{StaticResource IconsButtonStyle}"
+									Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ToggleSeenMarkCommand}"
+									CommandParameter="{Binding}"
+									HorizontalAlignment="Right"
+									Grid.Column="1">
+									<Grid
+										Height="24">
+										<controls:EyeIcon
+											Visibility="{Binding IsSeen}"
+											IconWidth="20"
+											IconHeight="20"
+											IconColor="Black"
+											IconStroke="Black"
+											IconStrokeThickness="4"
+										/>
+										<controls:EyeIcon
+											Visibility="{Binding IsSeen, Converter={StaticResource InverseBoolConverter}}"
+											IconWidth="20"
+											IconHeight="20"
+											IconColor="Black"
+											IconStroke="Black"
+											IconStrokeThickness="0"
+										/>
+									</Grid>
+								</Button>
+							</Grid>
+						</DataTemplate>
+					</ListView.ItemTemplate>
 				</ListView>
 				<Grid Visibility="{Binding IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}">
 					<Button

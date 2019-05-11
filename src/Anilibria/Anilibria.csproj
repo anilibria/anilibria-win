@@ -132,6 +132,9 @@
     <Compile Include="Controls\ChatIcon.xaml.cs">
       <DependentUpon>ChatIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CloseEyeIcon.xaml.cs">
+      <DependentUpon>CloseEyeIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CloseIcon.xaml.cs">
       <DependentUpon>CloseIcon.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,9 @@
     </Compile>
     <Compile Include="Controls\DonateIcon.xaml.cs">
       <DependentUpon>DonateIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EyeIcon.xaml.cs">
+      <DependentUpon>EyeIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FavoriteIcon.xaml.cs">
       <DependentUpon>FavoriteIcon.xaml</DependentUpon>
@@ -399,6 +405,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CloseEyeIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\CloseIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -408,6 +418,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DonateIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EyeIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
