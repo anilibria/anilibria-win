@@ -356,7 +356,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void RemoveSeensFavorites () {
-			if (!m_Favorites.Any()) {
+			if ( !m_Favorites.Any () ) {
 				await new ContentDialog {
 					Title = "Удаление просмотренных релизов из избранного" ,
 					Content = "У Вас нет релизов в избранном!" ,
@@ -766,7 +766,7 @@ namespace Anilibria.Pages.Releases {
 			if ( !IsMultipleSelect && SelectedGroupedReleases.Count == 1 ) {
 				var openedRelease = SelectedGroupedReleases.First ();
 				FillSeenFields ( openedRelease );
-				
+
 				OpenedRelease = openedRelease;
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
@@ -869,7 +869,14 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private bool ContainsInArrayCaseSensitive ( string filter , IEnumerable<string> values ) {
-			return values?.Where ( a => a != null ).Select ( a => a.ToLowerInvariant () ).Any ( a => a.Contains ( filter.ToLowerInvariant () ) ) ?? false;
+			return values?
+				.Where ( a => a != null )
+				.Select (
+					a =>
+						a.ToLowerInvariant ()
+							.Replace ( "ё" , "е" ) )
+							.Any ( a => a.Contains ( filter.ToLowerInvariant ().Replace ( "ё" , "е" ) )
+				) ?? false;
 		}
 
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
