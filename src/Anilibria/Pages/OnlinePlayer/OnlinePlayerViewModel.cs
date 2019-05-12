@@ -134,8 +134,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_AscendingSortingInPlaylist;
 		
-		private double m_BufferingPercent;
-
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -954,16 +952,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ApplicationData.Current.RoamingSettings.Values[PlaylistButtonPositionSettings] = (int) value.Position;
 			}
 		}
-
-		/// <summary>
-		/// Buffering percent.
-		/// </summary>
-		public double BufferingPercent
-		{
-			get => m_BufferingPercent;
-			set => Set ( ref m_BufferingPercent , value );
-		}
-
+		
 		/// <summary>
 		/// Change page handler.
 		/// </summary>
