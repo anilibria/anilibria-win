@@ -21,6 +21,10 @@
 
 		HistoryWatch,
 
+		Seens,
+
+		NotSeens
+
 	};
 
 }

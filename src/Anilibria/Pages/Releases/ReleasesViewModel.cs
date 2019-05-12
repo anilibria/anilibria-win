@@ -164,6 +164,8 @@ namespace Anilibria.Pages.Releases {
 
 		private IEntityCollection<ReleaseVideoStateEntity> m_VideoStateCollection;
 
+		private IDictionary<long , int> m_CountWachedVideos = new Dictionary<long , int> ();
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -184,6 +186,16 @@ namespace Anilibria.Pages.Releases {
 			m_AnalyticsService.TrackEvent ( "Releases" , "Opened" , "Simple start" );
 
 			m_VideoStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
+			RefreshWatchedVideo ();
+		}
+
+		private void RefreshWatchedVideo () {
+			var videoStates = m_VideoStateCollection.Find ( a => true );
+
+			m_CountWachedVideos = new Dictionary<long , int> ();
+			foreach ( var videoState in videoStates ) {
+				m_CountWachedVideos.Add ( videoState.ReleaseId , videoState.VideoStates?.Count ( a => a.IsSeen ) ?? 0 );
+			}
 		}
 
 		private void RestoreSettings () {
@@ -238,6 +250,18 @@ namespace Anilibria.Pages.Releases {
 					Title = "История просмотров",
 					Type = SectionType.HistoryWatch,
 					SortingMode = SortingItemType.HistoryWatch,
+					SortingDirection = SortingDirectionType.Descending,
+				},
+				new SectionModel {
+					Title = "Просмотренные",
+					Type = SectionType.Seens,
+					SortingMode = SortingItemType.DateLastUpdate,
+					SortingDirection = SortingDirectionType.Descending,
+				},
+				new SectionModel {
+					Title = "Не просмотренные",
+					Type = SectionType.NotSeens,
+					SortingMode = SortingItemType.DateLastUpdate,
 					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
@@ -968,6 +992,10 @@ namespace Anilibria.Pages.Releases {
 					return releases.Where ( a => a.LastViewTimestamp > 0 );
 				case SectionType.HistoryWatch:
 					return releases.Where ( a => a.LastWatchTimestamp > 0 );
+				case SectionType.Seens:
+					return releases.Where ( a => m_CountWachedVideos.ContainsKey ( a.Id ) && m_CountWachedVideos[a.Id] == ( a.Playlist?.Count () ?? 0 ) );
+				case SectionType.NotSeens:
+					return releases.Where ( a => !m_CountWachedVideos.ContainsKey ( a.Id ) || m_CountWachedVideos[a.Id] < ( a.Playlist?.Count () ?? 0 ) );
 				default: throw new NotSupportedException ( "Section type not supported." );
 			}
 		}
@@ -1107,6 +1135,7 @@ namespace Anilibria.Pages.Releases {
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
 			m_AnalyticsService.TrackEvent ( "Releases" , "NavigatedTo" , "Simple" );
+			RefreshWatchedVideo ();
 		}
 
 		/// <summary>
