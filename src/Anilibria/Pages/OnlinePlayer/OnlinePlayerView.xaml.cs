@@ -73,6 +73,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			OnlinePlayer.MediaPlayer.BufferingEnded += MediaPlayer_BufferingEnded;
 			OnlinePlayer.MediaPlayer.CurrentStateChanged += MediaPlayer_CurrentStateChanged;
 			OnlinePlayer.MediaPlayer.VolumeChanged += MediaPlayer_VolumeChanged;
+			OnlinePlayer.MediaPlayer.PlaybackSession.BufferingProgressChanged += MediaPlayer_BufferingProgressChanged;
 			OnlinePlayer.TransportControls.IsFastForwardButtonVisible = true;
 			OnlinePlayer.TransportControls.IsFastForwardEnabled = true;
 			OnlinePlayer.TransportControls.IsFastRewindButtonVisible = true;
@@ -110,6 +111,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 			Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
 		}
 
+		private async void MediaPlayer_BufferingProgressChanged ( MediaPlaybackSession sender , object args ) {
+			await Dispatcher.RunAsync (
+				CoreDispatcherPriority.Normal ,
+				() => {
+					m_ViewModel.BufferingPercent = OnlinePlayer.MediaPlayer.PlaybackSession.BufferingProgress;
+				}
+			);
+		}
+
 		private void SetVisiblePlaybackButtons (bool visible) {
 			OnlinePlayer.TransportControls.IsFastForwardButtonVisible = visible;
 			OnlinePlayer.TransportControls.IsFastRewindButtonVisible = visible;
@@ -125,7 +135,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 					m_ViewModel.Volume = OnlinePlayer.MediaPlayer.Volume;
 				}
 			);
-
 		}
 
 		private async void MediaPlayer_CurrentStateChanged ( MediaPlayer sender , object args ) {

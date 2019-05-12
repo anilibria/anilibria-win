@@ -1081,7 +1081,7 @@
 												x:Name='BufferingProgressBar'
 												Style="{StaticResource AnilibriaProgressBarStyle}"
 												Height='4'
-												IsIndeterminate='True'
+												Value="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.BufferingPercent}"
 												IsHitTestVisible='False'
 												VerticalAlignment='Top'
 												Margin='0,2,0,0'
