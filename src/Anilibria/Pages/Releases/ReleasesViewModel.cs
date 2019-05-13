@@ -196,6 +196,13 @@ namespace Anilibria.Pages.Releases {
 			foreach ( var videoState in videoStates ) {
 				m_CountWachedVideos.Add ( videoState.ReleaseId , videoState.VideoStates?.Count ( a => a.IsSeen ) ?? 0 );
 			}
+			if ( m_Collection == null ) return;
+
+			foreach ( var release in m_Collection ) {
+				if ( !m_CountWachedVideos.ContainsKey ( release.Id ) ) continue;
+
+				release.IsSeen = m_CountWachedVideos[release.Id] == ( release.OnlineVideos?.Count () ?? -2 );
+			}
 		}
 
 		private void RestoreSettings () {
@@ -1073,6 +1080,7 @@ namespace Anilibria.Pages.Releases {
 				Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
 				Year = a.Year ,
 				CountVideoOnline = a.Playlist?.Count () ?? 0 ,
+				IsSeen = ( m_CountWachedVideos?.FirstOrDefault ( watchVideo => watchVideo.Key == a.Id ).Value ?? -1 ) == ( a.Playlist?.Count () ?? -2 ) ,
 				Torrents = a?.Torrents?.Select (
 					torrent =>
 						new TorrentModel {

@@ -17,6 +17,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		
 		private string m_DisplaySeenVideoOnline;
 
+		private bool m_IsSeen;
+
 		/// <summary>
 		/// Identifier.
 		/// </summary>
@@ -204,6 +206,15 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		{
 			get => m_DisplaySeenVideoOnline;
 			set => Set ( ref m_DisplaySeenVideoOnline , value );
+		}
+
+		/// <summary>
+		/// Is seen release.
+		/// </summary>
+		public bool IsSeen
+		{
+			get => m_IsSeen;
+			set => Set ( ref m_IsSeen , value );
 		}
 
 		/// <summary>

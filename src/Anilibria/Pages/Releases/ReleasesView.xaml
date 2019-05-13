@@ -179,6 +179,12 @@
 									/>
 								</TextBlock>
 							</StackPanel>
+							<TextBlock
+								Foreground="Black"
+								FontWeight="Bold"
+								Visibility="{Binding IsSeen}">
+								Все серии просмотрены
+							</TextBlock>
 						</StackPanel>
 						<Grid
 							Grid.Row="1"
