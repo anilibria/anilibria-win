@@ -266,6 +266,12 @@ namespace Anilibria.Pages.Releases {
 					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
+					Title = "Просматриваемые",
+					Type = SectionType.PartiallySeen,
+					SortingMode = SortingItemType.DateLastUpdate,
+					SortingDirection = SortingDirectionType.Descending,
+				},
+				new SectionModel {
 					Title = "Не просмотренные",
 					Type = SectionType.NotSeens,
 					SortingMode = SortingItemType.DateLastUpdate,
@@ -1001,8 +1007,10 @@ namespace Anilibria.Pages.Releases {
 					return releases.Where ( a => a.LastWatchTimestamp > 0 );
 				case SectionType.Seens:
 					return releases.Where ( a => m_CountWachedVideos.ContainsKey ( a.Id ) && m_CountWachedVideos[a.Id] == ( a.Playlist?.Count () ?? 0 ) );
+				case SectionType.PartiallySeen:
+					return releases.Where ( a => m_CountWachedVideos.ContainsKey ( a.Id ) && m_CountWachedVideos[a.Id] > 0 && m_CountWachedVideos[a.Id] < ( a.Playlist?.Count () ?? 0 ) );
 				case SectionType.NotSeens:
-					return releases.Where ( a => !m_CountWachedVideos.ContainsKey ( a.Id ) || m_CountWachedVideos[a.Id] < ( a.Playlist?.Count () ?? 0 ) );
+					return releases.Where ( a => !m_CountWachedVideos.ContainsKey ( a.Id ) || m_CountWachedVideos[a.Id] == 0 );
 				default: throw new NotSupportedException ( "Section type not supported." );
 			}
 		}

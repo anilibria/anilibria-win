@@ -23,7 +23,9 @@
 
 		Seens,
 
-		NotSeens
+		NotSeens,
+
+		PartiallySeen,
 
 	};
 
