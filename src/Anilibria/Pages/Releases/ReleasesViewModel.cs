@@ -525,6 +525,7 @@ namespace Anilibria.Pages.Releases {
 
 			var openedRelease = MapToReleaseModel ( release );
 			FillSeenFields ( openedRelease );
+			OpenedRelease = openedRelease;
 
 			IsShowReleaseCard = true;
 			SaveReleaseViewTimestamp ( OpenedRelease.Id );
