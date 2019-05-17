@@ -125,8 +125,16 @@ Page {
                 height: parent.height
                 Rectangle {
                     Layout.fillWidth: true
-                    height:32
-                    color: "red"
+                    height: 32
+                    color: "#b3b3b3"
+                    Switch {
+                        id: selectMode
+                        height: 32
+                        text: "Одиночный"
+                        onCheckedChanged: {
+                            selectMode.text = selectMode.checked ? "Множественный" : "Одиночный";
+                        }
+                    }
                 }
 
                 GridView {
