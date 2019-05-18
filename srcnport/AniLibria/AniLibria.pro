@@ -1,4 +1,4 @@
-QT += quick multimedia
+QT += quick multimedia network
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -13,6 +13,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Classes/Models/onlinevideomodel.cpp \
+    Classes/Models/releasemodel.cpp \
+    Classes/Services/anilibriaapiservice.cpp \
+    Classes/Services/synchronizationservice.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -27,3 +31,9 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    Classes/Models/onlinevideomodel.h \
+    Classes/Models/releasemodel.h \
+    Classes/Services/anilibriaapiservice.h \
+    Classes/Services/synchronizationservice.h

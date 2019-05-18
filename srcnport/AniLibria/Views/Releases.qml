@@ -163,7 +163,7 @@ Page {
                                     fillMode: Image.PreserveAspectFit
                                     Layout.fillHeight: true
                                     Layout.preferredWidth: 210
-                                    Layout.topMargin:4
+                                    Layout.topMargin: 4
                                     Layout.bottomMargin: 4
                                     Layout.leftMargin: 1
                                 }
