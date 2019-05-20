@@ -14,7 +14,7 @@ private:
 public:    
     explicit SynchronizationService(QObject *parent = nullptr);
 
-    void synchronizeReleases();
+    Q_INVOKABLE void synchronizeReleases();
 signals:
 
 public slots:
