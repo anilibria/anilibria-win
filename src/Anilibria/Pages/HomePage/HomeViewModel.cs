@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Anilibria.GlobalState;
 using Anilibria.MVVM;
 using Anilibria.Pages.HomePage.PresentationClasses;
 using Anilibria.Pages.PresentationClasses;
@@ -28,6 +29,12 @@ namespace Anilibria.Pages.HomePage {
 		public const string YoutubePage = "Youtube";
 		
 		public const string DonatePage = "Donate";
+
+		private const string OpenReleasesPageLaunchParameter = "openreleasepage";
+
+		private const string OpenVideoPlayerPageLaunchParameter = "openvideoplayer";
+
+		private const string ReleaseWatchLaunchParameter = "releasewatchhistory:";
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 		
@@ -103,6 +110,25 @@ namespace Anilibria.Pages.HomePage {
 			CreateCommands ();
 
 			ObserverEvents.SubscribeOnEvent ( "showMessage" , ShowMessage );
+
+			LaunchParameters.AddSubscriber ( ChangeLaunchParameter );
+		}
+
+		private void ChangeLaunchParameter ( string parameter ) => HandleLaunchParameter ( parameter );
+
+		private void HandleLaunchParameter ( string parameter ) {
+			switch ( parameter ) {
+				case OpenReleasesPageLaunchParameter:
+					ChangePage ( ReleasesPage , null );
+					return;
+				case OpenVideoPlayerPageLaunchParameter:
+					ChangePage ( PlayerPage , null );
+					return;
+			}
+
+			if ( parameter.StartsWith( ReleaseWatchLaunchParameter ) ) {
+				//TODO: open concrete release on videoplayer page
+			}
 		}
 
 		private void ShowMessage ( object message ) {

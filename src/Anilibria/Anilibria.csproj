@@ -190,6 +190,7 @@
     <Compile Include="Converters\MediaSourceConverter.cs" />
     <Compile Include="Converters\TextBlockHighlight.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
+    <Compile Include="GlobalState\LaunchParameters.cs" />
     <Compile Include="Pages\AboutPage\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
@@ -260,6 +261,7 @@
     <Compile Include="Services\Implementations\AnalyticsService.cs" />
     <Compile Include="Services\Implementations\AnilibriaApiService.cs" />
     <Compile Include="Services\Implementations\ApiService.cs" />
+    <Compile Include="Services\Implementations\JumpListService.cs" />
     <Compile Include="Services\Implementations\LiteDbEntityCollection.cs" />
     <Compile Include="Services\Implementations\LiteDbLocalPath.cs" />
     <Compile Include="Services\Implementations\ObserverEvents.cs" />

@@ -1,4 +1,5 @@
 ﻿using Anilibria.Collections;
+using Anilibria.GlobalState;
 using Anilibria.MVVM;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
@@ -27,6 +28,8 @@ namespace Anilibria.Pages.Releases {
 	/// Release view model.
 	/// </summary>
 	public class ReleasesViewModel : ViewModel, INavigation {
+
+		private const string ReleaseCardLaunchParameter = "releasecardhistory:";
 
 		private const string IsFavoriteNotificationsSettings = "IsFavoriteNotifications";
 
@@ -187,7 +190,24 @@ namespace Anilibria.Pages.Releases {
 
 			m_VideoStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
 			RefreshWatchedVideo ();
+			LaunchParameters.AddSubscriber ( ChangeLaunchParameter );
 		}
+
+		private async void HandleLaunchParameter ( string parameter ) {
+			if ( parameter.StartsWith ( ReleaseCardLaunchParameter ) ) {
+				//TODO: Add filter for name of release instead card will be disapper after synchronize
+				var releaseCardId = Convert.ToInt32 ( parameter.Replace ( ReleaseCardLaunchParameter , "" ) );
+
+				var openedRelease = m_AllReleases.FirstOrDefault ( a => a.Id == releaseCardId );
+				if ( openedRelease == null ) return;
+
+				OpenedRelease = MapToReleaseModel ( openedRelease );
+				IsShowReleaseCard = true;
+				await SaveReleaseViewTimestamp ( OpenedRelease.Id );
+			}
+		}
+
+		private void ChangeLaunchParameter ( string arguments ) => HandleLaunchParameter ( arguments );
 
 		private void RefreshWatchedVideo () {
 			var videoStates = m_VideoStateCollection.Find ( a => true );
@@ -515,7 +535,7 @@ namespace Anilibria.Pages.Releases {
 			return videoState.VideoStates?.Where ( a => a.IsSeen ).Count () ?? 0;
 		}
 
-		private void ShowRandomRelease () {
+		private async void ShowRandomRelease () {
 			if ( m_AllReleases == null || m_AllReleases.Count () == 0 ) return;
 
 			var randomIndex = m_Random.Next ( m_AllReleases.Count () - 1 );
@@ -528,16 +548,16 @@ namespace Anilibria.Pages.Releases {
 			OpenedRelease = openedRelease;
 
 			IsShowReleaseCard = true;
-			SaveReleaseViewTimestamp ( OpenedRelease.Id );
+			await SaveReleaseViewTimestamp ( OpenedRelease.Id );
 		}
 
-		private void OpenCrossRelease ( string releaseUrl ) {
+		private async void OpenCrossRelease ( string releaseUrl ) {
 			var releaseCode = releaseUrl.Replace ( "https://www.anilibria.tv/release/" , "" ).Replace ( "http://www.anilibria.tv/release/" , "" ).Replace ( ".html" , "" );
 			if ( releaseCode.IndexOf ( "?" ) > -1 ) releaseCode = releaseCode.Substring ( 0 , releaseCode.IndexOf ( "?" ) );
 			var release = m_AllReleases.FirstOrDefault ( a => a.Code == releaseCode );
 			if ( release != null ) {
 				OpenedRelease = MapToReleaseModel ( release );
-				SaveReleaseViewTimestamp ( OpenedRelease.Id );
+				await SaveReleaseViewTimestamp ( OpenedRelease.Id );
 			}
 		}
 
@@ -819,7 +839,7 @@ namespace Anilibria.Pages.Releases {
 			SelectedGroupedReleases.CollectionChanged += SelectedGroupedReleasesChanged;
 		}
 
-		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
+		private async void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
 			RaiseCommands ();
 
 			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
@@ -830,7 +850,7 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
 				RefreshSelectedReleases ();
-				SaveReleaseViewTimestamp ( OpenedRelease.Id );
+				await SaveReleaseViewTimestamp ( OpenedRelease.Id );
 			}
 		}
 
@@ -839,7 +859,7 @@ namespace Anilibria.Pages.Releases {
 			openedRelease.DisplaySeenVideoOnline = openedRelease.CountSeenVideoOnline > 0 ? $"({openedRelease.CountSeenVideoOnline})" : "";
 		}
 
-		private void SelectedGroupedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
+		private async void SelectedGroupedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
 			RaiseCommands ();
 
 			if ( !IsMultipleSelect && SelectedGroupedReleases.Count == 1 ) {
@@ -850,17 +870,30 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = true;
 				ClearReleaseNotification ( OpenedRelease.Id );
 				RefreshSelectedReleases ();
-				SaveReleaseViewTimestamp ( OpenedRelease.Id );
+				await SaveReleaseViewTimestamp ( OpenedRelease.Id );
 			}
 		}
 
-		private void SaveReleaseViewTimestamp ( long releaseId ) {
+		private async Task SaveReleaseViewTimestamp ( long releaseId ) {
 			var collection = m_DataContext.GetCollection<ReleaseEntity> ();
 			var release = collection.FirstOrDefault ( a => a.Id == releaseId );
 			if ( release == null ) return;
 
 			release.LastViewTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
 			collection.Update ( release );
+
+			var lastThreeViewReleases = collection
+				.Find ( a => a.LastViewTimestamp > 0 )
+				.OrderByDescending ( a => a.LastViewTimestamp )
+				.Take ( 3 )
+				.ToList();
+			if ( !lastThreeViewReleases.Any () ) return;
+
+			var jumpService = new JumpListService ();
+			var dictionary = new Dictionary<long , string> ();
+			foreach ( var lastRelease in lastThreeViewReleases ) dictionary.Add ( lastRelease.Id , lastRelease.Title );
+			await jumpService.ChangeHistoryItems ( dictionary );
+
 		}
 
 		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode () {
@@ -1144,6 +1177,7 @@ namespace Anilibria.Pages.Releases {
 		public void Initialize () {
 			RefreshReleases ();
 			RefreshNotification ();
+			if ( !string.IsNullOrEmpty ( LaunchParameters.Arguments ) ) HandleLaunchParameter ( LaunchParameters.Arguments );
 		}
 
 		/// <summary>

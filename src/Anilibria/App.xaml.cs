@@ -1,4 +1,5 @@
-﻿using Anilibria.Pages.DiagnosticsPage;
+﻿using Anilibria.GlobalState;
+using Anilibria.Pages.DiagnosticsPage;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;
@@ -63,11 +64,13 @@ namespace Anilibria {
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="e">Details about the launch request and process.</param>
-		protected override void OnLaunched ( LaunchActivatedEventArgs e ) {
+		protected override async void OnLaunched ( LaunchActivatedEventArgs e ) {
 			//if app started on xbox then increase screen size on full screen.
 			TransitionToFullScreen ();
 
-			PopulateFirstStartReleases ();
+			if ( e.PreviousExecutionState != ApplicationExecutionState.Suspended && e.PreviousExecutionState != ApplicationExecutionState.Running ) PopulateFirstStartReleases ();
+
+			LaunchParameters.SetArguments ( e.Arguments );
 
 			var rootFrame = Window.Current.Content as Frame;
 
@@ -75,6 +78,7 @@ namespace Anilibria {
 				rootFrame = new Frame ();
 
 				Window.Current.Content = rootFrame;
+				await new JumpListService ().RefreshPagesGroup ();
 			}
 
 			if ( e.PrelaunchActivated == false ) {

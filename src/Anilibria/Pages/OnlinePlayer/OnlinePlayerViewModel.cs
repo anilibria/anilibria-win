@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.OnlinePlayer.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
+using Anilibria.Services.Implementations;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.Media.Playback;
@@ -191,13 +193,25 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
-		private void SaveReleaseWatchTimestamp ( long releaseId ) {
+		private async Task SaveReleaseWatchTimestamp ( long releaseId ) {
 			var collection = m_DataContext.GetCollection<ReleaseEntity> ();
 			var release = collection.FirstOrDefault ( a => a.Id == releaseId );
 			if ( release == null ) return;
 
 			release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
 			collection.Update ( release );
+
+			var lastThreeWatchReleases = collection
+				.Find ( a => a.LastWatchTimestamp > 0 )
+				.OrderByDescending ( a => a.LastWatchTimestamp )
+				.Take ( 3 )
+				.ToList ();
+			if ( !lastThreeWatchReleases.Any () ) return;
+
+			var jumpService = new JumpListService ();
+			var dictionary = new Dictionary<long , string> ();
+			foreach ( var watchRelease in lastThreeWatchReleases ) dictionary.Add ( watchRelease.Id , watchRelease.Title );
+			await jumpService.ChangeWatchHistoryItems ( dictionary );
 		}
 
 		/// <summary>
@@ -488,7 +502,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Start navigate to page.
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
-		public void NavigateTo ( object parameter ) {
+		public async void NavigateTo ( object parameter ) {
 			try {
 				if ( m_DisplayRequest == null ) m_DisplayRequest = new DisplayRequest ();
 				m_DisplayRequest.RequestActive ();
@@ -511,7 +525,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 
 							ChangePlayback ( PlaybackState.Play , false );
-							if ( SelectedRelease != null ) SaveReleaseWatchTimestamp ( SelectedRelease.Id );
+							if ( SelectedRelease != null ) await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
 						}
 					}
 				}
@@ -540,7 +554,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 				if ( release != null ) {
 					release.PrefferedOpenedVideo = null;
-					SaveReleaseWatchTimestamp ( release.Id );
+					await SaveReleaseWatchTimestamp ( release.Id );
 				}
 			}
 
