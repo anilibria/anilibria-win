@@ -39,7 +39,15 @@ namespace Anilibria.Services.Implementations {
 			videoPlayerItem.GroupName = PagesGroupName;
 			jumpList.Items.Add ( videoPlayerItem );
 			
+			OrderItems ( jumpList );
+
 			await jumpList.SaveAsync ();
+		}
+
+		private static void OrderItems ( JumpList jumpList ) {
+			var orderedItems = jumpList.Items.OrderByDescending ( a => a.GroupName ).ToList();
+			jumpList.Items.Clear ();
+			foreach ( var item in orderedItems ) jumpList.Items.Add ( item );
 		}
 
 		/// <summary>
@@ -62,6 +70,8 @@ namespace Anilibria.Services.Implementations {
 				item.GroupName = HistoryGroupName;
 				jumpList.Items.Add ( item );
 			}
+
+			OrderItems ( jumpList );
 
 			await jumpList.SaveAsync ();
 		}
@@ -86,6 +96,8 @@ namespace Anilibria.Services.Implementations {
 				item.GroupName = WatchHistoryGroupName;
 				jumpList.Items.Add ( item );
 			}
+
+			OrderItems ( jumpList );
 
 			await jumpList.SaveAsync ();
 		}
