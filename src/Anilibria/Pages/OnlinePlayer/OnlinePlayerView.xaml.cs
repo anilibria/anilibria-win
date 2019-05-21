@@ -59,9 +59,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () , StorageService.Current () , ApiService.Current () ) {
 				ChangeVolumeHandler = ChangeVolumeHandler ,
 				ChangePlayback = ChangePlaybackHandler ,
-				ChangePosition = ChangePosition,
-				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist,
-				SetVisiblePlaybackButtons = SetVisiblePlaybackButtons,
+				ChangePosition = ChangePosition ,
+				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist ,
+				SetVisiblePlaybackButtons = SetVisiblePlaybackButtons ,
 				ChangeOpenPlaylistButton = ChangeOpenPlaylistButton
 			};
 			DataContext = m_ViewModel;
@@ -110,7 +110,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
 		}
 
-		private void SetVisiblePlaybackButtons (bool visible) {
+		private void SetVisiblePlaybackButtons ( bool visible ) {
 			OnlinePlayer.TransportControls.IsFastForwardButtonVisible = visible;
 			OnlinePlayer.TransportControls.IsFastRewindButtonVisible = visible;
 			OnlinePlayer.TransportControls.IsSkipBackwardButtonVisible = visible;
@@ -217,17 +217,20 @@ namespace Anilibria.Pages.OnlinePlayer {
 						break;
 				}
 			}
-			if (args.VirtualKey == VirtualKey.PageUp) m_ViewModel.NextTrackCommand.Execute(null);
-			if (args.VirtualKey == VirtualKey.PageDown) m_ViewModel.PreviousTrackCommand.Execute(null);
+			if ( args.VirtualKey == VirtualKey.PageUp ) m_ViewModel.NextTrackCommand.Execute ( null );
+			if ( args.VirtualKey == VirtualKey.PageDown ) m_ViewModel.PreviousTrackCommand.Execute ( null );
 			if ( m_ViewModel.IsCompactOverlayEnabled ) return;
 
 			if ( args.VirtualKey == VirtualKey.Escape ) {
 				var view = ApplicationView.GetForCurrentView ();
 				if ( view.IsFullScreenMode ) view.ExitFullScreenMode ();
 			}
-			if ( args.VirtualKey == VirtualKey.F11) m_ViewModel.ToggleFullScreenCommand.Execute(null);
-			if (args.VirtualKey == VirtualKey.Home) m_ViewModel.ShowPlaylistCommand.Execute(null);
-			if (args.VirtualKey == VirtualKey.End) m_ViewModel.ShowPlaylistButton = true;
+			if ( args.VirtualKey == VirtualKey.F11 || args.VirtualKey == VirtualKey.F ) m_ViewModel.ToggleFullScreenCommand.Execute ( null );
+			if ( args.VirtualKey == VirtualKey.Up ) m_ViewModel.ChangeVolumeCommand.Execute ( .05 );
+			if ( args.VirtualKey == VirtualKey.Down ) m_ViewModel.ChangeVolumeCommand.Execute ( -.05 );
+			if ( args.VirtualKey == VirtualKey.M ) OnlinePlayer.MediaPlayer.IsMuted = !OnlinePlayer.MediaPlayer.IsMuted;
+			if ( args.VirtualKey == VirtualKey.Home ) m_ViewModel.ShowPlaylistCommand.Execute ( null );
+			if ( args.VirtualKey == VirtualKey.End ) m_ViewModel.ShowPlaylistButton = true;
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {
@@ -308,7 +311,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private void MouseHidingTracker () {
 			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
-			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && windowHeight - m_MouseY > 110 && !m_TransportControlsCaptured) {
+			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && windowHeight - m_MouseY > 110 && !m_TransportControlsCaptured ) {
 				m_LastActivityTime++;
 				if ( !( m_PreviousX == m_MouseX && m_PreviousY == m_MouseY ) ) {
 					RestoreCursor ();
@@ -365,7 +368,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					OnlinePlayer.MediaPlayer.PlaybackSession.Position = TimeSpan.FromSeconds ( 0 );
 					break;
 				case PlaybackState.Pause:
-					if (OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing) OnlinePlayer.MediaPlayer.Pause ();
+					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Pause ();
 					break;
 				case PlaybackState.Play:
 					if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState != MediaPlaybackState.Playing ) OnlinePlayer.MediaPlayer.Play ();
@@ -444,7 +447,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			m_TapCount++;
 
-			if (m_ViewModel.IsCompactOverlayEnabled) return;
+			if ( m_ViewModel.IsCompactOverlayEnabled ) return;
 
 			m_ViewModel.ToggleFullScreenCommand.Execute ( null );
 		}
@@ -474,13 +477,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 			);
 		}
 
-		private void PlaylistListView_PointerEntered(object sender, PointerRoutedEventArgs e)
-		{
+		private void PlaylistListView_PointerEntered ( object sender , PointerRoutedEventArgs e ) {
 			m_TransportControlsCaptured = true;
 		}
 
-		private void PlaylistListView_PointerExited(object sender, PointerRoutedEventArgs e)
-		{
+		private void PlaylistListView_PointerExited ( object sender , PointerRoutedEventArgs e ) {
 			m_TransportControlsCaptured = false;
 		}
 
