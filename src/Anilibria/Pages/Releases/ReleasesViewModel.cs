@@ -29,8 +29,6 @@ namespace Anilibria.Pages.Releases {
 	/// </summary>
 	public class ReleasesViewModel : ViewModel, INavigation {
 
-		private const string ReleaseCardLaunchParameter = "releasecardhistory:";
-
 		private const string IsFavoriteNotificationsSettings = "IsFavoriteNotifications";
 
 		private const string TorrentModeSettings = "TorrentMode";
@@ -190,24 +188,7 @@ namespace Anilibria.Pages.Releases {
 
 			m_VideoStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
 			RefreshWatchedVideo ();
-			LaunchParameters.AddSubscriber ( ChangeLaunchParameter );
 		}
-
-		private async void HandleLaunchParameter ( string parameter ) {
-			if ( parameter.StartsWith ( ReleaseCardLaunchParameter ) ) {
-				//TODO: Add filter for name of release instead card will be disapper after synchronize
-				var releaseCardId = Convert.ToInt32 ( parameter.Replace ( ReleaseCardLaunchParameter , "" ) );
-
-				var openedRelease = m_AllReleases.FirstOrDefault ( a => a.Id == releaseCardId );
-				if ( openedRelease == null ) return;
-
-				OpenedRelease = MapToReleaseModel ( openedRelease );
-				IsShowReleaseCard = true;
-				await SaveReleaseViewTimestamp ( OpenedRelease.Id );
-			}
-		}
-
-		private void ChangeLaunchParameter ( string arguments ) => HandleLaunchParameter ( arguments );
 
 		private void RefreshWatchedVideo () {
 			var videoStates = m_VideoStateCollection.Find ( a => true );
@@ -886,7 +867,7 @@ namespace Anilibria.Pages.Releases {
 				.Find ( a => a.LastViewTimestamp > 0 )
 				.OrderByDescending ( a => a.LastViewTimestamp )
 				.Take ( 3 )
-				.ToList();
+				.ToList ();
 			if ( !lastThreeViewReleases.Any () ) return;
 
 			var jumpService = new JumpListService ();
@@ -1177,16 +1158,27 @@ namespace Anilibria.Pages.Releases {
 		public void Initialize () {
 			RefreshReleases ();
 			RefreshNotification ();
-			if ( !string.IsNullOrEmpty ( LaunchParameters.Arguments ) ) HandleLaunchParameter ( LaunchParameters.Arguments );
 		}
 
 		/// <summary>
 		/// Start navigate to page.
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
-		public void NavigateTo ( object parameter ) {
+		public async void NavigateTo ( object parameter ) {
 			m_AnalyticsService.TrackEvent ( "Releases" , "NavigatedTo" , "Simple" );
 			RefreshWatchedVideo ();
+
+			var cardLink = parameter as ReleaseCardLinkModel;
+			if ( cardLink == null ) return;
+			if ( m_AllReleases == null ) return;
+
+			var openedRelease = m_AllReleases.FirstOrDefault ( a => a.Id == cardLink.ReleaseId );
+			if ( openedRelease == null ) return;
+
+			OpenedRelease = MapToReleaseModel ( openedRelease );
+			IsShowReleaseCard = true;
+			FilterByName = OpenedRelease.Title;
+			await SaveReleaseViewTimestamp ( OpenedRelease.Id );
 		}
 
 		/// <summary>

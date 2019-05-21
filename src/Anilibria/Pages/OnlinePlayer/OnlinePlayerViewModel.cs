@@ -531,7 +531,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 				}
 			}
 			else {
-				Releases = parameter as IEnumerable<ReleaseModel>;
+				var releaseLink = parameter as ReleaseLinkModel;
+				if ( releaseLink != null) {
+					var releaseLinkEntity = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == releaseLink.ReleaseId );
+					if ( releaseLinkEntity != null) Releases = new List<ReleaseModel> { MapToReleaseModel ( releaseLinkEntity ) };
+				} else {
+					Releases = parameter as IEnumerable<ReleaseModel>;
+				}
 				var release = Releases.First ();
 				m_ReleaseVideoStateEntity = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id );
 				

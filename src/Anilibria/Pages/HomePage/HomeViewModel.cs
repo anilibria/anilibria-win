@@ -7,7 +7,9 @@ using System.Windows.Input;
 using Anilibria.GlobalState;
 using Anilibria.MVVM;
 using Anilibria.Pages.HomePage.PresentationClasses;
+using Anilibria.Pages.OnlinePlayer.PresentationClasses;
 using Anilibria.Pages.PresentationClasses;
+using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
@@ -27,7 +29,7 @@ namespace Anilibria.Pages.HomePage {
 		public const string AuthorizePage = "Authorize";
 
 		public const string YoutubePage = "Youtube";
-		
+
 		public const string DonatePage = "Donate";
 
 		private const string OpenReleasesPageLaunchParameter = "openreleasepage";
@@ -36,8 +38,10 @@ namespace Anilibria.Pages.HomePage {
 
 		private const string ReleaseWatchLaunchParameter = "releasewatchhistory:";
 
+		private const string ReleaseCardLaunchParameter = "releasecardhistory:";
+
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
-		
+
 		private IEnumerable<SplitViewItem> m_MenuItems;
 
 		private ObservableCollection<SplitViewItem> m_Items;
@@ -126,8 +130,21 @@ namespace Anilibria.Pages.HomePage {
 					return;
 			}
 
-			if ( parameter.StartsWith( ReleaseWatchLaunchParameter ) ) {
-				//TODO: open concrete release on videoplayer page
+			if ( parameter.StartsWith ( ReleaseWatchLaunchParameter ) ) {
+				ChangePage (
+					PlayerPage ,
+					new ReleaseLinkModel {
+						ReleaseId = Convert.ToInt64 ( parameter.Replace ( ReleaseWatchLaunchParameter , "" ) )
+					}
+				);
+			}
+			if ( parameter.StartsWith ( ReleaseCardLaunchParameter ) ) {
+				ChangePage (
+					ReleasesPage ,
+					new ReleaseCardLinkModel {
+						ReleaseId = Convert.ToInt64 ( parameter.Replace ( ReleaseCardLaunchParameter , "" ) )
+					}
+				);
 			}
 		}
 
@@ -160,7 +177,7 @@ namespace Anilibria.Pages.HomePage {
 			catch {
 				ShowMessage (
 					new MessageModel {
-						Header = "Ошибка",
+						Header = "Ошибка" ,
 						Message = "Не удалось выйти из аккаунта."
 					}
 				);
@@ -171,6 +188,10 @@ namespace Anilibria.Pages.HomePage {
 			SelectedItem = Items.First ();
 
 			await ChangeUserSession ();
+
+			await Task.Delay ( 1000 );
+
+			HandleLaunchParameter ( LaunchParameters.Arguments );
 		}
 
 		private bool AuthorizeOptionIsVisible () {
@@ -179,7 +200,7 @@ namespace Anilibria.Pages.HomePage {
 
 		private bool StubMenuIsVisible () => true;
 
-		public void ChangeSelectedItem ( SplitViewItem splitViewItem) {
+		public void ChangeSelectedItem ( SplitViewItem splitViewItem ) {
 			m_SelectedItem = splitViewItem;
 			RaisePropertyChanged ( () => SelectedItem );
 		}
