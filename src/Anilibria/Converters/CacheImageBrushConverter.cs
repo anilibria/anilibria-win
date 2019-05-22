@@ -59,12 +59,17 @@ namespace Anilibria.Converters {
 				}
 			}
 			else {
-				var stream = dataContext.DownloadFile ( group , releaseId );
+				try {
+					var stream = dataContext.DownloadFile ( group , releaseId );
 
-				var bitmapImage = new BitmapImage ();
-				await bitmapImage.SetSourceAsync ( stream.AsRandomAccessStream () );
+					var bitmapImage = new BitmapImage ();
+					await bitmapImage.SetSourceAsync ( stream.AsRandomAccessStream () );
 
-				image.ImageSource = bitmapImage;
+					image.ImageSource = bitmapImage;
+				}
+				catch {
+					image.ImageSource = null;
+				}
 			}
 		}
 
