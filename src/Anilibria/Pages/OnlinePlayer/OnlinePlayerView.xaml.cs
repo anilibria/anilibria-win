@@ -223,7 +223,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( args.VirtualKey == VirtualKey.Escape ) {
 				var view = ApplicationView.GetForCurrentView ();
-				if ( view.IsFullScreenMode ) view.ExitFullScreenMode ();
+				if ( view.IsFullScreenMode ) {
+					view.ExitFullScreenMode ();
+				} else {
+					m_ViewModel.ChangePage ( "Releases" , null );
+				}
 			}
 			if ( args.VirtualKey == VirtualKey.F11 || args.VirtualKey == VirtualKey.F ) m_ViewModel.ToggleFullScreenCommand.Execute ( null );
 			if ( args.VirtualKey == VirtualKey.Up ) m_ViewModel.ChangeVolumeCommand.Execute ( .05 );
@@ -231,6 +235,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( args.VirtualKey == VirtualKey.M ) OnlinePlayer.MediaPlayer.IsMuted = !OnlinePlayer.MediaPlayer.IsMuted;
 			if ( args.VirtualKey == VirtualKey.Home ) m_ViewModel.ShowPlaylistCommand.Execute ( null );
 			if ( args.VirtualKey == VirtualKey.End ) m_ViewModel.ShowPlaylistButton = true;
+			if ( args.VirtualKey == VirtualKey.Left ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= TimeSpan.FromSeconds ( 5 );
+			if ( args.VirtualKey == VirtualKey.Right ) OnlinePlayer.MediaPlayer.PlaybackSession.Position += TimeSpan.FromSeconds ( 5 );
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {

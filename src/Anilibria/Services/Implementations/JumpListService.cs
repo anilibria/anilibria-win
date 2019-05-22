@@ -38,14 +38,19 @@ namespace Anilibria.Services.Implementations {
 			var videoPlayerItem = JumpListItem.CreateWithArguments ( $"openvideoplayer" , "Видеоплеер" );
 			videoPlayerItem.GroupName = PagesGroupName;
 			jumpList.Items.Add ( videoPlayerItem );
-			
+
 			OrderItems ( jumpList );
 
-			await jumpList.SaveAsync ();
+			try {
+				await jumpList.SaveAsync ();
+			}
+			catch {
+				// Sometimes it was cause application failure
+			}
 		}
 
 		private static void OrderItems ( JumpList jumpList ) {
-			var orderedItems = jumpList.Items.OrderByDescending ( a => a.GroupName ).ToList();
+			var orderedItems = jumpList.Items.OrderByDescending ( a => a.GroupName ).ToList ();
 			jumpList.Items.Clear ();
 			foreach ( var item in orderedItems ) jumpList.Items.Add ( item );
 		}
@@ -73,7 +78,12 @@ namespace Anilibria.Services.Implementations {
 
 			OrderItems ( jumpList );
 
-			await jumpList.SaveAsync ();
+			try {
+				await jumpList.SaveAsync ();
+			}
+			catch {
+				// Sometimes it was cause application failure
+			}
 		}
 
 		/// <summary>
@@ -99,7 +109,12 @@ namespace Anilibria.Services.Implementations {
 
 			OrderItems ( jumpList );
 
-			await jumpList.SaveAsync ();
+			try {
+				await jumpList.SaveAsync ();
+			}
+			catch {
+				// Sometimes it was cause application failure
+			}
 		}
 
 	}
