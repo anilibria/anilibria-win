@@ -3,6 +3,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.0
 import QtGraphicalEffects 1.12
+import Anilibria.Services 1.0
 import "Views"
 
 ApplicationWindow {
@@ -18,7 +19,6 @@ ApplicationWindow {
             drawer.close();
             return;
         }
-        console.log(currentPageId);
 
         const pages = {
             "videoplayer": videoplayer,
@@ -27,7 +27,6 @@ ApplicationWindow {
             "donate": donate,
             "youtube": youtube
         };
-        console.log(pages["release"], pageId);
 
         const currentPage = pages[currentPageId];
         //currentPage.navigateFrom();
@@ -39,6 +38,13 @@ ApplicationWindow {
         currentPageId = pageId;
 
         drawer.close();
+    }
+
+    SynchronizationService {
+        id: synchronizationService
+        Component.onCompleted: {
+            synchronizationService.synchronizeReleases();
+        }
     }
 
     //TODO: Switch beetween themes
