@@ -361,6 +361,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RefreshAfterSynchronize ( object parameter ) {
+			//TODO: read all differences for toast notifications!!!!
 			IsShowReleaseCard = false;
 			RefreshReleases ();
 			RefreshSelectedReleases ();
@@ -676,7 +677,19 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		public async void OpenTorrent ( string torrent ) {
-			var file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
+			StorageFile file = null;
+			try {
+				file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
+			}
+			catch {
+				ObserverEvents.FireEvent (
+					"showMessage" ,
+					new MessageModel {
+						Header = "Сохранение торрента" ,
+						Message = "Не удалось скачать торрент файл"
+					}
+				);
+			}
 			var mode = SelectedTorrentDownloadMode?.Mode ?? TorrentDownloadMode.OpenInTorrentClient;
 
 			switch ( mode ) {

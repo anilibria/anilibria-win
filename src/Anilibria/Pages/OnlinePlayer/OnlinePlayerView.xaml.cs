@@ -153,7 +153,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( Gamepad.Gamepads.Count == 0 ) return;
 
-			var firstGamepad = Gamepad.Gamepads.First ();
+			var firstGamepad = Gamepad.Gamepads?.FirstOrDefault ();
+			if ( firstGamepad == null ) return;
+
 			var gamepadState = firstGamepad.GetCurrentReading ();
 
 			var previousStateButtons = m_PreviousStateButtons;
@@ -219,13 +221,22 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			if ( args.VirtualKey == VirtualKey.PageUp ) m_ViewModel.NextTrackCommand.Execute ( null );
 			if ( args.VirtualKey == VirtualKey.PageDown ) m_ViewModel.PreviousTrackCommand.Execute ( null );
+			if ( args.VirtualKey == VirtualKey.P ) {
+				if ( m_ViewModel.IsCompactOverlayEnabled ) {
+					m_ViewModel.LeaveCompactModeCommand.Execute ( null );
+				}
+				else {
+					m_ViewModel.EnableCompactModeCommand.Execute ( null );
+				}
+			}
 			if ( m_ViewModel.IsCompactOverlayEnabled ) return;
 
 			if ( args.VirtualKey == VirtualKey.Escape ) {
 				var view = ApplicationView.GetForCurrentView ();
 				if ( view.IsFullScreenMode ) {
 					view.ExitFullScreenMode ();
-				} else {
+				}
+				else {
 					m_ViewModel.ChangePage ( "Releases" , null );
 				}
 			}
@@ -235,7 +246,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( args.VirtualKey == VirtualKey.M ) OnlinePlayer.MediaPlayer.IsMuted = !OnlinePlayer.MediaPlayer.IsMuted;
 			if ( args.VirtualKey == VirtualKey.Home ) m_ViewModel.ShowPlaylistCommand.Execute ( null );
 			if ( args.VirtualKey == VirtualKey.End ) m_ViewModel.ShowPlaylistButton = true;
-			if ( args.VirtualKey == VirtualKey.Left ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= TimeSpan.FromSeconds ( 5 );
+			if ( args.VirtualKey == VirtualKey.Left ) {
+				var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
+				var duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
+				if ( duration - position > TimeSpan.FromSeconds ( 5 ) ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= TimeSpan.FromSeconds ( 5 );
+			}
 			if ( args.VirtualKey == VirtualKey.Right ) OnlinePlayer.MediaPlayer.PlaybackSession.Position += TimeSpan.FromSeconds ( 5 );
 		}
 
