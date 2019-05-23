@@ -1690,47 +1690,84 @@
 							</Button>
 						</Grid>
 					</StackPanel>
-					<StackPanel
+					<Grid
 						Grid.Column="0">
-						<ScrollViewer MaxHeight="50">
-							<ItemsControl
-								Margin="18 0 0 0"
-								ItemsSource="{Binding OpenedRelease.Torrents}">
-								<ItemsControl.ItemsPanel>
-									<ItemsPanelTemplate>
-										<StackPanel Orientation="Vertical" />
-									</ItemsPanelTemplate>
-								</ItemsControl.ItemsPanel>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<StackPanel
+							Margin="32 0 0 0"
+							Orientation="Horizontal"
+							VerticalAlignment="Center">
+							<TextBlock
+								Foreground="Black">
+								<Run>
+									Доступно
+								</Run>
+								<Run
+									Text="{Binding OpenedRelease.TorrentsCount}"
+								/>
+								<Run>
+									торрент файлов
+								</Run>
+							</TextBlock>
+						</StackPanel>
+						<Button
+							Grid.Column="1"
+							Style="{StaticResource ActionButtonStyle}">
+							<Button.Flyout>
+								<Flyout>
+									<Flyout.FlyoutPresenterStyle>
+										<Style TargetType="FlyoutPresenter">
+											<Setter Property="Background" Value="#e6e6e6" />
+											<Setter Property="BorderThickness" Value="1" />
+											<Setter Property="BorderBrush" Value="Black" />
+										</Style>
+									</Flyout.FlyoutPresenterStyle>
+									<ScrollViewer Height="120" MaxHeight="280" Width="380">
+										<ItemsControl
+											Margin="18 0 0 0"
+											ItemsSource="{Binding OpenedRelease.Torrents}">
+											<ItemsControl.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Orientation="Vertical" />
+												</ItemsPanelTemplate>
+											</ItemsControl.ItemsPanel>
 
-								<ItemsControl.ItemTemplate>
-									<DataTemplate>
-										<Grid>
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="Auto" />
-												<ColumnDefinition />
-												<ColumnDefinition  Width="Auto" />
-											</Grid.ColumnDefinitions>
-											<TextBlock
-												Foreground="Black"
-												VerticalAlignment="Center">
-												<Run Text="{Binding Series}"></Run>
-												<Run Text="{Binding Quality}"></Run>
-												<Run Text="{Binding Size}"></Run>
-											</TextBlock>
-											<Button
-												Grid.Column="2" Margin="0 1 18 1"
-												Command="{Binding DataContext.OpenTorrentCommand, ElementName=ReleasesContainer}"
-												CommandParameter="{Binding Url}"
-												Style="{StaticResource ActionButtonStyle}"
-												HorizontalAlignment="Right">
-												Скачать
-											</Button>
-										</Grid>
-									</DataTemplate>
-								</ItemsControl.ItemTemplate>
-							</ItemsControl>
-						</ScrollViewer>
-					</StackPanel>
+											<ItemsControl.ItemTemplate>
+												<DataTemplate>
+													<Grid>
+														<Grid.ColumnDefinitions>
+															<ColumnDefinition Width="Auto" />
+															<ColumnDefinition />
+															<ColumnDefinition  Width="Auto" />
+														</Grid.ColumnDefinitions>
+														<TextBlock
+															Foreground="Black"
+															VerticalAlignment="Center">
+															<Run Text="{Binding Series}"></Run>
+															<Run Text="{Binding Quality}"></Run>
+															<Run Text="{Binding Size}"></Run>
+														</TextBlock>
+														<Button
+															Grid.Column="2" Margin="0 1 18 1"
+															Click="TorrentDownload_Click"
+															CommandParameter="{Binding Url}"
+															Style="{StaticResource ActionButtonStyle}"
+															HorizontalAlignment="Right">
+															Скачать
+														</Button>
+													</Grid>
+												</DataTemplate>
+											</ItemsControl.ItemTemplate>
+										</ItemsControl>
+									</ScrollViewer>
+								</Flyout>
+							</Button.Flyout>
+							Скачать
+						</Button>
+					</Grid>
 				</Grid>
 				<Grid
 					Grid.Row="1"

@@ -198,6 +198,13 @@ namespace Anilibria.Pages.Releases {
 			e.Handled = true;
 		}
 
+		private void TorrentDownload_Click ( object sender , RoutedEventArgs e ) {
+			var button = sender as Button;
+			if ( button == null ) return;
+
+			var url = button.CommandParameter.ToString ();
+			m_ViewModel.OpenTorrentCommand.Execute ( url );
+		}
 	}
 
 }

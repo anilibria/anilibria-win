@@ -235,6 +235,15 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 			set => Set ( ref m_PrefferedOpenedVideo , value );
 		}
 
+		/// <summary>
+		/// Torrents count.
+		/// </summary>
+		public int TorrentsCount
+		{
+			get;
+			set;
+		}
+
 	}
 
 }
