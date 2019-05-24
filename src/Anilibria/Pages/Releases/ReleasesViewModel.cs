@@ -362,11 +362,11 @@ namespace Anilibria.Pages.Releases {
 
 		private void RefreshAfterSynchronize ( object parameter ) {
 			ChangesEntity oldChanges = null;
-			if ( m_Changes != null) {
+			if ( m_Changes != null ) {
 				oldChanges = new ChangesEntity {
-					NewOnlineSeries = m_Changes.NewOnlineSeries,
-					NewReleases = m_Changes.NewReleases,
-					NewTorrents = m_Changes.NewTorrents,
+					NewOnlineSeries = m_Changes.NewOnlineSeries ,
+					NewReleases = m_Changes.NewReleases ,
+					NewTorrents = m_Changes.NewTorrents ,
 					NewTorrentSeries = m_Changes.NewTorrentSeries
 				};
 			}
@@ -380,8 +380,8 @@ namespace Anilibria.Pages.Releases {
 		private void SendToastByChanges ( ChangesEntity oldChanges ) {
 			foreach ( var newOnlineSeria in oldChanges.NewOnlineSeries ) {
 				if ( !m_Changes.NewOnlineSeries.ContainsKey ( newOnlineSeria.Key ) ) continue;
-				
-				if (newOnlineSeria.Value < m_Changes.NewOnlineSeries[newOnlineSeria.Key]) {
+
+				if ( newOnlineSeria.Value < m_Changes.NewOnlineSeries[newOnlineSeria.Key] ) {
 					//TODO: send toast notification
 				}
 			}
@@ -913,7 +913,9 @@ namespace Anilibria.Pages.Releases {
 			var context = m_DataContext.GetCollection<ReleaseEntity> ();
 
 			return context
-				.Find ( a => !a.Blocked ) // All blocking releases not showed on releases page!!!
+				.Find ( a => true )
+				.ToList ()
+				.Where ( a => !a.Blocked ) // All blocking releases not showed on releases page!!!
 				.ToList ();
 		}
 
@@ -1146,7 +1148,7 @@ namespace Anilibria.Pages.Releases {
 							Url = torrent.Url
 						}
 					)?.ToList () ?? Enumerable.Empty<TorrentModel> () ,
-				TorrentsCount = a?.Torrents?.Count() ?? 0,
+				TorrentsCount = a?.Torrents?.Count () ?? 0 ,
 				OnlineVideos = a.Playlist?
 					.Select (
 					videoOnline =>
