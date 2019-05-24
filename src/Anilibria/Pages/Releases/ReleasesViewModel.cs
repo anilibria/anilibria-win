@@ -8,6 +8,7 @@ using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +21,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.System;
+using Windows.UI.Notifications;
 using Windows.UI.Xaml.Controls;
 
 namespace Anilibria.Pages.Releases {
@@ -377,14 +379,59 @@ namespace Anilibria.Pages.Releases {
 			SendToastByChanges ( oldChanges );
 		}
 
+
+		private void NotificationToast ( bool isNewReleases , bool isNewSeries , bool isNewTorrents ) {
+			ToastNotificationManager.CreateToastNotifier ().Show (
+				new ToastNotification (
+					GenerateToastContent ( isNewReleases , isNewSeries , isNewTorrents ).GetXml ()
+				)
+			);
+		}
+
+		public static ToastContent GenerateToastContent ( bool isNewReleases , bool isNewSeries , bool isNewTorrents ) {
+			var entities = new List<string> ();
+			if ( isNewReleases ) entities.Add ( "Новые релизы" );
+			if ( isNewSeries ) entities.Add ( "Новые серии" );
+			if ( isNewTorrents ) entities.Add ( "Новые торренты" );
+
+			return new ToastContent () {
+				Launch = "openfromnotification" ,
+				Scenario = ToastScenario.Reminder ,
+
+				Visual = new ToastVisual () {
+					BindingGeneric = new ToastBindingGeneric () {
+						Children =
+						{
+							new AdaptiveText()
+							{
+								Text = $"Есть обновления"
+							},
+							new AdaptiveText()
+							{
+								Text = string.Join(", ", entities)
+							}
+						}
+					}
+				}
+			};
+		}
+
 		private void SendToastByChanges ( ChangesEntity oldChanges ) {
+			var newSeries = false;
 			foreach ( var newOnlineSeria in oldChanges.NewOnlineSeries ) {
 				if ( !m_Changes.NewOnlineSeries.ContainsKey ( newOnlineSeria.Key ) ) continue;
 
 				if ( newOnlineSeria.Value < m_Changes.NewOnlineSeries[newOnlineSeria.Key] ) {
-					//TODO: send toast notification
+					newSeries = true;
+					break;
 				}
 			}
+			var newReleases = oldChanges.NewReleases.Count () < m_Changes.NewReleases.Count ();
+			var newTorrents = oldChanges.NewTorrents.Count () < m_Changes.NewTorrents.Count ();
+			if (!newTorrents) {
+				//TODO: check torrents series
+			}
+			if ( newReleases || newSeries || newTorrents ) NotificationToast ( newReleases , newSeries , newTorrents );
 		}
 
 		private void CreateCommands () {
