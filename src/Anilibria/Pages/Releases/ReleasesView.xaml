@@ -829,6 +829,32 @@
 										PlaceholderText="Вводите через запятую"
 										TimeoutCommand="{Binding FilterCommand}"
 									/>
+									<TextBlock
+										Margin="4 0 4 4"
+										Foreground="Black">
+										Признак избранности
+									</TextBlock>
+									<ComboBox
+										Margin="4 0 0 0"
+										Style="{StaticResource AnilibriaComboBox}"
+										Width="200"
+										SelectedItem="{Binding SelectedFavoriteMarkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										ItemsSource="{Binding FavoriteMarkTypes}"
+										DisplayMemberPath="Title">
+									</ComboBox>
+									<TextBlock
+										Margin="4 0 4 4"
+										Foreground="Black">
+										Признак просмотра
+									</TextBlock>
+									<ComboBox
+										Margin="4 0 0 0"
+										Style="{StaticResource AnilibriaComboBox}"
+										Width="200"
+										SelectedItem="{Binding SelectedSeenMarkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										ItemsSource="{Binding SeenMarkTypes}"
+										DisplayMemberPath="Title">
+									</ComboBox>
 								</StackPanel>
 							</Flyout>
 						</Button.Flyout>

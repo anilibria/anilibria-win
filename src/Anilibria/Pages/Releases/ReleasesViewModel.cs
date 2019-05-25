@@ -111,6 +111,10 @@ namespace Anilibria.Pages.Releases {
 			}
 		);
 
+		private ObservableCollection<SeenMarkItem> m_SeenMarkTypes = ReleasesItems.GetSeenMarkItems ();
+
+		private ObservableCollection<FavoriteMarkItem> m_FavoriteMarkTypes = ReleasesItems.GetFavoriteMarkItems ();
+
 		private IEnumerable<long> m_Favorites = Enumerable.Empty<long> ();
 
 		private bool m_OpenedReleaseInFavorite;
@@ -168,6 +172,10 @@ namespace Anilibria.Pages.Releases {
 		private IEntityCollection<ReleaseVideoStateEntity> m_VideoStateCollection;
 
 		private IDictionary<long , int> m_CountWachedVideos = new Dictionary<long , int> ();
+
+		private SeenMarkItem m_SelectedSeenMarkType;
+
+		private FavoriteMarkItem m_SelectedFavoriteMarkType;
 
 		/// <summary>
 		/// Constructor injection.
@@ -360,6 +368,8 @@ namespace Anilibria.Pages.Releases {
 
 			m_SelectedSortingItem = m_SortingItems.First ();
 			m_SelectedSortingDirection = m_SortingDirections.Last ();
+			m_SelectedFavoriteMarkType = m_FavoriteMarkTypes.First ();
+			m_SelectedSeenMarkType = m_SeenMarkTypes.First ();
 		}
 
 		private void RefreshAfterSynchronize ( object parameter ) {
@@ -444,7 +454,6 @@ namespace Anilibria.Pages.Releases {
 						break;
 					}
 				}
-				//TODO: check torrents series
 			}
 			if ( newReleases || newSeries || newTorrents ) NotificationToast ( newReleases , newSeries , newTorrents );
 		}
@@ -1088,6 +1097,28 @@ namespace Anilibria.Pages.Releases {
 			if ( !string.IsNullOrEmpty ( FilterByVoicers ) ) {
 				var voicers = FilterByVoicers.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
 				releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
+			}
+			switch ( SelectedFavoriteMarkType.Type ) {
+				case FavoriteMarkType.Favorited:
+					releases = releases.Where ( a => m_Favorites.Contains ( a.Id ) );
+					break;
+				case FavoriteMarkType.NotFavorited:
+					releases = releases.Where ( a => !m_Favorites.Contains ( a.Id ) );
+					break;
+				case FavoriteMarkType.NotUsed: break;
+			}
+
+			switch ( SelectedSeenMarkType.Type ) {
+				case SeenMarkType.Seen:
+					releases = releases.Where ( a => m_CountWachedVideos.ContainsKey ( a.Id ) && m_CountWachedVideos[a.Id] == ( a.Playlist?.Count () ?? 0 ) );
+					break;
+				case SeenMarkType.SeenNow:
+					releases = releases.Where ( a => m_CountWachedVideos.ContainsKey ( a.Id ) && m_CountWachedVideos[a.Id] > 0 && m_CountWachedVideos[a.Id] < ( a.Playlist?.Count () ?? 0 ) );
+					break;
+				case SeenMarkType.NotSeen:
+					releases = releases.Where ( a => !m_CountWachedVideos.ContainsKey ( a.Id ) || m_CountWachedVideos[a.Id] == 0 );
+					break;
+				case SeenMarkType.NotUsed: break;
 			}
 
 			return releases;
@@ -1747,6 +1778,52 @@ namespace Anilibria.Pages.Releases {
 				if ( !Set ( ref m_SelectedOpenVideoMode , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[OpenVideoSettings] = (int) value.Mode;
+			}
+		}
+
+		/// <summary>
+		/// Seen mark types.
+		/// </summary>
+		public ObservableCollection<SeenMarkItem> SeenMarkTypes
+		{
+			get => m_SeenMarkTypes;
+			set => Set ( ref m_SeenMarkTypes , value );
+		}
+
+		/// <summary>
+		/// Selected seen mark type.
+		/// </summary>
+		public SeenMarkItem SelectedSeenMarkType
+		{
+			get => m_SelectedSeenMarkType;
+			set
+			{
+				if ( !Set ( ref m_SelectedSeenMarkType , value ) ) return;
+
+				Filter ();
+			}
+		}
+
+		/// <summary>
+		/// Favorite mark types.
+		/// </summary>
+		public ObservableCollection<FavoriteMarkItem> FavoriteMarkTypes
+		{
+			get => m_FavoriteMarkTypes;
+			set => Set ( ref m_FavoriteMarkTypes , value );
+		}
+
+		/// <summary>
+		/// Selected favorite mark type.
+		/// </summary>
+		public FavoriteMarkItem SelectedFavoriteMarkType
+		{
+			get => m_SelectedFavoriteMarkType;
+			set
+			{
+				if ( !Set ( ref m_SelectedFavoriteMarkType , value ) ) return;
+
+				Filter ();
 			}
 		}
 

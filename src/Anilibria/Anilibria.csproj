@@ -231,6 +231,8 @@
     <Compile Include="Pages\OnlinePlayer\PresentationClasses\ReleaseLinkModel.cs" />
     <Compile Include="Pages\OnlinePlayer\VideoTimeFormatter.cs" />
     <Compile Include="Pages\PresentationClasses\MessageModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\FavoriteMarkItem.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\FavoriteMarkType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OpenVideoMode.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OpenVideoModeModel.cs" />
@@ -238,6 +240,8 @@
     <Compile Include="Pages\Releases\PresentationClasses\ReleaseModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SectionModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SectionType.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SeenMarkItem.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\SeenMarkType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingDirectionType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemType.cs" />
@@ -245,6 +249,7 @@
     <Compile Include="Pages\Releases\PresentationClasses\TorrentDownloadMode.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentDownloadModeModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentModel.cs" />
+    <Compile Include="Pages\Releases\ReleasesItems.cs" />
     <Compile Include="Pages\Releases\ReleasesView.xaml.cs">
       <DependentUpon>ReleasesView.xaml</DependentUpon>
     </Compile>
