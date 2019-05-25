@@ -37,20 +37,39 @@ Page {
             Layout.fillWidth: true
 
             Rectangle {
+                id: cardContainer
                 radius: 8
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width / 2
-                height: 240
-
+                width: 320
+                height: 360
                 ColumnLayout {
-                    id: authForm
-                    anchors.fill: parent
-                    anchors.margins: 8
+                    width: cardContainer.width - 10
+                    height: cardContainer.height - 20
+                    anchors.horizontalCenter: cardContainer.horizontalCenter
+                    anchors.verticalCenter: cardContainer.verticalCenter
                     Image {
                         source: "../Assets/Icons/donate.jpg"
-                        width: 200
-                        height: 200
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 100
+                        Layout.preferredHeight: 200
+                        Layout.maximumHeight: 200
+                        fillMode: Image.PreserveAspectFit
+                    }
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        textFormat: Text.RichText
+                        text:
+                            "<table border='1' cellspacing='1' cellpadding='0'>"+
+                            "<tr><td>QIWI</td><td>79660956323</td></tr>" +
+                            "<tr><td>Яндекс деньги</td><td>41001990134497</td></tr>" +
+                            "<tr><td>Webmoney</td><td>R211016581718, Z720752385996</td></tr>" +
+                            "<tr><td>Bitcoin</td><td><a href='https://www.blockchain.com/btc/address/3CarFNZickTNb1nx2Bgk6VammB8CYCBSJd'>3CarFNZickTNb1nx2Bgk6VammB8CYCBSJd</a></td></tr>" +
+                            "</table>" +
+                            "<p><a href='https://www.patreon.com/anilibria'>https://www.patreon.com/anilibria</a> - ежемесячный платёж!</p>"+
+                            "<span>Самый лучший способ поддержать проект.</span>"
+                        onLinkActivated: Qt.openUrlExternally(link)
                     }
                 }
             }
