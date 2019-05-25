@@ -417,18 +417,33 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void SendToastByChanges ( ChangesEntity oldChanges ) {
-			var newSeries = false;
-			foreach ( var newOnlineSeria in oldChanges.NewOnlineSeries ) {
-				if ( !m_Changes.NewOnlineSeries.ContainsKey ( newOnlineSeria.Key ) ) continue;
+			if ( oldChanges == null || m_Changes == null ) return;
 
-				if ( newOnlineSeria.Value < m_Changes.NewOnlineSeries[newOnlineSeria.Key] ) {
-					newSeries = true;
-					break;
+			var newSeries = false;
+			if ( oldChanges.NewOnlineSeries != null && m_Changes.NewOnlineSeries != null ) {
+				foreach ( var newOnlineSeria in oldChanges.NewOnlineSeries ) {
+					if ( !m_Changes.NewOnlineSeries.ContainsKey ( newOnlineSeria.Key ) ) continue;
+
+					if ( newOnlineSeria.Value != m_Changes.NewOnlineSeries[newOnlineSeria.Key] ) {
+						newSeries = true;
+						break;
+					}
 				}
 			}
-			var newReleases = oldChanges.NewReleases.Count () < m_Changes.NewReleases.Count ();
-			var newTorrents = oldChanges.NewTorrents.Count () < m_Changes.NewTorrents.Count ();
-			if (!newTorrents) {
+			var newReleases = oldChanges.NewReleases?.Count () < m_Changes.NewReleases?.Count ();
+			var newTorrents = oldChanges.NewTorrents?.Count () < m_Changes.NewTorrents?.Count ();
+			if ( !newTorrents && oldChanges.NewTorrentSeries != null && m_Changes.NewTorrentSeries != null ) {
+
+				foreach ( var torrentRelease in oldChanges.NewTorrentSeries ) {
+					var oldseries = string.Join ( "" , torrentRelease.Value.Select ( a => a.Value ) );
+					if ( !m_Changes.NewTorrentSeries.ContainsKey ( torrentRelease.Key ) ) continue;
+
+					var newseries = string.Join ( "" , m_Changes.NewTorrentSeries[torrentRelease.Key].Select ( a => a.Value ) );
+					if ( oldseries != newseries ) {
+						newTorrents = true;
+						break;
+					}
+				}
 				//TODO: check torrents series
 			}
 			if ( newReleases || newSeries || newTorrents ) NotificationToast ( newReleases , newSeries , newTorrents );
