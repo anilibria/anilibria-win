@@ -251,8 +251,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				var seconds = m_ViewModel.JumpSeconds;
 				var timeSpan = new TimeSpan ( 0 , minutes , seconds );
 				var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
-				var duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
-				if ( duration - position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= timeSpan;
+				if ( position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= timeSpan;
 			}
 			if ( args.VirtualKey == VirtualKey.Right ) {
 				var minutes = m_ViewModel.JumpMinutes;
