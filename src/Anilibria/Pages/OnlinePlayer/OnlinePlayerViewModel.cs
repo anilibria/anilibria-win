@@ -37,6 +37,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private const string PlaylistSortSettings = "PlaylistSorting";
 
+		private const string JumpMinutesSetting = "JumpMinutesSetting";
+
+		private const string JumpSecondsSetting = "JumpSecondsSetting";
+
 		private double m_Volume;
 
 		private string m_DisplayVolume;
@@ -132,10 +136,62 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		};
 
+		private ObservableCollection<MinuteItem> m_Minutes = new ObservableCollection<MinuteItem> {
+			new MinuteItem {
+				Title = "0",
+				Value = 0
+			},
+			new MinuteItem {
+				Title = "1",
+				Value = 1
+			},
+			new MinuteItem {
+				Title = "2",
+				Value = 2
+			}
+		};
+
+		private MinuteItem m_SelectedMinute;
+
+		private ObservableCollection<SecondItem> m_Seconds = new ObservableCollection<SecondItem> {
+			new SecondItem {
+				Title = "0",
+				Value = 0
+			},
+			new SecondItem {
+				Title = "5",
+				Value = 5
+			},
+			new SecondItem {
+				Title = "10",
+				Value = 10
+			},
+			new SecondItem {
+				Title = "15",
+				Value = 15
+			},
+			new SecondItem {
+				Title = "20",
+				Value = 20
+			},
+			new SecondItem {
+				Title = "25",
+				Value = 25
+			},
+			new SecondItem {
+				Title = "30",
+				Value = 30
+			}
+		};
+
+		private SecondItem m_SelectedSecond;
+
 		private PlaylistButtonPositionItem m_SelectedPlaylistButtonPosition;
 
-		private bool m_AscendingSortingInPlaylist;
-		
+		private int m_JumpMinutes;
+
+		private int m_JumpSeconds;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -172,6 +228,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void RestoreSettings () {
+			m_JumpMinutes = 0;
+			m_JumpSeconds = 5;
 			m_ControlPanelOpacity = 1;
 			m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.First ( a => a.Position == PlaylistButtonPosition.Center );
 			var values = ApplicationData.Current.RoamingSettings.Values;
@@ -184,13 +242,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( values.ContainsKey ( AutoTransitionSettings ) ) m_IsAutoTransition = (bool) values[AutoTransitionSettings];
 			if ( values.ContainsKey ( NeedShowReleaseInfoSettings ) ) m_IsNeedShowReleaseInfo = (bool) values[NeedShowReleaseInfoSettings];
 			if ( values.ContainsKey ( ControlPanelOpacitySettings ) ) m_ControlPanelOpacity = (double) values[ControlPanelOpacitySettings];
-			if ( values.ContainsKey ( PlaylistSortSettings ) ) m_AscendingSortingInPlaylist = (bool) values[PlaylistSortSettings];
 			if ( values.ContainsKey ( PlaylistButtonPositionSettings ) ) {
 				var indexButtonPosition = (int) values[PlaylistButtonPositionSettings];
 				var position = (PlaylistButtonPosition) indexButtonPosition;
 
 				m_SelectedPlaylistButtonPosition = PlaylistButtonPositions.FirstOrDefault ( a => a.Position == position ) ?? PlaylistButtonPositions.First ( a => a.Position == PlaylistButtonPosition.Center );
 			}
+			if ( values.ContainsKey ( JumpMinutesSetting ) ) m_JumpMinutes = (int) values[JumpMinutesSetting];
+			if ( values.ContainsKey ( JumpSecondsSetting ) ) m_JumpSeconds = (int) values[JumpSecondsSetting];
+			SelectedMinute = Minutes.FirstOrDefault ( a => a.Value == m_JumpMinutes );
+			SelectedSecond = Seconds.FirstOrDefault ( a => a.Value == m_JumpSeconds );
 		}
 
 		private async Task SaveReleaseWatchTimestamp ( long releaseId ) {
@@ -532,19 +593,20 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			else {
 				var releaseLink = parameter as ReleaseLinkModel;
-				if ( releaseLink != null) {
+				if ( releaseLink != null ) {
 					var releaseLinkEntity = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == releaseLink.ReleaseId );
-					if ( releaseLinkEntity != null) Releases = new List<ReleaseModel> { MapToReleaseModel ( releaseLinkEntity ) };
-				} else {
+					if ( releaseLinkEntity != null ) Releases = new List<ReleaseModel> { MapToReleaseModel ( releaseLinkEntity ) };
+				}
+				else {
 					Releases = parameter as IEnumerable<ReleaseModel>;
 				}
 				var release = Releases.First ();
 				m_ReleaseVideoStateEntity = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id );
-				
+
 				m_Position = 0;
 				m_RestorePosition = 0;
 				RaisePropertyChanged ( () => Position );
-				
+
 				int onlineVideoIndex = release.PrefferedOpenedVideo == null ? -1 : release.PrefferedOpenedVideo.Order;
 				if ( onlineVideoIndex == -1 && m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
 					onlineVideoIndex = m_ReleaseVideoStateEntity.VideoStates.Max ( a => a.Id );
@@ -972,7 +1034,77 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ApplicationData.Current.RoamingSettings.Values[PlaylistButtonPositionSettings] = (int) value.Position;
 			}
 		}
-		
+
+		/// <summary>
+		/// Jump minutes.
+		/// </summary>
+		public int JumpMinutes
+		{
+			get => m_JumpMinutes;
+			set => m_JumpMinutes = value;
+		}
+
+		/// <summary>
+		/// Jump seconds.
+		/// </summary>
+		public int JumpSeconds
+		{
+			get => m_JumpSeconds;
+			set => m_JumpSeconds = value;
+		}
+
+		/// <summary>
+		/// Selected minute.
+		/// </summary>
+		public MinuteItem SelectedMinute
+		{
+			get => m_SelectedMinute;
+			set
+			{
+				if ( !Set ( ref m_SelectedMinute , value ) ) return;
+
+				if ( m_SelectedMinute == null ) return;
+
+				JumpMinutes = m_SelectedMinute.Value;
+				ApplicationData.Current.RoamingSettings.Values[JumpMinutesSetting] = JumpMinutes;
+			}
+		}
+
+		/// <summary>
+		/// Minutes.
+		/// </summary>
+		public ObservableCollection<MinuteItem> Minutes
+		{
+			get => m_Minutes;
+			set => Set ( ref m_Minutes , value );
+		}
+
+		/// <summary>
+		/// Selected minute.
+		/// </summary>
+		public SecondItem SelectedSecond
+		{
+			get => m_SelectedSecond;
+			set
+			{
+				if ( !Set ( ref m_SelectedSecond , value ) ) return;
+
+				if ( m_SelectedSecond == null ) return;
+
+				JumpSeconds = m_SelectedSecond.Value;
+				ApplicationData.Current.RoamingSettings.Values[JumpSecondsSetting] = JumpSeconds;
+			}
+		}
+
+		/// <summary>
+		/// Seconds.
+		/// </summary>
+		public ObservableCollection<SecondItem> Seconds
+		{
+			get => m_Seconds;
+			set => Set ( ref m_Seconds , value );
+		}
+
 		/// <summary>
 		/// Change page handler.
 		/// </summary>

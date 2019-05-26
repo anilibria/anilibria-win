@@ -247,11 +247,21 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( args.VirtualKey == VirtualKey.Home ) m_ViewModel.ShowPlaylistCommand.Execute ( null );
 			if ( args.VirtualKey == VirtualKey.End ) m_ViewModel.ShowPlaylistButton = true;
 			if ( args.VirtualKey == VirtualKey.Left ) {
+				var minutes = m_ViewModel.JumpMinutes;
+				var seconds = m_ViewModel.JumpSeconds;
+				var timeSpan = new TimeSpan ( 0 , minutes , seconds );
 				var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
 				var duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
-				if ( duration - position > TimeSpan.FromSeconds ( 5 ) ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= TimeSpan.FromSeconds ( 5 );
+				if ( duration - position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= timeSpan;
 			}
-			if ( args.VirtualKey == VirtualKey.Right ) OnlinePlayer.MediaPlayer.PlaybackSession.Position += TimeSpan.FromSeconds ( 5 );
+			if ( args.VirtualKey == VirtualKey.Right ) {
+				var minutes = m_ViewModel.JumpMinutes;
+				var seconds = m_ViewModel.JumpSeconds;
+				var timeSpan = new TimeSpan ( 0 , minutes , seconds );
+				var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
+				var duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
+				if ( duration - position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position += timeSpan;
+			}
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {
@@ -529,6 +539,19 @@ namespace Anilibria.Pages.OnlinePlayer {
 					OpenPlaylistButton.Margin = new Thickness ( 0 , 0 , 0 , m_isXbox ? 30 : 0 );
 					break;
 			}
+		}
+
+		private async void MinutesComboBox_DataContextChanged ( FrameworkElement sender , DataContextChangedEventArgs args ) {
+			await Task.Delay ( 500 );
+
+			if ( m_ViewModel.SelectedMinute == null ) m_ViewModel.SelectedMinute = m_ViewModel.Minutes.FirstOrDefault ( a => a.Value == m_ViewModel.JumpMinutes );
+
+		}
+
+		private async void SecondsComboBox_DataContextChanged ( FrameworkElement sender , DataContextChangedEventArgs args ) {
+			await Task.Delay ( 500 );
+
+			if ( m_ViewModel.SelectedSecond == null ) m_ViewModel.SelectedSecond = m_ViewModel.Seconds.FirstOrDefault ( a => a.Value == m_ViewModel.JumpSeconds );
 		}
 
 	}
