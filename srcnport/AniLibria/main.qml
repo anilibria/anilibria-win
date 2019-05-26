@@ -9,8 +9,10 @@ import "Views"
 ApplicationWindow {
     id: window
     visible: true
-    width: 640
-    height: 480
+    width: 800
+    minimumWidth: 800
+    minimumHeight: 600
+    height: 600
     title: qsTr("AniLibria")
     property string currentPageId: "release"
 

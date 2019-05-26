@@ -39,10 +39,9 @@ Page {
             Rectangle {
                 id: cardContainer
                 radius: 8
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: 320
-                height: 360
+                anchors.centerIn: parent
+                width: 600
+                height: 460
                 ColumnLayout {
                     width: cardContainer.width - 10
                     height: cardContainer.height - 20
@@ -53,9 +52,15 @@ Page {
                         Layout.alignment: Qt.AlignHCenter
                         Layout.fillWidth: true
                         Layout.minimumHeight: 100
-                        Layout.preferredHeight: 200
-                        Layout.maximumHeight: 200
+                        Layout.preferredHeight: 300
                         fillMode: Image.PreserveAspectFit
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                Qt.openUrlExternally("https://www.youtube.com/watch?v=xGYsezJddlw")
+                            }
+                        }
                     }
                     Text {
                         Layout.alignment: Qt.AlignHCenter
