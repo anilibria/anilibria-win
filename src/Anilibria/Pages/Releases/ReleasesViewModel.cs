@@ -381,8 +381,8 @@ namespace Anilibria.Pages.Releases {
 			RefreshSelectedReleases ();
 			RefreshNotification ();
 			SendToastByChanges (
-				NewReleasesCount > newReleasesCount,
-				NewOnlineSeriesCount > newOnlineSeriesCount,
+				NewReleasesCount > newReleasesCount ,
+				NewOnlineSeriesCount > newOnlineSeriesCount ,
 				NewTorrentSeriesCount > newTorrentSeriesCount
 			);
 		}
@@ -549,7 +549,10 @@ namespace Anilibria.Pages.Releases {
 			string.IsNullOrEmpty ( m_FilterByStatus ) &&
 			string.IsNullOrEmpty ( m_FilterByType ) &&
 			string.IsNullOrEmpty ( m_FilterByVoicers ) &&
-			string.IsNullOrEmpty ( m_FilterByYears );
+			string.IsNullOrEmpty ( m_FilterByYears ) &&
+			m_SelectedSeenMarkType.Type == SeenMarkType.NotUsed &&
+			m_SelectedFavoriteMarkType.Type == FavoriteMarkType.NotUsed;
+
 			FilterIsFilled = !allEmpties;
 		}
 
@@ -564,6 +567,10 @@ namespace Anilibria.Pages.Releases {
 			RaisePropertyChanged ( () => FilterByVoicers );
 			m_FilterByYears = "";
 			RaisePropertyChanged ( () => FilterByYears );
+			m_SelectedFavoriteMarkType = FavoriteMarkTypes.FirstOrDefault ( a => a.Type == FavoriteMarkType.NotUsed );
+			RaisePropertyChanged ( () => SelectedFavoriteMarkType );
+			m_SelectedSeenMarkType = SeenMarkTypes.FirstOrDefault ( a => a.Type == SeenMarkType.NotUsed );
+			RaisePropertyChanged ( () => SelectedSeenMarkType );
 
 			Filter ();
 			RefreshFilterState ();
@@ -1771,6 +1778,7 @@ namespace Anilibria.Pages.Releases {
 				if ( !Set ( ref m_SelectedSeenMarkType , value ) ) return;
 
 				Filter ();
+				RefreshFilterState ();
 			}
 		}
 
@@ -1794,6 +1802,7 @@ namespace Anilibria.Pages.Releases {
 				if ( !Set ( ref m_SelectedFavoriteMarkType , value ) ) return;
 
 				Filter ();
+				RefreshFilterState ();
 			}
 		}
 
