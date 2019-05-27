@@ -373,18 +373,10 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RefreshAfterSynchronize ( object parameter ) {
-			var newReleasesCount = NewReleasesCount;
-			var newOnlineSeriesCount = NewOnlineSeriesCount;
-			var newTorrentSeriesCount = NewTorrentSeriesCount;
 			IsShowReleaseCard = false;
 			RefreshReleases ();
 			RefreshSelectedReleases ();
 			RefreshNotification ();
-			SendToastByChanges (
-				NewReleasesCount > newReleasesCount ,
-				NewOnlineSeriesCount > newOnlineSeriesCount ,
-				NewTorrentSeriesCount > newTorrentSeriesCount
-			);
 		}
 
 
@@ -660,10 +652,10 @@ namespace Anilibria.Pages.Releases {
 			return m_Changes.NewOnlineSeries.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Select ( a => GetNewSeries ( a.Key , a.Value , onlineSeriesReleases ) ).Sum ();
 		}
 
-		private int GetCountTorrentSeries () {
-			if ( !m_Changes.NewTorrentSeries.Any () ) return 0;
+		private int GetCountTorrentSeries ( IDictionary<long , IDictionary<long , string>> newTorrents ) {
+			if ( newTorrents == null || !newTorrents.Any () ) return 0;
 
-			return m_Changes.NewTorrentSeries.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Count ();
+			return newTorrents.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Count ();
 		}
 
 		private void RefreshNotification () {
@@ -679,11 +671,26 @@ namespace Anilibria.Pages.Releases {
 
 			NewReleasesCount = m_Changes.NewReleases.Count ();
 			NewOnlineSeriesCount = GetCountOnlineSeries ( onlineSeriesReleases );
-			NewTorrentSeriesCount = GetCountTorrentSeries ();
+			NewTorrentSeriesCount = GetCountTorrentSeries ( m_Changes.NewTorrentSeries );
 			IsNewReleases = NewReleasesCount > 0;
 			IsNewOnlineSeries = NewOnlineSeriesCount > 0;
 			IsNewTorrentSeries = NewTorrentSeriesCount > 0;
 			IsShowNotification = NewReleasesCount > 0 || NewOnlineSeriesCount > 0 || NewTorrentSeriesCount > 0;
+
+			var historyChanges = m_DataContext.GetCollection<HistoryChangeEntity> ().FirstOrDefault ();
+			if ( historyChanges == null ) return;
+
+			var historyOnlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
+			if ( historyChanges.NewOnlineSeries.Any () ) {
+				var ids = historyChanges.NewOnlineSeries.Select ( a => a.Key ).ToArray ();
+				historyOnlineSeriesReleases = m_AllReleases.Where ( a => ids.Contains ( a.Id ) );
+			}
+
+			SendToastByChanges (
+				NewReleasesCount > historyChanges.NewReleases.Count () ,
+				NewOnlineSeriesCount > GetCountOnlineSeries ( historyOnlineSeriesReleases ) ,
+				NewTorrentSeriesCount > GetCountTorrentSeries ( historyChanges.NewTorrentSeries )
+			);
 		}
 
 		private LocalFavoriteEntity GetLocalFavorites ( IEntityCollection<LocalFavoriteEntity> collection ) {

@@ -204,6 +204,8 @@ namespace Anilibria.Services.Implementations {
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
 				var changes = GetChanges ( changesCollection );
 
+				if ( changes != null ) SaveHistoryChanges ( changes );
+
 				var cacheReleases = collection.Find ( a => true );
 
 				var addReleases = new List<ReleaseEntity> ();
@@ -285,6 +287,27 @@ namespace Anilibria.Services.Implementations {
 			}
 
 			return changes;
+		}
+
+		private void SaveHistoryChanges ( ChangesEntity changes ) {
+			var collection = m_DataContext.GetCollection<HistoryChangeEntity> ();
+			var historyChanges = collection.FirstOrDefault ();
+			if ( historyChanges == null ) {
+				historyChanges = new HistoryChangeEntity {
+					NewOnlineSeries = changes.NewOnlineSeries ?? new Dictionary<long , int> () ,
+					NewReleases = changes.NewReleases ?? new List<long> () ,
+					NewTorrents = changes.NewTorrents ?? new Dictionary<long , int> () ,
+					NewTorrentSeries = changes.NewTorrentSeries ?? new Dictionary<long , IDictionary<long , string>> ()
+				};
+				collection.Add ( historyChanges );
+			}
+			else {
+				historyChanges.NewOnlineSeries = changes.NewOnlineSeries ?? new Dictionary<long , int> ();
+				historyChanges.NewReleases = changes.NewReleases ?? new List<long> ();
+				historyChanges.NewTorrents = changes.NewTorrents ?? new Dictionary<long , int> ();
+				historyChanges.NewTorrentSeries = changes.NewTorrentSeries ?? new Dictionary<long , IDictionary<long , string>> ();
+				collection.Update ( historyChanges );
+			}
 		}
 
 		public Task SynchronizeYoutubes () {
