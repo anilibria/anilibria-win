@@ -204,7 +204,7 @@ namespace Anilibria.Services.Implementations {
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
 				var changes = GetChanges ( changesCollection );
 
-				if ( changes != null ) SaveHistoryChanges ( changes );
+				if ( changes != null ) SaveHistoryChanges ( changes , collection );
 
 				var cacheReleases = collection.Find ( a => true );
 
@@ -289,15 +289,21 @@ namespace Anilibria.Services.Implementations {
 			return changes;
 		}
 
-		private void SaveHistoryChanges ( ChangesEntity changes ) {
+		private void SaveHistoryChanges ( ChangesEntity changes , IEntityCollection<ReleaseEntity> releaseCollection ) {
+			var allReleases = releaseCollection.Find ( a => true );
 			var collection = m_DataContext.GetCollection<HistoryChangeEntity> ();
 			var historyChanges = collection.FirstOrDefault ();
+			var releasesIds = changes.NewOnlineSeries.Select ( a => a.Key );
+			var seriesReleases = allReleases.Where ( a => releasesIds.Contains ( a.Id ) );
+			var releaseOnlineSeries = new Dictionary<long , int> ();
+			foreach ( var seriesRelease in seriesReleases ) releaseOnlineSeries.Add ( seriesRelease.Id , seriesRelease.Playlist?.Count () ?? 0 );
 			if ( historyChanges == null ) {
 				historyChanges = new HistoryChangeEntity {
 					NewOnlineSeries = changes.NewOnlineSeries ?? new Dictionary<long , int> () ,
 					NewReleases = changes.NewReleases ?? new List<long> () ,
 					NewTorrents = changes.NewTorrents ?? new Dictionary<long , int> () ,
-					NewTorrentSeries = changes.NewTorrentSeries ?? new Dictionary<long , IDictionary<long , string>> ()
+					NewTorrentSeries = changes.NewTorrentSeries ?? new Dictionary<long , IDictionary<long , string>> (),
+					ReleaseOnlineSeries = releaseOnlineSeries
 				};
 				collection.Add ( historyChanges );
 			}
@@ -306,6 +312,7 @@ namespace Anilibria.Services.Implementations {
 				historyChanges.NewReleases = changes.NewReleases ?? new List<long> ();
 				historyChanges.NewTorrents = changes.NewTorrents ?? new Dictionary<long , int> ();
 				historyChanges.NewTorrentSeries = changes.NewTorrentSeries ?? new Dictionary<long , IDictionary<long , string>> ();
+				historyChanges.ReleaseOnlineSeries = releaseOnlineSeries;
 				collection.Update ( historyChanges );
 			}
 		}

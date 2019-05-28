@@ -35,6 +35,15 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
+		/// Release online series.
+		/// </summary>
+		public IDictionary<long , int> ReleaseOnlineSeries
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// New torrens.
 		/// </summary>
 		public IDictionary<long , int> NewTorrents
