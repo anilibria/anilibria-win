@@ -1,5 +1,4 @@
 ﻿using Anilibria.Collections;
-using Anilibria.GlobalState;
 using Anilibria.MVVM;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
@@ -177,6 +176,8 @@ namespace Anilibria.Pages.Releases {
 
 		private FavoriteMarkItem m_SelectedFavoriteMarkType;
 
+		private IEntityCollection<ReleaseEntity> m_ReleasesCollection;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -186,6 +187,8 @@ namespace Anilibria.Pages.Releases {
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
+
+			m_ReleasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
 
 			CreateCommands ();
 			CreateSortingItems ();
@@ -952,15 +955,14 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async Task SaveReleaseViewTimestamp ( long releaseId ) {
-			var collection = m_DataContext.GetCollection<ReleaseEntity> ();
-			var release = collection.FirstOrDefault ( a => a.Id == releaseId );
+			var release = m_AllReleases.FirstOrDefault ( a => a.Id == releaseId );
 			if ( release == null ) return;
 
 			release.LastViewTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
-			collection.Update ( release );
+			m_ReleasesCollection.Update ( release );
 
-			var lastThreeViewReleases = collection
-				.Find ( a => a.LastViewTimestamp > 0 )
+			var lastThreeViewReleases = m_AllReleases
+				.Where ( a => a.LastViewTimestamp > 0 )
 				.OrderByDescending ( a => a.LastViewTimestamp )
 				.Take ( 3 )
 				.ToList ();
@@ -974,9 +976,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode () {
-			var context = m_DataContext.GetCollection<ReleaseEntity> ();
-
-			return context
+			return m_ReleasesCollection
 				.Find ( a => true )
 				.ToList ()
 				.Where ( a => !a.Blocked ) // All blocking releases not showed on releases page!!!

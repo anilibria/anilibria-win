@@ -192,6 +192,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private int m_JumpSeconds;
 
+		private IEntityCollection<ReleaseEntity> m_ReleasesCollection;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -225,6 +227,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			m_ReleaseStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
 			m_IsSupportedCompactOverlay = ApplicationView.GetForCurrentView ().IsViewModeSupported ( ApplicationViewMode.CompactOverlay );
+
+			m_ReleasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
 		}
 
 		private void RestoreSettings () {
@@ -255,15 +259,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private async Task SaveReleaseWatchTimestamp ( long releaseId ) {
-			var collection = m_DataContext.GetCollection<ReleaseEntity> ();
-			var release = collection.FirstOrDefault ( a => a.Id == releaseId );
-			if ( release == null ) return;
+			var releases = m_ReleasesCollection.Find ( a => true );
+			var release = releases.FirstOrDefault ( a => a.Id == releaseId );
 
 			release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
-			collection.Update ( release );
+			m_ReleasesCollection.Update ( release );
 
-			var lastThreeWatchReleases = collection
-				.Find ( a => a.LastWatchTimestamp > 0 )
+			var lastThreeWatchReleases = releases
+				.Where ( a => a.LastWatchTimestamp > 0 )
 				.OrderByDescending ( a => a.LastWatchTimestamp )
 				.Take ( 3 )
 				.ToList ();
