@@ -323,6 +323,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private async void EnableCompactMode () {
 			var enabled = await ApplicationView.GetForCurrentView ().TryEnterViewModeAsync ( ApplicationViewMode.CompactOverlay );
 			IsCompactOverlayEnabled = enabled;
+			if (enabled) ShowPlaylistButton = true;
 		}
 
 		private void PreviousTrack () {
