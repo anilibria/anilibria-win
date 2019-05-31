@@ -38,5 +38,32 @@ Page {
         anchors.fill: parent
     }
 
+    Row {
+        id: controlPanel
+        anchors.bottom: parent.bottom
+        spacing: 5
+        //anchors.bottomMargin: buttontest.height + 10
+        anchors.horizontalCenter: parent.horizontalCenter
+        Button {
+            id: buttontest
+            text: qsTr("Пауза")
+            onClicked: {
+                player.pause();
+            }
+        }
+        Button {
+            text: qsTr("Воспроизведение")
+            onClicked: {
+                player.play();
+            }
+        }
+        Button {
+            text: qsTr("Переход вперед")
+            onClicked: {
+                if (player.seekable) player.seek(5000);
+            }
+        }
+    }
+
 }
 
