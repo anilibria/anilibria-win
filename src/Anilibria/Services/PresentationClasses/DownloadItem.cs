@@ -26,9 +26,18 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Серия.
+		/// Release identifier.
 		/// </summary>
-		public string Seria
+		public long ReleaseId
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Seria.
+		/// </summary>
+		public int Seria
 		{
 			get;
 			set;
@@ -38,6 +47,42 @@ namespace Anilibria.Services.PresentationClasses {
 		/// Uri.
 		/// </summary>
 		public Uri Uri
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Progress.
+		/// </summary>
+		public double Progress
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Position.
+		/// </summary>
+		public long Position
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Size.
+		/// </summary>
+		public long Size
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// File name.
+		/// </summary>
+		public string FileName
 		{
 			get;
 			set;

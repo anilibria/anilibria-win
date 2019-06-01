@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Anilibria.Services.PresentationClasses;
 
@@ -9,14 +8,6 @@ namespace Anilibria.Services {
 	/// Download service.
 	/// </summary>
 	public interface IDownloadService {
-
-		/// <summary>
-		/// Download file.
-		/// </summary>
-		/// <param name="uri">Uri file.</param>
-		/// <param name="id">Identifier.</param>
-		/// <param name="percentProgress">Percent progress.</param>
-		Task DownloadFile ( Uri uri , long id, Action<double> percentProgress );
 
 		/// <summary>
 		/// Get pending downloads.
@@ -36,7 +27,7 @@ namespace Anilibria.Services {
 		/// Remove download file.
 		/// </summary>
 		/// <param name="id">Identifier.</param>
-		void RemoveDownloadFile ( long id );
+		Task RemoveDownloadFile ( long id );
 
 	}
 

@@ -270,6 +270,8 @@
     <Compile Include="Services\Implementations\AnalyticsService.cs" />
     <Compile Include="Services\Implementations\AnilibriaApiService.cs" />
     <Compile Include="Services\Implementations\ApiService.cs" />
+    <Compile Include="Services\Implementations\DownloadManager.cs" />
+    <Compile Include="Services\Implementations\DownloadService.cs" />
     <Compile Include="Services\Implementations\JumpListService.cs" />
     <Compile Include="Services\Implementations\LiteDbEntityCollection.cs" />
     <Compile Include="Services\Implementations\LiteDbLocalPath.cs" />
