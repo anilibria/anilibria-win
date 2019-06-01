@@ -205,6 +205,11 @@ namespace Anilibria.Pages.Releases {
 			var url = button.CommandParameter.ToString ();
 			m_ViewModel.OpenTorrentCommand.Execute ( url );
 		}
+
+		private void BindableGridControl_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
+			e.Handled = true;
+			m_ViewModel.IsMultipleSelect = !m_ViewModel.IsMultipleSelect;
+		}
 	}
 
 }

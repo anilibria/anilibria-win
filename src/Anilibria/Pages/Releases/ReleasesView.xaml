@@ -1286,6 +1286,7 @@
 			</StackPanel>
 		</Grid>
 		<controls:BindableGridControl
+			RightTapped="BindableGridControl_RightTapped"
 			Visibility="{Binding GroupedGridVisible, Converter={StaticResource InverseBoolConverter}}"
 			Style="{StaticResource GridViewStyle}"
 			Grid.Row="2"
@@ -1297,6 +1298,7 @@
 			HorizontalContentAlignment="Center"
 		/>
 		<controls:BindableGridControl
+			RightTapped="BindableGridControl_RightTapped"
 			Visibility="{Binding GroupedGridVisible}"
 			Style="{StaticResource GridViewStyle}"
 			Grid.Row="2"
