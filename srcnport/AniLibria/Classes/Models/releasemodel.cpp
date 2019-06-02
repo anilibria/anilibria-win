@@ -30,3 +30,68 @@ void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
 
 
 }
+
+QString ReleaseModel::code()
+{
+    return m_Code;
+}
+
+QString ReleaseModel::series()
+{
+    return m_Series;
+}
+
+QString ReleaseModel::poster()
+{
+    return m_Poster;
+}
+
+QString ReleaseModel::timestamp()
+{
+    return m_Timestamp;
+}
+
+QString ReleaseModel::status()
+{
+    return m_Status;
+}
+
+QString ReleaseModel::type()
+{
+    return m_Type;
+}
+
+QString ReleaseModel::year()
+{
+    return m_Year;
+}
+
+QString ReleaseModel::description()
+{
+    return m_Description;
+}
+
+QStringList ReleaseModel::genres()
+{
+    return m_Genres;
+}
+
+QStringList ReleaseModel::voices()
+{
+    return m_Voices;
+}
+
+QStringList ReleaseModel::names()
+{
+    return m_Names;
+}
+
+int ReleaseModel::rating()
+{
+    return m_Rating;
+}
+
+bool ReleaseModel::isBlocked()
+{
+    return m_IsBlocked;
+}

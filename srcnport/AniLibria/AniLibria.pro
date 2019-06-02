@@ -14,6 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Classes/Models/onlinevideomodel.cpp \
+    Classes/Models/releaseitemmodel.cpp \
     Classes/Models/releasemodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
     Classes/Services/synchronizationservice.cpp \
@@ -34,6 +35,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Classes/Models/onlinevideomodel.h \
+    Classes/Models/releaseitemmodel.h \
     Classes/Models/releasemodel.h \
     Classes/Services/anilibriaapiservice.h \
     Classes/Services/synchronizationservice.h

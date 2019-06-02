@@ -26,6 +26,31 @@ public:
 
     void readFromApiModel(const QJsonObject &jsonObject);
 
+    QString code();
+
+    QString series();
+
+    QString poster();
+
+    QString timestamp();
+
+    QString status();
+
+    QString type();
+
+    QString year();
+
+    QString description();
+
+    QStringList genres();
+
+    QStringList voices();
+
+    QStringList names();
+
+    int rating();
+
+    bool isBlocked();
 
 };
 
