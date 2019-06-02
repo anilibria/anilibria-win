@@ -10,7 +10,8 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setTitle(releaseModel.names().first());
     setStatus(releaseModel.status());
     setYear(releaseModel.year());
-    setPoster(releaseModel.poster());
+    QString fullPosterUrl = "https://www.anilibria.tv" + releaseModel.poster();
+    setPoster(fullPosterUrl);
 }
 
 QString ReleaseItemModel::title() const
