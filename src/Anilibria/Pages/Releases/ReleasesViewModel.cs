@@ -385,11 +385,16 @@ namespace Anilibria.Pages.Releases {
 
 
 		private void NotificationToast ( bool isNewReleases , bool isNewSeries , bool isNewTorrents ) {
-			ToastNotificationManager.CreateToastNotifier ().Show (
-				new ToastNotification (
-					GenerateToastContent ( isNewReleases , isNewSeries , isNewTorrents ).GetXml ()
-				)
-			);
+			try
+			{
+				ToastNotificationManager.CreateToastNotifier ().Show (
+					new ToastNotification (
+						GenerateToastContent ( isNewReleases , isNewSeries , isNewTorrents ).GetXml ()
+					)
+				);
+			} catch {
+				//WORKAROUND: Sometimes app crashes on this line, I sure that issue not in my code.
+			}
 		}
 
 		public static ToastContent GenerateToastContent ( bool isNewReleases , bool isNewSeries , bool isNewTorrents ) {
