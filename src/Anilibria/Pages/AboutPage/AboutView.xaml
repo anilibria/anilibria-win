@@ -4,6 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:converters="using:Anilibria.Converters"
 	mc:Ignorable="d"
 	d:DesignHeight="300"
 	d:DesignWidth="400">
@@ -59,10 +60,12 @@
 					Клиент для сайта AniLibria.TV
 				</TextBlock>
 				<TextBlock
-					Foreground="Black"
 					FontSize="26"
-					HorizontalAlignment="Center">
+					Foreground="#a32727"
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Hyperlink
+						Foreground="#a32727"
 						NavigateUri="https://www.anilibria.tv/">
 						https://www.anilibria.tv/
 					</Hyperlink>
@@ -92,9 +95,11 @@
 					Margin="0 10 0 10"
 					HorizontalAlignment="Center"
 					TextWrapping="WrapWholeWords"
-					TextAlignment="Center">
+					TextAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>В случае если у Вас есть проблемы с приложением Вы можете</Run>
 					<Hyperlink
+						Foreground="#a32727"
 						NavigateUri="tg://resolve?domain=AniLibriaTP">
 						написать в техподдержку
 					</Hyperlink>
@@ -105,13 +110,15 @@
 					Margin="0 10 0 10"
 					HorizontalAlignment="Center"
 					TextWrapping="WrapWholeWords"
-					TextAlignment="Center">
+					TextAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Весь материал в приложении представлен исключительно для домашнего ознакомительного просмотра.</Run>
 					<LineBreak />
 					<Run>
 						В случаях нарушения авторских прав - обращайтесь на почту
 					</Run>
 					<Hyperlink
+						Foreground="#a32727"
 						NavigateUri="mailto:lupin@anilibria.tv">
 						lupin@anilibria.tv
 					</Hyperlink>
@@ -164,134 +171,158 @@
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.freepik.com/">Freepik</Hyperlink>
+					<Hyperlink
+						Foreground="#a32727"
+						NavigateUri="https://www.freepik.com/">
+						Freepik
+					</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink
+						Foreground="#a32727"
+						NavigateUri="https://www.flaticon.com/">
+						www.flaticon.com
+					</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink
+						Foreground="#a32727"
+						NavigateUri="http://creativecommons.org/licenses/by/3.0/">
+						CC 3.0 BY
+					</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/cole-bemis">Cole Bemis</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/cole-bemis">Cole Bemis</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/smashicons">Smashicons</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/smashicons">Smashicons</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/srip">srip</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/srip">srip</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/gregor-cresnar">Gregor Cresnar</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/gregor-cresnar">Gregor Cresnar</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/google">Google</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/google">Google</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/egor-rumyantsev">Egor Rumyantsev</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/egor-rumyantsev">Egor Rumyantsev</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/those-icons">Those Icons</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/those-icons">Those Icons</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/yannick">Yannick</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/yannick">Yannick</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/pixel-perfect">Pixel perfect</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/pixel-perfect">Pixel perfect</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/gregor-cresnar">Gregor Cresnar</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/gregor-cresnar">Gregor Cresnar</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>Icons made by</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/authors/eleonor-wang">Eleonor Wang</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/authors/eleonor-wang">Eleonor Wang</Hyperlink>
 					<Run>from</Run>
-					<Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://www.flaticon.com/">www.flaticon.com</Hyperlink>
 					<Run>is licensed by</Run>
-					<Hyperlink NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
@@ -303,30 +334,33 @@
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>
 						LiteDB
 					</Run>
-					<Hyperlink NavigateUri="https://github.com/mbdavid/LiteDB/blob/master/LICENSE">license</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://github.com/mbdavid/LiteDB/blob/master/LICENSE">license</Hyperlink>
 					</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
-					HorizontalAlignment="Center">
+					HorizontalAlignment="Center"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>
 						Html Agility Pack
 					</Run>
-					<Hyperlink NavigateUri="https://github.com/zzzprojects/html-agility-pack/blob/master/LICENSE">license</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://github.com/zzzprojects/html-agility-pack/blob/master/LICENSE">license</Hyperlink>
 				</TextBlock>
 				<TextBlock
 					Foreground="Black"
 					FontSize="16"
 					HorizontalAlignment="Center"
-					Margin="0 0 0 10">
+					Margin="0 0 0 10"
+					converters:TextBlockHighlight.HyperLinkHightlight="True">
 					<Run>
 						Newtonsoft.Json
 					</Run>
-					<Hyperlink NavigateUri="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md">license</Hyperlink>
+					<Hyperlink Foreground="#a32727" NavigateUri="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md">license</Hyperlink>
 				</TextBlock>
 			</StackPanel>
 		</ScrollViewer>
