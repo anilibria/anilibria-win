@@ -189,6 +189,13 @@ ApplicationWindow {
         id: videoplayer
         drawer: drawer
         visible: false
+        onChangeFullScreenMode: {
+            if (fullScreen) {
+                window.showFullScreen();
+            } else {
+                window.showNormal();
+            }
+        }
     }
 
     Releases {

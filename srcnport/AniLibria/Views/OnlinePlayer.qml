@@ -5,8 +5,10 @@ import QtMultimedia 5.12
 
 Page {
     property Drawer drawer
+    property bool isFullScreen: false
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
+    signal changeFullScreenMode(bool fullScreen)
     onNavigateFrom: {
         player.pause();
     }
@@ -30,7 +32,18 @@ Page {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            drawer.open();
+            //drawer.open();
+            if (player.playbackState === MediaPlayer.PlayingState) {
+                player.pause();
+                return;
+            }
+            if (player.playbackState === MediaPlayer.PausedState || player.playbackState === MediaPlayer.StoppedState) {
+                player.play();
+            }
+        }
+        onDoubleClicked: {
+            isFullScreen = !isFullScreen;
+            changeFullScreenMode(isFullScreen);
         }
     }
     VideoOutput {
