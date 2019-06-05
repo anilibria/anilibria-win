@@ -52,6 +52,71 @@ namespace Anilibria.Converters {
 			return (string) textBlock.GetValue ( BackgroundMapperProperty );
 		}
 
+		private static void SetBorderBrush ( DependencyObject element , Brush brush ) {
+			var border = element as Border;
+			if ( border != null ) {
+				border.BorderBrush = brush;
+				return;
+			}
+		}
+
+		public static readonly DependencyProperty BorderMapperProperty =
+			DependencyProperty.RegisterAttached (
+				"BorderMapper" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , BorderMapperChanged )
+		);
+
+		private static void BorderMapperChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetBorderBrush ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => {
+					SetBorderBrush ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+				}
+			);
+		}
+
+		public static void SetBorderMapper ( DependencyObject textBlock , string value ) => textBlock.SetValue ( BorderMapperProperty , value );
+
+		public static string GetBorderMapper ( DependencyObject textBlock ) => (string) textBlock.GetValue ( BorderMapperProperty );
+
+		private static void SetTextColor ( DependencyObject element , Brush brush ) {
+			var border = element as TextBlock;
+			if ( border != null ) {
+				border.Foreground = brush;
+				return;
+			}
+		}
+
+		public static readonly DependencyProperty TextMapperProperty =
+			DependencyProperty.RegisterAttached (
+				"TextMapper" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , TextMapperChanged )
+		);
+
+		private static void TextMapperChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetTextColor ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => {
+					SetTextColor ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+				}
+			);
+		}
+
+		public static void SetTextMapper ( DependencyObject textBlock , string value ) => textBlock.SetValue ( TextMapperProperty , value );
+
+		public static string GetTextMapper ( DependencyObject textBlock ) => (string) textBlock.GetValue ( TextMapperProperty );
+
+
 	}
 
 }

@@ -66,12 +66,13 @@
 						<RowDefinition></RowDefinition>
 					</Grid.RowDefinitions>
 
+					<!-- BorderBrush="#adadad" -->
 					<Border
 						Height="300"
 						Width="200"
 						Grid.Row="0"
 						Grid.Column="0"
-						BorderBrush="#adadad"
+						converters:BackgroundThemeConverter.BorderMapper="ImageBorderColor"
 						BorderThickness="2"
 						CornerRadius="5">
 						<Border.Background>
@@ -99,15 +100,19 @@
 						<StackPanel
 							Grid.Row="0"
 							Orientation="Vertical">
+							<!-- Foreground="#b32121" -->
 							<TextBlock
 								TextWrapping="Wrap"
 								TextTrimming="CharacterEllipsis"
 								MaxLines="3"
-								Foreground="#b32121"
+								FontWeight="Bold"
+								FontSize="14.5"
+								converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 								Text="{Binding Title}"
 							/>
 							<StackPanel Orientation="Vertical">
-								<TextBlock Foreground="Black">
+								<TextBlock
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Статус"
 										FontWeight="Bold"
@@ -120,7 +125,7 @@
 							<StackPanel
 								Orientation="Vertical"
 								Visibility="{Binding IsExistsScheduledOnDay}">
-								<TextBlock Foreground="Black">
+								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="В расписании"
 										FontWeight="Bold"
@@ -131,7 +136,7 @@
 								</TextBlock>
 							</StackPanel>
 							<StackPanel Orientation="Vertical">
-								<TextBlock Foreground="Black">
+								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Год"
 										FontWeight="Bold"
@@ -142,7 +147,7 @@
 								</TextBlock>
 							</StackPanel>
 							<StackPanel Orientation="Vertical">
-								<TextBlock Foreground="Black">
+								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Тип"
 										FontWeight="Bold"
@@ -156,7 +161,7 @@
 								<TextBlock
 									MaxLines="3"
 									TextWrapping="WrapWholeWords"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Жанры"
 										FontWeight="Bold"
@@ -170,7 +175,7 @@
 								<TextBlock
 								MaxLines="5"
 								TextWrapping="WrapWholeWords"
-								Foreground="Black">
+								converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Озвучка"
 										FontWeight="Bold"
@@ -181,7 +186,7 @@
 								</TextBlock>
 							</StackPanel>
 							<TextBlock
-								Foreground="Black"
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
 								FontWeight="Bold"
 								Visibility="{Binding IsSeen}">
 								Все серии просмотрены
@@ -203,7 +208,7 @@
 									Height="20"
 									FontFamily="Segoe MDL2 Assets"
 									FontSize="18"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									&#xEB51;
 								</TextBlock>
 							</Grid>
@@ -213,7 +218,7 @@
 									Margin="4 0 0 0"
 									FontSize="16"
 									Text="{Binding Rating}"
-									Foreground="Black"
+									converters:BackgroundThemeConverter.TextMapper="TextBlock"
 								/>
 							</Grid>
 							<Grid
