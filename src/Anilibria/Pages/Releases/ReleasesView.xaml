@@ -54,9 +54,10 @@
 		</Style>
 		<DataTemplate x:Key="ReleaseItemTemplate">
 			<Border CornerRadius="8">
+				<!-- Background="#f2f2f2" -->
 				<Grid
 					Padding="10"
-					Background="#f2f2f2">
+					converters:BackgroundThemeConverter.BackgroundMapper="ReleaseGridBackground">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
@@ -636,9 +637,10 @@
 			</BeginStoryboard>
 		</EventTrigger>
 	</UserControl.Triggers>
-	
+
+	<!-- Background="#e6e6e6" -->
 	<Grid
-		Background="#e6e6e6">
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -648,10 +650,11 @@
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
+		<!-- Background="#ba2d2d" -->
 		<Border
 			Grid.Row="0"
 			Grid.Column="0"
-			Background="#ba2d2d"
+			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
 			MinHeight="44"
 			Width="44">
 			<Button
@@ -666,11 +669,12 @@
 				/>
 			</Button>
 		</Border>
+		<!-- Background="#9e2323"-->
 		<Border
 			Grid.Row="1"
 			Grid.RowSpan="2"
 			Grid.Column="0"
-			Background="#9e2323"
+			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
 			Width="44">
 			<RelativePanel
 				HorizontalAlignment="Stretch">
@@ -1174,10 +1178,11 @@
 				</Button>
 			</RelativePanel>
 		</Border>
+		<!-- Background="#b3b3b3" -->
 		<Border
 			Grid.Row="0"
 			Grid.Column="1"
-			Background="#b3b3b3">
+			converters:BackgroundThemeConverter.BackgroundMapper="UpperPanel">
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<ToggleSwitch
