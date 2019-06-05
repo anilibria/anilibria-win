@@ -65,3 +65,16 @@ void ReleaseItemModel::setPoster(const QString &poster)
     m_Poster = poster;
     emit posterChanged();
 }
+
+QString ReleaseItemModel::description() const
+{
+    return m_Description;
+}
+
+void ReleaseItemModel::setDescription(const QString &description)
+{
+    if (description == m_Description) return;
+
+    m_Description = description;
+    emit descriptionChanged();
+}

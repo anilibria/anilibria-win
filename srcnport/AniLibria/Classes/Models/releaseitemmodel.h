@@ -12,12 +12,14 @@ class ReleaseItemModel : public QObject
     Q_PROPERTY(QString status READ status WRITE setStatus NOTIFY statusChanged)
     Q_PROPERTY(QString year READ year WRITE setYear NOTIFY yearChanged)
     Q_PROPERTY(QString poster READ poster WRITE setPoster NOTIFY posterChanged)
+    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 private:
     QString m_Title;
     QString m_Status;
     QString m_Year;
     QString m_Poster;
+    QString m_Description;
 
 public:
     explicit ReleaseItemModel(QObject *parent = nullptr);
@@ -34,6 +36,9 @@ public:
     QString poster() const;
     void setPoster(const QString &poster);
 
+    QString description() const;
+    void setDescription(const QString &description);
+
     void mapFromReleaseModel(ReleaseModel & releaseModel);
 
 signals:
@@ -41,6 +46,7 @@ signals:
     void statusChanged();
     void yearChanged();
     void posterChanged();
+    void descriptionChanged();
 
 public slots:
 
