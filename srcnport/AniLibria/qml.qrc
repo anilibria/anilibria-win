@@ -15,5 +15,14 @@
         <file>Assets/Icons/user.svg</file>
         <file>Views/Donate.qml</file>
         <file>Views/Youtube.qml</file>
+        <file>Assets/Icons/back.svg</file>
+        <file>Assets/Icons/fast-forward.svg</file>
+        <file>Assets/Icons/next.svg</file>
+        <file>Assets/Icons/pause.svg</file>
+        <file>Assets/Icons/play-button.svg</file>
+        <file>Assets/Icons/previous.svg</file>
+        <file>Assets/Icons/rewind.svg</file>
+        <file>Assets/Icons/skip.svg</file>
+        <file>Assets/Icons/speaker.svg</file>
     </qresource>
 </RCC>

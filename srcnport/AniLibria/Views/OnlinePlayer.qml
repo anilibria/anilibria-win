@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtMultimedia 5.12
-
+import "../Controls"
 
 Page {
     property Drawer drawer
@@ -27,6 +27,10 @@ Page {
         source: "https://de10.anilibria.tv/videos/ts/3996/0105-sd/playlist.m3u8"
         //source: "D:\ChromeDownload\test.mp4"
         autoPlay: false
+        onPlaybackStateChanged: {
+            playButton.visible = playbackState === MediaPlayer.PausedState || playbackState === MediaPlayer.StoppedState;
+            pauseButton.visible = playbackState === MediaPlayer.PlayingState;
+        }
     }
 
     MouseArea {
@@ -51,32 +55,37 @@ Page {
         anchors.fill: parent
     }
 
-    Row {
+    Rectangle {
         id: controlPanel
+        color: "white"
         anchors.bottom: parent.bottom
-        spacing: 5
-        //anchors.bottomMargin: buttontest.height + 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        Button {
-            id: buttontest
-            text: qsTr("Пауза")
-            onClicked: {
-                player.pause();
+        width: parent.width
+        height: 70
+        Row {
+            spacing: 5
+            AppPanelButton {
+                id: playButton
+                iconSource: "../Assets/Icons/play-button.svg"
+                width: 40
+                onPressed: {
+                    player.play();
+                }
             }
-        }
-        Button {
-            text: qsTr("Воспроизведение")
-            onClicked: {
-                player.play();
+            AppPanelButton {
+                id: pauseButton
+                iconSource: "../Assets/Icons/pause.svg"
+                width: 40
+                onPressed: {
+                    player.pause();
+                }
             }
-        }
-        Button {
-            text: qsTr("Переход вперед")
-            onClicked: {
-                if (player.seekable) player.seek(5000);
+            Button {
+                text: qsTr("Переход вперед")
+                onClicked: {
+                    if (player.seekable) player.seek(5000);
+                }
             }
         }
     }
-
 }
 
