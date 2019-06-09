@@ -734,9 +734,46 @@
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>
+				<Button
+					x:Name="SeenButton"
+					RelativePanel.Below="FavoritesButton"
+					Style="{StaticResource IconsButtonStyle}"
+					ToolTipService.ToolTip="Чтобы снять или поставить отметку о просмотре необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
+					<controls:OpenEyeIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="32"
+						IconColor="White"
+					/>
+					<Button.Flyout>
+						<MenuFlyout>
+							<MenuFlyout.MenuFlyoutPresenterStyle>
+								<Style TargetType="MenuFlyoutPresenter">
+									<Setter Property="Background" Value="#e6e6e6" />
+									<Setter Property="BorderThickness" Value="1" />
+									<Setter Property="BorderBrush" Value="Black" />
+								</Style>
+							</MenuFlyout.MenuFlyoutPresenterStyle>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Отметить как просмотренное"
+								Command="{Binding AddSeenMarkCommand}"
+							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Отметить как не просмотренное"
+								Command="{Binding RemoveSeenMarkCommand}"
+							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Удалить все отметки о просмотре"
+								Command="{Binding RemoveAllSeensMarksCommand}"
+							/>
+						</MenuFlyout>
+					</Button.Flyout>
+				</Button>
 				<Grid
 					x:Name="FilterButton"
-					RelativePanel.Below="FavoritesButton">
+					RelativePanel.Below="SeenButton">
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
 						<controls:SearchIcon

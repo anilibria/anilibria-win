@@ -385,14 +385,14 @@ namespace Anilibria.Pages.Releases {
 
 
 		private void NotificationToast ( bool isNewReleases , bool isNewSeries , bool isNewTorrents ) {
-			try
-			{
+			try {
 				ToastNotificationManager.CreateToastNotifier ().Show (
 					new ToastNotification (
 						GenerateToastContent ( isNewReleases , isNewSeries , isNewTorrents ).GetXml ()
 					)
 				);
-			} catch {
+			}
+			catch {
 				//WORKAROUND: Sometimes app crashes on this line, I sure that issue not in my code.
 			}
 		}
@@ -453,6 +453,117 @@ namespace Anilibria.Pages.Releases {
 			AddGenreToFilterCommand = CreateCommand<string> ( AddGenreToFilter );
 			AddVoicesToFilterCommand = CreateCommand<string> ( AddVoicesToFilter );
 			RemoveSeensFavoritesCommand = CreateCommand ( RemoveSeensFavorites );
+			AddSeenMarkCommand = CreateCommand ( AddSeenMark , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			RemoveSeenMarkCommand = CreateCommand ( RemoveSeenMark , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			RemoveAllSeensMarksCommand = CreateCommand ( RemoveAllSeensMarks );
+		}
+
+		private void RemoveAllSeensMarks () {
+			var states = m_VideoStateCollection
+				.Find ( a => true )
+				.ToList ();
+
+			foreach ( var state in states ) {
+				if ( state.VideoStates == null ) continue;
+
+				foreach ( var videoState in state.VideoStates ) videoState.IsSeen = false;
+
+				m_VideoStateCollection.Update ( state );
+			}
+
+			RefreshWatchedVideo ();
+		}
+
+		private void RemoveSeenMark () {
+			var selectedReleasesIds = GetSelectedReleases ()
+				.Select ( a => a.Id )
+				.ToArray ();
+			var states = m_VideoStateCollection
+				.Find ( a => true )
+				.ToList ()
+				.Where ( a => a.VideoStates != null && selectedReleasesIds.Contains ( a.ReleaseId ) )
+				.ToList ();
+
+			foreach ( var state in states ) {
+				if ( state.VideoStates == null ) continue;
+
+				foreach ( var videoState in state.VideoStates ) videoState.IsSeen = false;
+
+				m_VideoStateCollection.Update ( state );
+			}
+
+			RefreshWatchedVideo ();
+			RefreshSelectedReleases ();
+		}
+
+		private ICollection<VideoStateEntity> GetSeensReleasePlaylistStates ( long releaseId ) {
+			var release = m_AllReleases.FirstOrDefault ( a => a.Id == releaseId );
+			if ( release == null ) return Enumerable.Empty<VideoStateEntity> ().ToList ();
+
+			return release.Playlist
+				.Select (
+					a => new VideoStateEntity {
+						Id = a.Id ,
+						IsSeen = true ,
+						LastPosition = 0
+					}
+				)
+				.ToList ();
+		}
+
+		private ICollection<VideoStateEntity> GetSeensReleasePlaylistStates ( long releaseId , IEnumerable<VideoStateEntity> videoStates ) {
+			var release = m_AllReleases.FirstOrDefault ( a => a.Id == releaseId );
+			if ( release == null ) return Enumerable.Empty<VideoStateEntity> ().ToList();
+
+			var result = new List<VideoStateEntity> ();
+
+			foreach ( var item in release.Playlist ) {
+				var existsItem = videoStates.FirstOrDefault ( a => a.Id == item.Id );
+				if ( existsItem != null ) {
+					existsItem.IsSeen = true;
+					result.Add ( existsItem );
+					continue;
+				}
+
+				result.Add (
+					new VideoStateEntity {
+						Id = item.Id ,
+						IsSeen = true ,
+						LastPosition = 0
+					}
+				);
+			}
+
+			return result;
+		}
+
+		private void AddSeenMark () {
+			var selectedReleasesIds = GetSelectedReleases ()
+				.Select ( a => a.Id )
+				.ToArray ();
+			var states = m_VideoStateCollection
+				.Find ( a => true )
+				.ToList ()
+				.Where ( a => a.VideoStates != null && selectedReleasesIds.Contains ( a.ReleaseId ) )
+				.ToList ();
+
+			foreach ( var selectedReleaseId in selectedReleasesIds ) {
+				var state = states.FirstOrDefault ( a => a.ReleaseId == selectedReleaseId );
+				if ( state == null ) {
+					m_VideoStateCollection.Add (
+						new ReleaseVideoStateEntity {
+							ReleaseId = selectedReleaseId ,
+							VideoStates = GetSeensReleasePlaylistStates ( selectedReleaseId )
+						}
+					);
+					continue;
+				}
+				state.VideoStates = GetSeensReleasePlaylistStates ( selectedReleaseId, state.VideoStates );
+				m_VideoStateCollection.Update ( state );
+			}
+
+			RefreshWatchedVideo ();
+			RefreshSelectedReleases ();
 		}
 
 		private async void RemoveSeensFavorites () {
@@ -2069,6 +2180,34 @@ namespace Anilibria.Pages.Releases {
 			get;
 			set;
 		}
+
+		/// <summary>
+		/// Add seen mark command.
+		/// </summary>
+		public ICommand AddSeenMarkCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove seen mark command.
+		/// </summary>
+		public ICommand RemoveSeenMarkCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove seen mark command.
+		/// </summary>
+		public ICommand RemoveAllSeensMarksCommand
+		{
+			get;
+			set;
+		}
+
 
 	}
 

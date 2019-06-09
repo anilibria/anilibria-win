@@ -160,6 +160,9 @@
     <Compile Include="Controls\NotificationIcon.xaml.cs">
       <DependentUpon>NotificationIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\OpenEyeIcon.xaml.cs">
+      <DependentUpon>OpenEyeIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerButtonControl.cs" />
     <Compile Include="Controls\PointingGridControl.cs" />
     <Compile Include="Controls\RefreshIcon.xaml.cs">
@@ -453,6 +456,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\NotificationIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OpenEyeIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
