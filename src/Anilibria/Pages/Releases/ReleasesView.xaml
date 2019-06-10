@@ -738,10 +738,11 @@
 					x:Name="SeenButton"
 					RelativePanel.Below="FavoritesButton"
 					Style="{StaticResource IconsButtonStyle}"
+					Height="40"
 					ToolTipService.ToolTip="Чтобы снять или поставить отметку о просмотре необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
 					<controls:OpenEyeIcon
-						IconWidth="{StaticResource IconSize}"
-						IconHeight="32"
+						IconWidth="28"
+						IconHeight="28"
 						IconColor="White"
 					/>
 					<Button.Flyout>

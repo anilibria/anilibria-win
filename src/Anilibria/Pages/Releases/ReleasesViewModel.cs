@@ -458,7 +458,15 @@ namespace Anilibria.Pages.Releases {
 			RemoveAllSeensMarksCommand = CreateCommand ( RemoveAllSeensMarks );
 		}
 
-		private void RemoveAllSeensMarks () {
+		private async void RemoveAllSeensMarks () {
+			var result = await new ContentDialog {
+				Title = "Удалить все отметки о просмотре" ,
+				Content = "Вы уверены что хотите удалить абсолютно все отметки о просмотре во всем каталоге релизов?" ,
+				PrimaryButtonText = "Удалить" ,
+				CloseButtonText = "Отмена"
+			}.ShowAsync ();
+			if ( result != ContentDialogResult.Primary ) return;
+
 			var states = m_VideoStateCollection
 				.Find ( a => true )
 				.ToList ();
@@ -513,7 +521,7 @@ namespace Anilibria.Pages.Releases {
 
 		private ICollection<VideoStateEntity> GetSeensReleasePlaylistStates ( long releaseId , IEnumerable<VideoStateEntity> videoStates ) {
 			var release = m_AllReleases.FirstOrDefault ( a => a.Id == releaseId );
-			if ( release == null ) return Enumerable.Empty<VideoStateEntity> ().ToList();
+			if ( release == null ) return Enumerable.Empty<VideoStateEntity> ().ToList ();
 
 			var result = new List<VideoStateEntity> ();
 
@@ -558,7 +566,7 @@ namespace Anilibria.Pages.Releases {
 					);
 					continue;
 				}
-				state.VideoStates = GetSeensReleasePlaylistStates ( selectedReleaseId, state.VideoStates );
+				state.VideoStates = GetSeensReleasePlaylistStates ( selectedReleaseId , state.VideoStates );
 				m_VideoStateCollection.Update ( state );
 			}
 
