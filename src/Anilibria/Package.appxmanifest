@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
-  <Identity Name="53309GeekIT.AniLibria" Publisher="CN=41F76773-5EA9-45BD-A6E3-C759BF2C7A1E" Version="0.1.18.0" />
+  <Identity Name="53309GeekIT.AniLibria" Publisher="CN=41F76773-5EA9-45BD-A6E3-C759BF2C7A1E" Version="0.1.19.0" />
   <mp:PhoneIdentity PhoneProductId="d7021c1b-c77b-46e3-9c41-de490ca0e71c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>AniLibria</DisplayName>
