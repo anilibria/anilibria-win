@@ -31,7 +31,7 @@ ApplicationWindow {
         };
 
         const currentPage = pages[currentPageId];
-        //currentPage.navigateFrom();
+        currentPage.navigateFrom();
 
         currentPage.visible = false;
 

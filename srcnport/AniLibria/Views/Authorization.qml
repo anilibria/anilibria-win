@@ -6,6 +6,7 @@ import "../Controls"
 
 Page {
     property Drawer drawer
+    signal navigateFrom()
 
     background: Rectangle {
         color: "#D3D3D3"

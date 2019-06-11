@@ -20,13 +20,13 @@ void SynchronizationService::synchronizeReleases()
 QQmlListProperty<ReleaseItemModel> SynchronizationService::releases()
 {
     return QQmlListProperty<ReleaseItemModel>(
-             this,
-             this,
-             &SynchronizationService::addRelease,
-             &SynchronizationService::releasesCount,
-             &SynchronizationService::release,
-             &SynchronizationService::clearReleases
-                );
+        this,
+        this,
+        &SynchronizationService::addRelease,
+        &SynchronizationService::releasesCount,
+        &SynchronizationService::release,
+        &SynchronizationService::clearReleases
+    );
 }
 
 void SynchronizationService::addRelease(ReleaseItemModel * release)
