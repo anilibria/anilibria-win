@@ -899,6 +899,7 @@ namespace Anilibria.Pages.Releases {
 						Message = "Не удалось скачать торрент файл"
 					}
 				);
+				return;
 			}
 			var mode = SelectedTorrentDownloadMode?.Mode ?? TorrentDownloadMode.OpenInTorrentClient;
 
