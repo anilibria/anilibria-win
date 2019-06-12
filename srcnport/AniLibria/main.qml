@@ -219,6 +219,7 @@ ApplicationWindow {
     Youtube {
         id: youtube
         drawer: drawer
+        synchronizeService: synchronizationService
         visible: false
     }
 }

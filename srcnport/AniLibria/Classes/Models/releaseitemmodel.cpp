@@ -12,6 +12,7 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setYear(releaseModel.year());
     QString fullPosterUrl = "https://www.anilibria.tv" + releaseModel.poster();
     setPoster(fullPosterUrl);
+    setReleaseType(releaseModel.type());
 }
 
 QString ReleaseItemModel::title() const
@@ -77,4 +78,17 @@ void ReleaseItemModel::setDescription(const QString &description)
 
     m_Description = description;
     emit descriptionChanged();
+}
+
+QString ReleaseItemModel::releaseType() const
+{
+    return m_ReleaseType;
+}
+
+void ReleaseItemModel::setReleaseType(const QString &releaseType)
+{
+    if (releaseType == m_ReleaseType) return;
+
+    m_ReleaseType = releaseType;
+    emit releaseTypeChanged();
 }

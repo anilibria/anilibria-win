@@ -11,7 +11,7 @@ class SynchronizationService : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QQmlListProperty<ReleaseItemModel> releases READ releases)
+    Q_PROPERTY(QQmlListProperty<ReleaseItemModel> releases READ releases NOTIFY releasesChanged)
 
 private:
     AnilibriaApiService* m_AnilibriaApiService;
@@ -31,9 +31,10 @@ public:
     void addRelease(ReleaseItemModel*);
     int releasesCount() const;
     ReleaseItemModel* release(int) const;
-    void clearReleases();
+    void clearReleases();    
 
 signals:
+    void releasesChanged();
 
 public slots:
     void saveReleasesToCache(QString data);

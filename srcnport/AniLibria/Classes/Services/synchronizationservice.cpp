@@ -69,38 +69,6 @@ void SynchronizationService::clearReleases(QQmlListProperty<ReleaseItemModel> * 
     reinterpret_cast<SynchronizationService*>(list->data)->clearReleases();
 }
 
-/*
-"id":1202,
-    "code":"sakurako-san-no-ashimoto-ni-wa-shitai-ga-umatteiru",
-    "names":[
-        "Труп под ногами Сакурако",
-        "Sakurako-san no Ashimoto ni wa Shitai ga Umatteiru"
-    ],
-    "series":"1-12",
-    "poster":"/upload/release/350x500/default.jpg",
-    "favorite": МОДЕЛЬ ИЗБРАННОГО В РЕЛИЗЕ,
-    "last":"1202",
-    "moon":"https://streamguard.cc/serial/f9f3c92e182de8c722ed0c13e8087558/iframe?nocontrols_translations=1",
-    "status":"Завершен",
-    "type":"ТВ (>12 эп.), 25 мин.",
-    "genres":[
-        "приключения",
-        "мистика",
-        "детектив"
-    ],
-    "voices":[
-        "Mikrobelka",
-        "HectoR",
-        "Aemi"
-    ],
-    "year":"0",
-    "day":"1",
-    "description":"Описание релиза <a href='#'>которое может содержать html</a>",
-    "blockedInfo": МОДЕЛЬ БЛОКИРОВКИ,
-    "playlist":[ МОДЕЛЬ СЕРИИ ],
-    "torrents":[ МОДЕЛЬ ТОРРЕНТА]
-*/
-
 void SynchronizationService::saveReleasesToCache(QString data)
 {
     QJsonParseError jsonError;
@@ -123,4 +91,14 @@ void SynchronizationService::saveReleasesToCache(QString data)
         releaseModel.readFromApiModel(item.toObject());
         m_ApiReleases.append(releaseModel);
     }
+
+    //TODO: save releases to cache
+
+    ReleaseModel item;
+    foreach (item, m_ApiReleases) {
+        ReleaseItemModel * releaseItemModel = new ReleaseItemModel();
+        releaseItemModel->mapFromReleaseModel(item);
+        m_Releases.append(releaseItemModel);
+    }
+    emit releasesChanged();
 }
