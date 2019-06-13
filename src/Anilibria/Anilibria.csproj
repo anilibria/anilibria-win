@@ -291,6 +291,7 @@
     <Compile Include="Services\PresentationClasses\DeviceFamilyType.cs" />
     <Compile Include="Services\PresentationClasses\DeviceInputType.cs" />
     <Compile Include="Services\PresentationClasses\DownloadItem.cs" />
+    <Compile Include="Services\PresentationClasses\DownloadVideoQuality.cs" />
     <Compile Include="Services\PresentationClasses\Favorite.cs" />
     <Compile Include="Services\PresentationClasses\FavoriteModel.cs" />
     <Compile Include="Services\PresentationClasses\PagingInfo.cs" />

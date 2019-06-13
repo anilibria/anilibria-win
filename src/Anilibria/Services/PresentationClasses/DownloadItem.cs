@@ -17,15 +17,6 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Release name.
-		/// </summary>
-		public string ReleaseName
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// Release identifier.
 		/// </summary>
 		public long ReleaseId
@@ -83,6 +74,24 @@ namespace Anilibria.Services.PresentationClasses {
 		/// File name.
 		/// </summary>
 		public string FileName
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Download path.
+		/// </summary>
+		public Uri DownloadPath
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Quality.
+		/// </summary>
+		public DownloadVideoQuality Quality
 		{
 			get;
 			set;
