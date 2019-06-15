@@ -456,6 +456,21 @@ namespace Anilibria.Pages.Releases {
 			AddSeenMarkCommand = CreateCommand ( AddSeenMark , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			RemoveSeenMarkCommand = CreateCommand ( RemoveSeenMark , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			RemoveAllSeensMarksCommand = CreateCommand ( RemoveAllSeensMarks );
+			EnableFavoriteMarkFilterCommand = CreateCommand ( EnableFavoriteMarkFilter , () => !IsShowReleaseCard );
+			EnableNotFavoriteMarkFilterCommand = CreateCommand ( NotEnableFavoriteMarkFilter , () => !IsShowReleaseCard );
+			DisableFavoriteMarkFilterCommand = CreateCommand ( DisableFavoriteMarkFilter , () => !IsShowReleaseCard );
+		}
+
+		private void DisableFavoriteMarkFilter () {
+			if ( SelectedFavoriteMarkType.Type != FavoriteMarkType.NotUsed ) SelectedFavoriteMarkType = FavoriteMarkTypes.First ( a => a.Type == FavoriteMarkType.NotUsed );
+		}
+
+		private void NotEnableFavoriteMarkFilter () {
+			if ( SelectedFavoriteMarkType.Type != FavoriteMarkType.NotFavorited ) SelectedFavoriteMarkType = FavoriteMarkTypes.First ( a => a.Type == FavoriteMarkType.NotFavorited );
+		}
+
+		private void EnableFavoriteMarkFilter () {
+			if ( SelectedFavoriteMarkType.Type != FavoriteMarkType.Favorited ) SelectedFavoriteMarkType = FavoriteMarkTypes.First ( a => a.Type == FavoriteMarkType.Favorited );
 		}
 
 		private async void RemoveAllSeensMarks () {
@@ -2217,6 +2232,32 @@ namespace Anilibria.Pages.Releases {
 			set;
 		}
 
+		/// <summary>
+		/// Enable favorite mark filter command.
+		/// </summary>
+		public ICommand EnableFavoriteMarkFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Enable not favorite mark filter command.
+		/// </summary>
+		public ICommand EnableNotFavoriteMarkFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Disable favorite mark filter command.
+		/// </summary>
+		public ICommand DisableFavoriteMarkFilterCommand
+		{
+			get;
+			set;
+		}
 
 	}
 

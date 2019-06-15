@@ -21,6 +21,10 @@ namespace Anilibria.Pages.Releases {
 
 		private ReleasesViewModel m_ViewModel;
 
+		private bool m_ControlPressed = false;
+
+		private bool m_ShiftPressed = false;
+
 		public ReleasesView () {
 			InitializeComponent ();
 
@@ -28,14 +32,28 @@ namespace Anilibria.Pages.Releases {
 			DataContext = m_ViewModel;
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
+			Window.Current.CoreWindow.KeyDown += GlobalKeyDownHandler;
 
 			m_ViewModel.SetCommentsUrl = SetCommentsUrl;
+		}
+
+		private void GlobalKeyDownHandler ( CoreWindow sender , KeyEventArgs args ) {
+			if ( Visibility != Visibility.Visible ) return;
+
+			if ( args.VirtualKey == VirtualKey.Control ) m_ControlPressed = true;
+			if ( args.VirtualKey == VirtualKey.Shift ) m_ShiftPressed = true;
 		}
 
 		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
 			if ( Visibility != Visibility.Visible ) return;
 
 			if ( args.VirtualKey == VirtualKey.Escape ) Rectangle_Tapped ( null , null );
+			if ( args.VirtualKey == VirtualKey.F ) m_ViewModel.EnableFavoriteMarkFilterCommand.Execute ( null );
+			if ( args.VirtualKey == VirtualKey.F && m_ControlPressed ) m_ViewModel.EnableNotFavoriteMarkFilterCommand.Execute ( null );
+			if ( args.VirtualKey == VirtualKey.F && m_ShiftPressed ) m_ViewModel.DisableFavoriteMarkFilterCommand.Execute ( null );
+
+			m_ControlPressed = false;
+			m_ShiftPressed = false;
 		}
 
 		private void UserControl_Loaded ( object sender , RoutedEventArgs e ) {
