@@ -25,6 +25,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_ShiftPressed = false;
 
+		private bool m_AltPressed = false;
+
 		public ReleasesView () {
 			InitializeComponent ();
 
@@ -32,28 +34,51 @@ namespace Anilibria.Pages.Releases {
 			DataContext = m_ViewModel;
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
-			Window.Current.CoreWindow.KeyDown += GlobalKeyDownHandler;
+			Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
 
 			m_ViewModel.SetCommentsUrl = SetCommentsUrl;
 		}
 
-		private void GlobalKeyDownHandler ( CoreWindow sender , KeyEventArgs args ) {
-			if ( Visibility != Visibility.Visible ) return;
+		private void Dispatcher_AcceleratorKeyActivated ( CoreDispatcher sender , AcceleratorKeyEventArgs args ) {
+			if ( args.VirtualKey == VirtualKey.Menu ) m_AltPressed = !args.KeyStatus.WasKeyDown;
+			if ( args.VirtualKey == VirtualKey.Shift ) m_ShiftPressed = !args.KeyStatus.WasKeyDown;
+			if ( args.VirtualKey == VirtualKey.Control ) m_ControlPressed = !args.KeyStatus.WasKeyDown;
 
-			if ( args.VirtualKey == VirtualKey.Control ) m_ControlPressed = true;
-			if ( args.VirtualKey == VirtualKey.Shift ) m_ShiftPressed = true;
+			if ( args.VirtualKey == VirtualKey.S && m_AltPressed ) m_ViewModel.EnableSeenNowMarkFilterCommand.Execute ( null );
 		}
 
 		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
 			if ( Visibility != Visibility.Visible ) return;
 
 			if ( args.VirtualKey == VirtualKey.Escape ) Rectangle_Tapped ( null , null );
-			if ( args.VirtualKey == VirtualKey.F ) m_ViewModel.EnableFavoriteMarkFilterCommand.Execute ( null );
-			if ( args.VirtualKey == VirtualKey.F && m_ControlPressed ) m_ViewModel.EnableNotFavoriteMarkFilterCommand.Execute ( null );
-			if ( args.VirtualKey == VirtualKey.F && m_ShiftPressed ) m_ViewModel.DisableFavoriteMarkFilterCommand.Execute ( null );
 
-			m_ControlPressed = false;
-			m_ShiftPressed = false;
+			if ( args.VirtualKey == VirtualKey.F ) {
+				if ( m_ControlPressed ) {
+					m_ViewModel.EnableNotFavoriteMarkFilterCommand.Execute ( null );
+					return;
+				}
+				if ( m_ShiftPressed ) {
+					m_ViewModel.DisableFavoriteMarkFilterCommand.Execute ( null );
+					return;
+				}
+
+				m_ViewModel.EnableFavoriteMarkFilterCommand.Execute ( null );
+			}
+
+			if ( args.VirtualKey == VirtualKey.S ) {
+				if ( m_ControlPressed ) {
+					m_ViewModel.EnableNotSeenMarkFilterCommand.Execute ( null );
+					return;
+				}
+				if ( m_ShiftPressed ) {
+					m_ViewModel.DisableSeenMarkFilterCommand.Execute ( null );
+					return;
+				}
+
+				m_ViewModel.EnableSeenMarkFilterCommand.Execute ( null );
+			}
+
+			if ( args.VirtualKey == VirtualKey.C ) m_ViewModel.ClearFiltersCommands.Execute ( null );
 		}
 
 		private void UserControl_Loaded ( object sender , RoutedEventArgs e ) {

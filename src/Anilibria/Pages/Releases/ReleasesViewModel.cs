@@ -459,6 +459,26 @@ namespace Anilibria.Pages.Releases {
 			EnableFavoriteMarkFilterCommand = CreateCommand ( EnableFavoriteMarkFilter , () => !IsShowReleaseCard );
 			EnableNotFavoriteMarkFilterCommand = CreateCommand ( NotEnableFavoriteMarkFilter , () => !IsShowReleaseCard );
 			DisableFavoriteMarkFilterCommand = CreateCommand ( DisableFavoriteMarkFilter , () => !IsShowReleaseCard );
+			EnableSeenMarkFilterCommand = CreateCommand ( EnableSeenMarkFilter , () => !IsShowReleaseCard );
+			EnableNotSeenMarkFilterCommand = CreateCommand ( EnableNotSeenMarkFilter , () => !IsShowReleaseCard );
+			EnableSeenNowMarkFilterCommand = CreateCommand ( EnableSeenNowMarkFilter , () => !IsShowReleaseCard );
+			DisableSeenMarkFilterCommand = CreateCommand ( DisableSeenMarkFilter , () => !IsShowReleaseCard );
+		}
+
+		private void DisableSeenMarkFilter () {
+			if ( SelectedSeenMarkType.Type != SeenMarkType.NotUsed ) SelectedSeenMarkType = SeenMarkTypes.First ( a => a.Type == SeenMarkType.NotUsed );
+		}
+
+		private void EnableSeenNowMarkFilter () {
+			if ( SelectedSeenMarkType.Type != SeenMarkType.SeenNow ) SelectedSeenMarkType = SeenMarkTypes.First ( a => a.Type == SeenMarkType.SeenNow );
+		}
+
+		private void EnableNotSeenMarkFilter () {
+			if ( SelectedSeenMarkType.Type != SeenMarkType.NotSeen ) SelectedSeenMarkType = SeenMarkTypes.First ( a => a.Type == SeenMarkType.NotSeen );
+		}
+
+		private void EnableSeenMarkFilter () {
+			if ( SelectedSeenMarkType.Type != SeenMarkType.Seen ) SelectedSeenMarkType = SeenMarkTypes.First ( a => a.Type == SeenMarkType.Seen );
 		}
 
 		private void DisableFavoriteMarkFilter () {
@@ -2254,6 +2274,42 @@ namespace Anilibria.Pages.Releases {
 		/// Disable favorite mark filter command.
 		/// </summary>
 		public ICommand DisableFavoriteMarkFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Enable seen mark filter command.
+		/// </summary>
+		public ICommand EnableSeenMarkFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Enable not seen mark filter command.
+		/// </summary>
+		public ICommand EnableNotSeenMarkFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Enable seen now mark filter command.
+		/// </summary>
+		public ICommand EnableSeenNowMarkFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Disable seen mark filter command.
+		/// </summary>
+		public ICommand DisableSeenMarkFilterCommand
 		{
 			get;
 			set;
