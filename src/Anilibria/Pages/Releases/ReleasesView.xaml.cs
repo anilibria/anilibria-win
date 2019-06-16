@@ -253,6 +253,12 @@ namespace Anilibria.Pages.Releases {
 			e.Handled = true;
 			m_ViewModel.IsMultipleSelect = !m_ViewModel.IsMultipleSelect;
 		}
+
+		private void MarkSeenMark_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			e.Handled = true;
+		}
+
 	}
 
 }

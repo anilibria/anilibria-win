@@ -463,6 +463,20 @@ namespace Anilibria.Pages.Releases {
 			EnableNotSeenMarkFilterCommand = CreateCommand ( EnableNotSeenMarkFilter , () => !IsShowReleaseCard );
 			EnableSeenNowMarkFilterCommand = CreateCommand ( EnableSeenNowMarkFilter , () => !IsShowReleaseCard );
 			DisableSeenMarkFilterCommand = CreateCommand ( DisableSeenMarkFilter , () => !IsShowReleaseCard );
+			EnableSeenMarkCardCommand = CreateCommand ( EnableSeenMarkCard , () => IsShowReleaseCard );
+			DisableSeenMarkCardCommand = CreateCommand ( DisableSeenMarkCard , () => IsShowReleaseCard );
+		}
+
+		private void DisableSeenMarkCard () {
+			RemoveSeenMark ( new long[] { OpenedRelease.Id } );
+
+			FillSeenFields ( OpenedRelease );
+		}
+
+		private void EnableSeenMarkCard () {
+			EnableSeenMark ( new long[] { OpenedRelease.Id } );
+
+			FillSeenFields ( OpenedRelease );
 		}
 
 		private void DisableSeenMarkFilter () {
@@ -518,9 +532,14 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RemoveSeenMark () {
-			var selectedReleasesIds = GetSelectedReleases ()
-				.Select ( a => a.Id )
-				.ToArray ();
+			RemoveSeenMark (
+				GetSelectedReleases ()
+					.Select ( a => a.Id )
+					.ToArray ()
+			);
+		}
+
+		private void RemoveSeenMark ( IEnumerable<long> selectedReleasesIds ) {
 			var states = m_VideoStateCollection
 				.Find ( a => true )
 				.ToList ()
@@ -581,9 +600,14 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void AddSeenMark () {
-			var selectedReleasesIds = GetSelectedReleases ()
-				.Select ( a => a.Id )
-				.ToArray ();
+			EnableSeenMark (
+				GetSelectedReleases ()
+					.Select ( a => a.Id )
+					.ToArray ()
+			);
+		}
+
+		private void EnableSeenMark ( IEnumerable<long> selectedReleasesIds ) {
 			var states = m_VideoStateCollection
 				.Find ( a => true )
 				.ToList ()
@@ -2310,6 +2334,24 @@ namespace Anilibria.Pages.Releases {
 		/// Disable seen mark filter command.
 		/// </summary>
 		public ICommand DisableSeenMarkFilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Enable seen mark command.
+		/// </summary>
+		public ICommand EnableSeenMarkCardCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Disable seen mark card command.
+		/// </summary>
+		public ICommand DisableSeenMarkCardCommand
 		{
 			get;
 			set;

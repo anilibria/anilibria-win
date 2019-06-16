@@ -86,7 +86,7 @@
 					<Grid
 						Grid.Column="1"
 						Grid.Row="0"
-						Margin="3"
+						Margin="8 3 3 3"
 						MaxWidth="230"
 						VerticalAlignment="Stretch"
 						Padding="0">
@@ -1650,6 +1650,39 @@
 									Tapped="ShowComments_Tapped"
 									ToolTipService.ToolTip="Открыть коментарии">
 						<controls:ChatIcon
+							IconWidth="20"
+							IconHeight="20"
+							IconColor="Black"
+						/>
+					</controls:PointingGridControl>
+
+					<controls:PointingGridControl
+						Width="20"
+						Height="20"
+						Margin="4 2 1 8"
+						x:Name="MarkSeenMark"
+						Tapped="MarkSeenMark_Tapped"
+						ToolTipService.ToolTip="Изменить отметки серий о просмотре по этому релизу">
+						<FlyoutBase.AttachedFlyout>
+							<MenuFlyout>
+								<MenuFlyout.MenuFlyoutPresenterStyle>
+									<Style TargetType="MenuFlyoutPresenter">
+										<Setter Property="Background" Value="#e6e6e6" />
+										<Setter Property="BorderThickness" Value="1" />
+										<Setter Property="BorderBrush" Value="Black" />
+									</Style>
+								</MenuFlyout.MenuFlyoutPresenterStyle>
+								<MenuFlyoutItem
+									Text="Отметить все серии как просмотренные"
+									Command="{Binding EnableSeenMarkCardCommand}"
+								/>
+								<MenuFlyoutItem
+									Text="Отметить все серии как не просмотренные"
+									Command="{Binding DisableSeenMarkCardCommand}"
+								/>
+							</MenuFlyout>
+						</FlyoutBase.AttachedFlyout>
+						<controls:OpenEyeIcon
 							IconWidth="20"
 							IconHeight="20"
 							IconColor="Black"
