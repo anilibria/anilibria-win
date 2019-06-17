@@ -95,10 +95,13 @@ void SynchronizationService::saveReleasesToCache(QString data)
     //TODO: save releases to cache
 
     ReleaseModel item;
+    int iterator = 0;
     foreach (item, m_ApiReleases) {
         ReleaseItemModel * releaseItemModel = new ReleaseItemModel();
         releaseItemModel->mapFromReleaseModel(item);
         m_Releases.append(releaseItemModel);
+
+        if (iterator > 50) break; // maximum of page 50 items
     }
     emit releasesChanged();
 }
