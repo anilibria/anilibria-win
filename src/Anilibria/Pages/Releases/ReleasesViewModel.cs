@@ -177,6 +177,8 @@ namespace Anilibria.Pages.Releases {
 		private FavoriteMarkItem m_SelectedFavoriteMarkType;
 
 		private IEntityCollection<ReleaseEntity> m_ReleasesCollection;
+		
+		private string m_FilterByDescription;
 
 		/// <summary>
 		/// Constructor injection.
@@ -729,6 +731,7 @@ namespace Anilibria.Pages.Releases {
 			string.IsNullOrEmpty ( m_FilterByType ) &&
 			string.IsNullOrEmpty ( m_FilterByVoicers ) &&
 			string.IsNullOrEmpty ( m_FilterByYears ) &&
+			string.IsNullOrEmpty ( m_FilterByDescription ) &&
 			m_SelectedSeenMarkType.Type == SeenMarkType.NotUsed &&
 			m_SelectedFavoriteMarkType.Type == FavoriteMarkType.NotUsed;
 
@@ -750,6 +753,8 @@ namespace Anilibria.Pages.Releases {
 			RaisePropertyChanged ( () => SelectedFavoriteMarkType );
 			m_SelectedSeenMarkType = SeenMarkTypes.FirstOrDefault ( a => a.Type == SeenMarkType.NotUsed );
 			RaisePropertyChanged ( () => SelectedSeenMarkType );
+			m_FilterByDescription = "";
+			RaisePropertyChanged ( () => FilterByDescription );
 
 			Filter ();
 			RefreshFilterState ();
@@ -1259,6 +1264,7 @@ namespace Anilibria.Pages.Releases {
 
 			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => ContainsInArrayCaseSensitive ( FilterByName , a.Names ) );
 			if ( !string.IsNullOrEmpty ( FilterByType ) ) releases = releases.Where ( a => a.Type?.ToLowerInvariant ().Contains ( FilterByType.ToLowerInvariant () ) ?? false );
+			if ( !string.IsNullOrEmpty ( FilterByDescription ) ) releases = releases.Where ( a => a.Description?.ToLowerInvariant ().Contains ( FilterByDescription.ToLowerInvariant () ) ?? false );
 			if ( !string.IsNullOrEmpty ( FilterByStatus ) ) {
 				var statuses = FilterByStatus.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
 				releases = releases.Where ( a => statuses?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { a.Status } ) ) ?? false );
@@ -1730,6 +1736,20 @@ namespace Anilibria.Pages.Releases {
 			set
 			{
 				if ( !Set ( ref m_FilterByStatus , value ) ) return;
+
+				RefreshFilterState ();
+			}
+		}
+
+		/// <summary>
+		/// Filter by description.
+		/// </summary>
+		public string FilterByDescription
+		{
+			get => m_FilterByDescription;
+			set
+			{
+				if ( !Set ( ref m_FilterByDescription , value ) ) return;
 
 				RefreshFilterState ();
 			}
