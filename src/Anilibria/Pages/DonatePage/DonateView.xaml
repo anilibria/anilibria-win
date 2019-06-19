@@ -80,24 +80,21 @@
 						Grid.Row="0"
 						Foreground="Black"
 						HorizontalAlignment="Right"
-						Margin="0 10 30 0">
+						Margin="0 10 30 6">
 						QIWI
 					</TextBlock>
-					<TextBox
-						Style="{StaticResource AnilibriaTextBox}"
+					<TextBlock
 						Grid.Column="1"
 						Grid.Row="0"
-						Background="Transparent"
+						Margin="0 10 0 6"
 						Foreground="Black"
-						Padding="0"
-						Margin="0 6 0 0"
-						Height="20"
-						Width="220"
-						HorizontalAlignment="Left"
-						BorderThickness="0"
-						Text="79660956323"
-						IsReadOnly="True"
-					/>
+						converters:TextBlockHighlight.HyperLinkHightlight="True">
+						<Hyperlink
+							Foreground="#a32727"
+							NavigateUri="https://my.qiwi.com/Aleksandr-PeUlISbRs_">
+							https://my.qiwi.com/Aleksandr-PeUlISbRs_
+						</Hyperlink>
+					</TextBlock>
 					<TextBlock
 						Grid.Column="0"
 						Grid.Row="1"
@@ -150,7 +147,7 @@
 						HorizontalAlignment="Right"
 						Foreground="Black"
 						Margin="0 0 30 0">
-						Bitcoin
+						PayPal
 					</TextBlock>
 					<TextBlock
 						Grid.Column="1"
@@ -159,8 +156,8 @@
 						converters:TextBlockHighlight.HyperLinkHightlight="True">
 						<Hyperlink
 							Foreground="#a32727"
-							NavigateUri="https://www.blockchain.com/btc/address/3CarFNZickTNb1nx2Bgk6VammB8CYCBSJd">
-							3CarFNZickTNb1nx2Bgk6VammB8CYCBSJd
+							NavigateUri="https://www.paypal.me/anilibria">
+							https://www.paypal.me/anilibria
 						</Hyperlink>
 					</TextBlock>
 					<TextBlock
