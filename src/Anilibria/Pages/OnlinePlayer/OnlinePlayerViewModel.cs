@@ -194,6 +194,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private IEntityCollection<ReleaseEntity> m_ReleasesCollection;
 
+		private bool m_IsXbox;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -1107,6 +1109,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get => m_Seconds;
 			set => Set ( ref m_Seconds , value );
+		}
+
+		/// <summary>
+		/// Is xbox.
+		/// </summary>
+		public bool IsXbox {
+			get => m_IsXbox;
+			set => Set(ref m_IsXbox, value);
 		}
 
 		/// <summary>

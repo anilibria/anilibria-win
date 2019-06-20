@@ -1471,50 +1471,44 @@
 													</AppBarButton>
 												</CommandBar.PrimaryCommands>
 											</CommandBar>
-											<CommandBar
+											<StackPanel
 												Grid.Column="2"
-												Margin='0 0 0 5'
-												Style='{StaticResource CommandBarStyle}'
-												OverflowButtonVisibility="Collapsed">
-												<AppBarButton
+												Orientation="Horizontal"
+												Margin="0 0 0 5"
+												Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsXbox, Converter={StaticResource InverseBoolConverter}}">
+												<Button
 													x:Name='CastButton'
 													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													IsTabStop="False"
-													Style='{StaticResource AppBarButtonStyle}'
-													MediaTransportControlsHelper.DropoutOrder='7'>
-													<AppBarButton.Icon>
-														<FontIcon Glyph="&#xEC15;"/>
-													</AppBarButton.Icon>
-												</AppBarButton>
-												<AppBarButton
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xEC15;"/>
+												</Button>
+												<Button
 													x:Name='ZoomButton'
+													Width="50"
 													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													IsTabStop="False"
-													Style='{StaticResource AppBarButtonStyle}'
-													MediaTransportControlsHelper.DropoutOrder='6'>
-													<AppBarButton.Icon>
-														<FontIcon Glyph="&#xE799;"/>
-													</AppBarButton.Icon>
-												</AppBarButton>
-												<AppBarButton
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xE799;"/>
+												</Button>
+												<Button
 													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 													IsTabStop="False"
-													Style='{StaticResource AppBarButtonStyle}'
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'
 													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ToggleFullScreenCommand}">
-													<AppBarButton.Icon>
-														<SymbolIcon Symbol='FullScreen' />
-													</AppBarButton.Icon>
-												</AppBarButton>
-												<AppBarButton
+													<SymbolIcon Symbol='FullScreen' />
+												</Button>
+												<Button
 													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled}"
 													IsTabStop="False"
-													Style='{StaticResource AppBarButtonStyle}'
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'
 													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.LeaveCompactModeCommand}"
 													ToolTipService.ToolTip="Выйти из режима картинка в картинке">
-													<AppBarButton.Icon>
-														<FontIcon Glyph="&#xE746;"/>
-													</AppBarButton.Icon>
-												</AppBarButton>
+													<FontIcon Glyph="&#xE746;"/>
+												</Button>
 												<AppBarButton x:Name='FullWindowButton'
 													IsTabStop="False"
 													Style='{StaticResource AppBarButtonStyle}'
@@ -1523,7 +1517,7 @@
 														<SymbolIcon x:Name='FullWindowSymbol' Symbol='FullScreen' />
 													</AppBarButton.Icon>
 												</AppBarButton>
-											</CommandBar>
+											</StackPanel>
 										</Grid>
 									</Border>
 								</Grid>

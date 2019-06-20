@@ -104,6 +104,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_GamepadTimer.Tick += GamepadTimer_Tick;
 				m_GamepadTimer.Start ();
 				m_isXbox = true;
+				m_ViewModel.IsXbox = true;
 			}
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
