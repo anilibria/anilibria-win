@@ -22,6 +22,10 @@ Page {
         contentHeight: itemGrid.height
         onContentYChanged: {
             console.log(scrollview.contentY);
+            if (scrollview.contentY === scrollview.contentHeight) {
+                //TODO: Add next 50 element
+            }
+
         }
         ScrollBar.vertical: ScrollBar {
             active: true;
