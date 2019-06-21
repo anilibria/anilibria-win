@@ -40,6 +40,9 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void Dispatcher_AcceleratorKeyActivated ( CoreDispatcher sender , AcceleratorKeyEventArgs args ) {
+			var element = FocusManager.GetFocusedElement();
+			if (element is TextBox) return;
+
 			if ( args.VirtualKey == VirtualKey.Menu ) m_AltPressed = !args.KeyStatus.WasKeyDown;
 			if ( args.VirtualKey == VirtualKey.Shift ) m_ShiftPressed = !args.KeyStatus.WasKeyDown;
 			if ( args.VirtualKey == VirtualKey.Control ) m_ControlPressed = !args.KeyStatus.WasKeyDown;
@@ -49,6 +52,8 @@ namespace Anilibria.Pages.Releases {
 
 		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
 			if ( Visibility != Visibility.Visible ) return;
+			var element = FocusManager.GetFocusedElement();
+			if (element is TextBox) return;
 
 			if ( args.VirtualKey == VirtualKey.Escape ) Rectangle_Tapped ( null , null );
 
