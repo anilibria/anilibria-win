@@ -146,7 +146,12 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void StatusLabel_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
-			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			FlyoutBase.ShowAttachedFlyout ( StatusLabel );
+			e.Handled = true;
+		}
+
+		private void YearLabel_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
+			FlyoutBase.ShowAttachedFlyout ( YearFiltersMenuTextBlock );
 			e.Handled = true;
 		}
 
@@ -170,7 +175,7 @@ namespace Anilibria.Pages.Releases {
 				GenresFiltersMenu.Items.Add ( option );
 			}
 
-			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			FlyoutBase.ShowAttachedFlyout ( GenresFiltersMenuTextBlock );
 			e.Handled = true;
 		}
 
@@ -194,7 +199,7 @@ namespace Anilibria.Pages.Releases {
 				VoicesFiltersMenu.Items.Add ( option );
 			}
 
-			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+			FlyoutBase.ShowAttachedFlyout ( VoicesFiltersMenuTextBlock );
 			e.Handled = true;
 		}
 

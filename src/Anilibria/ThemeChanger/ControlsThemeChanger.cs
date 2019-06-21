@@ -28,6 +28,8 @@ namespace Anilibria.ThemeChanger {
 			["ImageBorderColor"] = new SolidColorBrush ( Color.FromArgb ( 255 , 173 , 173 , 173 ) ) ,
 			["TextBlock"] = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) ) ,
 			["TextBlockAccent"] = new SolidColorBrush ( Color.FromArgb ( 255 , 179 , 33 , 33 ) ) ,
+			["TextBlockHighlight"] = new SolidColorBrush ( Color.FromArgb ( 255 , 163 , 39 , 39 ) ) ,
+			["ReleaseCardBackground"] = new SolidColorBrush ( Color.FromArgb ( 255, 242 , 242 , 242 ) ) ,
 		};
 
 		private static Dictionary<string , Brush> m_DarkBrushes = new Dictionary<string , Brush> {
@@ -40,6 +42,8 @@ namespace Anilibria.ThemeChanger {
 			["ImageBorderColor"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
 			["TextBlock"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255, 255, 255 ) ) ,
 			["TextBlockAccent"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
+			["TextBlockHighlight"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
+			["ReleaseCardBackground"] = new SolidColorBrush ( Color.FromArgb ( 255 , 84 , 84 , 84 ) ) ,
 		};
 
 		/// <summary>
