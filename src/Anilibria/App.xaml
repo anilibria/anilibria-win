@@ -2189,6 +2189,28 @@
 			</Setter>
 		</Style>
 
+		<Style x:Key="AnilibriaMenuFlyout" TargetType="MenuFlyoutPresenter">
+			<Setter Property="Background" Value="#e6e6e6" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="BorderBrush" Value="Black" />
+		</Style>
+		<Style x:Key="DarkAnilibriaMenuFlyout" TargetType="MenuFlyoutPresenter">
+			<Setter Property="Background" Value="#454545" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="BorderBrush" Value="Black" />
+		</Style>
+
+		<Style x:Key="AnilibriaFlyout" TargetType="FlyoutPresenter">
+			<Setter Property="Background" Value="#e6e6e6" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="BorderBrush" Value="Black" />
+		</Style>
+		<Style x:Key="DarkAnilibriaFlyout" TargetType="FlyoutPresenter">
+			<Setter Property="Background" Value="#454545" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="BorderBrush" Value="Black" />
+		</Style>
+
 	</Application.Resources>
 
 </Application>

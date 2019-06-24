@@ -10,9 +10,9 @@ namespace Anilibria.ThemeChanger {
 	/// </summary>
 	public static class ControlsThemeChanger {
 
-		public static string DefaultTheme = "default";
+		public const string DefaultTheme = "default";
 
-		public static string DarkTheme = "dark";
+		public const string DarkTheme = "dark";
 
 		private static string m_ThemeName = DefaultTheme;
 
@@ -55,6 +55,11 @@ namespace Anilibria.ThemeChanger {
 
 			foreach ( var subscriber in m_Subscribers ) subscriber ( themeName );
 		}
+
+		/// <summary>
+		/// Current theme.
+		/// </summary>
+		public static string CurrentTheme () => m_ThemeName;
 
 		/// <summary>
 		/// Get theme resource.

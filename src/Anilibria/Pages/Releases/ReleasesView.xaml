@@ -708,14 +708,8 @@
 						IconColor="White"
 					/>
 					<Button.Flyout>
-						<MenuFlyout>
-							<MenuFlyout.MenuFlyoutPresenterStyle>
-								<Style TargetType="MenuFlyoutPresenter">
-									<Setter Property="Background" Value="#e6e6e6" />
-									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="Black" />
-								</Style>
-							</MenuFlyout.MenuFlyoutPresenterStyle>
+						<MenuFlyout
+							converters:BackgroundThemeConverter.MenuFlyout="Origin">
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Добавить в избранное"
@@ -756,14 +750,8 @@
 							IconColor="White"
 						/>
 						<Button.Flyout>
-							<Flyout>
-								<Flyout.FlyoutPresenterStyle>
-									<Style TargetType="FlyoutPresenter">
-										<Setter Property="Background" Value="#e6e6e6" />
-										<Setter Property="BorderThickness" Value="1" />
-										<Setter Property="BorderBrush" Value="Black" />
-									</Style>
-								</Flyout.FlyoutPresenterStyle>
+							<Flyout
+								converters:BackgroundThemeConverter.CommonFlyout="Origin">
 								<StackPanel HorizontalAlignment="Stretch">
 									<Button
 										HorizontalAlignment="Stretch"
@@ -896,7 +884,8 @@
 						IconColor="White"
 					/>
 					<Button.Flyout>
-						<Flyout>
+						<Flyout
+							converters:BackgroundThemeConverter.CommonFlyout="Origin">
 							<Flyout.FlyoutPresenterStyle>
 								<Style TargetType="FlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
@@ -944,7 +933,8 @@
 							IconColor="White"
 						/>
 						<Button.Flyout>
-							<Flyout>
+							<Flyout
+								converters:BackgroundThemeConverter.CommonFlyout="Origin">
 								<Flyout.FlyoutPresenterStyle>
 									<Style TargetType="FlyoutPresenter">
 										<Setter Property="Background" Value="#e6e6e6" />
@@ -1077,7 +1067,8 @@
 					RelativePanel.Below="RandomReleaseButton"
 					ToolTipService.ToolTip="Настройки">
 					<Button.Flyout>
-						<Flyout>
+						<Flyout
+							converters:BackgroundThemeConverter.CommonFlyout="Origin">
 							<Flyout.FlyoutPresenterStyle>
 								<Style TargetType="FlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
@@ -1151,7 +1142,8 @@
 						/>
 					</Viewbox>
 					<Button.Flyout>
-						<Flyout>
+						<Flyout
+							converters:BackgroundThemeConverter.CommonFlyout="Origin">
 							<Flyout.FlyoutPresenterStyle>
 								<Style TargetType="FlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
@@ -1412,14 +1404,8 @@
 							RightTapped="StatusLabel_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
-								<MenuFlyout>
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+								<MenuFlyout
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 									<MenuFlyoutItem
 										Style="{StaticResource AnilibriaMenuFlyoutItem}"
 										Text="Фильтровать по этому статусу"
@@ -1451,14 +1437,8 @@
 							RightTapped="YearLabel_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
-								<MenuFlyout>
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+								<MenuFlyout
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 									<MenuFlyoutItem
 										Style="{StaticResource AnilibriaMenuFlyoutItem}"
 										Text="Фильтровать по этому году"
@@ -1504,14 +1484,8 @@
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout
-									x:Name="GenresFiltersMenu">
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+									x:Name="GenresFiltersMenu"
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
 							<Run
@@ -1540,14 +1514,8 @@
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout
-									x:Name="VoicesFiltersMenu">
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+									x:Name="VoicesFiltersMenu"
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
 							<Run
@@ -1720,14 +1688,9 @@
 								RightTapped="Button_RightTapped"
 								Tapped="Button_Tapped">
 								<FlyoutBase.AttachedFlyout>
-									<Flyout x:Name="OnlineVideoAttachFlyout">
-										<Flyout.FlyoutPresenterStyle>
-											<Style TargetType="FlyoutPresenter">
-												<Setter Property="Background" Value="#e6e6e6" />
-												<Setter Property="BorderThickness" Value="1" />
-												<Setter Property="BorderBrush" Value="Black" />
-											</Style>
-										</Flyout.FlyoutPresenterStyle>
+									<Flyout
+										x:Name="OnlineVideoAttachFlyout"
+										converters:BackgroundThemeConverter.CommonFlyout="Origin">
 										<ListView
 											x:Name="PrefferedOnlineVideoSelector"
 											ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
@@ -1773,14 +1736,8 @@
 							Grid.Column="1"
 							Style="{StaticResource ActionButtonStyle}">
 							<Button.Flyout>
-								<Flyout>
-									<Flyout.FlyoutPresenterStyle>
-										<Style TargetType="FlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</Flyout.FlyoutPresenterStyle>
+								<Flyout
+									converters:BackgroundThemeConverter.CommonFlyout="Origin">
 									<ScrollViewer Height="120" MaxHeight="280" Width="380">
 										<ItemsControl
 											Margin="18 0 0 0"
