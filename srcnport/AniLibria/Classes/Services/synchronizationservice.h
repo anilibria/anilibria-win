@@ -27,10 +27,16 @@ public:
 
     Q_INVOKABLE void synchronizeReleases();
 
+    Q_INVOKABLE void fillNextReleases();
+
     QQmlListProperty<ReleaseItemModel> releases();
+
     void addRelease(ReleaseItemModel*);
+
     int releasesCount() const;
+
     ReleaseItemModel* release(int) const;
+
     void clearReleases();    
 
 signals:

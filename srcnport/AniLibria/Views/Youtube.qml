@@ -6,6 +6,7 @@ import Anilibria.Services 1.0
 Page {
     id: page
     property Drawer drawer
+    property bool isBusy: false
     property SynchronizationService synchronizeService
     signal navigateFrom()
 
@@ -21,11 +22,11 @@ Page {
         contentWidth: parent.width
         contentHeight: itemGrid.height
         onContentYChanged: {
-            console.log(scrollview.contentY);
-            if (scrollview.contentY === scrollview.contentHeight) {
-                //TODO: Add next 50 element
+            if (scrollview.atYEnd && !page.isBusy) {
+                page.isBusy = true;
+                synchronizationService.fillNextReleases();
+                page.isBusy = false;
             }
-
         }
         ScrollBar.vertical: ScrollBar {
             active: true;

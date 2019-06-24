@@ -17,6 +17,24 @@ void SynchronizationService::synchronizeReleases()
     m_AnilibriaApiService->getAllReleases();
 }
 
+void SynchronizationService::fillNextReleases()
+{
+    int startPosition = m_Releases.count();
+    int iterator = 0;
+
+    for (int i = startPosition; i < m_ApiReleases.count(); i++) {
+        if (iterator >= 30) break;
+
+        ReleaseItemModel * releaseItemModel = new ReleaseItemModel();
+        releaseItemModel->mapFromReleaseModel(m_ApiReleases[i]);
+        m_Releases.append(releaseItemModel);
+
+        iterator++;
+    }
+
+    emit releasesChanged();
+}
+
 QQmlListProperty<ReleaseItemModel> SynchronizationService::releases()
 {
     return QQmlListProperty<ReleaseItemModel>(
@@ -101,7 +119,8 @@ void SynchronizationService::saveReleasesToCache(QString data)
         releaseItemModel->mapFromReleaseModel(item);
         m_Releases.append(releaseItemModel);
 
-        if (iterator > 50) break; // maximum of page 50 items
+        if (iterator > 30) break; // maximum of page 30 items
+        iterator++;
     }
     emit releasesChanged();
 }
