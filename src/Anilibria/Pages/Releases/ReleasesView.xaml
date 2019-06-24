@@ -1144,13 +1144,6 @@
 					<Button.Flyout>
 						<Flyout
 							converters:BackgroundThemeConverter.CommonFlyout="Origin">
-							<Flyout.FlyoutPresenterStyle>
-								<Style TargetType="FlyoutPresenter">
-									<Setter Property="Background" Value="#e6e6e6" />
-									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="Black" />
-								</Style>
-							</Flyout.FlyoutPresenterStyle>
 							<StackPanel>
 								<TextBlock
 									Foreground="#a32727"
