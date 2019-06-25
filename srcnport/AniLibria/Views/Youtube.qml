@@ -10,6 +10,11 @@ Page {
     property SynchronizationService synchronizeService
     signal navigateFrom()
 
+    onWidthChanged: {
+        const columnCount = parseInt(page.width / 400);
+        itemGrid.columns = columnCount < 1 ? 1 : columnCount;
+    }
+
     background: Rectangle {
         color: "#D3D3D3"
     }
