@@ -89,7 +89,8 @@
 						Grid.Column="1"
 						Grid.Row="0"
 						Margin="3"
-						MaxWidth="230"
+						MinWidth="222"
+						MaxWidth="222"
 						VerticalAlignment="Stretch"
 						Padding="0">
 						<Grid.RowDefinitions>
@@ -231,7 +232,7 @@
 									FontFamily="Segoe MDL2 Assets"
 									FontSize="18"
 									Foreground="#a32727"
-									converters:BackgroundThemeConverter.TextMapper="TextBlock">
+									converters:BackgroundThemeConverter.TextMapper="TextBlockAccent">
 									&#xE734;
 								</TextBlock>
 							</Grid>
@@ -245,7 +246,7 @@
 									FontSize="16"
 									Text="В избранном"
 									Foreground="#a32727"
-									converters:BackgroundThemeConverter.TextMapper="TextBlock"
+									converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 								/>
 							</Grid>
 						</Grid>
@@ -710,29 +711,30 @@
 					<Button.Flyout>
 						<MenuFlyout
 							converters:BackgroundThemeConverter.MenuFlyout="Origin">
+							<!-- Style="{StaticResource AnilibriaMenuFlyoutItem}" -->
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Добавить в избранное"
 								Command="{Binding AddToFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Удалить из избранного"
 								Command="{Binding RemoveFromFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Удалить просмотренные релизы из избранного"
 								Command="{Binding RemoveSeensFavoritesCommand}"
 							/>
 							<MenuFlyoutSeparator />
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Добавить в локальное избранное"
 								Command="{Binding AddToLocalFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Удалить из локального избранного"
 								Command="{Binding RemoveFromLocalFavoritesCommand}"
 							/>
@@ -761,7 +763,7 @@
 									</Button>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Жанры
 									</TextBlock>
 									<controls:TimingTextBox
@@ -775,7 +777,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Года
 									</TextBlock>
 									<controls:TimingTextBox
@@ -789,7 +791,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Озвучка
 										</TextBlock>
 										<controls:TimingTextBox
@@ -803,7 +805,7 @@
 										/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Тип
 									</TextBlock>
 									<controls:TimingTextBox
@@ -816,7 +818,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Статусы
 									</TextBlock>
 									<controls:TimingTextBox
@@ -830,7 +832,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Признак избранности
 									</TextBlock>
 									<ComboBox
@@ -843,7 +845,7 @@
 									</ComboBox>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Признак просмотра
 									</TextBlock>
 									<ComboBox
@@ -896,7 +898,7 @@
 							<StackPanel>
 								<TextBlock
 									Margin="0 2 0 2"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Сортировать по
 								</TextBlock>
 								<ComboBox
@@ -908,7 +910,7 @@
 								</ComboBox>
 								<TextBlock
 									Margin="0 2 0 2"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									В порядке
 								</TextBlock>
 								<ComboBox
@@ -946,7 +948,7 @@
 									<TextBlock
 										Visibility="{Binding IsShowNotification, Converter={StaticResource InverseBoolConverter}}"
 										TextAlignment="Center"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										У Вас нет новых уведомлений
 									</TextBlock>
 									<Button
@@ -1080,7 +1082,7 @@
 								Orientation="Vertical"
 								Margin="2 0 2 4">
 								<TextBlock
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Уведомления по избранным
 								</TextBlock>
 								<ToggleSwitch
@@ -1093,7 +1095,7 @@
 								/>
 								<TextBlock
 									Margin="0 4 0 0"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Торрент
 								</TextBlock>
 								<ComboBox
@@ -1106,7 +1108,7 @@
 								/>
 								<TextBlock
 									Margin="0 4 0 0"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Смотреть в карточке
 								</TextBlock>
 								<ComboBox
@@ -1400,7 +1402,7 @@
 								<MenuFlyout
 									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 									<MenuFlyoutItem
-										Style="{StaticResource AnilibriaMenuFlyoutItem}"
+										converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 										Text="Фильтровать по этому статусу"
 										Command="{Binding AddStatusToFilterCommand}"
 									/>
@@ -1433,7 +1435,7 @@
 								<MenuFlyout
 									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 									<MenuFlyoutItem
-										Style="{StaticResource AnilibriaMenuFlyoutItem}"
+										converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 										Text="Фильтровать по этому году"
 										Command="{Binding AddYearToFilterCommand}"
 									/>

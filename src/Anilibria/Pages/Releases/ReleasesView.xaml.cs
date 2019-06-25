@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services.Implementations;
+using Anilibria.ThemeChanger;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -158,9 +159,20 @@ namespace Anilibria.Pages.Releases {
 		private void GenresFiltersMenuTextBlock_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
 			GenresFiltersMenu.Items.Clear ();
 
+			var currentTheme = ControlsThemeChanger.CurrentTheme ();
+			Style style = null;
+			switch ( currentTheme ) {
+				case ControlsThemeChanger.DefaultTheme:
+					style = (Style) Application.Current.Resources["AnilibriaMenuFlyoutItem"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					style = (Style) Application.Current.Resources["DarkAnilibriaMenuFlyoutItem"];
+					break;
+			}
+
 			var allOption = new MenuFlyoutItem ();
 			allOption.Text = "Фильтровать по всем";
-			allOption.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+			allOption.Style = style;
 			allOption.Command = m_ViewModel.AddGenreToFilterCommand;
 			allOption.CommandParameter = m_ViewModel.OpenedRelease.Genres;
 			GenresFiltersMenu.Items.Add ( allOption );
@@ -169,7 +181,7 @@ namespace Anilibria.Pages.Releases {
 			foreach ( var genre in genres ) {
 				var option = new MenuFlyoutItem ();
 				option.Text = "Фильтровать по " + genre;
-				option.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+				option.Style = style;
 				option.Command = m_ViewModel.AddGenreToFilterCommand;
 				option.CommandParameter = genre;
 				GenresFiltersMenu.Items.Add ( option );
@@ -182,9 +194,20 @@ namespace Anilibria.Pages.Releases {
 		private void VoicesFiltersMenuTextBlock_RightTapped ( object sender , RightTappedRoutedEventArgs e ) {
 			VoicesFiltersMenu.Items.Clear ();
 
+			var currentTheme = ControlsThemeChanger.CurrentTheme ();
+			Style style = null;
+			switch ( currentTheme ) {
+				case ControlsThemeChanger.DefaultTheme:
+					style = (Style) Application.Current.Resources["AnilibriaMenuFlyoutItem"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					style = (Style) Application.Current.Resources["DarkAnilibriaMenuFlyoutItem"];
+					break;
+			}
+
 			var allOption = new MenuFlyoutItem ();
 			allOption.Text = "Фильтровать по всем";
-			allOption.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+			allOption.Style = style;
 			allOption.Command = m_ViewModel.AddVoicesToFilterCommand;
 			allOption.CommandParameter = m_ViewModel.OpenedRelease.Voices;
 			VoicesFiltersMenu.Items.Add ( allOption );
@@ -193,7 +216,7 @@ namespace Anilibria.Pages.Releases {
 			foreach ( var voice in voices ) {
 				var option = new MenuFlyoutItem ();
 				option.Text = "Фильтровать по " + voice;
-				option.Style = Application.Current.Resources["AnilibriaMenuFlyoutItem"] as Style;
+				option.Style = style;
 				option.Command = m_ViewModel.AddVoicesToFilterCommand;
 				option.CommandParameter = voice;
 				VoicesFiltersMenu.Items.Add ( option );

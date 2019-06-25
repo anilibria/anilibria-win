@@ -185,6 +185,41 @@ namespace Anilibria.Converters {
 
 		public static string GetCommonFlyout ( DependencyObject flyout ) => (string) flyout.GetValue ( CommonFlyoutProperty );
 
+
+		public static readonly DependencyProperty MenuFlyoutItemProperty =
+			DependencyProperty.RegisterAttached (
+				"MenuFlyoutItem" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , MenuFlyoutItemChanged )
+			);
+
+		private static void SetMenuFlyoutItemStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (MenuFlyoutItem) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["AnilibriaMenuFlyoutItem"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["DarkAnilibriaMenuFlyoutItem"];
+					break;
+			}
+		}
+
+		private static void MenuFlyoutItemChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetMenuFlyoutItemStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetMenuFlyoutItemStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetMenuFlyoutItem ( DependencyObject flyout , string value ) => flyout.SetValue ( MenuFlyoutItemProperty , value );
+
+		public static string GetMenuFlyoutItem ( DependencyObject flyout ) => (string) flyout.GetValue ( MenuFlyoutItemProperty );
+
 	}
 
 }
