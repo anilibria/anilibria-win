@@ -14,6 +14,8 @@ class ReleaseItemModel : public QObject
     Q_PROPERTY(QString poster READ poster WRITE setPoster NOTIFY posterChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(QString releaseType READ releaseType WRITE setReleaseType NOTIFY releaseTypeChanged)
+    Q_PROPERTY(QString genres READ genres WRITE setGenres NOTIFY genresChanged)
+    Q_PROPERTY(QString voicers READ voicers WRITE setVoicers NOTIFY voicersChanged)
 
 private:
     QString m_Title;
@@ -22,6 +24,8 @@ private:
     QString m_Poster;
     QString m_Description;
     QString m_ReleaseType;
+    QString m_Genres;
+    QString m_Voicers;
 
 public:
     explicit ReleaseItemModel(QObject *parent = nullptr);
@@ -44,6 +48,12 @@ public:
     QString releaseType() const;
     void setReleaseType(const QString &releaseType);
 
+    QString genres() const;
+    void setGenres(const QString &genres);
+
+    QString voicers() const;
+    void setVoicers(const QString &voicers);
+
     void mapFromReleaseModel(ReleaseModel & releaseModel);
 
 signals:
@@ -53,6 +63,8 @@ signals:
     void posterChanged();
     void descriptionChanged();
     void releaseTypeChanged();
+    void genresChanged();
+    void voicersChanged();
 
 public slots:
 

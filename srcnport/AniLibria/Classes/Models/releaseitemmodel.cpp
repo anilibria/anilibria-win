@@ -13,6 +13,8 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     QString fullPosterUrl = "https://www.anilibria.tv" + releaseModel.poster();
     setPoster(fullPosterUrl);
     setReleaseType(releaseModel.type());
+    setVoicers(releaseModel.voices().join(", "));
+    setGenres(releaseModel.genres().join(", "));
 }
 
 QString ReleaseItemModel::title() const
@@ -91,4 +93,30 @@ void ReleaseItemModel::setReleaseType(const QString &releaseType)
 
     m_ReleaseType = releaseType;
     emit releaseTypeChanged();
+}
+
+QString ReleaseItemModel::genres() const
+{
+    return m_Genres;
+}
+
+void ReleaseItemModel::setGenres(const QString &genres)
+{
+    if (genres == m_Genres) return;
+
+    m_Genres = genres;
+    emit genresChanged();
+}
+
+QString ReleaseItemModel::voicers() const
+{
+    return m_Voicers;
+}
+
+void ReleaseItemModel::setVoicers(const QString &voicers)
+{
+    if (voicers == m_Voicers) return;
+
+    m_Voicers = voicers;
+    emit voicersChanged();
 }

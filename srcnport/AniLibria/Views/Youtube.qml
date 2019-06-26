@@ -92,6 +92,24 @@ Page {
                                 maximumLineCount: 2
                                 text: qsTr("<b>Тип:</b> ") + qsTr(modelData.releaseType)
                             }
+                            Text {
+                                font.pointSize: 10
+                                leftPadding: 8
+                                topPadding: 4
+                                width: 380
+                                wrapMode: Text.WordWrap
+                                maximumLineCount: 2
+                                text: qsTr("<b>Жанры:</b> ") + qsTr(modelData.genres)
+                            }
+                            Text {
+                                font.pointSize: 10
+                                leftPadding: 8
+                                topPadding: 4
+                                width: 380
+                                wrapMode: Text.WordWrap
+                                maximumLineCount: 2
+                                text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voicers)
+                            }
                         }
                     }
                 }
