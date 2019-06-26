@@ -1151,7 +1151,7 @@
 									Foreground="#a32727"
 									converters:TextBlockHighlight.HyperLinkHightlight="True">
 									<Hyperlink
-										Foreground="#a32727"
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 										NavigateUri="http://anilibriawin10.reformal.ru/">
 										Сообщить об идее/предложении
 									</Hyperlink>
@@ -1161,7 +1161,7 @@
 									Margin="0 4 0 0"
 									converters:TextBlockHighlight.HyperLinkHightlight="True">
 									<Hyperlink
-										Foreground="#a32727"
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 										NavigateUri="tg://resolve?domain=AniLibriaTP">
 										Техподдержка АниЛибрии
 									</Hyperlink>
@@ -1538,7 +1538,7 @@
 							MaxHeight="190">
 							<TextBlock
 								TextWrapping="WrapWholeWords"
-								Foreground="Black"
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
 								Margin="0 0 14 0"
 								converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}"
 								converters:TextBlockHtmlConverter.LinkCommand="{Binding OpenCrossReleaseCommand}"
@@ -1663,7 +1663,7 @@
 									Margin="5 0 0 0"
 									VerticalAlignment="Center"
 									HorizontalAlignment="Right"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="{Binding OpenedRelease.CountVideoOnline}"
 									/>
@@ -1679,7 +1679,7 @@
 							<Button
 								HorizontalAlignment="Right"
 								Grid.Column="1"
-								Style="{StaticResource ActionButtonStyle}"
+								converters:BackgroundThemeConverter.ActionButton="Origin"
 								RightTapped="Button_RightTapped"
 								Tapped="Button_Tapped">
 								<FlyoutBase.AttachedFlyout>
@@ -1714,7 +1714,7 @@
 							Orientation="Horizontal"
 							VerticalAlignment="Center">
 							<TextBlock
-								Foreground="Black">
+								converters:BackgroundThemeConverter.TextMapper="TextBlock">
 								<Run>
 									Доступно
 								</Run>
@@ -1729,11 +1729,14 @@
 						<Button
 							Margin="10 0 0 0"
 							Grid.Column="1"
-							Style="{StaticResource ActionButtonStyle}">
+							converters:BackgroundThemeConverter.ActionButton="Origin">
 							<Button.Flyout>
 								<Flyout
 									converters:BackgroundThemeConverter.CommonFlyout="Origin">
-									<ScrollViewer Height="120" MaxHeight="280" Width="380">
+									<ScrollViewer
+										Height="120"
+										MaxHeight="280"
+										Width="380">
 										<ItemsControl
 											Margin="18 0 0 0"
 											ItemsSource="{Binding OpenedRelease.Torrents}">
@@ -1752,7 +1755,7 @@
 															<ColumnDefinition  Width="Auto" />
 														</Grid.ColumnDefinitions>
 														<TextBlock
-															Foreground="Black"
+															converters:BackgroundThemeConverter.TextMapper="TextBlock"
 															VerticalAlignment="Center">
 															<Run Text="{Binding Series}"></Run>
 															<Run Text="{Binding Quality}"></Run>
@@ -1762,7 +1765,7 @@
 															Grid.Column="2" Margin="0 1 18 1"
 															Click="TorrentDownload_Click"
 															CommandParameter="{Binding Url}"
-															Style="{StaticResource ActionButtonStyle}"
+															converters:BackgroundThemeConverter.ActionButton="Origin"
 															HorizontalAlignment="Right">
 															Скачать
 														</Button>

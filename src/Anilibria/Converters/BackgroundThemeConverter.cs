@@ -1,6 +1,7 @@
 ﻿using Anilibria.ThemeChanger;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 
 namespace Anilibria.Converters {
@@ -85,6 +86,12 @@ namespace Anilibria.Converters {
 		public static string GetBorderMapper ( DependencyObject textBlock ) => (string) textBlock.GetValue ( BorderMapperProperty );
 
 		private static void SetTextColor ( DependencyObject element , Brush brush ) {
+			var hyperlink = element as Hyperlink;
+			if ( hyperlink != null ) {
+				hyperlink.Foreground = brush;
+				return;
+			}
+
 			var border = element as TextBlock;
 			if ( border != null ) {
 				border.Foreground = brush;
@@ -254,6 +261,40 @@ namespace Anilibria.Converters {
 
 		public static string GetToggleSwitch ( DependencyObject toggleSwitch ) => (string) toggleSwitch.GetValue ( ToggleSwitchProperty );
 
+
+		public static readonly DependencyProperty ActionButtonProperty =
+			DependencyProperty.RegisterAttached (
+				"ActionButton" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , ActionButtonChanged )
+			);
+
+		private static void SetActionButtonStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (Button) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["ActionButtonStyle"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["DarkActionButtonStyle"];
+					break;
+			}
+		}
+
+		private static void ActionButtonChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetActionButtonStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetActionButtonStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetActionButton ( DependencyObject actionButton , string value ) => actionButton.SetValue ( ActionButtonProperty , value );
+
+		public static string GetActionButton ( DependencyObject actionButton ) => (string) actionButton.GetValue ( ActionButtonProperty );
 
 	}
 
