@@ -1408,13 +1408,13 @@
 												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobOff" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobOn" Storyboard.TargetProperty="Fill">
 												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
 											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobOn" Storyboard.TargetProperty="Fill">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="#ad3e3e"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Stroke">
 												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -1430,13 +1430,13 @@
 												<DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="OuterBorder" Storyboard.TargetProperty="Stroke">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="OuterBorder" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="#ad3e3e"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="#ad3e3e"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobBounds" Storyboard.TargetProperty="Stroke">
 												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -1445,7 +1445,7 @@
 												<DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchKnobOn" Storyboard.TargetProperty="Fill">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
 											</ObjectAnimationUsingKeyFrames>
 											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SwitchAreaGrid" Storyboard.TargetProperty="Background">
 												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -1617,7 +1617,7 @@
 									ContentTemplate="{TemplateBinding OffContentTemplate}"
 									Content="{TemplateBinding OffContent}"
 									Grid.Column="2"
-									Foreground="Black"
+									Foreground="White"
 									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 									IsHitTestVisible="False"
 									Opacity="0"
@@ -1629,7 +1629,7 @@
 									ContentTemplate="{TemplateBinding OnContentTemplate}"
 									Content="{TemplateBinding OnContent}"
 									Grid.Column="2"
-									Foreground="Black"
+									Foreground="White"
 									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 									IsHitTestVisible="False"
 									Opacity="0"
@@ -1643,12 +1643,12 @@
 									RadiusY="10"
 									Grid.Row="1"
 									StrokeThickness="2"
-									Stroke="Black"
+									Stroke="White"
 									Width="44"
 								/>
 								<Rectangle
 									x:Name="SwitchKnobBounds"
-									Fill="#ad3e3e"
+									Fill="White"
 									Height="20"
 									Opacity="0"
 									RadiusX="10"
@@ -1662,8 +1662,8 @@
 									<Grid.RenderTransform>
 										<TranslateTransform x:Name="KnobTranslateTransform"/>
 									</Grid.RenderTransform>
-									<Ellipse x:Name="SwitchKnobOn" Fill="White" Height="10" Opacity="0" Width="10"/>
-									<Ellipse x:Name="SwitchKnobOff" Fill="Black" Height="10" Width="10"/>
+									<Ellipse x:Name="SwitchKnobOn" Fill="Black" Height="10" Opacity="0" Width="10"/>
+									<Ellipse x:Name="SwitchKnobOff" Fill="White" Height="10" Width="10"/>
 								</Grid>
 								<Thumb x:Name="SwitchThumb" AutomationProperties.AccessibilityView="Raw" Grid.ColumnSpan="3" Grid.RowSpan="3">
 									<Thumb.Template>

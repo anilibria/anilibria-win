@@ -220,6 +220,41 @@ namespace Anilibria.Converters {
 
 		public static string GetMenuFlyoutItem ( DependencyObject flyout ) => (string) flyout.GetValue ( MenuFlyoutItemProperty );
 
+		public static readonly DependencyProperty ToggleSwitchProperty =
+			DependencyProperty.RegisterAttached (
+				"ToggleSwitch" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , ToggleSwitchChanged )
+			);
+
+		private static void SetToggleSwitchStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (ToggleSwitch) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["AnilibriaToggleSwitch"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["DarkAnilibriaToggleSwitch"];
+					break;
+			}
+		}
+
+		private static void ToggleSwitchChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetToggleSwitchStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetToggleSwitchStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetToggleSwitch ( DependencyObject toggleSwitch , string value ) => toggleSwitch.SetValue ( ToggleSwitchProperty , value );
+
+		public static string GetToggleSwitch ( DependencyObject toggleSwitch ) => (string) toggleSwitch.GetValue ( ToggleSwitchProperty );
+
+
 	}
 
 }
