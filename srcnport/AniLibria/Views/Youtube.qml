@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import QtGraphicalEffects 1.0
 import Anilibria.Services 1.0
 
 Page {
@@ -20,6 +21,14 @@ Page {
     }
 
     anchors.fill: parent
+
+    Rectangle {
+        id: mask
+        width: 180
+        height: 260
+        radius: 10
+        visible: false
+    }
 
     Flickable {
         id: scrollview
@@ -53,62 +62,75 @@ Page {
                 Repeater {
                     model: synchronizeService.releases
                     Rectangle {
-                        width: 400
-                        height: 200
+                        width: 460
+                        height: 260
                         radius: 10
                         color: "#f2f2f2"
-                        Column {
-                            Text {
-                                textFormat: Text.RichText
-                                color: "#a32727"
-                                font.pointSize: 12
-                                width: 380
-                                leftPadding: 8
-                                topPadding: 6
-                                wrapMode: Text.WordWrap
-                                maximumLineCount: 3
-                                text: qsTr(modelData.title)
+                        Row {
+                            Image {
+                                source: modelData.poster
+                                fillMode: Image.PreserveAspectCrop //Image.PreserveAspectFit
+                                width: 180
+                                height: 260
+                                layer.enabled: true
+                                layer.effect: OpacityMask {
+                                    maskSource: mask
+                                }
                             }
-                            Text {
-                                textFormat: Text.RichText
-                                font.pointSize: 10
-                                leftPadding: 8
-                                topPadding: 4
-                                text: qsTr("<b>Статус:</b> ") + qsTr(modelData.status)
-                            }
-                            Text {
-                                font.pointSize: 10
-                                leftPadding: 8
-                                topPadding: 4
-                                text: qsTr("<b>Год:</b> ") + qsTr(modelData.year)
-                            }
-                            Text {
-                                textFormat: Text.RichText
-                                font.pointSize: 10
-                                leftPadding: 8
-                                topPadding: 4
-                                width: 380
-                                wrapMode: Text.WordWrap
-                                maximumLineCount: 2
-                                text: qsTr("<b>Тип:</b> ") + qsTr(modelData.releaseType)
-                            }
-                            Text {
-                                font.pointSize: 10
-                                leftPadding: 8
-                                topPadding: 4
-                                width: 380
-                                wrapMode: Text.WordWrap
-                                maximumLineCount: 2
-                                text: qsTr("<b>Жанры:</b> ") + qsTr(modelData.genres)
-                            }
-                            Text {
-                                font.pointSize: 10
-                                leftPadding: 8
-                                topPadding: 4
-                                width: 380
-                                wrapMode: Text.WordWrap
-                                maximumLineCount: 2
-                                text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voicers)
+
+                            Column {
+                                Text {
+                                    textFormat: Text.RichText
+                                    color: "#a32727"
+                                    font.pointSize: 12
+                                    width: 280
+                                    leftPadding: 8
+                                    topPadding: 6
+                                    wrapMode: Text.WordWrap
+                                    maximumLineCount: 3
+                                    text: qsTr(modelData.title)
+                                }
+                                Text {
+                                    textFormat: Text.RichText
+                                    font.pointSize: 10
+                                    leftPadding: 8
+                                    topPadding: 4
+                                    text: qsTr("<b>Статус:</b> ") + qsTr(modelData.status)
+                                }
+                                Text {
+                                    font.pointSize: 10
+                                    leftPadding: 8
+                                    topPadding: 4
+                                    text: qsTr("<b>Год:</b> ") + qsTr(modelData.year)
+                                }
+                                Text {
+                                    textFormat: Text.RichText
+                                    font.pointSize: 10
+                                    leftPadding: 8
+                                    topPadding: 4
+                                    width: 280
+                                    wrapMode: Text.WordWrap
+                                    maximumLineCount: 2
+                                    text: qsTr("<b>Тип:</b> ") + qsTr(modelData.releaseType)
+                                }
+                                Text {
+                                    font.pointSize: 10
+                                    leftPadding: 8
+                                    topPadding: 4
+                                    width: 280
+                                    wrapMode: Text.WordWrap
+                                    maximumLineCount: 2
+                                    text: qsTr("<b>Жанры:</b> ") + qsTr(modelData.genres)
+                                }
+                                Text {
+                                    font.pointSize: 10
+                                    leftPadding: 8
+                                    topPadding: 4
+                                    width: 280
+                                    wrapMode: Text.WordWrap
+                                    maximumLineCount: 2
+                                    text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voicers)
+                                }
                             }
                         }
                     }
