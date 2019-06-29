@@ -252,6 +252,8 @@
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingItemType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\SortingDirectionModel.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\ThemeStyleItem.cs" />
+    <Compile Include="Pages\Releases\PresentationClasses\ThemeStyleType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentDownloadMode.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentDownloadModeModel.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\TorrentModel.cs" />

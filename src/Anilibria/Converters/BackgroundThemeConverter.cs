@@ -1,4 +1,6 @@
-﻿using Anilibria.ThemeChanger;
+﻿using Anilibria.Controls;
+using Anilibria.ThemeChanger;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -141,13 +143,13 @@ namespace Anilibria.Converters {
 					menuFlyout.MenuFlyoutPresenterStyle = (Style) App.Current.Resources["DarkAnilibriaMenuFlyout"];
 					break;
 			}
-			
+
 		}
 
 		private static void MenuFlyoutChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
 			var themeResourceName = e.NewValue.ToString ();
 
-			SetMenuFlyoutStyle ( element , ControlsThemeChanger.CurrentTheme() );
+			SetMenuFlyoutStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
 				( string name ) => SetMenuFlyoutStyle ( element , ControlsThemeChanger.CurrentTheme () )
@@ -295,6 +297,213 @@ namespace Anilibria.Converters {
 		public static void SetActionButton ( DependencyObject actionButton , string value ) => actionButton.SetValue ( ActionButtonProperty , value );
 
 		public static string GetActionButton ( DependencyObject actionButton ) => (string) actionButton.GetValue ( ActionButtonProperty );
+
+		public static readonly DependencyProperty AnilibriaTextBoxProperty =
+			DependencyProperty.RegisterAttached (
+				"AnilibriaTextBox" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , AnilibriaTextBoxChanged )
+			);
+
+		private static void SetAnilibriaTextBoxStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (TextBox) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["AnilibriaTextBox"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["DarkAnilibriaTextBox"];
+					break;
+			}
+		}
+
+		private static void AnilibriaTextBoxChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetAnilibriaTextBoxStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetAnilibriaTextBoxStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetAnilibriaTextBox ( DependencyObject textbox , string value ) => textbox.SetValue ( AnilibriaTextBoxProperty , value );
+
+		public static string GetAnilibriaTextBox ( DependencyObject textbox ) => (string) textbox.GetValue ( AnilibriaTextBoxProperty );
+
+		public static readonly DependencyProperty CloseIconProperty =
+			DependencyProperty.RegisterAttached (
+				"CloseIcon" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , CloseIconChanged )
+			);
+
+		private static void SetCloseIconStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (CloseIcon) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) );
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) );
+					break;
+			}
+		}
+
+		private static void CloseIconChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetCloseIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetCloseIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetCloseIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( CloseIconProperty , value );
+
+		public static string GetCloseIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( CloseIconProperty );
+
+		public static readonly DependencyProperty FavoriteIconProperty =
+			DependencyProperty.RegisterAttached (
+				"FavoriteIcon" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , FavoriteIconChanged )
+			);
+
+		private static void SetFavoriteIconStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (FavoriteIcon) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) );
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) );
+					break;
+			}
+		}
+
+		private static void FavoriteIconChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetFavoriteIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( FavoriteIconProperty , value );
+
+		public static string GetFavoriteIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( FavoriteIconProperty );
+
+		public static readonly DependencyProperty RemoveFavoriteIconProperty =
+			DependencyProperty.RegisterAttached (
+				"RemoveFavoriteIcon" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , RemoveFavoriteIconChanged )
+			);
+
+		private static void SetRemoveFavoriteIconStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (FavoriteIcon) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 161 , 39 , 39 ) );
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 179 , 179 , 179 ) );
+					break;
+			}
+		}
+
+		private static void RemoveFavoriteIconChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetRemoveFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetRemoveFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetRemoveFavoriteIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( RemoveFavoriteIconProperty , value );
+
+		public static string GetRemoveFavoriteIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( RemoveFavoriteIconProperty );
+
+
+		public static readonly DependencyProperty ChatIconProperty =
+			DependencyProperty.RegisterAttached (
+				"ChatIcon" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , ChatIconChanged )
+			);
+
+		private static void SetChatIconStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (ChatIcon) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) );
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) );
+					break;
+			}
+		}
+
+		private static void ChatIconChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetChatIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetChatIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetChatIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( ChatIconProperty , value );
+
+		public static string GetChatIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( ChatIconProperty );
+
+
+		public static readonly DependencyProperty OpenEyeIconProperty =
+			DependencyProperty.RegisterAttached (
+				"OpenEyeIcon" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , OpenEyeIconChanged )
+			);
+
+		private static void SetOpenEyeIconStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (OpenEyeIcon) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) );
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) );
+					break;
+			}
+		}
+
+		private static void OpenEyeIconChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetOpenEyeIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetOpenEyeIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetOpenEyeIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( OpenEyeIconProperty , value );
+
+		public static string GetOpenEyeIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( OpenEyeIconProperty );
+		
 
 	}
 

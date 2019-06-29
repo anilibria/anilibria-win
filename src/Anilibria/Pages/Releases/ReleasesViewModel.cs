@@ -37,6 +37,8 @@ namespace Anilibria.Pages.Releases {
 
 		private const string OpenVideoSettings = "OpenVideo";
 
+		private const string IsDarkThemeSettings = "IsDarkTheme";
+
 		private Random m_Random = new Random ( Guid.NewGuid ().GetHashCode () );
 
 		private bool m_IsMultipleSelect;
@@ -180,6 +182,8 @@ namespace Anilibria.Pages.Releases {
 		private IEntityCollection<ReleaseEntity> m_ReleasesCollection;
 		
 		private string m_FilterByDescription;
+
+		private bool m_IsDarkTheme;
 
 		/// <summary>
 		/// Constructor injection.
@@ -811,8 +815,6 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void Refresh () {
-			ControlsThemeChanger.ChangeTheme ( ControlsThemeChanger.DarkTheme );
-
 			IsRefreshing = true;
 			RaiseCanExecuteChanged ( RefreshCommand );
 
@@ -2026,6 +2028,22 @@ namespace Anilibria.Pages.Releases {
 
 				Filter ();
 				RefreshFilterState ();
+			}
+		}
+
+		/// <summary>
+		/// Is dark theme.
+		/// </summary>
+		public bool IsDarkTheme
+		{
+			get => m_IsDarkTheme;
+			set
+			{
+				if ( !Set ( ref m_IsDarkTheme , value ) ) return;
+
+				ControlsThemeChanger.ChangeTheme ( value ? ControlsThemeChanger.DarkTheme : ControlsThemeChanger.DefaultTheme );
+
+				ApplicationData.Current.RoamingSettings.Values[IsDarkThemeSettings] = value;
 			}
 		}
 

@@ -88,7 +88,7 @@
 					<Grid
 						Grid.Column="1"
 						Grid.Row="0"
-						Margin="3"
+						Margin="8 3 3 3"
 						MinWidth="222"
 						MaxWidth="222"
 						VerticalAlignment="Stretch"
@@ -753,28 +753,25 @@
 						IconColor="White"
 					/>
 					<Button.Flyout>
-						<MenuFlyout>
-							<MenuFlyout.MenuFlyoutPresenterStyle>
-								<Style TargetType="MenuFlyoutPresenter">
-									<Setter Property="Background" Value="#e6e6e6" />
-									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="Black" />
-								</Style>
-							</MenuFlyout.MenuFlyoutPresenterStyle>
+						<MenuFlyout
+							converters:BackgroundThemeConverter.MenuFlyout="Origin">
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Отметить как просмотренное"
 								Command="{Binding AddSeenMarkCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 							/>
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Отметить как не просмотренное"
 								Command="{Binding RemoveSeenMarkCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 							/>
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"
 								Text="Удалить все отметки о просмотре"
 								Command="{Binding RemoveAllSeensMarksCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 							/>
 						</MenuFlyout>
 					</Button.Flyout>
@@ -795,7 +792,7 @@
 								<StackPanel HorizontalAlignment="Stretch">
 									<Button
 										HorizontalAlignment="Stretch"
-										Style="{StaticResource ActionButtonStyle}"
+										converters:BackgroundThemeConverter.ActionButton="Origin"
 										Command="{Binding ClearFiltersCommands}">
 										Очистить фильтры
 									</Button>
@@ -805,7 +802,7 @@
 										Жанры
 									</TextBlock>
 									<controls:TimingTextBox
-										Style="{StaticResource AnilibriaTextBox}"
+										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
@@ -819,7 +816,7 @@
 										Года
 									</TextBlock>
 									<controls:TimingTextBox
-										Style="{StaticResource AnilibriaTextBox}"
+										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
@@ -831,23 +828,23 @@
 										Margin="4 0 4 4"
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Озвучка
-										</TextBlock>
-										<controls:TimingTextBox
-											Style="{StaticResource AnilibriaTextBox}"
-											Width="200"
-											Margin="4 0 4 4"
-											IsSpellCheckEnabled="False"
-											Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-											PlaceholderText="Вводите через запятую"
-											TimeoutCommand="{Binding FilterCommand}"
-										/>
+									</TextBlock>
+									<controls:TimingTextBox
+										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
+										Width="200"
+										Margin="4 0 4 4"
+										IsSpellCheckEnabled="False"
+										Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										PlaceholderText="Вводите через запятую"
+										TimeoutCommand="{Binding FilterCommand}"
+									/>
 									<TextBlock
 										Margin="4 0 4 4"
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Тип
 									</TextBlock>
 									<controls:TimingTextBox
-										Style="{StaticResource AnilibriaTextBox}"
+										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
@@ -860,7 +857,7 @@
 										Статусы
 									</TextBlock>
 									<controls:TimingTextBox
-										Style="{StaticResource AnilibriaTextBox}"
+										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
@@ -870,11 +867,11 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Описание
 									</TextBlock>
 									<controls:TimingTextBox
-										Style="{StaticResource AnilibriaTextBox}"
+										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
@@ -883,7 +880,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Признак избранности
 									</TextBlock>
 									<ComboBox
@@ -1003,7 +1000,7 @@
 										У Вас нет новых уведомлений
 									</TextBlock>
 									<Button
-										Style="{StaticResource ActionButtonStyle}"
+										converters:BackgroundThemeConverter.ActionButton="Origin"
 										Visibility="{Binding IsShowNotification}"
 										Command="{Binding ResetNotificationCommand}"
 										Margin="0 2 0 2">
@@ -1142,7 +1139,7 @@
 									OnContent="Включены"
 									OffContent="Выключены"
 									FontSize="12"
-									IsOn="{Binding IsFavoriteNotifications, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+									IsOn="{Binding IsFavoriteNotifications, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								/>
 								<TextBlock
 									Margin="0 4 0 0"
@@ -1169,6 +1166,19 @@
 									SelectedItem="{Binding SelectedOpenVideoMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									Width="250"
 									DisplayMemberPath="Title"
+								/>
+								<TextBlock
+									Margin="0 4 0 0"
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
+									Тема
+								</TextBlock>
+								<ToggleSwitch
+									converters:BackgroundThemeConverter.ToggleSwitch="Origin"
+									Margin="0 4 0 0"
+									OnContent="Темная"
+									OffContent="По умолчанию"
+									FontSize="12"
+									IsOn="{Binding IsDarkTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								/>
 							</StackPanel>
 						</Flyout>
@@ -1312,7 +1322,7 @@
 				Orientation="Horizontal"
 				HorizontalAlignment="Center">
 				<controls:TimingTextBox
-					Style="{StaticResource AnilibriaTextBox}"
+					converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 					MinWidth="250"
 					Width="380"
 					Margin="0 -3 4 0"
@@ -1400,7 +1410,6 @@
 			Visibility="{Binding IsShowReleaseCard}"
 			Tapped="Rectangle_Tapped">
 		</Rectangle>
-		<!-- BorderBrush="#881919" -->
 		<Border
 			Margin="10"
 			Grid.Row="1"
@@ -1411,7 +1420,6 @@
 			MaxWidth="800"
 			VerticalAlignment="Center"
 			Visibility="{Binding IsShowReleaseCard}">
-			<!-- Background="#f2f2f2" -->
 			<Grid
 				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground">
 				<Grid.ColumnDefinitions>
@@ -1613,7 +1621,7 @@
 						<controls:CloseIcon
 							IconWidth="20"
 							IconHeight="20"
-							IconColor="Black"
+							converters:BackgroundThemeConverter.CloseIcon="Origin"
 						/>
 					</controls:PointingGridControl>
 					<Grid Visibility="{Binding IsAuthorized}">
@@ -1627,7 +1635,7 @@
 							<controls:FavoriteIcon
 								IconWidth="20"
 								IconHeight="20"
-								IconColor="Black"
+								converters:BackgroundThemeConverter.FavoriteIcon="Origin"
 							/>
 						</controls:PointingGridControl>
 						<controls:PointingGridControl
@@ -1641,7 +1649,7 @@
 							<controls:FavoriteIcon
 								IconWidth="20"
 								IconHeight="20"
-								IconColor="#a32727"
+								converters:BackgroundThemeConverter.RemoveFavoriteIcon="Origin"
 							/>
 						</controls:PointingGridControl>
 					</Grid>
@@ -1655,7 +1663,7 @@
 						<controls:ChatIcon
 							IconWidth="20"
 							IconHeight="20"
-							IconColor="Black"
+							converters:BackgroundThemeConverter.ChatIcon="Origin"
 						/>
 					</controls:PointingGridControl>
 
@@ -1667,28 +1675,24 @@
 						Tapped="MarkSeenMark_Tapped"
 						ToolTipService.ToolTip="Изменить отметки серий о просмотре по этому релизу">
 						<FlyoutBase.AttachedFlyout>
-							<MenuFlyout>
-								<MenuFlyout.MenuFlyoutPresenterStyle>
-									<Style TargetType="MenuFlyoutPresenter">
-										<Setter Property="Background" Value="#e6e6e6" />
-										<Setter Property="BorderThickness" Value="1" />
-										<Setter Property="BorderBrush" Value="Black" />
-									</Style>
-								</MenuFlyout.MenuFlyoutPresenterStyle>
+							<MenuFlyout
+								converters:BackgroundThemeConverter.MenuFlyout="Origin">
 								<MenuFlyoutItem
 									Text="Отметить все серии как просмотренные"
 									Command="{Binding EnableSeenMarkCardCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								/>
 								<MenuFlyoutItem
 									Text="Отметить все серии как не просмотренные"
 									Command="{Binding DisableSeenMarkCardCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								/>
 							</MenuFlyout>
 						</FlyoutBase.AttachedFlyout>
 						<controls:OpenEyeIcon
 							IconWidth="20"
 							IconHeight="20"
-							IconColor="Black"
+							converters:BackgroundThemeConverter.OpenEyeIcon="Origin"
 						/>
 					</controls:PointingGridControl>
 				</StackPanel>
@@ -1870,7 +1874,7 @@
 					Visibility="{Binding IsShowComments}"
 					Margin="4">
 					<Button
-						Style="{StaticResource ActionButtonStyle}"
+						converters:BackgroundThemeConverter.ActionButton="Origin"
 						HorizontalAlignment="Center"
 						Command="{Binding CloseCommentsCommand}">
 						Скрыть Комментарии
@@ -1887,41 +1891,5 @@
 				/>
 			</Grid>
 		</Border>
-		<VisualStateManager.VisualStateGroups>
-			<VisualStateGroup>
-				<!--<VisualState x:Name="ExtraWide">
-					<VisualState.StateTriggers>
-						<AdaptiveTrigger MinWindowWidth="1800" MinWindowHeight="1200" />
-					</VisualState.StateTriggers>
-					<VisualState.Setters>
-						<Setter Target="CardDescription.Height" Value="400" />
-					</VisualState.Setters>
-				</VisualState>
-				<VisualState x:Name="Wide">
-					<VisualState.StateTriggers>
-						<AdaptiveTrigger MinWindowWidth="1400" MinWindowHeight="720" />
-					</VisualState.StateTriggers>
-					<VisualState.Setters>
-						<Setter Target="CardDescription.Height" Value="310" />
-					</VisualState.Setters>
-				</VisualState>
-				<VisualState x:Name="Square">
-					<VisualState.StateTriggers>
-						<AdaptiveTrigger MinWindowWidth="720" MinWindowHeight="440" />
-					</VisualState.StateTriggers>
-					<VisualState.Setters>
-						<Setter Target="CardDescription.Height" Value="190" />
-					</VisualState.Setters>
-				</VisualState>-->
-				<!--<VisualState x:Name="Snapped">
-					<VisualState.StateTriggers>
-						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
-					</VisualState.StateTriggers>
-					<VisualState.Setters>
-						<Setter Target="CardPosterBorder.Height" Value="250" />
-					</VisualState.Setters>
-				</VisualState>-->
-			</VisualStateGroup>
-		</VisualStateManager.VisualStateGroups>
 	</Grid>
 </UserControl>
