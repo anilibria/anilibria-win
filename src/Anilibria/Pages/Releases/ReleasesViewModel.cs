@@ -7,6 +7,7 @@ using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Anilibria.ThemeChanger;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
@@ -810,6 +811,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void Refresh () {
+			ControlsThemeChanger.ChangeTheme ( ControlsThemeChanger.DarkTheme );
+
 			IsRefreshing = true;
 			RaiseCanExecuteChanged ( RefreshCommand );
 

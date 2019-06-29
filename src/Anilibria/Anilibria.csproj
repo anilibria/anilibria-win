@@ -187,6 +187,7 @@
     <Compile Include="Controls\YoutubeIcon.xaml.cs">
       <DependentUpon>YoutubeIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BackgroundThemeConverter.cs" />
     <Compile Include="Converters\CacheImageBrushConverter.cs" />
     <Compile Include="Converters\CacheImageConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
@@ -320,6 +321,7 @@
     <Compile Include="Storage\Entities\UserFavoriteEntity.cs" />
     <Compile Include="Storage\Entities\YoutubeEntity.cs" />
     <Compile Include="Storage\IDataContext.cs" />
+    <Compile Include="ThemeChanger\ControlsThemeChanger.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

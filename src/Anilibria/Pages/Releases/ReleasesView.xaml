@@ -54,9 +54,10 @@
 		</Style>
 		<DataTemplate x:Key="ReleaseItemTemplate">
 			<Border CornerRadius="8">
+				<!-- Background="#f2f2f2" -->
 				<Grid
 					Padding="10"
-					Background="#f2f2f2">
+					converters:BackgroundThemeConverter.BackgroundMapper="ReleaseGridBackground">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
@@ -65,12 +66,13 @@
 						<RowDefinition></RowDefinition>
 					</Grid.RowDefinitions>
 
+					<!-- BorderBrush="#adadad" -->
 					<Border
 						Height="300"
 						Width="200"
 						Grid.Row="0"
 						Grid.Column="0"
-						BorderBrush="#adadad"
+						converters:BackgroundThemeConverter.BorderMapper="ImageBorderColor"
 						BorderThickness="2"
 						CornerRadius="5">
 						<Border.Background>
@@ -86,7 +88,8 @@
 					<Grid
 						Grid.Column="1"
 						Grid.Row="0"
-						Margin="8 3 3 3"
+						Margin="3"
+						MinWidth="222"
 						MaxWidth="222"
 						VerticalAlignment="Stretch"
 						Padding="0">
@@ -98,15 +101,19 @@
 						<StackPanel
 							Grid.Row="0"
 							Orientation="Vertical">
+							<!-- Foreground="#b32121" -->
 							<TextBlock
 								TextWrapping="Wrap"
 								TextTrimming="CharacterEllipsis"
 								MaxLines="3"
-								Foreground="#b32121"
+								FontWeight="Bold"
+								FontSize="14.5"
+								converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 								Text="{Binding Title}"
 							/>
 							<StackPanel Orientation="Vertical">
-								<TextBlock Foreground="Black">
+								<TextBlock
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Статус"
 										FontWeight="Bold"
@@ -119,7 +126,7 @@
 							<StackPanel
 								Orientation="Vertical"
 								Visibility="{Binding IsExistsScheduledOnDay}">
-								<TextBlock Foreground="Black">
+								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="В расписании"
 										FontWeight="Bold"
@@ -130,7 +137,7 @@
 								</TextBlock>
 							</StackPanel>
 							<StackPanel Orientation="Vertical">
-								<TextBlock Foreground="Black">
+								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Год"
 										FontWeight="Bold"
@@ -141,7 +148,7 @@
 								</TextBlock>
 							</StackPanel>
 							<StackPanel Orientation="Vertical">
-								<TextBlock Foreground="Black">
+								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Тип"
 										FontWeight="Bold"
@@ -155,7 +162,7 @@
 								<TextBlock
 									MaxLines="3"
 									TextWrapping="WrapWholeWords"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Жанры"
 										FontWeight="Bold"
@@ -169,7 +176,7 @@
 								<TextBlock
 								MaxLines="5"
 								TextWrapping="WrapWholeWords"
-								Foreground="Black">
+								converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Озвучка"
 										FontWeight="Bold"
@@ -180,7 +187,7 @@
 								</TextBlock>
 							</StackPanel>
 							<TextBlock
-								Foreground="Black"
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
 								FontWeight="Bold"
 								Visibility="{Binding IsSeen}">
 								Все серии просмотрены
@@ -202,7 +209,7 @@
 									Height="20"
 									FontFamily="Segoe MDL2 Assets"
 									FontSize="18"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									&#xEB51;
 								</TextBlock>
 							</Grid>
@@ -212,7 +219,7 @@
 									Margin="4 0 0 0"
 									FontSize="16"
 									Text="{Binding Rating}"
-									Foreground="Black"
+									converters:BackgroundThemeConverter.TextMapper="TextBlock"
 								/>
 							</Grid>
 							<Grid
@@ -224,7 +231,8 @@
 									Height="20"
 									FontFamily="Segoe MDL2 Assets"
 									FontSize="18"
-									Foreground="#a32727">
+									Foreground="#a32727"
+									converters:BackgroundThemeConverter.TextMapper="TextBlockAccent">
 									&#xE734;
 								</TextBlock>
 							</Grid>
@@ -238,6 +246,7 @@
 									FontSize="16"
 									Text="В избранном"
 									Foreground="#a32727"
+									converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 								/>
 							</Grid>
 						</Grid>
@@ -636,9 +645,10 @@
 			</BeginStoryboard>
 		</EventTrigger>
 	</UserControl.Triggers>
-	
+
+	<!-- Background="#e6e6e6" -->
 	<Grid
-		Background="#e6e6e6">
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -648,10 +658,11 @@
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
+		<!-- Background="#ba2d2d" -->
 		<Border
 			Grid.Row="0"
 			Grid.Column="0"
-			Background="#ba2d2d"
+			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
 			MinHeight="44"
 			Width="44">
 			<Button
@@ -666,11 +677,12 @@
 				/>
 			</Button>
 		</Border>
+		<!-- Background="#9e2323"-->
 		<Border
 			Grid.Row="1"
 			Grid.RowSpan="2"
 			Grid.Column="0"
-			Background="#9e2323"
+			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
 			Width="44">
 			<RelativePanel
 				HorizontalAlignment="Stretch">
@@ -697,37 +709,32 @@
 						IconColor="White"
 					/>
 					<Button.Flyout>
-						<MenuFlyout>
-							<MenuFlyout.MenuFlyoutPresenterStyle>
-								<Style TargetType="MenuFlyoutPresenter">
-									<Setter Property="Background" Value="#e6e6e6" />
-									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="Black" />
-								</Style>
-							</MenuFlyout.MenuFlyoutPresenterStyle>
+						<MenuFlyout
+							converters:BackgroundThemeConverter.MenuFlyout="Origin">
+							<!-- Style="{StaticResource AnilibriaMenuFlyoutItem}" -->
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Добавить в избранное"
 								Command="{Binding AddToFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Удалить из избранного"
 								Command="{Binding RemoveFromFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Удалить просмотренные релизы из избранного"
 								Command="{Binding RemoveSeensFavoritesCommand}"
 							/>
 							<MenuFlyoutSeparator />
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Добавить в локальное избранное"
 								Command="{Binding AddToLocalFavoritesCommand}"
 							/>
 							<MenuFlyoutItem
-								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								Text="Удалить из локального избранного"
 								Command="{Binding RemoveFromLocalFavoritesCommand}"
 							/>
@@ -783,14 +790,8 @@
 							IconColor="White"
 						/>
 						<Button.Flyout>
-							<Flyout>
-								<Flyout.FlyoutPresenterStyle>
-									<Style TargetType="FlyoutPresenter">
-										<Setter Property="Background" Value="#e6e6e6" />
-										<Setter Property="BorderThickness" Value="1" />
-										<Setter Property="BorderBrush" Value="Black" />
-									</Style>
-								</Flyout.FlyoutPresenterStyle>
+							<Flyout
+								converters:BackgroundThemeConverter.CommonFlyout="Origin">
 								<StackPanel HorizontalAlignment="Stretch">
 									<Button
 										HorizontalAlignment="Stretch"
@@ -800,7 +801,7 @@
 									</Button>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Жанры
 									</TextBlock>
 									<controls:TimingTextBox
@@ -814,7 +815,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Года
 									</TextBlock>
 									<controls:TimingTextBox
@@ -828,7 +829,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Озвучка
 										</TextBlock>
 										<controls:TimingTextBox
@@ -842,7 +843,7 @@
 										/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Тип
 									</TextBlock>
 									<controls:TimingTextBox
@@ -855,7 +856,7 @@
 									/>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Статусы
 									</TextBlock>
 									<controls:TimingTextBox
@@ -895,7 +896,7 @@
 									</ComboBox>
 									<TextBlock
 										Margin="4 0 4 4"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Признак просмотра
 									</TextBlock>
 									<ComboBox
@@ -936,7 +937,8 @@
 						IconColor="White"
 					/>
 					<Button.Flyout>
-						<Flyout>
+						<Flyout
+							converters:BackgroundThemeConverter.CommonFlyout="Origin">
 							<Flyout.FlyoutPresenterStyle>
 								<Style TargetType="FlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
@@ -947,7 +949,7 @@
 							<StackPanel>
 								<TextBlock
 									Margin="0 2 0 2"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Сортировать по
 								</TextBlock>
 								<ComboBox
@@ -959,7 +961,7 @@
 								</ComboBox>
 								<TextBlock
 									Margin="0 2 0 2"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									В порядке
 								</TextBlock>
 								<ComboBox
@@ -984,7 +986,8 @@
 							IconColor="White"
 						/>
 						<Button.Flyout>
-							<Flyout>
+							<Flyout
+								converters:BackgroundThemeConverter.CommonFlyout="Origin">
 								<Flyout.FlyoutPresenterStyle>
 									<Style TargetType="FlyoutPresenter">
 										<Setter Property="Background" Value="#e6e6e6" />
@@ -996,7 +999,7 @@
 									<TextBlock
 										Visibility="{Binding IsShowNotification, Converter={StaticResource InverseBoolConverter}}"
 										TextAlignment="Center"
-										Foreground="Black">
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										У Вас нет новых уведомлений
 									</TextBlock>
 									<Button
@@ -1117,7 +1120,8 @@
 					RelativePanel.Below="RandomReleaseButton"
 					ToolTipService.ToolTip="Настройки">
 					<Button.Flyout>
-						<Flyout>
+						<Flyout
+							converters:BackgroundThemeConverter.CommonFlyout="Origin">
 							<Flyout.FlyoutPresenterStyle>
 								<Style TargetType="FlyoutPresenter">
 									<Setter Property="Background" Value="#e6e6e6" />
@@ -1129,11 +1133,11 @@
 								Orientation="Vertical"
 								Margin="2 0 2 4">
 								<TextBlock
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Уведомления по избранным
 								</TextBlock>
 								<ToggleSwitch
-									Style="{StaticResource AnilibriaToggleSwitch}"
+									converters:BackgroundThemeConverter.ToggleSwitch="Origin"
 									Margin="0 4 0 0"
 									OnContent="Включены"
 									OffContent="Выключены"
@@ -1142,7 +1146,7 @@
 								/>
 								<TextBlock
 									Margin="0 4 0 0"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Торрент
 								</TextBlock>
 								<ComboBox
@@ -1155,7 +1159,7 @@
 								/>
 								<TextBlock
 									Margin="0 4 0 0"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									Смотреть в карточке
 								</TextBlock>
 								<ComboBox
@@ -1191,20 +1195,14 @@
 						/>
 					</Viewbox>
 					<Button.Flyout>
-						<Flyout>
-							<Flyout.FlyoutPresenterStyle>
-								<Style TargetType="FlyoutPresenter">
-									<Setter Property="Background" Value="#e6e6e6" />
-									<Setter Property="BorderThickness" Value="1" />
-									<Setter Property="BorderBrush" Value="Black" />
-								</Style>
-							</Flyout.FlyoutPresenterStyle>
+						<Flyout
+							converters:BackgroundThemeConverter.CommonFlyout="Origin">
 							<StackPanel>
 								<TextBlock
 									Foreground="#a32727"
 									converters:TextBlockHighlight.HyperLinkHightlight="True">
 									<Hyperlink
-										Foreground="#a32727"
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 										NavigateUri="http://anilibriawin10.reformal.ru/">
 										Сообщить об идее/предложении
 									</Hyperlink>
@@ -1214,7 +1212,7 @@
 									Margin="0 4 0 0"
 									converters:TextBlockHighlight.HyperLinkHightlight="True">
 									<Hyperlink
-										Foreground="#a32727"
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 										NavigateUri="tg://resolve?domain=AniLibriaTP">
 										Техподдержка АниЛибрии
 									</Hyperlink>
@@ -1225,14 +1223,15 @@
 				</Button>
 			</RelativePanel>
 		</Border>
+		<!-- Background="#b3b3b3" -->
 		<Border
 			Grid.Row="0"
 			Grid.Column="1"
-			Background="#b3b3b3">
+			converters:BackgroundThemeConverter.BackgroundMapper="UpperPanel">
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<ToggleSwitch
-					Style="{StaticResource AnilibriaToggleSwitch}"
+					converters:BackgroundThemeConverter.ToggleSwitch="Origin"
 					Margin="8 0 0 0"
 					RelativePanel.AlignLeftWithPanel="True"
 					RelativePanel.AlignTopWithPanel="True"
@@ -1401,19 +1400,20 @@
 			Visibility="{Binding IsShowReleaseCard}"
 			Tapped="Rectangle_Tapped">
 		</Rectangle>
+		<!-- BorderBrush="#881919" -->
 		<Border
 			Margin="10"
 			Grid.Row="1"
 			Grid.RowSpan="2"
 			Grid.ColumnSpan="2"
-			BorderBrush="#881919"
 			BorderThickness="0"
 			CornerRadius="8"
 			MaxWidth="800"
 			VerticalAlignment="Center"
 			Visibility="{Binding IsShowReleaseCard}">
+			<!-- Background="#f2f2f2" -->
 			<Grid
-				Background="#f2f2f2">
+				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition />
@@ -1429,38 +1429,36 @@
 					Grid.Column="1"
 					Margin="2 16 6 0">
 					<TextBlock
-						Foreground="#a32727"
+						converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 						Text="{Binding OpenedRelease.Title}"
 						TextWrapping="Wrap"
 						FontWeight="SemiBold"
+						FontSize="16"
 					/>
 					<StackPanel Orientation="Horizontal">
 						<TextBlock
+							FontWeight="ExtraBold"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+							RightTapped="StatusLabel_RightTapped"
+							Margin="0 0 3 0"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
+							*
+						</TextBlock>
+						<TextBlock
 							x:Name="StatusLabel"
-							Foreground="Black"
+							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							RightTapped="StatusLabel_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
-								<MenuFlyout>
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+								<MenuFlyout
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 									<MenuFlyoutItem
-										Style="{StaticResource AnilibriaMenuFlyoutItem}"
+										converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 										Text="Фильтровать по этому статусу"
 										Command="{Binding AddStatusToFilterCommand}"
 									/>
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
-							<Run
-								FontWeight="ExtraBold"
-								Foreground="#a32727">
-								*
-							</Run>
 							<Run
 								Text="Статус"
 								FontWeight="Bold"
@@ -1470,32 +1468,30 @@
 							/>
 						</TextBlock>
 					</StackPanel>
-					<StackPanel Orientation="Vertical">
+					<StackPanel Orientation="Horizontal">
 						<TextBlock
-							Foreground="Black"
-							RightTapped="StatusLabel_RightTapped"
+							FontWeight="ExtraBold"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+							RightTapped="YearLabel_RightTapped"
+							Margin="0 0 3 0"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
+							*
+						</TextBlock>
+						<TextBlock
+							x:Name="YearFiltersMenuTextBlock"
+							converters:BackgroundThemeConverter.TextMapper="TextBlock"
+							RightTapped="YearLabel_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
-								<MenuFlyout>
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+								<MenuFlyout
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 									<MenuFlyoutItem
-										Style="{StaticResource AnilibriaMenuFlyoutItem}"
+										converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 										Text="Фильтровать по этому году"
 										Command="{Binding AddYearToFilterCommand}"
 									/>
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
-							<Run
-								FontWeight="ExtraBold"
-								Foreground="#a32727">
-								*
-							</Run>
 							<Run
 								Text="Год"
 								FontWeight="Bold"
@@ -1507,7 +1503,7 @@
 					</StackPanel>
 					<StackPanel Orientation="Vertical">
 						<TextBlock
-							Foreground="Black">
+							converters:BackgroundThemeConverter.TextMapper="TextBlock">
 							<Run
 								Text="Тип"
 								FontWeight="Bold"
@@ -1517,30 +1513,27 @@
 							/>
 						</TextBlock>
 					</StackPanel>
-					<StackPanel Orientation="Vertical">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock
+							FontWeight="ExtraBold"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+							RightTapped="GenresFiltersMenuTextBlock_RightTapped"
+							Margin="0 0 3 0"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
+							*
+						</TextBlock>
 						<TextBlock
 							x:Name="GenresFiltersMenuTextBlock"
 							TextWrapping="WrapWholeWords"
-							Foreground="Black"
+							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							RightTapped="GenresFiltersMenuTextBlock_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout
-									x:Name="GenresFiltersMenu">
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+									x:Name="GenresFiltersMenu"
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
-							<Run
-								FontWeight="ExtraBold"
-								Foreground="#a32727">
-								*
-							</Run>
 							<Run
 								Text="Жанры"
 								FontWeight="Bold"
@@ -1550,30 +1543,27 @@
 							/>
 						</TextBlock>
 					</StackPanel>
-					<StackPanel Orientation="Vertical">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock
+							FontWeight="ExtraBold"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+							RightTapped="VoicesFiltersMenuTextBlock_RightTapped"
+							Margin="0 0 3 0"
+							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
+							*
+						</TextBlock>
 						<TextBlock
 							x:Name="VoicesFiltersMenuTextBlock"
 							TextWrapping="WrapWholeWords"
-							Foreground="Black"
+							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							RightTapped="VoicesFiltersMenuTextBlock_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
 							<FlyoutBase.AttachedFlyout>
 								<MenuFlyout
-									x:Name="VoicesFiltersMenu">
-									<MenuFlyout.MenuFlyoutPresenterStyle>
-										<Style TargetType="MenuFlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</MenuFlyout.MenuFlyoutPresenterStyle>
+									x:Name="VoicesFiltersMenu"
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
 								</MenuFlyout>
 							</FlyoutBase.AttachedFlyout>
-							<Run
-								FontWeight="ExtraBold"
-								Foreground="#a32727">
-								*
-							</Run>
 							<Run
 								Text="Озвучка"
 								FontWeight="Bold"
@@ -1587,7 +1577,7 @@
 						Margin="0 2 0 0"
 						TextWrapping="WrapWholeWords"
 						TextTrimming="CharacterEllipsis"
-						Foreground="#a32727"
+						converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 						MaxLines="2"
 						Visibility="{Binding ShowAnnounce}"
 						Text="{Binding OpenedRelease.Announce}"
@@ -1599,7 +1589,7 @@
 							MaxHeight="190">
 							<TextBlock
 								TextWrapping="WrapWholeWords"
-								Foreground="Black"
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
 								Margin="0 0 14 0"
 								converters:TextBlockHtmlConverter.HtmlContent="{Binding OpenedRelease.Description}"
 								converters:TextBlockHtmlConverter.LinkCommand="{Binding OpenCrossReleaseCommand}"
@@ -1757,7 +1747,7 @@
 									Margin="5 0 0 0"
 									VerticalAlignment="Center"
 									HorizontalAlignment="Right"
-									Foreground="Black">
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="{Binding OpenedRelease.CountVideoOnline}"
 									/>
@@ -1773,18 +1763,13 @@
 							<Button
 								HorizontalAlignment="Right"
 								Grid.Column="1"
-								Style="{StaticResource ActionButtonStyle}"
+								converters:BackgroundThemeConverter.ActionButton="Origin"
 								RightTapped="Button_RightTapped"
 								Tapped="Button_Tapped">
 								<FlyoutBase.AttachedFlyout>
-									<Flyout x:Name="OnlineVideoAttachFlyout">
-										<Flyout.FlyoutPresenterStyle>
-											<Style TargetType="FlyoutPresenter">
-												<Setter Property="Background" Value="#e6e6e6" />
-												<Setter Property="BorderThickness" Value="1" />
-												<Setter Property="BorderBrush" Value="Black" />
-											</Style>
-										</Flyout.FlyoutPresenterStyle>
+									<Flyout
+										x:Name="OnlineVideoAttachFlyout"
+										converters:BackgroundThemeConverter.CommonFlyout="Origin">
 										<ListView
 											x:Name="PrefferedOnlineVideoSelector"
 											ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
@@ -1813,7 +1798,7 @@
 							Orientation="Horizontal"
 							VerticalAlignment="Center">
 							<TextBlock
-								Foreground="Black">
+								converters:BackgroundThemeConverter.TextMapper="TextBlock">
 								<Run>
 									Доступно
 								</Run>
@@ -1828,17 +1813,14 @@
 						<Button
 							Margin="10 0 0 0"
 							Grid.Column="1"
-							Style="{StaticResource ActionButtonStyle}">
+							converters:BackgroundThemeConverter.ActionButton="Origin">
 							<Button.Flyout>
-								<Flyout>
-									<Flyout.FlyoutPresenterStyle>
-										<Style TargetType="FlyoutPresenter">
-											<Setter Property="Background" Value="#e6e6e6" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="BorderBrush" Value="Black" />
-										</Style>
-									</Flyout.FlyoutPresenterStyle>
-									<ScrollViewer Height="120" MaxHeight="280" Width="380">
+								<Flyout
+									converters:BackgroundThemeConverter.CommonFlyout="Origin">
+									<ScrollViewer
+										Height="120"
+										MaxHeight="280"
+										Width="380">
 										<ItemsControl
 											Margin="18 0 0 0"
 											ItemsSource="{Binding OpenedRelease.Torrents}">
@@ -1857,7 +1839,7 @@
 															<ColumnDefinition  Width="Auto" />
 														</Grid.ColumnDefinitions>
 														<TextBlock
-															Foreground="Black"
+															converters:BackgroundThemeConverter.TextMapper="TextBlock"
 															VerticalAlignment="Center">
 															<Run Text="{Binding Series}"></Run>
 															<Run Text="{Binding Quality}"></Run>
@@ -1867,7 +1849,7 @@
 															Grid.Column="2" Margin="0 1 18 1"
 															Click="TorrentDownload_Click"
 															CommandParameter="{Binding Url}"
-															Style="{StaticResource ActionButtonStyle}"
+															converters:BackgroundThemeConverter.ActionButton="Origin"
 															HorizontalAlignment="Right">
 															Скачать
 														</Button>

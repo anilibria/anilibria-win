@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Anilibria.ThemeChanger;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -53,9 +54,19 @@ namespace Anilibria.Converters {
 		}
 
 		private static void ChangeColorForHyperlinks ( TextBlock textBlock ) {
+			Brush brush = null;
+			switch ( ControlsThemeChanger.CurrentTheme () ) {
+				case ControlsThemeChanger.DefaultTheme:
+					brush = new SolidColorBrush ( Color.FromArgb ( 255 , 163 , 39 , 39 ) );
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					brush = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) );
+					break;
+			}
+
 			var hyperlinks = new List<Hyperlink> ();
 			FillHyperlinks ( hyperlinks , textBlock.Inlines );
-			foreach ( var hyperlink in hyperlinks ) hyperlink.Foreground = new SolidColorBrush ( Color.FromArgb ( 255 , 163 , 39 , 39 ) );
+			foreach ( var hyperlink in hyperlinks ) hyperlink.Foreground = brush;
 		}
 
 		private static void TextBlock_PointerExited ( object sender , PointerRoutedEventArgs e ) {
