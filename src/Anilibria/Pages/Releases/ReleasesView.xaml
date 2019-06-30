@@ -885,7 +885,7 @@
 									</TextBlock>
 									<ComboBox
 										Margin="4 0 0 0"
-										Style="{StaticResource AnilibriaComboBox}"
+										converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
 										Width="200"
 										SelectedItem="{Binding SelectedFavoriteMarkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										ItemsSource="{Binding FavoriteMarkTypes}"
@@ -898,7 +898,7 @@
 									</TextBlock>
 									<ComboBox
 										Margin="4 0 0 0"
-										Style="{StaticResource AnilibriaComboBox}"
+										converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
 										Width="200"
 										SelectedItem="{Binding SelectedSeenMarkType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										ItemsSource="{Binding SeenMarkTypes}"
@@ -950,7 +950,7 @@
 									Сортировать по
 								</TextBlock>
 								<ComboBox
-									Style="{StaticResource AnilibriaComboBox}"
+									converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
 									Width="280"
 									SelectedItem="{Binding SelectedSortingItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									ItemsSource="{Binding SortingItems}"
@@ -962,7 +962,7 @@
 									В порядке
 								</TextBlock>
 								<ComboBox
-									Style="{StaticResource AnilibriaComboBox}"
+									converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
 									Width="280"
 									SelectedItem="{Binding SelectedSortingDirection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									ItemsSource="{Binding SortingDirections}"
@@ -1148,7 +1148,7 @@
 								</TextBlock>
 								<ComboBox
 									Margin="0 4 0 0"
-									Style="{StaticResource AnilibriaComboBox}"
+									converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
 									ItemsSource="{Binding TorrentDownloadModes}"
 									SelectedItem="{Binding SelectedTorrentDownloadMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									Width="250"
@@ -1161,7 +1161,7 @@
 								</TextBlock>
 								<ComboBox
 									Margin="0 4 0 0"
-									Style="{StaticResource AnilibriaComboBox}"
+									converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
 									ItemsSource="{Binding OpenVideoModes}"
 									SelectedItem="{Binding SelectedOpenVideoMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									Width="250"
@@ -1336,7 +1336,7 @@
 				<ComboBox
 					Margin="0 -1 0 0"
 					RelativePanel.AlignHorizontalCenterWithPanel="True"
-					Style="{StaticResource AnilibriaComboBox}"
+					converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
 					ItemsSource="{Binding Sections}"
 					SelectedItem="{Binding SelectedSection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					MinWidth="250"

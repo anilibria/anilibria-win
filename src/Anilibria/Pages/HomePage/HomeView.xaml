@@ -12,6 +12,7 @@
 	xmlns:donate="using:Anilibria.Pages.DonatePage"
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	xmlns:controls="using:Anilibria.Controls"
+	xmlns:converters="using:Anilibria.Converters"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
 	Loaded="Page_Loaded">
@@ -53,16 +54,8 @@
 			DisplayMode="Overlay"
 			OpenPaneLength="260">
 			<SplitView.Pane>
-				<RelativePanel>
-					<RelativePanel.Background>
-						<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-							<GradientStop Color="#6b0200" Offset="0.0"></GradientStop>
-							<GradientStop Color="#ab0909" Offset="0.3"></GradientStop>
-							<GradientStop Color="#d41515" Offset="0.5"></GradientStop>
-							<GradientStop Color="#fc2626" Offset="0.7"></GradientStop>
-							<GradientStop Color="#f52c39" Offset="1"></GradientStop>
-						</LinearGradientBrush>
-					</RelativePanel.Background>
+				<RelativePanel
+					converters:BackgroundThemeConverter.AnilibriaSidebar="Origin">
 					<Grid
 						x:Name="UserInfo"
 						RelativePanel.AlignTopWithPanel="True"
@@ -118,7 +111,7 @@
 						RelativePanel.AlignLeftWithPanel="True"
 						HorizontalAlignment="Stretch"
 						ItemsSource="{Binding Items}"
-						ItemContainerStyle="{StaticResource SidebarListViewItem}"
+						converters:BackgroundThemeConverter.AnilibriaSidebarList="Origin"
 						SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 						<ListView.ItemTemplate>
 							<DataTemplate>
@@ -223,29 +216,33 @@
 		<Border
 			x:Name="InformationMessage"
 			Margin="0 60 10 0"
-			BorderBrush="#881919"
+			converters:BackgroundThemeConverter.BorderMapper="ImageBorderColor"
+			converters:BackgroundThemeConverter.BackgroundMapper="ReleaseGridBackground"
 			BorderThickness="2"
+			CornerRadius="8"
 			Width="300"
 			MaxWidth="400"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
-			Visibility="{Binding ShowedMessage}">
+			Visibility="{Binding ShowedMessage}"
+			Padding="8">
 			<Grid
-				Background="White"
-				Padding="8">
+				Background="Transparent">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<TextBlock
 					Grid.Row="0"
-					Foreground="#b32121"
+					converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 					TextAlignment="Center"
+					FontSize="18"
+					FontWeight="Bold"
 					Text="{Binding DialogHeader}">
 				</TextBlock>
 				<TextBlock
 					Grid.Row="1"
-					Foreground="Black"
+					converters:BackgroundThemeConverter.TextMapper="TextBlock"
 					MaxLines="3"
 					TextWrapping="WrapWholeWords"
 					TextTrimming="WordEllipsis"

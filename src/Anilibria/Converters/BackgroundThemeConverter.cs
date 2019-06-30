@@ -503,7 +503,142 @@ namespace Anilibria.Converters {
 		public static void SetOpenEyeIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( OpenEyeIconProperty , value );
 
 		public static string GetOpenEyeIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( OpenEyeIconProperty );
-		
+
+		public static readonly DependencyProperty AnilibriaComboBoxProperty =
+			DependencyProperty.RegisterAttached (
+				"AnilibriaComboBox" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , AnilibriaComboBoxChanged )
+			);
+
+		private static void SetAnilibriaComboBoxStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (ComboBox) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["AnilibriaComboBox"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.Style = (Style) App.Current.Resources["DarkAnilibriaComboBox"];
+					break;
+			}
+		}
+
+		private static void AnilibriaComboBoxChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetAnilibriaComboBoxStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetAnilibriaComboBoxStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetAnilibriaComboBox ( DependencyObject combobox , string value ) => combobox.SetValue ( AnilibriaComboBoxProperty , value );
+
+		public static string GetAnilibriaComboBox ( DependencyObject combobox ) => (string) combobox.GetValue ( AnilibriaComboBoxProperty );
+
+		public static readonly DependencyProperty AnilibriaSidebarProperty =
+			DependencyProperty.RegisterAttached (
+				"AnilibriaSidebar" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , AnilibriaSidebarChanged )
+			);
+
+		private static void SetAnilibriaSidebarStyle ( DependencyObject element , string themeName ) {
+			var relativeElement = (RelativePanel) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					relativeElement.Style = (Style) App.Current.Resources["AnilibriaSidebarStyle"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					relativeElement.Style = (Style) App.Current.Resources["DarkAnilibriaSidebarStyle"];
+					break;
+			}
+		}
+
+		private static void AnilibriaSidebarChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetAnilibriaSidebarStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetAnilibriaSidebarStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetAnilibriaSidebar ( DependencyObject sidebar , string value ) => sidebar.SetValue ( AnilibriaSidebarProperty , value );
+
+		public static string GetAnilibriaSidebar ( DependencyObject sidebar ) => (string) sidebar.GetValue ( AnilibriaSidebarProperty );
+
+		public static readonly DependencyProperty AnilibriaSidebarListProperty =
+			DependencyProperty.RegisterAttached (
+				"AnilibriaSidebarList" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , AnilibriaSidebarListChanged )
+			);
+
+		private static void SetAnilibriaSidebarListStyle ( DependencyObject element , string themeName ) {
+			var relativeElement = (ListView) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					relativeElement.Style = (Style) App.Current.Resources["AnilibriaSidebarList"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					relativeElement.Style = (Style) App.Current.Resources["DarkAnilibriaSidebarList"];
+					break;
+			}
+		}
+
+		private static void AnilibriaSidebarListChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetAnilibriaSidebarListStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetAnilibriaSidebarListStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetAnilibriaSidebarList ( DependencyObject sidebar , string value ) => sidebar.SetValue ( AnilibriaSidebarListProperty , value );
+
+		public static string GetAnilibriaSidebarList ( DependencyObject sidebar ) => (string) sidebar.GetValue ( AnilibriaSidebarListProperty );
+
+		public static readonly DependencyProperty AnilibriaPasswordBoxProperty =
+			DependencyProperty.RegisterAttached (
+				"AnilibriaPasswordBox" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , AnilibriaPasswordBoxChanged )
+			);
+
+		private static void SetAnilibriaPasswordBoxStyle ( DependencyObject element , string themeName ) {
+			var relativeElement = (PasswordBox) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					relativeElement.Style = (Style) App.Current.Resources["AnilibriaPasswordBox"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					relativeElement.Style = (Style) App.Current.Resources["DarkAnilibriaPasswordBox"];
+					break;
+			}
+		}
+
+		private static void AnilibriaPasswordBoxChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetAnilibriaPasswordBoxStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetAnilibriaPasswordBoxStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetAnilibriaPasswordBox ( DependencyObject sidebar , string value ) => sidebar.SetValue ( AnilibriaPasswordBoxProperty , value );
+
+		public static string GetAnilibriaPasswordBox ( DependencyObject sidebar ) => (string) sidebar.GetValue ( AnilibriaPasswordBoxProperty );
 
 	}
 
