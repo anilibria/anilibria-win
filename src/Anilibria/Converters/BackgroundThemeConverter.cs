@@ -55,6 +55,42 @@ namespace Anilibria.Converters {
 			return (string) textBlock.GetValue ( BackgroundMapperProperty );
 		}
 
+		public static readonly DependencyProperty ForegroundMapperProperty =
+			DependencyProperty.RegisterAttached (
+				"ForegroundMapper" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , ForegroundMapperChanged )
+		);
+
+		private static void SetForeground ( DependencyObject element , Brush brush ) {
+			var panel = element as FontIcon;
+			if ( panel != null ) {
+				panel.Foreground = brush;
+				return;
+			}
+		}
+
+		private static void ForegroundMapperChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetForeground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => {
+					SetForeground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+				}
+			);
+		}
+
+		public static void SetForegroundMapper ( DependencyObject textBlock , string value ) {
+			textBlock.SetValue ( ForegroundMapperProperty , value );
+		}
+
+		public static string GetForegroundMapper ( DependencyObject textBlock ) {
+			return (string) textBlock.GetValue ( ForegroundMapperProperty );
+		}
+
 		private static void SetBorderBrush ( DependencyObject element , Brush brush ) {
 			var border = element as Border;
 			if ( border != null ) {

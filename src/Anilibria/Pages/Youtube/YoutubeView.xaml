@@ -14,7 +14,7 @@
 				Padding="4"
 				VerticalAlignment="Stretch"
 				Width="380"
-				Background="#f2f2f2"
+				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
 				CornerRadius="8">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
@@ -46,7 +46,7 @@
 					<TextBlock
 						TextWrapping="Wrap"
 						MaxLines="2"
-						Foreground="Black">
+						converters:BackgroundThemeConverter.TextMapper="TextBlock">
 						<Run Text="{Binding Title}" />
 						<LineBreak />
 					</TextBlock>
@@ -58,14 +58,35 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 						<StackPanel Orientation="Horizontal">
-							<FontIcon Foreground="Black" Glyph="&#xE90A;" FontSize="14" Margin="0 2 2 0" VerticalAlignment="Center" />
-							<TextBlock Foreground="Black" Text="{Binding Comments}" VerticalAlignment="Center"></TextBlock>
+							<FontIcon
+								converters:BackgroundThemeConverter.ForegroundMapper="TextBlock"
+								Glyph="&#xE90A;"
+								FontSize="14"
+								Margin="0 2 2 0"
+								VerticalAlignment="Center"
+								
+							/>
+							<TextBlock
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
+								Text="{Binding Comments}"
+								VerticalAlignment="Center"
+							/>
 						</StackPanel>
 						<StackPanel
 							HorizontalAlignment="Right"
 							Orientation="Horizontal">
-							<FontIcon Foreground="Black" Glyph="&#xE7B3;" FontSize="16" Margin="2 2 2 0" VerticalAlignment="Center" />
-							<TextBlock Foreground="Black" Text="{Binding Views}" VerticalAlignment="Center"></TextBlock>
+							<FontIcon
+								converters:BackgroundThemeConverter.ForegroundMapper="TextBlock"
+								Glyph="&#xE7B3;"
+								FontSize="16"
+								Margin="2 2 2 0"
+								VerticalAlignment="Center"
+							/>
+							<TextBlock
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
+								Text="{Binding Views}"
+								VerticalAlignment="Center"
+							/>
 						</StackPanel>
 					</Grid>
 				</Grid>
@@ -441,7 +462,7 @@
 	</UserControl.Resources>
 
 	<Grid
-		Background="#D3D3D3">
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition />
@@ -454,7 +475,7 @@
 		<Border
 			Grid.Row="0"
 			Grid.Column="0"
-			Background="#ba2d2d"
+			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
 			MinHeight="44"
 			Width="48">
 			<Button
@@ -473,14 +494,14 @@
 			Grid.Row="1"
 			Grid.RowSpan="2"
 			Grid.Column="0"
-			Background="#9e2323"
+			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
 			Width="48">
 		</Border>
 		<controls:BindableGridControl
 			Grid.Row="0"
 			Grid.RowSpan="2"
 			Grid.Column="1"
-			Margin="0 4 0 0"
+			Margin="2 4 0 0"
 			Style="{StaticResource GridViewStyle}"
 			ItemsSource="{Binding Collection}"
 			MultipleSelectedItems="{Binding SelectedVideos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
