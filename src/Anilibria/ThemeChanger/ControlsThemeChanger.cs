@@ -29,7 +29,8 @@ namespace Anilibria.ThemeChanger {
 			["TextBlock"] = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) ) ,
 			["TextBlockAccent"] = new SolidColorBrush ( Color.FromArgb ( 255 , 179 , 33 , 33 ) ) ,
 			["TextBlockHighlight"] = new SolidColorBrush ( Color.FromArgb ( 255 , 163 , 39 , 39 ) ) ,
-			["ReleaseCardBackground"] = new SolidColorBrush ( Color.FromArgb ( 255, 242 , 242 , 242 ) ) ,
+			["ReleaseCardBackground"] = new SolidColorBrush ( Color.FromArgb ( 255 , 242 , 242 , 242 ) ) ,
+			["AccentBorderColor"] = new SolidColorBrush ( Color.FromArgb ( 255 , 179 , 33 , 33 ) ) ,
 		};
 
 		private static Dictionary<string , Brush> m_DarkBrushes = new Dictionary<string , Brush> {
@@ -40,10 +41,11 @@ namespace Anilibria.ThemeChanger {
 			["HumburgerBackground"] = new SolidColorBrush ( Color.FromArgb ( 255 , 84 , 84 , 84 ) ) ,
 			["ReleaseGridBackground"] = new SolidColorBrush ( Color.FromArgb ( 255 , 71 , 71 , 71 ) ) ,
 			["ImageBorderColor"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
-			["TextBlock"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255, 255, 255 ) ) ,
+			["TextBlock"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
 			["TextBlockAccent"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
 			["TextBlockHighlight"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
 			["ReleaseCardBackground"] = new SolidColorBrush ( Color.FromArgb ( 255 , 84 , 84 , 84 ) ) ,
+			["AccentBorderColor"] = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) ) ,
 		};
 
 		/// <summary>

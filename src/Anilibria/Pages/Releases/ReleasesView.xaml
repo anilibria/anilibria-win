@@ -1009,9 +1009,9 @@
 											Visibility="{Binding IsNewReleases}"
 											Margin="0 2 0 2"
 											MinWidth="200"
-											BorderBrush="#881919"
+											converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
 											BorderThickness="2"
-											Background="White"
+											converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
 											Padding="8">
 											<StackPanel Orientation="Horizontal">
 												<TextBlock
@@ -1019,11 +1019,11 @@
 													Width="35"
 													TextAlignment="Center"
 													Text="{Binding NewReleasesCount}"
-													Foreground="Black"
+													converters:BackgroundThemeConverter.TextMapper="TextBlock"
 												/>
 												<TextBlock
 													Grid.Column="1"
-													Foreground="Black">
+													converters:BackgroundThemeConverter.TextMapper="TextBlock">
 													Новых релизов
 												</TextBlock>
 											</StackPanel>
@@ -1035,9 +1035,9 @@
 											Visibility="{Binding IsNewOnlineSeries}"
 											Margin="0 2 0 2"
 											MinWidth="200"
-											BorderBrush="#881919"
+											converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
 											BorderThickness="2"
-											Background="White"
+											converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
 											Padding="8">
 											<StackPanel Orientation="Horizontal">
 												<TextBlock
@@ -1045,11 +1045,11 @@
 													Width="35"
 													TextAlignment="Center"
 													Text="{Binding NewOnlineSeriesCount}"
-													Foreground="Black"
+													converters:BackgroundThemeConverter.TextMapper="TextBlock"
 												/>
 												<TextBlock
 													Grid.Column="1"
-													Foreground="Black">
+													converters:BackgroundThemeConverter.TextMapper="TextBlock">
 													Новых онлайн серий
 												</TextBlock>
 											</StackPanel>
@@ -1061,9 +1061,9 @@
 											Visibility="{Binding IsNewTorrentSeries}"
 											Margin="0 2 0 2"
 											MinWidth="200"
-											BorderBrush="#881919"
+											converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
 											BorderThickness="2"
-											Background="White"
+											converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
 											Padding="8">
 											<StackPanel Orientation="Horizontal">
 												<TextBlock
@@ -1071,11 +1071,11 @@
 													Width="35"
 													TextAlignment="Center"
 													Text="{Binding NewTorrentSeriesCount}"
-													Foreground="Black"
+													converters:BackgroundThemeConverter.TextMapper="TextBlock"
 												/>
 												<TextBlock
 													Grid.Column="1"
-													Foreground="Black">
+													converters:BackgroundThemeConverter.TextMapper="TextBlock">
 													Новые торренты
 												</TextBlock>
 											</StackPanel>
