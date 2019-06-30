@@ -646,7 +646,6 @@
 		</EventTrigger>
 	</UserControl.Triggers>
 
-	<!-- Background="#e6e6e6" -->
 	<Grid
 		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
 		<Grid.RowDefinitions>
@@ -658,7 +657,6 @@
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
-		<!-- Background="#ba2d2d" -->
 		<Border
 			Grid.Row="0"
 			Grid.Column="0"
@@ -677,7 +675,6 @@
 				/>
 			</Button>
 		</Border>
-		<!-- Background="#9e2323"-->
 		<Border
 			Grid.Row="1"
 			Grid.RowSpan="2"

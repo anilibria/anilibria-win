@@ -24,6 +24,7 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
+			MinHeight="44"
 			Width="48">
 			<Button
 				HorizontalAlignment="Stretch"

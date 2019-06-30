@@ -9,7 +9,7 @@
 	mc:Ignorable="d">
 
 	<Grid
-		Background="#D3D3D3">
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition />
@@ -22,7 +22,7 @@
 		<Border
 			Grid.Row="0"
 			Grid.Column="0"
-			Background="#ba2d2d"
+			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
 			MinHeight="44"
 			Width="48">
 			<Button
@@ -41,7 +41,7 @@
 			Grid.Row="1"
 			Grid.RowSpan="2"
 			Grid.Column="0"
-			Background="#9e2323"
+			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
 			Width="48">
 		</Border>
 
@@ -54,7 +54,7 @@
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				Padding="18"
-				Background="White"
+				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseGridBackground"
 				CornerRadius="8">
 				<Image
 					Tapped="Image_Tapped"
@@ -78,7 +78,7 @@
 					<TextBlock
 						Grid.Column="0"
 						Grid.Row="0"
-						Foreground="Black"
+						converters:BackgroundThemeConverter.TextMapper="TextBlock"
 						HorizontalAlignment="Right"
 						Margin="0 10 30 6">
 						QIWI
@@ -90,7 +90,7 @@
 						Foreground="Black"
 						converters:TextBlockHighlight.HyperLinkHightlight="True">
 						<Hyperlink
-							Foreground="#a32727"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 							NavigateUri="https://my.qiwi.com/Aleksandr-PeUlISbRs_">
 							https://my.qiwi.com/Aleksandr-PeUlISbRs_
 						</Hyperlink>
@@ -98,18 +98,18 @@
 					<TextBlock
 						Grid.Column="0"
 						Grid.Row="1"
-						Foreground="Black"
+						converters:BackgroundThemeConverter.TextMapper="TextBlock"
 						HorizontalAlignment="Right"
 						Margin="0 4 30 0">
 						Яндекс деньги
 					</TextBlock>
 					<TextBox
-						Style="{StaticResource AnilibriaTextBox}"
+						converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 						Grid.Column="1"
 						Grid.Row="1"
 						Background="Transparent"
 						Foreground="Black"
-						Padding="0"
+						Padding="8 3 0 0"
 						Margin="0"
 						Height="20"
 						Width="220"
@@ -121,18 +121,18 @@
 					<TextBlock
 						Grid.Column="0"
 						Grid.Row="2"
-						Foreground="Black"
+						converters:BackgroundThemeConverter.TextMapper="TextBlock"
 						HorizontalAlignment="Right"
 						Margin="0 3 30 0">
 						Webmoney
 					</TextBlock>
 					<TextBox
-						Style="{StaticResource AnilibriaTextBox}"
+						converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 						Grid.Column="1"
 						Grid.Row="2"
 						Background="Transparent"
 						Foreground="Black"
-						Padding="0"
+						Padding="8 3 0 0"
 						Margin="0"
 						Height="20"
 						Width="220"
@@ -145,17 +145,17 @@
 						Grid.Column="0"
 						Grid.Row="3"
 						HorizontalAlignment="Right"
-						Foreground="Black"
+						converters:BackgroundThemeConverter.TextMapper="TextBlock"
 						Margin="0 0 30 0">
 						PayPal
 					</TextBlock>
 					<TextBlock
 						Grid.Column="1"
 						Grid.Row="3"
-						Foreground="Black"
+						converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 						converters:TextBlockHighlight.HyperLinkHightlight="True">
 						<Hyperlink
-							Foreground="#a32727"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 							NavigateUri="https://www.paypal.me/anilibria">
 							https://www.paypal.me/anilibria
 						</Hyperlink>
@@ -167,11 +167,11 @@
 						Grid.Row="4"
 						HorizontalAlignment="Center"
 						TextAlignment="Center"
-						Foreground="Black"
+						converters:BackgroundThemeConverter.TextMapper="TextBlock"
 						converters:TextBlockHighlight.HyperLinkHightlight="True">
 						<Hyperlink
 							NavigateUri="https://www.patreon.com/anilibria"
-							Foreground="#a32727">
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent">
 							https://www.patreon.com/anilibria
 						</Hyperlink>
 						<Run> - ежемесячный платёж!</Run>
