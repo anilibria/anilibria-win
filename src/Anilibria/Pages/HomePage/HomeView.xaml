@@ -170,6 +170,12 @@
 						<controls:DefaultAnilibriaIcon
 							IconHeight="50"
 							IconWidth="50"
+							converters:BackgroundThemeConverter.AnilibriaIcon="defaultheme"
+						/>
+						<controls:DarkAnilibriaIcon
+							IconHeight="50"
+							IconWidth="50"
+							converters:BackgroundThemeConverter.AnilibriaIcon="darkheme"
 						/>
 
 						<StackPanel

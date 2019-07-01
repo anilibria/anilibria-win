@@ -676,6 +676,40 @@ namespace Anilibria.Converters {
 
 		public static string GetAnilibriaPasswordBox ( DependencyObject sidebar ) => (string) sidebar.GetValue ( AnilibriaPasswordBoxProperty );
 
+		public static readonly DependencyProperty AnilibriaIconProperty =
+			DependencyProperty.RegisterAttached (
+				"AnilibriaIcon" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , AnilibriaIconChanged )
+			);
+
+		private static void SetAnilibriaIconStyle ( DependencyObject element , string themeName , string resourceName ) {
+			var userControl = (UserControl) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					userControl.Visibility = resourceName == "defaultheme" ? Visibility.Visible : Visibility.Collapsed;
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					userControl.Visibility = resourceName == "darkheme" ? Visibility.Visible : Visibility.Collapsed;
+					break;
+			}
+		}
+
+		private static void AnilibriaIconChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetAnilibriaIconStyle ( element , ControlsThemeChanger.CurrentTheme () , themeResourceName );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetAnilibriaIconStyle ( element , ControlsThemeChanger.CurrentTheme () , themeResourceName )
+			);
+		}
+
+		public static void SetAnilibriaIcon ( DependencyObject anilibriaicon , string value ) => anilibriaicon.SetValue ( AnilibriaIconProperty , value );
+
+		public static string GetAnilibriaIcon ( DependencyObject anilibriaicon ) => (string) anilibriaicon.GetValue ( AnilibriaIconProperty );
+
 	}
 
 }

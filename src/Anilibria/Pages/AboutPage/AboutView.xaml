@@ -57,11 +57,13 @@
 					Margin="0 10 0 10"
 					IconHeight="240"
 					IconWidth="240"
+					converters:BackgroundThemeConverter.AnilibriaIcon="defaultheme"
 				/>
 				<controls:DarkAnilibriaIcon
 					Margin="0 10 0 10"
 					IconHeight="240"
 					IconWidth="240"
+					converters:BackgroundThemeConverter.AnilibriaIcon="darkheme"
 				/>
 				<TextBlock
 					FontSize="30"
