@@ -1,0 +1,122 @@
+﻿<UserControl
+	x:Class="Anilibria.Controls.DefaultAnilibriaIcon"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d">
+	<Viewbox  x:Name="IconViewbox" Stretch="Uniform">
+		<Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="svg3833" Width="916" Height="916">
+			<Canvas.RenderTransform>
+				<TranslateTransform X="0" Y="0"/>
+			</Canvas.RenderTransform>
+			<Ellipse  Canvas.Left="0" Canvas.Top="0" Width="916" Height="916" Name="circle3787">
+				<Ellipse.Fill>
+					<LinearGradientBrush  MappingMode="Absolute" StartPoint="0,0" EndPoint="1,1">
+						<LinearGradientBrush.GradientStops>
+							<GradientStopCollection>
+								<GradientStop Color="#AD2121" Offset="0"/>
+								<GradientStop Color="#D6101B" Offset="1"/>
+							</GradientStopCollection>
+						</LinearGradientBrush.GradientStops>
+					</LinearGradientBrush>
+				</Ellipse.Fill>
+			</Ellipse>
+			<Path  Name="path3789" Fill="#ca2723" Data="M499 501 83 390S27 556 102 671c15.66 24 25.73 47.86 38 68 46.5 76.29 88.4 126.2 249 180C426 776 499 501 499 501Z">
+				<Path.RenderTransform>
+					<TranslateTransform X="-41" Y="-43"/>
+				</Path.RenderTransform>
+			</Path>
+			<Path  Name="path3791" Fill="#c00a0a" Data="M80.31 389.94 497 501 278 128A516.63 516.63 0 0 0 147.15 248.41C121.59 270 80.31 389.94 80.31 389.94Z">
+				<Path.RenderTransform>
+					<TranslateTransform X="-41" Y="-43"/>
+				</Path.RenderTransform>
+			</Path>
+			<Path  Name="path3793" Fill="#c91f1e" Data="M275 130 499 501 761 157c-29.06-22.88-121.25-89.45-256.1-91.39C390.83 64 308 109.44 275 130Z">
+				<Path.RenderTransform>
+					<TranslateTransform X="-41" Y="-43"/>
+				</Path.RenderTransform>
+			</Path>
+			<Path  Name="path3795" Fill="#e13534" Data="M761 157 499 501 918 607c9.82-35.27 36.28-147.67-16-273.08C861 235.66 792.64 179.81 761 157Z">
+				<Path.RenderTransform>
+					<TranslateTransform X="-41" Y="-43"/>
+				</Path.RenderTransform>
+			</Path>
+			<Path  Name="path3797" Fill="#d62d29" Data="M917 606 496 498 384 916c59.87 19.17 109.83 20.66 142 19 0 0 178.48-9.23 304-157 8.39-9.87 15.86-19.91 16.43-20.67C869.63 726.08 898.88 677 917 606Z">
+				<Path.RenderTransform>
+					<TranslateTransform X="-41" Y="-43"/>
+				</Path.RenderTransform>
+			</Path>
+			<Polygon  Points="371.51 612.3 289.94 612.3 459.97 172 513.04 172 656.53 612.3 573.97 612.3 471.76 265.37 371.51 612.3" Name="polygon3799" FillRule="NonZero" Fill="#fff"/>
+			<Polygon  Points="471.76 601.49 477.66 612.3 709.61 497.31 696.83 465.86 471.76 601.49" Name="polygon3801" FillRule="NonZero" Fill="#fff"/>
+			<Polygon  Points="289.94 172 230.97 206.4 454.07 572.01 685.03 433.43 659.48 365.61 479.62 471.76 289.94 172" Name="polygon3803" FillRule="NonZero" Fill="#fff"/>
+			<Path  Name="path3805" Fill="#ffeaea" Data="M499 71A430.11 430.11 0 0 1 666.37 897.21 430.11 430.11 0 0 1 331.63 104.79 427.28 427.28 0 0 1 499 71m0-8C257.1 63 61 259.1 61 501S257.1 939 499 939 937 742.9 937 501 740.9 63 499 63Z">
+				<Path.RenderTransform>
+					<TranslateTransform X="-41" Y="-43"/>
+				</Path.RenderTransform>
+			</Path>
+			<Canvas Name="g3831">
+				<Path  Name="path3807" Fill="#fff" Data="M322.11 788.8H308.84l-2.27-15.31H290.43l-2.27 15.31H276.09l13.38-84.39h19.25ZM292.1 762h12.67l-6.33-42.67Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3809" Fill="#fff" Data="M339.92 727.67V788.8H328.08V704.41h16.5l13.51 50.51V704.41H369.8V788.8H356.29Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3811" Fill="#fff" Data="M379.24 704.41h13.15V788.8H379.24Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3813" Fill="#fff" Data="M402 704.41H415.1v72.33h21.63V788.8H402Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3815" Fill="#fff" Data="M442.47 704.41h13.15V788.8H442.47Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3817" Fill="#fff" Data="M504.51 723.82v3c0 8.68-2.63 14.23-8.49 17 7.05 2.77 9.8 9.16 9.8 18.08v6.88c0 13-6.81 20-20 20H465.18V704.41H485C498.65 704.41 504.51 710.8 504.51 723.82Zm-26.18-7.36v22.31h5.14c4.9 0 7.89-2.17 7.89-8.93v-4.7c0-6-2-8.68-6.7-8.68Zm-6 34.36v25.92h7.53c4.42 0 6.81-2 6.81-8.32v-7.35c0-7.84-2.51-10.25-8.48-10.25Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3819" Fill="#fff" Data="M541.2 788.8c-.72-2.17-1.19-3.5-1.19-10.37V765.17c0-7.84-2.63-10.73-8.61-10.73h-4.54V788.8H513.71V704.41h19.84c13.63 0 19.49 6.39 19.49 19.41v6.63c0 8.68-2.75 14.34-8.61 17.12 6.57 2.77 8.73 9.16 8.73 18v13c0 4.1.12 7.11 1.43 10.25Zm-28.34-72.34v25.92H532c4.9 0 7.89-2.17 7.89-8.92v-8.32c0-6-2-8.68-6.7-8.68Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3821" Fill="#fff" Data="M561.76 704.41h13.15V788.8H561.76Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3823" Fill="#fff" Data="M627 788.8H613.76l-2.28-15.31H595.35l-2.27 15.31H581l13.39-84.39h19.25ZM597 762h12.67l-6.33-42.67Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3825" Fill="#fff" Data="M645.79 776V788.8H633.12V776Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3827" Fill="#fff" Data="M644.35 704.41H685v12.05H671.25V788.8H658.1V716.46H644.35Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+				<Path  Name="path3829" Fill="#fff" Data="M710.57 773.25l10-68.84h12.07L719.78 788.8H700.17l-12.91-84.39h13.27Z">
+					<Path.RenderTransform>
+						<TranslateTransform X="-41" Y="-43"/>
+					</Path.RenderTransform>
+				</Path>
+			</Canvas>
+		</Canvas>
+	</Viewbox>
+</UserControl>

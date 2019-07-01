@@ -138,6 +138,12 @@
     <Compile Include="Controls\CloseIcon.xaml.cs">
       <DependentUpon>CloseIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DarkAnilibriaIcon.xaml.cs">
+      <DependentUpon>DarkAnilibriaIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DefaultAnilibriaIcon.xaml.cs">
+      <DependentUpon>DefaultAnilibriaIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DiceIcon.xaml.cs">
       <DependentUpon>DiceIcon.xaml</DependentUpon>
     </Compile>
@@ -431,6 +437,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CloseIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DarkAnilibriaIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DefaultAnilibriaIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

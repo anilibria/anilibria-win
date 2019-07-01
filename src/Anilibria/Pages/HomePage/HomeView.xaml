@@ -167,11 +167,11 @@
 							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
 						
-						<Image
-							Height="50"
-							Stretch="Uniform"
-							Source="/Assets/anilibriaicon.png"
+						<controls:DefaultAnilibriaIcon
+							IconHeight="50"
+							IconWidth="50"
 						/>
+
 						<StackPanel
 							Orientation="Vertical"
 							VerticalAlignment="Center"
