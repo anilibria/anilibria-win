@@ -15,6 +15,10 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private string m_FilterByName;
 
+		private DownloadSectionItem m_SelectedSection;
+
+		private bool m_IsMultipleSelect;
+
 		private ObservableCollection<DownloadSectionItem> m_Sections = new ObservableCollection<DownloadSectionItem> (
 			new List<DownloadSectionItem> {
 				new DownloadSectionItem {
@@ -35,8 +39,6 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				},
 			}
 		);
-
-		private DownloadSectionItem m_SelectedSection;
 
 		public DownloadManagerViewModel () {
 			CreateCommands ();
@@ -65,6 +67,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		{
 			get => m_FilterByName;
 			set => Set ( ref m_FilterByName , value );
+		}
+
+		/// <summary>
+		/// Is multiple select.
+		/// </summary>
+		public bool IsMultipleSelect
+		{
+			get => m_IsMultipleSelect;
+			set => Set ( ref m_IsMultipleSelect , value );
 		}
 
 		/// <summary>

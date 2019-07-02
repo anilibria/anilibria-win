@@ -46,9 +46,29 @@
 			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
 			Width="48">
 		</Border>
+		<Border
+			Grid.Row="0"
+			Grid.Column="1"
+			converters:BackgroundThemeConverter.BackgroundMapper="UpperPanel">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
+				<ToggleSwitch
+					converters:BackgroundThemeConverter.ToggleSwitch="Origin"
+					Margin="8 0 0 0"
+					RelativePanel.AlignLeftWithPanel="True"
+					RelativePanel.AlignTopWithPanel="True"
+					RelativePanel.AlignBottomWithPanel="True"
+					HorizontalAlignment="Center"
+					OnContent="Множественный"
+					OffContent="Одиночный"
+					FontSize="12"
+					IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+				</ToggleSwitch>
+			</RelativePanel>
+		</Border>
 
 		<Grid
-			Grid.RowSpan="2"
+			Grid.Row="1"
 			Grid.Column="1">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
