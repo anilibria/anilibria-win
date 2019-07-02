@@ -15,6 +15,7 @@ using System;
 using Anilibria.Pages.AboutPage;
 using Windows.UI.Core;
 using Anilibria.Pages.DonatePage;
+using Anilibria.Pages.DownloadManagerPage;
 
 namespace Anilibria {
 
@@ -42,6 +43,7 @@ namespace Anilibria {
 			m_Pages.Add ( "Youtube" , Youtube );
 			m_Pages.Add ( "About" , About );
 			m_Pages.Add ( "Donate" , Donate );
+			m_Pages.Add ( "DownloadManager" , DownloadManager );
 
 			CreateViewModels ();
 
@@ -75,6 +77,12 @@ namespace Anilibria {
 			CreateYoutubeViewModel ();
 			CreateAboutViewModel ();
 			CreateDonateViewModel ();
+			CreateDownloadManagerViewModel ();
+		}
+
+		private void CreateDownloadManagerViewModel () {
+			var viewModel = DownloadManager.DataContext as DownloadManagerViewModel;
+			viewModel.ShowSidebar = ShowSidebar;
 		}
 
 		private void CreateYoutubeViewModel () {

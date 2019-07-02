@@ -96,7 +96,16 @@ namespace Anilibria.Pages.HomePage.PresentationClasses {
 			get;
 			set;
 		}
-		
+
+		/// <summary>
+		/// Download manager page.
+		/// </summary>
+		public bool IsDownloadManagerPage
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

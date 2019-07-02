@@ -32,6 +32,8 @@ namespace Anilibria.Pages.HomePage {
 
 		public const string DonatePage = "Donate";
 
+		public const string DownloadManager = "DownloadManager";
+
 		private const string OpenReleasesPageLaunchParameter = "openreleasepage";
 
 		private const string OpenVideoPlayerPageLaunchParameter = "openvideoplayer";
@@ -89,6 +91,13 @@ namespace Anilibria.Pages.HomePage {
 					IsYoutubePage = true
 				},
 				new SplitViewItem {
+					Name = "Менеджер загрузок",
+					Page = DownloadManager,
+					IconUri = new Uri("ms-appx:///Assets/Icons/youtube.svg"),
+					IsVisible = StubMenuIsVisible,
+					IsDownloadManagerPage = true
+				},
+				new SplitViewItem {
 					Name = "Поддержать проект",
 					Page = DonatePage,
 					IconUri = new Uri("ms-appx:///Assets/Icons/donate.svg"),
@@ -102,12 +111,6 @@ namespace Anilibria.Pages.HomePage {
 					IsVisible = AuthorizeOptionIsVisible,
 					IsSigninPage = true
 				}
-				/*,
-				new SplitViewItem {
-					Name = "Менеджер загрузок",
-					Page = "Torrents",
-					Icon = "\xE896"
-				}*/
 			};
 			RefreshOptions ();
 

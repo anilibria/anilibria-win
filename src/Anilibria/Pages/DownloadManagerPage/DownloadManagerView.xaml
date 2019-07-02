@@ -1,0 +1,89 @@
+﻿<UserControl
+	x:Class="Anilibria.Pages.DownloadManagerPage.DownloadManagerView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:converters="using:Anilibria.Converters"
+	xmlns:controls="using:Anilibria.Controls"
+	mc:Ignorable="d"
+	d:DesignHeight="300"
+	d:DesignWidth="400">
+
+	<Grid
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+
+		<Border
+			Grid.Row="0"
+			Grid.Column="0"
+			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
+			MinHeight="44"
+			Width="48">
+			<Button
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Style="{StaticResource IconsButtonStyle}"
+				Command="{Binding ShowSidebarCommand}">
+				<controls:HumburgerIcon
+					IconWidth="{StaticResource IconSize}"
+					IconHeight="{StaticResource IconSize}"
+					IconColor="White"
+				/>
+			</Button>
+		</Border>
+		<Border
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
+			Width="48">
+		</Border>
+
+		<Grid
+			Grid.RowSpan="2"
+			Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<Grid
+				Grid.Row="0"
+				Margin="0 6 0 4">
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Center">
+					<controls:TimingTextBox
+						converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
+						MinWidth="250"
+						Width="380"
+						Margin="0 -3 4 0"
+						VerticalAlignment="Center"
+						IsSpellCheckEnabled="False"
+						HorizontalAlignment="Center"
+						PlaceholderText="Введите название релиза для поиска"
+						Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						TimeoutCommand="{Binding FilterCommand}"
+					/>
+					<ComboBox
+						Margin="0 -1 0 0"
+						RelativePanel.AlignHorizontalCenterWithPanel="True"
+						converters:BackgroundThemeConverter.AnilibriaComboBox="Origin"
+						ItemsSource="{Binding Sections}"
+						SelectedItem="{Binding SelectedSection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						MinWidth="250"
+						Width="300"
+						DisplayMemberPath="Title"
+					/>
+				</StackPanel>
+			</Grid>
+		</Grid>
+	</Grid>
+</UserControl>

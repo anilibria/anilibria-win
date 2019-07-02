@@ -13,6 +13,7 @@
 	xmlns:viewmodel="Anilibria.Pages.HomePage"
 	xmlns:controls="using:Anilibria.Controls"
 	xmlns:converters="using:Anilibria.Converters"
+	xmlns:downloadmanager="using:Anilibria.Pages.DownloadManagerPage"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
 	Loaded="Page_Loaded">
@@ -146,6 +147,12 @@
 										IconColor="White"
 										Visibility="{Binding IsSigninPage}"
 									/>
+									<controls:DownloadIcon
+										IconWidth="28"
+										IconHeight="28"
+										IconColor="White"
+										Visibility="{Binding IsDownloadManagerPage}"
+									/>
 									<TextBlock
 										Text="{Binding Name}"
 										VerticalAlignment="Center"
@@ -215,6 +222,10 @@
 				/>
 				<donate:DonateView
 					x:Name="Donate"
+					Visibility="Collapsed"
+				/>
+				<downloadmanager:DownloadManagerView
+					x:Name="DownloadManager"
 					Visibility="Collapsed"
 				/>
 			</Grid>

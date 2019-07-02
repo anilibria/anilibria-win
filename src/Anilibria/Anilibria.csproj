@@ -150,6 +150,9 @@
     <Compile Include="Controls\DonateIcon.xaml.cs">
       <DependentUpon>DonateIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DownloadIcon.xaml.cs">
+      <DependentUpon>DownloadIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\EyeIcon.xaml.cs">
       <DependentUpon>EyeIcon.xaml</DependentUpon>
     </Compile>
@@ -216,6 +219,12 @@
       <DependentUpon>DonateView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\DonatePage\DonateViewModel.cs" />
+    <Compile Include="Pages\DownloadManagerPage\DownloadManagerView.xaml.cs">
+      <DependentUpon>DownloadManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DownloadManagerPage\DownloadManagerViewModel.cs" />
+    <Compile Include="Pages\DownloadManagerPage\PresentationClasses\DownloadSectionItem.cs" />
+    <Compile Include="Pages\DownloadManagerPage\PresentationClasses\DownloadSectionType.cs" />
     <Compile Include="Pages\HomePage\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -456,6 +465,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DownloadIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\EyeIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -523,6 +536,10 @@
     <Page Include="Pages\DonatePage\DonateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\DownloadManagerPage\DownloadManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\HomePage\HomeView.xaml">
       <Generator>MSBuild:Compile</Generator>
