@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Windows.Storage;
 
 namespace Anilibria.Services.Implementations {
 
@@ -67,6 +69,7 @@ namespace Anilibria.Services.Implementations {
 					releaseItem.Videos = videos;
 				}
 			}
+
 			m_Collection.Update ( m_Entity );
 		}
 
@@ -81,9 +84,39 @@ namespace Anilibria.Services.Implementations {
 		/// <summary>
 		/// Remove download file.
 		/// </summary>
-		/// <param name="id">Download item identifier.</param>
-		public Task RemoveDownloadFile ( long id ) {
-			return Task.CompletedTask;
+		/// <param name="releaseId">Release identifier.</param>
+		/// <param name="videoId">Video identifier.</param>
+		public async Task RemoveDownloadFile ( long releaseId , int videoId ) {
+			var releaseItem = m_Entity.DownloadingReleases.FirstOrDefault ( a => a.ReleaseId == releaseId );
+			if ( releaseItem == null ) return;
+
+			var files = releaseItem.Videos.Where ( a => a.Id == videoId ).ToList ();
+			releaseItem.Videos = releaseItem.Videos.Where ( a => a.Id != videoId ).ToList ();
+
+			foreach ( var file in files ) {
+				if ( file.IsDownloaded ) {
+					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
+					await storageFile.DeleteAsync ();
+				}
+			}
+			m_Collection.Update ( m_Entity );
+		}
+
+		/// <summary>
+		/// Remove download release.
+		/// </summary>
+		/// <param name="releaseId">Release identifier.</param>
+		public async Task RemoveDownloadRelease ( long releaseId ) {
+			var releaseItem = m_Entity.DownloadingReleases.FirstOrDefault ( a => a.ReleaseId == releaseId );
+			if ( releaseItem == null ) return;
+
+			foreach ( var file in releaseItem.Videos ) {
+				if ( file.IsDownloaded ) {
+					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
+					await storageFile.DeleteAsync ();
+				}
+			}
+			m_Collection.Update ( m_Entity );
 		}
 
 	}

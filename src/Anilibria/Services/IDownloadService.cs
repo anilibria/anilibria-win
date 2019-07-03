@@ -22,13 +22,20 @@ namespace Anilibria.Services {
 		/// <param name="releaseId">Release identifier.</param>
 		/// <param name="videoId">Video identifier.</param>
 		/// <param name="quality">Quality.</param>
-		void AddDownloadFile ( long releaseId, int videoId, VideoQuality quality );
+		void AddDownloadFile ( long releaseId , int videoId , VideoQuality quality );
 
 		/// <summary>
 		/// Remove download file.
 		/// </summary>
-		/// <param name="id">Identifier.</param>
-		Task RemoveDownloadFile ( long id );
+		/// <param name="releaseId">Release identifier.</param>
+		/// <param name="videoId">Video identifier.</param>
+		Task RemoveDownloadFile ( long releaseId , int videoId );
+
+		/// <summary>
+		/// Remove download release.
+		/// </summary>
+		/// <param name="releaseId">Release identifier.</param>
+		Task RemoveDownloadRelease ( long releaseId );
 
 	}
 
