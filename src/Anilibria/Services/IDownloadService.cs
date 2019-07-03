@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Anilibria.Services.PresentationClasses;
+using Anilibria.Storage.Entities;
 
 namespace Anilibria.Services {
 
@@ -18,10 +19,10 @@ namespace Anilibria.Services {
 		/// <summary>
 		/// Set download file.
 		/// </summary>
-		/// <param name="release">Release name.</param>
-		/// <param name="seria">Seria.</param>
-		/// <param name="uri">Uri.</param>
-		void AddDownloadFile ( DownloadItem downloadItem );
+		/// <param name="releaseId">Release identifier.</param>
+		/// <param name="videoId">Video identifier.</param>
+		/// <param name="quality">Quality.</param>
+		void AddDownloadFile ( long releaseId, int videoId, VideoQuality quality );
 
 		/// <summary>
 		/// Remove download file.

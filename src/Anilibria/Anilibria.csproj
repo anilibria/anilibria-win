@@ -320,8 +320,12 @@
     <Compile Include="Services\PresentationClasses\TorrentItem.cs" />
     <Compile Include="Services\PresentationClasses\TouchReleaseModel.cs" />
     <Compile Include="Services\PresentationClasses\UserModel.cs" />
+    <Compile Include="Storage\Entities\VideoQuality.cs" />
     <Compile Include="Services\PresentationClasses\YoutubeModel.cs" />
     <Compile Include="Storage\Entities\ChangesEntity.cs" />
+    <Compile Include="Storage\Entities\DownloadFileEntity.cs" />
+    <Compile Include="Storage\Entities\DownloadReleaseEntity.cs" />
+    <Compile Include="Storage\Entities\DownloadReleaseVideoEntity.cs" />
     <Compile Include="Storage\Entities\HistoryChangeEntity.cs" />
     <Compile Include="Storage\Entities\LocalFavoriteEntity.cs" />
     <Compile Include="Storage\Entities\PlayerRestoreEntity.cs" />

@@ -1,34 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Anilibria.Services.PresentationClasses;
-using Windows.Storage;
-
-namespace Anilibria.Services.Implementations {
+﻿namespace Anilibria.Services.Implementations {
 
 	/// <summary>
 	/// Download manager.
 	/// </summary>
 	public static class DownloadManager {
 
-		private static List<DownloadItem> m_DownloadedItems = new List<DownloadItem> ();
+		private static readonly object m_LockObject = new object ();
 
-		public static void Initialize () {
-			//TODO: Read downloading item from local database
-		}
+		private static DownloadService m_DownloadService;
 
 		/// <summary>
-		/// Remove download item.
+		/// Get current instance synchronize service.
 		/// </summary>
-		/// <param name="downloadId">Download identifier.</param>
-		public static async Task RemoveDownloadItem ( long downloadId ) {
-			var items = m_DownloadedItems.Where ( a => a.ReleaseId == downloadId ).ToList ();
-			foreach ( var item in items ) {
-				m_DownloadedItems.Remove ( item );
-				var downloadItemFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync ( item.FileName );
-				await downloadItemFile.DeleteAsync ( StorageDeleteOption.PermanentDelete );
+		public static IDownloadService Current () {
+			lock ( m_LockObject ) {
+				if ( m_DownloadService == null ) m_DownloadService = new DownloadService ( StorageService.Current () );
 			}
+
+			return m_DownloadService;
 		}
 
 	}
