@@ -148,7 +148,10 @@
 								</TextBlock>
 							</StackPanel>
 							<StackPanel Orientation="Vertical">
-								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
+								<TextBlock
+									MaxLines="2"
+									TextWrapping="WrapWholeWords"
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
 										Text="Тип"
 										FontWeight="Bold"

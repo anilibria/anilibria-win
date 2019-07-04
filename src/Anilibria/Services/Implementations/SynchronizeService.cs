@@ -302,7 +302,7 @@ namespace Anilibria.Services.Implementations {
 					NewOnlineSeries = changes.NewOnlineSeries ?? new Dictionary<long , int> () ,
 					NewReleases = changes.NewReleases ?? new List<long> () ,
 					NewTorrents = changes.NewTorrents ?? new Dictionary<long , int> () ,
-					NewTorrentSeries = changes.NewTorrentSeries ?? new Dictionary<long , IDictionary<long , string>> (),
+					NewTorrentSeries = changes.NewTorrentSeries ?? new Dictionary<long , IDictionary<long , string>> () ,
 					ReleaseOnlineSeries = releaseOnlineSeries
 				};
 				collection.Add ( historyChanges );

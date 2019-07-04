@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
@@ -19,6 +21,8 @@ namespace Anilibria.Services.Implementations {
 		private readonly IEntityCollection<DownloadFileEntity> m_Collection;
 
 		private DownloadFileEntity m_Entity;
+
+		private HttpClient m_HttpClient = new HttpClient ();
 
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
@@ -71,6 +75,25 @@ namespace Anilibria.Services.Implementations {
 			}
 
 			m_Collection.Update ( m_Entity );
+		}
+
+		private async Task DownloadFile ( string url ) {
+			long contentLength = 0;
+			int bufferSize = 1024 * 3;
+			byte[] buffer = new byte[bufferSize];
+			using ( var response = await m_HttpClient.GetAsync ( url , HttpCompletionOption.ResponseHeadersRead ) ) {
+				if ( !response.Content.Headers.ContentLength.HasValue ) throw new NotSupportedException ( "Files without content lenght not supported" );
+
+				contentLength = response.Content.Headers.ContentLength.Value;
+
+				var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( "temp_downloading" , CreationCollisionOption.GenerateUniqueName );
+
+				using ( var fileStream = await file.OpenStreamForWriteAsync () )
+				using ( var stream = await response.Content.ReadAsStreamAsync () ) {
+					await stream.ReadAsync ( buffer , 0 , bufferSize );
+					await fileStream.WriteAsync ( buffer , 0 , bufferSize );
+				}
+			}
 		}
 
 		/// <summary>
