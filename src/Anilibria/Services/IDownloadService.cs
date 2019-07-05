@@ -17,6 +17,12 @@ namespace Anilibria.Services {
 		IEnumerable<DownloadItem> GetPendingDownloads ();
 
 		/// <summary>
+		/// Start download process.
+		/// </summary>
+		/// <returns></returns>
+		Task StartDownloadProcess ();
+
+		/// <summary>
 		/// Set download file.
 		/// </summary>
 		/// <param name="releaseId">Release identifier.</param>

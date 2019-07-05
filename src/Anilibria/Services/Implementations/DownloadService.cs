@@ -16,6 +16,8 @@ namespace Anilibria.Services.Implementations {
 	/// </summary>
 	public class DownloadService : IDownloadService {
 
+		private readonly int BufferSize = 1024 * 3;
+
 		private readonly IDataContext m_DataContext;
 
 		private readonly IEntityCollection<DownloadFileEntity> m_Collection;
@@ -23,6 +25,8 @@ namespace Anilibria.Services.Implementations {
 		private DownloadFileEntity m_Entity;
 
 		private HttpClient m_HttpClient = new HttpClient ();
+
+		private bool m_DownloadingProcessed = false;
 
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
@@ -77,25 +81,6 @@ namespace Anilibria.Services.Implementations {
 			m_Collection.Update ( m_Entity );
 		}
 
-		private async Task DownloadFile ( string url ) {
-			long contentLength = 0;
-			int bufferSize = 1024 * 3;
-			byte[] buffer = new byte[bufferSize];
-			using ( var response = await m_HttpClient.GetAsync ( url , HttpCompletionOption.ResponseHeadersRead ) ) {
-				if ( !response.Content.Headers.ContentLength.HasValue ) throw new NotSupportedException ( "Files without content lenght not supported" );
-
-				contentLength = response.Content.Headers.ContentLength.Value;
-
-				var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( "temp_downloading" , CreationCollisionOption.GenerateUniqueName );
-
-				using ( var fileStream = await file.OpenStreamForWriteAsync () )
-				using ( var stream = await response.Content.ReadAsStreamAsync () ) {
-					await stream.ReadAsync ( buffer , 0 , bufferSize );
-					await fileStream.WriteAsync ( buffer , 0 , bufferSize );
-				}
-			}
-		}
-
 		/// <summary>
 		/// Get panding downloads.
 		/// </summary>
@@ -140,6 +125,42 @@ namespace Anilibria.Services.Implementations {
 				}
 			}
 			m_Collection.Update ( m_Entity );
+		}
+
+		private async Task DownloadFile ( string url , long offset ) {
+			long contentLength = 0;
+			byte[] buffer = new byte[BufferSize];
+			using ( var response = await m_HttpClient.GetAsync ( url , HttpCompletionOption.ResponseHeadersRead ) ) {
+				if ( !response.Content.Headers.ContentLength.HasValue ) throw new NotSupportedException ( "Files without content lenght not supported" );
+
+				contentLength = response.Content.Headers.ContentLength.Value;
+
+				var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( "temp_downloading" , CreationCollisionOption.GenerateUniqueName );
+
+				using ( var fileStream = await file.OpenStreamForWriteAsync () )
+				using ( var stream = await response.Content.ReadAsStreamAsync () ) {
+					await stream.ReadAsync ( buffer , 0 , BufferSize );
+					await fileStream.WriteAsync ( buffer , 0 , BufferSize );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Start download process.
+		/// </summary>
+		/// <returns></returns>
+		public async Task StartDownloadProcess () {
+			var activeReleases = m_Entity.DownloadingReleases.Where ( a => a.Active ).OrderBy ( a => a.Order ).ToList ();
+
+			m_DownloadingProcessed = true;
+
+			foreach ( var activeRelease in activeReleases ) {
+				foreach ( var videoFile in activeRelease.Videos.Where ( a => !a.IsDownloaded ) ) {
+					await DownloadFile ( videoFile.DownloadUrl , 0 );
+				}
+			}
+
+			m_DownloadingProcessed = false;
 		}
 
 	}

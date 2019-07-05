@@ -42,6 +42,15 @@
 		}
 
 		/// <summary>
+		/// Download url.
+		/// </summary>
+		public string DownloadUrl
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Quality.
 		/// </summary>
 		public VideoQuality Quality
