@@ -139,11 +139,12 @@
 							<StackPanel Orientation="Vertical">
 								<TextBlock converters:BackgroundThemeConverter.TextMapper="TextBlock">
 									<Run
-										Text="Год"
+										Text="{Binding Year}"
 										FontWeight="Bold"
 									/>
 									<Run
-										Text="{Binding Year}"
+										Text="{Binding Season}"
+										FontWeight="Bold"
 									/>
 								</TextBlock>
 							</StackPanel>
@@ -821,6 +822,20 @@
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
 										Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+										PlaceholderText="Вводите через запятую"
+										TimeoutCommand="{Binding FilterCommand}"
+									/>
+									<TextBlock
+										Margin="4 0 4 4"
+										converters:BackgroundThemeConverter.TextMapper="TextBlock">
+										Сезоны
+									</TextBlock>
+									<controls:TimingTextBox
+										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
+										Width="200"
+										Margin="4 0 4 4"
+										IsSpellCheckEnabled="False"
+										Text="{Binding FilterBySeasons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										PlaceholderText="Вводите через запятую"
 										TimeoutCommand="{Binding FilterCommand}"
 									/>

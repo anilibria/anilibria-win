@@ -244,6 +244,15 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 			set;
 		}
 
+		/// <summary>
+		/// Season.
+		/// </summary>
+		public string Season
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

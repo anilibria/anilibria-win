@@ -135,6 +135,15 @@ namespace Anilibria.Services.PresentationClasses {
 		}
 
 		/// <summary>
+		/// Season.
+		/// </summary>
+		public string Season
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Day.
 		/// </summary>
 		public string Day

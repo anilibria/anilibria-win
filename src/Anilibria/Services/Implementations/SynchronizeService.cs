@@ -85,6 +85,7 @@ namespace Anilibria.Services.Implementations {
 				Title = release.Names?.FirstOrDefault () ?? "" ,
 				Series = release.Series ,
 				Year = release.Year ,
+				Season = release.Season,
 				Voices = release.Voices.ToArray () ,
 				Timestamp = release.Last ,
 				Playlist = release.Playlist?
@@ -131,6 +132,7 @@ namespace Anilibria.Services.Implementations {
 			if ( releaseEntity.Status != release.Status ) releaseEntity.Status = release.Status;
 			if ( releaseEntity.Series != release.Series?.TrimEnd () ) releaseEntity.Series = release.Series;
 			if ( releaseEntity.Announce != release.Announce ) releaseEntity.Announce = release.Announce;
+			if ( releaseEntity.Season != release.Season ) releaseEntity.Season = release.Season;
 			releaseEntity.Rating = release.Favorite?.Rating ?? 0;
 			releaseEntity.Title = release.Names?.FirstOrDefault () ?? "";
 			releaseEntity.Names = release.Names.ToList ();

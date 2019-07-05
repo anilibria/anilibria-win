@@ -108,6 +108,15 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
+		/// Season.
+		/// </summary>
+		public string Season
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Genres.
 		/// </summary>
 		public IEnumerable<string> Genres

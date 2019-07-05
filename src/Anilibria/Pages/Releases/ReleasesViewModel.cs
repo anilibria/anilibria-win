@@ -133,6 +133,8 @@ namespace Anilibria.Pages.Releases {
 
 		private string m_FilterByYears;
 
+		private string m_FilterBySeasons;
+
 		private string m_FilterByVoicers;
 
 		private string m_FilterByType;
@@ -180,7 +182,7 @@ namespace Anilibria.Pages.Releases {
 		private FavoriteMarkItem m_SelectedFavoriteMarkType;
 
 		private IEntityCollection<ReleaseEntity> m_ReleasesCollection;
-		
+
 		private string m_FilterByDescription;
 
 		private bool m_IsDarkTheme;
@@ -738,6 +740,7 @@ namespace Anilibria.Pages.Releases {
 			string.IsNullOrEmpty ( m_FilterByType ) &&
 			string.IsNullOrEmpty ( m_FilterByVoicers ) &&
 			string.IsNullOrEmpty ( m_FilterByYears ) &&
+			string.IsNullOrEmpty ( m_FilterBySeasons ) &&
 			string.IsNullOrEmpty ( m_FilterByDescription ) &&
 			m_SelectedSeenMarkType.Type == SeenMarkType.NotUsed &&
 			m_SelectedFavoriteMarkType.Type == FavoriteMarkType.NotUsed;
@@ -762,6 +765,8 @@ namespace Anilibria.Pages.Releases {
 			RaisePropertyChanged ( () => SelectedSeenMarkType );
 			m_FilterByDescription = "";
 			RaisePropertyChanged ( () => FilterByDescription );
+			m_FilterBySeasons = "";
+			RaisePropertyChanged ( () => FilterBySeasons );
 
 			Filter ();
 			RefreshFilterState ();
@@ -1280,6 +1285,10 @@ namespace Anilibria.Pages.Releases {
 				var genres = FilterByGenres.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
 				releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
 			}
+			if ( !string.IsNullOrEmpty ( FilterBySeasons ) ) {
+				var seasons = FilterBySeasons.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
+				releases = releases.Where ( a => seasons.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { a.Season } ) ) );
+			}
 			if ( !string.IsNullOrEmpty ( FilterByYears ) ) {
 				var years = FilterByYears.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
 				releases = releases.Where ( a => a.Year != null && years.Contains ( a.Year ) );
@@ -1419,6 +1428,7 @@ namespace Anilibria.Pages.Releases {
 				ScheduledOnDay = GetScheduleDayOnRelease ( a ) ,
 				Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
 				Year = a.Year ,
+				Season = a.Season,
 				CountVideoOnline = a.Playlist?.Count () ?? 0 ,
 				IsSeen = ( m_CountWachedVideos?.FirstOrDefault ( watchVideo => watchVideo.Key == a.Id ).Value ?? -1 ) == ( a.Playlist?.Count () ?? -2 ) ,
 				Torrents = a?.Torrents?.Select (
@@ -1701,6 +1711,20 @@ namespace Anilibria.Pages.Releases {
 			set
 			{
 				if ( !Set ( ref m_FilterByYears , value ) ) return;
+
+				RefreshFilterState ();
+			}
+		}
+
+		/// <summary>
+		/// Filter by seasons.
+		/// </summary>
+		public string FilterBySeasons
+		{
+			get => m_FilterBySeasons;
+			set
+			{
+				if ( !Set ( ref m_FilterBySeasons , value ) ) return;
 
 				RefreshFilterState ();
 			}
