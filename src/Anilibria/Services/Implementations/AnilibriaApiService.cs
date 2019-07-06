@@ -18,15 +18,17 @@ namespace Anilibria.Services.Implementations {
 	/// </summary>
 	public class AnilibriaApiService : IAnilibriaApiService {
 
-		private const string m_WebSiteUrl = "https://www.anilibria.tv";
+		public const string ApiPathSettingName = "ApiPathSettingName";
 
-		private const string m_ImageUploadUrl = m_WebSiteUrl + "/upload/release/";
+		private string m_WebSiteUrl = "https://www.anilibria.tv";
 
-		private const string m_ApiIndexUrl = m_WebSiteUrl + "/public/api/index.php";
+		private string m_ImageUploadUrl;
 
-		private const string m_ApiLoginUrl = m_WebSiteUrl + "/public/login.php";
+		private string m_ApiIndexUrl;
 
-		private const string m_ApiLogoutUrl = m_WebSiteUrl + "/public/logout.php";
+		private string m_ApiLoginUrl;
+
+		private string m_ApiLogoutUrl;
 
 		private const string m_SessionName = "PHPSESSID";
 
@@ -42,11 +44,19 @@ namespace Anilibria.Services.Implementations {
 
 
 		public AnilibriaApiService () {
+			var settings = ApplicationData.Current.LocalSettings;
+			var overrideApiPath = settings.Values[ApiPathSettingName] as string;
+			if ( !string.IsNullOrEmpty ( overrideApiPath ) ) m_WebSiteUrl = overrideApiPath;
+
+			m_ImageUploadUrl = m_WebSiteUrl + "/upload/release/";
+			m_ApiIndexUrl = m_WebSiteUrl + "/public/api/index.php";
+			m_ApiLoginUrl = m_WebSiteUrl + "/public/login.php";
+			m_ApiLogoutUrl = m_WebSiteUrl + "/public/logout.php";
+
 			m_HttpHandler = new HttpClientHandler { CookieContainer = new CookieContainer () };
 			m_HttpClient = new HttpClient ( m_HttpHandler );
 
 			//restore session identifier.
-			var settings = ApplicationData.Current.LocalSettings;
 			m_SessionId = settings.Values[SessionIdName] as string;
 			if ( !string.IsNullOrEmpty ( m_SessionId ) ) m_HttpHandler.CookieContainer.Add ( new Uri ( m_WebSiteUrl ) , new Cookie ( m_SessionName , m_SessionId ) );
 		}

@@ -1,9 +1,12 @@
-﻿using Anilibria.GlobalState;
+﻿using System;
+using Anilibria.GlobalState;
 using Anilibria.Pages.DiagnosticsPage;
+using Anilibria.Pages.ProtocolsPages;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -45,10 +48,34 @@ namespace Anilibria {
 				case "diagnosticspage":
 					TransitionToDiagnosticsPage ();
 					break;
+				case "changeapipath":
+					var query = uri.PathAndQuery;
+
+					var newUrl = query.Replace ( "/?path=" , "" );
+					ApplicationData.Current.LocalSettings.Values[AnilibriaApiService.ApiPathSettingName] = newUrl;
+
+					if ( isNotStarted ) {
+						TransitionToChangeApiPath ( newUrl );
+					}
+					else {
+						var frame = (Frame) Window.Current.Content;
+						var homeView = ( frame.Content as HomeView );
+						homeView.SetApiPath ( newUrl );
+					}
+
+					break;
 				default:
 					if ( isNotStarted ) Exit ();
 					break;
 			}
+		}
+
+		private void TransitionToChangeApiPath ( string url ) {
+			if ( Window.Current.Content == null ) Window.Current.Content = new Frame ();
+
+			var frame = (Frame) Window.Current.Content;
+			frame.Navigate ( typeof ( ChangeApiView ) , url );
+			Window.Current.Activate ();
 		}
 
 		private void TransitionToDiagnosticsPage () {

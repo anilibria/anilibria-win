@@ -14,6 +14,7 @@
 	xmlns:controls="using:Anilibria.Controls"
 	xmlns:converters="using:Anilibria.Converters"
 	xmlns:downloadmanager="using:Anilibria.Pages.DownloadManagerPage"
+	xmlns:protocolpage="using:Anilibria.Pages.ProtocolsPages"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
 	Loaded="Page_Loaded">
@@ -230,6 +231,10 @@
 				/>
 			</Grid>
 		</SplitView>
+		<protocolpage:ChangeApiControl
+			x:Name="ChangeApi"
+			Visibility="Collapsed">
+		</protocolpage:ChangeApiControl>
 		<Border
 			x:Name="InformationMessage"
 			Margin="0 60 10 0"

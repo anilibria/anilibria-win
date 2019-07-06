@@ -150,14 +150,15 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <returns></returns>
 		public async Task StartDownloadProcess () {
+			if ( m_DownloadingProcessed ) return; // prevent processes from running twice
+
 			var activeReleases = m_Entity.DownloadingReleases.Where ( a => a.Active ).OrderBy ( a => a.Order ).ToList ();
 
 			m_DownloadingProcessed = true;
 
 			foreach ( var activeRelease in activeReleases ) {
-				foreach ( var videoFile in activeRelease.Videos.Where ( a => !a.IsDownloaded ) ) {
-					await DownloadFile ( videoFile.DownloadUrl , 0 );
-				}
+				var videos = activeRelease.Videos.Where ( a => !a.IsDownloaded ).ToList ();
+				foreach ( var videoFile in videos ) await DownloadFile ( videoFile.DownloadUrl , 0 );
 			}
 
 			m_DownloadingProcessed = false;

@@ -252,6 +252,12 @@
     <Compile Include="Pages\OnlinePlayer\PresentationClasses\SecondItem.cs" />
     <Compile Include="Pages\OnlinePlayer\VideoTimeFormatter.cs" />
     <Compile Include="Pages\PresentationClasses\MessageModel.cs" />
+    <Compile Include="Pages\ProtocolsPages\ChangeApiControl.xaml.cs">
+      <DependentUpon>ChangeApiControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ProtocolsPages\ChangeApiView.xaml.cs">
+      <DependentUpon>ChangeApiView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Releases\PresentationClasses\FavoriteMarkItem.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\FavoriteMarkType.cs" />
     <Compile Include="Pages\Releases\PresentationClasses\OnlineVideoModel.cs" />
@@ -550,6 +556,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\OnlinePlayer\OnlinePlayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ProtocolsPages\ChangeApiControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ProtocolsPages\ChangeApiView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

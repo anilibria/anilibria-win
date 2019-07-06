@@ -194,6 +194,15 @@ namespace Anilibria {
 			ChangePage ( "About" , null );
 		}
 
+		/// <summary>
+		/// Set api url.
+		/// </summary>
+		/// <param name="url">Url.</param>
+		public void SetApiPath ( string url ) {
+			ChangeApi.SetApiAddress ( url );
+			ChangeApi.Visibility = Visibility.Visible;
+		}
+
 	}
 
 }
