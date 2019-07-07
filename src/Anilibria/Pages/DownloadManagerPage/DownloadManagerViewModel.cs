@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.DownloadManagerPage.PresentationClasses;
+using Anilibria.Services;
 
 namespace Anilibria.Pages.DownloadManagerPage {
 
@@ -18,6 +20,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private DownloadSectionItem m_SelectedSection;
 
 		private bool m_IsMultipleSelect;
+
+		private IDownloadService m_DownloadService;
 
 		private ObservableCollection<DownloadSectionItem> m_Sections = new ObservableCollection<DownloadSectionItem> (
 			new List<DownloadSectionItem> {
@@ -40,11 +44,18 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			}
 		);
 
-		public DownloadManagerViewModel () {
+		public DownloadManagerViewModel ( IDownloadService downloadService ) {
+			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			CreateCommands ();
 
 			m_SelectedSection = m_Sections.First ();
 		}
+
+		/// <summary>
+		/// Initialize.
+		/// </summary>
+		/// <returns></returns>
+		public async Task Initalize () => await m_DownloadService.StartDownloadProcess ();
 
 		private void CreateCommands () {
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );

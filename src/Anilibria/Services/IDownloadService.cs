@@ -43,6 +43,14 @@ namespace Anilibria.Services {
 		/// <param name="releaseId">Release identifier.</param>
 		Task RemoveDownloadRelease ( long releaseId );
 
+		/// <summary>
+		/// Downliading processed.
+		/// </summary>
+		bool DownloadingProcessed
+		{
+			get;
+		}
+
 	}
 
 }

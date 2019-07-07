@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Anilibria.Services.Implementations;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Anilibria.Pages.DownloadManagerPage {
 
@@ -7,10 +9,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 	/// </summary>
 	public sealed partial class DownloadManagerView : UserControl {
 
+		private readonly DownloadManagerViewModel m_ViewModel;
+
 		public DownloadManagerView () {
 			InitializeComponent ();
-			DataContext = new DownloadManagerViewModel ();
+			m_ViewModel = new DownloadManagerViewModel ( DownloadManager.Current () );
+			DataContext = m_ViewModel;
 		}
+
+		private async void UserControl_Loaded ( object sender , RoutedEventArgs e ) => await m_ViewModel.Initalize ();
 
 	}
 

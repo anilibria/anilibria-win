@@ -28,6 +28,8 @@ namespace Anilibria.Services.Implementations {
 
 		private bool m_DownloadingProcessed = false;
 
+		public bool DownloadingProcessed => m_DownloadingProcessed;
+
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
 			m_Collection = m_DataContext.GetCollection<DownloadFileEntity> ();
