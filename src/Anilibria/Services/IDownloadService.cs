@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage.Entities;
 
@@ -26,9 +27,17 @@ namespace Anilibria.Services {
 		/// Set download file.
 		/// </summary>
 		/// <param name="releaseId">Release identifier.</param>
-		/// <param name="videoId">Video identifier.</param>
+		/// <param name="video">Video information.</param>
 		/// <param name="quality">Quality.</param>
-		void AddDownloadFile ( long releaseId , int videoId , VideoQuality quality );
+		void AddDownloadFile ( long releaseId , OnlineVideoModel videoId , VideoQuality quality );
+
+		/// <summary>
+		/// Set download file.
+		/// </summary>
+		/// <param name="releaseId">Release identifier.</param>
+		/// <param name="videos">Videos.</param>
+		/// <param name="quality">Quality.</param>
+		void AddDownloadFile ( long releaseId , IEnumerable<OnlineVideoModel> videos , VideoQuality quality );
 
 		/// <summary>
 		/// Remove download file.

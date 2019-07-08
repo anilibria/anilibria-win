@@ -20,6 +20,8 @@ namespace Anilibria.Pages.Youtube {
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
+		private readonly IAnalyticsService m_AnalyticsService;
+
 		private IncrementalLoadingCollection<YoutubeVideoModel> m_Collection;
 
 		private ObservableCollection<YoutubeVideoModel> m_SelectedVideos;
@@ -28,8 +30,9 @@ namespace Anilibria.Pages.Youtube {
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria api service.</param>
-		public YoutubeViewModel ( IAnilibriaApiService anilibriaApiService ) {
+		public YoutubeViewModel ( IAnilibriaApiService anilibriaApiService , IAnalyticsService analyticsService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 
 			CreateCommands ();
 			RefreshVideos ();
@@ -117,6 +120,7 @@ namespace Anilibria.Pages.Youtube {
 		}
 
 		public void NavigateTo ( object parameter ) {
+			m_AnalyticsService.TrackEvent ( "YoutubeVideo" , "NavigatedTo" , "Simple" );
 		}
 
 		/// <summary>

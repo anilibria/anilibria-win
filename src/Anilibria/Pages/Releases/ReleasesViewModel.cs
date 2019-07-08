@@ -476,6 +476,24 @@ namespace Anilibria.Pages.Releases {
 			DisableSeenMarkFilterCommand = CreateCommand ( DisableSeenMarkFilter , () => !IsShowReleaseCard );
 			EnableSeenMarkCardCommand = CreateCommand ( EnableSeenMarkCard , () => IsShowReleaseCard );
 			DisableSeenMarkCardCommand = CreateCommand ( DisableSeenMarkCard , () => IsShowReleaseCard );
+			AddDownloadHdCommand = CreateCommand ( AddDownloadHd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			AddDownloadSdCommand = CreateCommand ( AddDownloadSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+		}
+
+		private void AddDownloadSd () => AddToDownloadReleases ( VideoQuality.SD );
+
+		private void AddDownloadHd () => AddToDownloadReleases ( VideoQuality.HD );
+
+		private void AddToDownloadReleases ( VideoQuality videoQuality ) {
+			var downloadManager = DownloadManager.Current ();
+
+			foreach ( var selectedRelease in SelectedReleases ) {
+				foreach ( var video in selectedRelease.OnlineVideos ) {
+					downloadManager.AddDownloadFile ( selectedRelease.Id , video , videoQuality );
+				}
+			}
+
+			RefreshSelectedReleases ();
 		}
 
 		private void DisableSeenMarkCard () {
@@ -1428,7 +1446,7 @@ namespace Anilibria.Pages.Releases {
 				ScheduledOnDay = GetScheduleDayOnRelease ( a ) ,
 				Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
 				Year = a.Year ,
-				Season = a.Season,
+				Season = a.Season ,
 				CountVideoOnline = a.Playlist?.Count () ?? 0 ,
 				IsSeen = ( m_CountWachedVideos?.FirstOrDefault ( watchVideo => watchVideo.Key == a.Id ).Value ?? -1 ) == ( a.Playlist?.Count () ?? -2 ) ,
 				Torrents = a?.Torrents?.Select (
@@ -1451,7 +1469,8 @@ namespace Anilibria.Pages.Releases {
 							HDQuality = videoOnline.HD ,
 							SDQuality = videoOnline.SD ,
 							FullHDQuality = videoOnline.FullHD ,
-
+							DownloadableHD = videoOnline.DownloadableHD,
+							DownloadableSD = videoOnline.DownloadableSD
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
 			};
@@ -2424,6 +2443,23 @@ namespace Anilibria.Pages.Releases {
 			set;
 		}
 
+		/// <summary>
+		/// Add download HD command.
+		/// </summary>
+		public ICommand AddDownloadHdCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add download SD command.
+		/// </summary>
+		public ICommand AddDownloadSdCommand
+		{
+			get;
+			set;
+		}
 	}
 
 }

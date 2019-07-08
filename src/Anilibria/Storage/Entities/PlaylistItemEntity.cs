@@ -52,6 +52,24 @@ namespace Anilibria.Storage.Entities {
 			set;
 		}
 
+		/// <summary>
+		/// Downloadable HD.
+		/// </summary>
+		public Uri DownloadableHD
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Downloadable SD.
+		/// </summary>
+		public Uri DownloadableSD
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

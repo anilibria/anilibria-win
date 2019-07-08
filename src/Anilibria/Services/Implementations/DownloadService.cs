@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
@@ -43,30 +44,43 @@ namespace Anilibria.Services.Implementations {
 		}
 
 		/// <summary>
+		/// Add download file.
+		/// </summary>
+		/// <param name="releaseId">Release identifier.</param>
+		/// <param name="videoIds">Video identifier.</param>
+		/// <param name="quality">Quality.</param>
+		public void AddDownloadFile ( long releaseId , IEnumerable<OnlineVideoModel> videoIds , VideoQuality quality ) {
+			foreach ( var videoId in videoIds ) AddDownloadFile ( releaseId , videoId , quality );
+		}
+
+		/// <summary>
 		/// Set download file.
 		/// </summary>
 		/// <param name="releaseId">Release identifier.</param>
 		/// <param name="videoId">Video identifier.</param>
 		/// <param name="quality">Quality.</param>
-		public void AddDownloadFile ( long releaseId , int videoId , VideoQuality quality ) {
+		public void AddDownloadFile ( long releaseId , OnlineVideoModel videoInfo , VideoQuality quality ) {
 			var releaseItem = m_Entity.DownloadingReleases.FirstOrDefault ( a => a.ReleaseId == releaseId );
 			if ( releaseItem == null ) {
 				releaseItem = new DownloadReleaseEntity {
 					ReleaseId = releaseId ,
-					Active = false ,
+					Active = true ,
 					Videos = new List<DownloadReleaseVideoEntity> {
 						new DownloadReleaseVideoEntity {
 							IsDownloaded = false,
 							Quality = quality,
-							DownloadedPath = "",
+							DownloadedPath = quality == VideoQuality.HD ? videoInfo.DownloadableHD.ToString() : videoInfo.DownloadableSD.ToString(),
 							DownloadedSize = 0,
-							Id = videoId
+							Id = videoInfo.Order
 						}
 					}
 				};
+				var list = m_Entity.DownloadingReleases.ToList ();
+				list.Add ( releaseItem );
+				m_Entity.DownloadingReleases = list;
 			}
 			else {
-				var video = releaseItem.Videos.Where ( a => a.Id == videoId && a.Quality == quality ).FirstOrDefault ();
+				var video = releaseItem.Videos.Where ( a => a.Id == videoInfo.Order && a.Quality == quality ).FirstOrDefault ();
 				if ( video == null ) {
 					video = new DownloadReleaseVideoEntity {
 						IsDownloaded = false ,
@@ -78,6 +92,7 @@ namespace Anilibria.Services.Implementations {
 					videos.Add ( video );
 					releaseItem.Videos = videos;
 				}
+				releaseItem.Active = true;
 			}
 
 			m_Collection.Update ( m_Entity );

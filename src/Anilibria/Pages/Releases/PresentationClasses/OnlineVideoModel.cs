@@ -47,6 +47,24 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		}
 
 		/// <summary>
+		/// Downloadable HD.
+		/// </summary>
+		public Uri DownloadableHD
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Downloadable SD.
+		/// </summary>
+		public Uri DownloadableSD
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Link to video in FullHD quality.
 		/// </summary>
 		public Uri FullHDQuality

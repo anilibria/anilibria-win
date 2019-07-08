@@ -85,7 +85,7 @@ namespace Anilibria.Services.Implementations {
 				Title = release.Names?.FirstOrDefault () ?? "" ,
 				Series = release.Series ,
 				Year = release.Year ,
-				Season = release.Season,
+				Season = release.Season ,
 				Voices = release.Voices.ToArray () ,
 				Timestamp = release.Last ,
 				Playlist = release.Playlist?
@@ -95,7 +95,9 @@ namespace Anilibria.Services.Implementations {
 							Title = a.Title ,
 							HD = a.HD ,
 							SD = a.SD ,
-							FullHD = a.FullHd
+							FullHD = a.FullHd ,
+							DownloadableHD = a.SrcHd ,
+							DownloadableSD = a.SrcSd
 						}
 					)
 					.ToArray () ?? Enumerable.Empty<PlaylistItemEntity> () ,
@@ -156,7 +158,9 @@ namespace Anilibria.Services.Implementations {
 							HD = a.HD ,
 							SD = a.SD ,
 							FullHD = a.FullHd ,
-							Title = a.Title
+							Title = a.Title ,
+							DownloadableHD = a.SrcHd ,
+							DownloadableSD = a.SrcSd
 						}
 					)
 				.ToList ();

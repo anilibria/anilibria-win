@@ -777,9 +777,38 @@
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>
+				<Button
+					x:Name="DownloadButton"
+					RelativePanel.Below="SeenButton"
+					Style="{StaticResource IconsButtonStyle}"
+					Height="40"
+					ToolTipService.ToolTip="Чтобы снять или поставить отметку о просмотре необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
+					<controls:DownloadIcon
+						IconWidth="28"
+						IconHeight="28"
+						IconColor="White"
+					/>
+					<Button.Flyout>
+						<MenuFlyout
+							converters:BackgroundThemeConverter.MenuFlyout="Origin">
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Скачать в качестве HD"
+								Command="{Binding AddDownloadHdCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Скачать в качестве SD"
+								Command="{Binding AddDownloadSdCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
+						</MenuFlyout>
+					</Button.Flyout>
+				</Button>
 				<Grid
 					x:Name="FilterButton"
-					RelativePanel.Below="SeenButton">
+					RelativePanel.Below="DownloadButton">
 					<Button
 						Style="{StaticResource IconsButtonStyle}">
 						<controls:SearchIcon

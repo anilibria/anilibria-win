@@ -11,7 +11,7 @@ namespace Anilibria.Pages.Youtube {
 		public YoutubeView () {
 			InitializeComponent ();
 
-			DataContext = new YoutubeViewModel ( ApiService.Current () );
+			DataContext = new YoutubeViewModel ( ApiService.Current () , new AnalyticsService () );
 		}
 
 	}
