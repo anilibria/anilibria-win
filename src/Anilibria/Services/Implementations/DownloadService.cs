@@ -17,7 +17,9 @@ namespace Anilibria.Services.Implementations {
 	/// </summary>
 	public class DownloadService : IDownloadService {
 
-		private readonly int BufferSize = 1024 * 3;
+		private readonly int BufferSize = 1024 * 20;
+
+		private readonly long BufferFlush = 204800;
 
 		private readonly IDataContext m_DataContext;
 
@@ -69,7 +71,7 @@ namespace Anilibria.Services.Implementations {
 						new DownloadReleaseVideoEntity {
 							IsDownloaded = false,
 							Quality = quality,
-							DownloadedPath = quality == VideoQuality.HD ? videoInfo.DownloadableHD.ToString() : videoInfo.DownloadableSD.ToString(),
+							DownloadUrl = quality == VideoQuality.HD ? videoInfo.DownloadableHD.ToString() : videoInfo.DownloadableSD.ToString(),
 							DownloadedSize = 0,
 							Id = videoInfo.Order
 						}
@@ -85,7 +87,7 @@ namespace Anilibria.Services.Implementations {
 					video = new DownloadReleaseVideoEntity {
 						IsDownloaded = false ,
 						Quality = quality ,
-						DownloadedPath = "" ,
+						DownloadUrl = quality == VideoQuality.HD ? videoInfo.DownloadableHD.ToString () : videoInfo.DownloadableSD.ToString () ,
 						DownloadedSize = 0 ,
 					};
 					var videos = releaseItem.Videos.ToList ();
@@ -146,6 +148,7 @@ namespace Anilibria.Services.Implementations {
 
 		private async Task DownloadFile ( string url , long offset ) {
 			long contentLength = 0;
+			long downloadedSize = offset;
 			byte[] buffer = new byte[BufferSize];
 			using ( var response = await m_HttpClient.GetAsync ( url , HttpCompletionOption.ResponseHeadersRead ) ) {
 				if ( !response.Content.Headers.ContentLength.HasValue ) throw new NotSupportedException ( "Files without content lenght not supported" );
@@ -156,8 +159,18 @@ namespace Anilibria.Services.Implementations {
 
 				using ( var fileStream = await file.OpenStreamForWriteAsync () )
 				using ( var stream = await response.Content.ReadAsStreamAsync () ) {
-					await stream.ReadAsync ( buffer , 0 , BufferSize );
-					await fileStream.WriteAsync ( buffer , 0 , BufferSize );
+					while ( true ) {
+						var readed = await stream.ReadAsync ( buffer , 0 , BufferSize );
+						if ( readed == 0 ) break;
+
+						await fileStream.WriteAsync ( buffer , 0 , readed );
+
+						downloadedSize += readed;
+
+						if ( downloadedSize % BufferFlush‬ == 0 ) await fileStream.FlushAsync ();
+					}
+					await fileStream.FlushAsync ();
+					fileStream.Close ();
 				}
 			}
 		}
@@ -175,7 +188,12 @@ namespace Anilibria.Services.Implementations {
 
 			foreach ( var activeRelease in activeReleases ) {
 				var videos = activeRelease.Videos.Where ( a => !a.IsDownloaded ).ToList ();
-				foreach ( var videoFile in videos ) await DownloadFile ( videoFile.DownloadUrl , 0 );
+				foreach ( var videoFile in videos ) {
+					await DownloadFile ( videoFile.DownloadUrl , 0 );
+					videoFile.IsDownloaded = true;
+				}
+				activeRelease.Active = activeRelease.Videos.Any ( a => a.IsDownloaded );
+				m_Collection.Update ( m_Entity );
 			}
 
 			m_DownloadingProcessed = false;
