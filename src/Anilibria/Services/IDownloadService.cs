@@ -12,10 +12,10 @@ namespace Anilibria.Services {
 	public interface IDownloadService {
 
 		/// <summary>
-		/// Get pending downloads.
+		/// Get downloads.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<DownloadItem> GetPendingDownloads ();
+		IEnumerable<DownloadReleaseEntity> GetDownloads (DownloadItemsMode downloadItemsMode);
 
 		/// <summary>
 		/// Start download process.

@@ -101,11 +101,34 @@ namespace Anilibria.Services.Implementations {
 		}
 
 		/// <summary>
-		/// Get panding downloads.
+		/// Get downloads.
 		/// </summary>
+		/// <param name="downloadItemsMode">Download items mode.</param>
 		/// <returns></returns>
-		public IEnumerable<DownloadItem> GetPendingDownloads () {
-			return null;
+		public IEnumerable<DownloadReleaseEntity> GetDownloads ( DownloadItemsMode downloadItemsMode ) {
+			switch ( downloadItemsMode ) {
+				case DownloadItemsMode.All:
+					return m_Entity.DownloadingReleases
+						.OrderBy ( a => a.Order )
+						.ToList ();
+				case DownloadItemsMode.Downloaded:
+					return m_Entity.DownloadingReleases
+						.Where ( a => a.Videos.All ( b => b.IsDownloaded ) )
+						.OrderBy ( a => a.Order )
+						.ToList ();
+				case DownloadItemsMode.Downloading:
+					return m_Entity.DownloadingReleases
+						.Where ( a => a.Videos.Any ( b => b.IsDownloaded ) && !a.Videos.All ( b => b.IsDownloaded ) )
+						.OrderBy ( a => a.Order )
+						.ToList ();
+				case DownloadItemsMode.NotDownloaded:
+					return m_Entity.DownloadingReleases
+						.Where ( a => !a.Videos.All ( b => b.IsDownloaded ) )
+						.OrderBy ( a => a.Order )
+						.ToList ();
+				default: throw new NotSupportedException ( $"Download item mode {downloadItemsMode} not supported." );
+			}
+
 		}
 
 		/// <summary>

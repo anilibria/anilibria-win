@@ -17,7 +17,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			DataContext = m_ViewModel;
 		}
 
-		private async void UserControl_Loaded ( object sender , RoutedEventArgs e ) => await m_ViewModel.Initalize ();
+		private async void UserControl_Loaded ( object sender , RoutedEventArgs e ) => await m_ViewModel.Initialize ();
 
 	}
 

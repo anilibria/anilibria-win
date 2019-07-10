@@ -55,7 +55,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// Initialize.
 		/// </summary>
 		/// <returns></returns>
-		public async Task Initalize () => await m_DownloadService.StartDownloadProcess ();
+		public async Task Initialize () => await m_DownloadService.StartDownloadProcess ();
 
 		private void CreateCommands () {
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
