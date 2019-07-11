@@ -1820,7 +1820,7 @@
 										converters:BackgroundThemeConverter.CommonFlyout="Origin">
 										<ListView
 											x:Name="PrefferedOnlineVideoSelector"
-											ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
+											converters:BackgroundThemeConverter.AnilibriaListViewStyle="Origin"
 											Width="160"
 											Height="280"
 											HorizontalAlignment="Left"

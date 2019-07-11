@@ -103,6 +103,13 @@
 					/>
 				</StackPanel>
 			</Grid>
+			<ListView
+				converters:BackgroundThemeConverter.AnilibriaListViewStyle="Origin"
+				Grid.Row="1"
+				ItemsSource="{Binding Downloads}"
+				DisplayMemberPath="ReleaseId">
+			</ListView>
 		</Grid>
+
 	</Grid>
 </UserControl>

@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.DownloadManagerPage.PresentationClasses;
 using Anilibria.Services;
+using Anilibria.Storage.Entities;
 
 namespace Anilibria.Pages.DownloadManagerPage {
 
@@ -44,6 +45,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			}
 		);
 
+		private IEnumerable<DownloadReleaseEntity> m_Downloads = Enumerable.Empty<DownloadReleaseEntity> ();
+
 		public DownloadManagerViewModel ( IDownloadService downloadService ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			CreateCommands ();
@@ -69,6 +72,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		}
 
 		public void NavigateTo ( object parameter ) {
+			Downloads = m_DownloadService.GetDownloads ( DownloadItemsMode.All );
 		}
 
 		/// <summary>
@@ -87,6 +91,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		{
 			get => m_IsMultipleSelect;
 			set => Set ( ref m_IsMultipleSelect , value );
+		}
+
+		/// <summary>
+		/// Downloads.
+		/// </summary>
+		public IEnumerable<DownloadReleaseEntity> Downloads
+		{
+			get => m_Downloads;
+			set => Set ( ref m_Downloads , value );
 		}
 
 		/// <summary>

@@ -710,6 +710,41 @@ namespace Anilibria.Converters {
 
 		public static string GetAnilibriaIcon ( DependencyObject anilibriaicon ) => (string) anilibriaicon.GetValue ( AnilibriaIconProperty );
 
+		public static readonly DependencyProperty AnilibriaListViewStyleProperty =
+			DependencyProperty.RegisterAttached (
+				"AnilibriaListViewStyle" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , AnilibriaListViewStyleChanged )
+			);
+
+		private static void SetAnilibriaListViewGlobalStyle ( DependencyObject element , string themeName ) {
+			var relativeElement = (ListView) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					relativeElement.ItemContainerStyle = (Style) App.Current.Resources["PlayerListViewItemContainerStyle"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					relativeElement.ItemContainerStyle = (Style) App.Current.Resources["DarkPlayerListViewItemContainerStyle"];
+					break;
+			}
+		}
+
+		private static void AnilibriaListViewStyleChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetAnilibriaListViewGlobalStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				( string name ) => SetAnilibriaListViewGlobalStyle ( element , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetAnilibriaListViewStyle ( DependencyObject sidebar , string value ) => sidebar.SetValue ( AnilibriaListViewStyleProperty , value );
+
+		public static string GetAnilibriaListViewStyle ( DependencyObject sidebar ) => (string) sidebar.GetValue ( AnilibriaListViewStyleProperty );
+
+
 	}
 
 }
