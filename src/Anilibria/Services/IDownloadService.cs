@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Anilibria.Pages.Releases.PresentationClasses;
-using Anilibria.Services.PresentationClasses;
+using Anilibria.Services.Implementations.PresentationClasses;
 using Anilibria.Storage.Entities;
 
 namespace Anilibria.Services {
@@ -15,7 +15,7 @@ namespace Anilibria.Services {
 		/// Get downloads.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<DownloadReleaseEntity> GetDownloads (DownloadItemsMode downloadItemsMode);
+		IEnumerable<DownloadItemModel> GetDownloads (DownloadItemsMode downloadItemsMode);
 
 		/// <summary>
 		/// Start download process.
@@ -51,14 +51,6 @@ namespace Anilibria.Services {
 		/// </summary>
 		/// <param name="releaseId">Release identifier.</param>
 		Task RemoveDownloadRelease ( long releaseId );
-
-		/// <summary>
-		/// Downliading processed.
-		/// </summary>
-		bool DownloadingProcessed
-		{
-			get;
-		}
 
 	}
 

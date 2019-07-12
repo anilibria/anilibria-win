@@ -7,7 +7,50 @@
 	xmlns:converters="using:Anilibria.Converters"
 	xmlns:controls="using:Anilibria.Controls"
 	mc:Ignorable="d"
-	Loaded="UserControl_Loaded">
+	Loaded="UserControl_Loaded"
+	x:Name="DownloadContainer">
+
+	<UserControl.Resources>
+		<DataTemplate x:Key="DownloadItemTemplate">
+			<Border
+				HorizontalAlignment="Stretch"
+				CornerRadius="8">
+				<Grid
+					converters:BackgroundThemeConverter.BackgroundMapper="ReleaseGridBackground">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+
+					<Border
+						Height="300"
+						Width="200"
+						Margin="8"
+						Grid.Column="0"
+						converters:BackgroundThemeConverter.BorderMapper="ImageBorderColor"
+						BorderThickness="2"
+						CornerRadius="5">
+						<Border.Background>
+							<ImageBrush
+								Stretch="UniformToFill"
+								converters:CacheImageBrushConverter.ImageId="{Binding ReleaseId}"
+								converters:CacheImageBrushConverter.ImageGroup="Poster"
+								converters:CacheImageBrushConverter.ImagePath="{Binding Poster}"
+							/>
+						</Border.Background>
+					</Border>
+					<StackPanel
+						Grid.Column="1"
+						Orientation="Vertical">
+						<TextBlock
+							Text="{Binding Title}"
+						/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+	</UserControl.Resources>
 
 	<Grid
 		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
@@ -105,9 +148,9 @@
 			</Grid>
 			<ListView
 				converters:BackgroundThemeConverter.AnilibriaListViewStyle="Origin"
+				ItemTemplate="{StaticResource DownloadItemTemplate}"
 				Grid.Row="1"
-				ItemsSource="{Binding Downloads}"
-				DisplayMemberPath="ReleaseId">
+				ItemsSource="{Binding Downloads}">
 			</ListView>
 		</Grid>
 

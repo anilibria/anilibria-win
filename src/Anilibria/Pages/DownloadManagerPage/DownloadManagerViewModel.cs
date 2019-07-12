@@ -7,7 +7,7 @@ using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.DownloadManagerPage.PresentationClasses;
 using Anilibria.Services;
-using Anilibria.Storage.Entities;
+using Anilibria.Services.Implementations.PresentationClasses;
 
 namespace Anilibria.Pages.DownloadManagerPage {
 
@@ -45,7 +45,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			}
 		);
 
-		private IEnumerable<DownloadReleaseEntity> m_Downloads = Enumerable.Empty<DownloadReleaseEntity> ();
+		private IEnumerable<DownloadItemModel> m_Downloads = Enumerable.Empty<DownloadItemModel> ();
 
 		public DownloadManagerViewModel ( IDownloadService downloadService ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
@@ -71,9 +71,27 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		public void NavigateFrom () {
 		}
 
-		public void NavigateTo ( object parameter ) {
+		public void RefreshDownloadItems () {
+			DownloadSectionType type = DownloadSectionType.All;
+			switch ( m_SelectedSection.Type ) {
+				case DownloadSectionType.All:
+					type = DownloadSectionType.All;
+					break;
+				case DownloadSectionType.Downloading:
+					type = DownloadSectionType.Downloading;
+					break;
+				case DownloadSectionType.Downloaded:
+					type = DownloadSectionType.Downloaded;
+					break;
+				case DownloadSectionType.NotDownloaded:
+					type = DownloadSectionType.NotDownloaded;
+					break;
+				default: throw new NotSupportedException ( $"Type {type} not supported" );
+			}
 			Downloads = m_DownloadService.GetDownloads ( DownloadItemsMode.All );
 		}
+
+		public void NavigateTo ( object parameter ) => RefreshDownloadItems ();
 
 		/// <summary>
 		/// Filter by name.
@@ -96,7 +114,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Downloads.
 		/// </summary>
-		public IEnumerable<DownloadReleaseEntity> Downloads
+		public IEnumerable<DownloadItemModel> Downloads
 		{
 			get => m_Downloads;
 			set => Set ( ref m_Downloads , value );
@@ -108,7 +126,12 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		public DownloadSectionItem SelectedSection
 		{
 			get => m_SelectedSection;
-			set => Set ( ref m_SelectedSection , value );
+			set
+			{
+				if ( !Set ( ref m_SelectedSection , value ) ) return;
+
+				RefreshDownloadItems ();
+			}
 		}
 
 		/// <summary>
