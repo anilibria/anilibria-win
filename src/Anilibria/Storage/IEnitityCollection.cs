@@ -97,6 +97,12 @@ namespace Anilibria.Storage {
 		IEnumerable<T> Find ( Query query , int skip = 0 , int take = int.MaxValue );
 
 		/// <summary>
+		/// Get all entities in collection.
+		/// </summary>
+		/// <typeparam name="T">Type of entity.</typeparam>
+		IEnumerable<T> All ();
+
+		/// <summary>
 		/// Delete by id.
 		/// </summary>
 		/// <param name="id">Identifier.</param>

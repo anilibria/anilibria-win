@@ -13,7 +13,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		public DownloadManagerView () {
 			InitializeComponent ();
-			m_ViewModel = new DownloadManagerViewModel ( DownloadManager.Current () );
+			m_ViewModel = new DownloadManagerViewModel ( DownloadManager.Current (), StorageService.Current () );
 			DataContext = m_ViewModel;
 		}
 

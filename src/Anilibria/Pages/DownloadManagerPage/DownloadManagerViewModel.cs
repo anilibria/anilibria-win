@@ -7,7 +7,9 @@ using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.DownloadManagerPage.PresentationClasses;
 using Anilibria.Services;
-using Anilibria.Services.Implementations.PresentationClasses;
+using Anilibria.Services.Implementations;
+using Anilibria.Storage;
+using Anilibria.Storage.Entities;
 
 namespace Anilibria.Pages.DownloadManagerPage {
 
@@ -23,6 +25,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private bool m_IsMultipleSelect;
 
 		private IDownloadService m_DownloadService;
+
+		private readonly IEntityCollection<ReleaseEntity> m_ReleaseCollection;
 
 		private ObservableCollection<DownloadSectionItem> m_Sections = new ObservableCollection<DownloadSectionItem> (
 			new List<DownloadSectionItem> {
@@ -47,11 +51,36 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private IEnumerable<DownloadItemModel> m_Downloads = Enumerable.Empty<DownloadItemModel> ();
 
-		public DownloadManagerViewModel ( IDownloadService downloadService ) {
+		private IEnumerable<ReleaseEntity> m_Releases = Enumerable.Empty<ReleaseEntity> ();
+
+		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
+			m_ReleaseCollection = dataContext.GetCollection<ReleaseEntity> ();
 			CreateCommands ();
 
 			m_SelectedSection = m_Sections.First ();
+			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
+		}
+
+		private DownloadItemModel MapToModel ( DownloadReleaseEntity downloadRelease ) {
+			var release = m_Releases.FirstOrDefault ( a => a.Id == downloadRelease.ReleaseId );
+
+			return new DownloadItemModel {
+				ReleaseId = downloadRelease.ReleaseId ,
+				Order = downloadRelease.Order ,
+				Active = downloadRelease.Active ,
+				Title = release?.Title ,
+				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
+				DownloadedVideos = 0 ,
+				DownloadingVideos = 0 ,
+				NotDownloadedVideos = 0
+			};
+		}
+
+		private void RefreshAfterSynchronize ( object parameter ) {
+			m_Releases = m_ReleaseCollection
+				.All ()
+				.ToList ();
 		}
 
 		/// <summary>
@@ -72,23 +101,27 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		}
 
 		public void RefreshDownloadItems () {
-			DownloadSectionType type = DownloadSectionType.All;
+			if ( !m_Releases.Any () ) RefreshAfterSynchronize ( null );
+
+			DownloadItemsMode type = DownloadItemsMode.All;
 			switch ( m_SelectedSection.Type ) {
 				case DownloadSectionType.All:
-					type = DownloadSectionType.All;
+					type = DownloadItemsMode.All;
 					break;
 				case DownloadSectionType.Downloading:
-					type = DownloadSectionType.Downloading;
+					type = DownloadItemsMode.Downloading;
 					break;
 				case DownloadSectionType.Downloaded:
-					type = DownloadSectionType.Downloaded;
+					type = DownloadItemsMode.Downloaded;
 					break;
 				case DownloadSectionType.NotDownloaded:
-					type = DownloadSectionType.NotDownloaded;
+					type = DownloadItemsMode.NotDownloaded;
 					break;
 				default: throw new NotSupportedException ( $"Type {type} not supported" );
 			}
-			Downloads = m_DownloadService.GetDownloads ( DownloadItemsMode.All );
+			Downloads = m_DownloadService.GetDownloads ( type )
+				.Select ( MapToModel )
+				.ToList ();
 		}
 
 		public void NavigateTo ( object parameter ) => RefreshDownloadItems ();

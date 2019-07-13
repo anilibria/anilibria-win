@@ -204,7 +204,7 @@ namespace Anilibria.Services.Implementations {
 				var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
 				var schedules = await m_AnilibriaApiService.GetSchedule ();
 
-				saveSchedule ( schedules );
+				SaveSchedule ( schedules );
 
 				var collection = m_DataContext.GetCollection<ReleaseEntity> ();
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
@@ -264,7 +264,7 @@ namespace Anilibria.Services.Implementations {
 			}
 		}
 
-		private void saveSchedule ( IDictionary<int , IEnumerable<long>> schedules ) {
+		private void SaveSchedule ( IDictionary<int , IEnumerable<long>> schedules ) {
 			var collection = m_DataContext.GetCollection<ScheduleEntity> ();
 			var entity = collection.FirstOrDefault ();
 			if ( entity == null ) {

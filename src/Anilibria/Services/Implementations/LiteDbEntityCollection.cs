@@ -196,6 +196,12 @@ namespace Anilibria.Services.Implementations {
 			return m_Collection.Max ( expression );
 		}
 
+		/// <summary>
+		/// Get all entities in collection.
+		/// </summary>
+		/// <typeparam name="T">Type of entity.</typeparam>
+		public IEnumerable<T> All () => m_Collection.FindAll ();
+
 	}
 
 }

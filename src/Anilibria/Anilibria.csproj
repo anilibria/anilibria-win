@@ -302,7 +302,7 @@
     <Compile Include="Services\Implementations\LiteDbEntityCollection.cs" />
     <Compile Include="Services\Implementations\LiteDbLocalPath.cs" />
     <Compile Include="Services\Implementations\ObserverEvents.cs" />
-    <Compile Include="Services\Implementations\PresentationClasses\DownloadItemModel.cs" />
+    <Compile Include="Pages\DownloadManagerPage\PresentationClasses\DownloadItemModel.cs" />
     <Compile Include="Services\Implementations\StorageService.cs" />
     <Compile Include="Services\Implementations\SynchronizeService.cs" />
     <Compile Include="Services\Implementations\SyncService.cs" />

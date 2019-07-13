@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Anilibria.Pages.Releases.PresentationClasses;
-using Anilibria.Services.Implementations.PresentationClasses;
 using Anilibria.Storage.Entities;
 
 namespace Anilibria.Services {
@@ -15,7 +14,7 @@ namespace Anilibria.Services {
 		/// Get downloads.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<DownloadItemModel> GetDownloads (DownloadItemsMode downloadItemsMode);
+		IEnumerable<DownloadReleaseEntity> GetDownloads (DownloadItemsMode downloadItemsMode);
 
 		/// <summary>
 		/// Start download process.

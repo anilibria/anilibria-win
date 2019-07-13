@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Anilibria.Pages.Releases.PresentationClasses;
-using Anilibria.Services.Implementations.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.Storage;
@@ -25,22 +24,15 @@ namespace Anilibria.Services.Implementations {
 
 		private readonly IEntityCollection<DownloadFileEntity> m_Collection;
 
-		private readonly IEntityCollection<ReleaseEntity> m_ReleaseCollection;
-
 		private DownloadFileEntity m_Entity;
 
 		private HttpClient m_HttpClient = new HttpClient ();
 
 		private bool m_DownloadingProcessed = false;
 
-		private List<ReleaseEntity> m_Releases;
-
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
 			m_Collection = m_DataContext.GetCollection<DownloadFileEntity> ();
-			m_ReleaseCollection = m_DataContext.GetCollection<ReleaseEntity> ();
-
-			RefreshReleases ();
 
 			m_Entity = m_Collection.FirstOrDefault ();
 			if ( m_Entity == null ) {
@@ -49,10 +41,6 @@ namespace Anilibria.Services.Implementations {
 				};
 				m_Collection.Add ( m_Entity );
 			}
-		}
-
-		private void RefreshReleases () {
-			m_Releases = m_ReleaseCollection.Find ( a => true ).ToList ();
 		}
 
 		/// <summary>
@@ -110,51 +98,32 @@ namespace Anilibria.Services.Implementations {
 			m_Collection.Update ( m_Entity );
 		}
 
-		private DownloadItemModel MapToModel ( DownloadReleaseEntity downloadRelease ) {
-			var release = m_Releases.FirstOrDefault ( a => a.Id == downloadRelease.ReleaseId );
-
-			return new DownloadItemModel {
-				ReleaseId = downloadRelease.ReleaseId ,
-				Order = downloadRelease.Order ,
-				Active = downloadRelease.Active ,
-				Title = release?.Title ,
-				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
-				DownloadedVideos = 0 ,
-				DownloadingVideos = 0 ,
-				NotDownloadedVideos = 0
-			};
-		}
-
 		/// <summary>
 		/// Get downloads.
 		/// </summary>
 		/// <param name="downloadItemsMode">Download items mode.</param>
 		/// <returns></returns>
-		public IEnumerable<DownloadItemModel> GetDownloads ( DownloadItemsMode downloadItemsMode ) {
+		public IEnumerable<DownloadReleaseEntity> GetDownloads ( DownloadItemsMode downloadItemsMode ) {
 
 			switch ( downloadItemsMode ) {
 				case DownloadItemsMode.All:
 					return m_Entity.DownloadingReleases
 						.OrderBy ( a => a.Order )
-						.Select ( MapToModel )
 						.ToList ();
 				case DownloadItemsMode.Downloaded:
 					return m_Entity.DownloadingReleases
 						.Where ( a => a.Videos.All ( b => b.IsDownloaded ) )
 						.OrderBy ( a => a.Order )
-						.Select ( MapToModel )
 						.ToList ();
 				case DownloadItemsMode.Downloading:
 					return m_Entity.DownloadingReleases
 						.Where ( a => a.Videos.Any ( b => b.IsDownloaded ) && !a.Videos.All ( b => b.IsDownloaded ) )
 						.OrderBy ( a => a.Order )
-						.Select ( MapToModel )
 						.ToList ();
 				case DownloadItemsMode.NotDownloaded:
 					return m_Entity.DownloadingReleases
 						.Where ( a => !a.Videos.All ( b => b.IsDownloaded ) )
 						.OrderBy ( a => a.Order )
-						.Select ( MapToModel )
 						.ToList ();
 				default: throw new NotSupportedException ( $"Download item mode {downloadItemsMode} not supported." );
 			}

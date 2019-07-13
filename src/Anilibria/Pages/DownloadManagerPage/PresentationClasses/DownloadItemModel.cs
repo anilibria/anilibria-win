@@ -1,7 +1,7 @@
 ﻿using System;
 using Anilibria.MVVM;
 
-namespace Anilibria.Services.Implementations.PresentationClasses {
+namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 
 	/// <summary>
 	/// Download item model.
