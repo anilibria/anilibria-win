@@ -14,9 +14,9 @@
 		<DataTemplate x:Key="DownloadItemTemplate">
 			<Border
 				HorizontalAlignment="Stretch"
-				CornerRadius="8">
-				<Grid
-					converters:BackgroundThemeConverter.BackgroundMapper="ReleaseGridBackground">
+				CornerRadius="8"
+				Margin="0 5 0 4">
+				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition />
@@ -42,11 +42,37 @@
 					</Border>
 					<StackPanel
 						Grid.Column="1"
-						Orientation="Vertical">
+						Orientation="Vertical"
+						Margin="0 8 0 8">
 						<TextBlock
+							FontSize="20"
+							TextWrapping="WrapWholeWords"
+							MaxLines="3"
 							Text="{Binding Title}"
 						/>
+						<TextBlock
+							FontSize="16">
+							<Run FontWeight="Bold">Скачивается: </Run>
+							<Run Text="{Binding DownloadingVideos}"></Run>
+						</TextBlock>
 					</StackPanel>
+					<Grid
+						Grid.Column="2">
+						<StackPanel Orientation="Vertical">
+							<Button
+								Margin="0 8 0 0"
+								Width="80"
+								converters:BackgroundThemeConverter.ActionButton="Origin">
+								Смотреть
+							</Button>
+							<Button
+								Margin="0 8 0 0"
+								Width="80"
+								converters:BackgroundThemeConverter.ActionButton="Origin">
+								Удалить
+							</Button>
+						</StackPanel>
+					</Grid>
 				</Grid>
 			</Border>
 		</DataTemplate>
