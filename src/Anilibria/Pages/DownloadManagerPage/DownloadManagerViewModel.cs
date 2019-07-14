@@ -71,9 +71,9 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				Active = downloadRelease.Active ,
 				Title = release?.Title ,
 				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
-				DownloadedVideos = 0 ,
+				DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded ) ,
 				DownloadingVideos = 0 ,
-				NotDownloadedVideos = 0
+				NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded )
 			};
 		}
 
@@ -91,6 +91,13 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private void CreateCommands () {
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
+			DeleteFilesCommand = CreateCommand<DownloadItemModel> ( DeleteFiles );
+		}
+
+		private void DeleteFiles ( DownloadItemModel item ) {
+			m_DownloadService.RemoveDownloadRelease ( item.ReleaseId );
+
+			RefreshDownloadItems ();
 		}
 
 		private void OpenSidebar () {
@@ -189,6 +196,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// Show sidebar command.
 		/// </summary>
 		public ICommand ShowSidebarCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Delete files command.
+		/// </summary>
+		public ICommand DeleteFilesCommand
 		{
 			get;
 			set;
