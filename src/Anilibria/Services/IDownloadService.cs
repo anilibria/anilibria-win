@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Storage.Entities;
@@ -14,13 +15,19 @@ namespace Anilibria.Services {
 		/// Get downloads.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<DownloadReleaseEntity> GetDownloads (DownloadItemsMode downloadItemsMode);
+		IEnumerable<DownloadReleaseEntity> GetDownloads ( DownloadItemsMode downloadItemsMode );
 
 		/// <summary>
 		/// Start download process.
 		/// </summary>
 		/// <returns></returns>
 		Task StartDownloadProcess ();
+
+		/// <summary>
+		/// Set download progress.
+		/// </summary>
+		/// <param name="progressHandler">Progress handler.</param>
+		void SetDownloadProgress ( Action<long , int , int> progressHandler );
 
 		/// <summary>
 		/// Set download file.

@@ -55,11 +55,20 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
+			m_DownloadService.SetDownloadProgress ( ProgressHandler );
 			m_ReleaseCollection = dataContext.GetCollection<ReleaseEntity> ();
 			CreateCommands ();
 
 			m_SelectedSection = m_Sections.First ();
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
+		}
+
+		private void ProgressHandler ( long releaseId , int videoId , int progress ) {
+			var release = m_Downloads.FirstOrDefault ( a => a.ReleaseId == releaseId );
+			if ( release == null ) return;
+
+			release.CurrentDownloadVideo = videoId;
+			release.DownloadProgress = progress;
 		}
 
 		private DownloadItemModel MapToModel ( DownloadReleaseEntity downloadRelease ) {

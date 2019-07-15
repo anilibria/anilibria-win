@@ -86,6 +86,24 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 			set => Set ( ref m_DownloadingVideos , value );
 		}
 
+		/// <summary>
+		/// Download pogress.
+		/// </summary>
+		public int DownloadProgress
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Curretn download video.
+		/// </summary>
+		public int CurrentDownloadVideo
+		{
+			get;
+			set;
+		}
+
 	}
 
 }
