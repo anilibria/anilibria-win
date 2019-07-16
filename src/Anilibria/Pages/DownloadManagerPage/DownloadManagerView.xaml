@@ -55,20 +55,21 @@
 						<TextBlock
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							FontSize="16">
-							<Run FontWeight="Bold">Скачивается: </Run>
-							<Run Text="{Binding DownloadingVideos}"></Run>
+							<Run FontWeight="Bold">Скачивается серия: </Run>
+							<Run Text="{Binding CurrentDownloadVideo}"></Run>
 						</TextBlock>
 						<TextBlock
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							FontSize="16">
-							<Run FontWeight="Bold">Скачано: </Run>
+							<Run FontWeight="Bold">Закачено: </Run>
+							<Run Text="{Binding DownloadProgress}"></Run>
+							<Run>%</Run>
+						</TextBlock>
+						<TextBlock
+							converters:BackgroundThemeConverter.TextMapper="TextBlock"
+							FontSize="16">
+							<Run FontWeight="Bold">Скачанных серий: </Run>
 							<Run Text="{Binding DownloadedVideos}"></Run>
-						</TextBlock>
-						<TextBlock
-							converters:BackgroundThemeConverter.TextMapper="TextBlock"
-							FontSize="16">
-							<Run FontWeight="Bold">Не скачано: </Run>
-							<Run Text="{Binding NotDownloadedVideos}"></Run>
 						</TextBlock>
 					</StackPanel>
 					<Grid

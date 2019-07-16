@@ -33,6 +33,8 @@ namespace Anilibria.Services.Implementations {
 
 		private Action<long , int , int> m_DownloadProgressHandler;
 
+		private Action<DownloadReleaseEntity , int> m_DownloadFinishedHandler;
+
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
 			m_Collection = m_DataContext.GetCollection<DownloadFileEntity> ();
@@ -168,10 +170,15 @@ namespace Anilibria.Services.Implementations {
 					await storageFile.DeleteAsync ();
 				}
 			}
+
+			var list = m_Entity.DownloadingReleases.ToList ();
+			list.Remove ( releaseItem );
+			m_Entity.DownloadingReleases = list;
+
 			m_Collection.Update ( m_Entity );
 		}
 
-		private async Task DownloadFile ( string url , long offset , long releaseId , int videoId ) {
+		private async Task<StorageFile> DownloadFile ( string url , long offset , long releaseId , int videoId ) {
 			long contentLength = 0;
 			long downloadedSize = offset;
 			byte[] buffer = new byte[BufferSize];
@@ -201,6 +208,8 @@ namespace Anilibria.Services.Implementations {
 					await fileStream.FlushAsync ();
 					fileStream.Close ();
 				}
+
+				return file;
 			}
 		}
 
@@ -218,8 +227,11 @@ namespace Anilibria.Services.Implementations {
 			foreach ( var activeRelease in activeReleases ) {
 				var videos = activeRelease.Videos.Where ( a => !a.IsDownloaded ).ToList ();
 				foreach ( var videoFile in videos ) {
-					await DownloadFile ( videoFile.DownloadUrl , 0 , activeRelease.ReleaseId , videoFile.Id );
+					var downloadedFile = await DownloadFile ( videoFile.DownloadUrl , 0 , activeRelease.ReleaseId , videoFile.Id );
 					videoFile.IsDownloaded = true;
+					videoFile.DownloadedPath = downloadedFile.Path;
+
+					m_DownloadFinishedHandler?.Invoke ( activeRelease , videoFile.Id );
 				}
 				activeRelease.Active = activeRelease.Videos.Any ( a => a.IsDownloaded );
 				m_Collection.Update ( m_Entity );
@@ -233,6 +245,20 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <param name="progressHandler">Progress handler.</param>
 		public void SetDownloadProgress ( Action<long , int , int> progressHandler ) => m_DownloadProgressHandler = progressHandler;
+
+		/// <summary>
+		/// Set download finished.
+		/// </summary>
+		/// <param name="finishHandler">Finish handler.</param>
+		public void SetDownloadFinished ( Action<DownloadReleaseEntity , int> finishHandler ) => m_DownloadFinishedHandler = finishHandler;
+
+		/// <summary>
+		/// Get download release.
+		/// </summary>
+		public DownloadReleaseEntity GetDownloadRelease ( long releaseId ) {
+			return m_Entity.DownloadingReleases
+				.FirstOrDefault ( a => a.ReleaseId == releaseId );
+		}
 
 	}
 

@@ -14,6 +14,10 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		
 		private int m_NotDownloadedVideos;
 
+		private int m_CurrentDownloadVideo;
+
+		private int m_DownloadProgress;
+
 		/// <summary>
 		/// Release identifier.
 		/// </summary>
@@ -91,8 +95,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		/// </summary>
 		public int DownloadProgress
 		{
-			get;
-			set;
+			get => m_DownloadProgress;
+			set => Set ( ref m_DownloadProgress , value );
 		}
 
 		/// <summary>
@@ -100,8 +104,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		/// </summary>
 		public int CurrentDownloadVideo
 		{
-			get;
-			set;
+			get => m_CurrentDownloadVideo;
+			set => Set ( ref m_CurrentDownloadVideo , value );
 		}
 
 	}

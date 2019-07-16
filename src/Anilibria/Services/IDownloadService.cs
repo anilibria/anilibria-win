@@ -18,6 +18,11 @@ namespace Anilibria.Services {
 		IEnumerable<DownloadReleaseEntity> GetDownloads ( DownloadItemsMode downloadItemsMode );
 
 		/// <summary>
+		/// Get download release.
+		/// </summary>
+		DownloadReleaseEntity GetDownloadRelease ( long releaseId );
+
+		/// <summary>
 		/// Start download process.
 		/// </summary>
 		/// <returns></returns>
@@ -28,6 +33,12 @@ namespace Anilibria.Services {
 		/// </summary>
 		/// <param name="progressHandler">Progress handler.</param>
 		void SetDownloadProgress ( Action<long , int , int> progressHandler );
+
+		/// <summary>
+		/// Set download finished.
+		/// </summary>
+		/// <param name="finishHandler">Finish handler.</param>
+		void SetDownloadFinished ( Action<DownloadReleaseEntity , int> finishHandler );
 
 		/// <summary>
 		/// Set download file.

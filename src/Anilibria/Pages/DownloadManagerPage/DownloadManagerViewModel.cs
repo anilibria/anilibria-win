@@ -56,6 +56,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			m_DownloadService.SetDownloadProgress ( ProgressHandler );
+			m_DownloadService.SetDownloadFinished ( FinishHandler );
 			m_ReleaseCollection = dataContext.GetCollection<ReleaseEntity> ();
 			CreateCommands ();
 
@@ -63,12 +64,26 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 		}
 
+		private void FinishHandler ( DownloadReleaseEntity downloadRelease , int videoId ) {
+			var release = m_Downloads.FirstOrDefault ( a => a.ReleaseId == downloadRelease.ReleaseId );
+			if ( release == null ) return;
+
+			release.CurrentDownloadVideo = 0;
+			release.DownloadProgress = 0;
+			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
+			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
+		}
+
 		private void ProgressHandler ( long releaseId , int videoId , int progress ) {
 			var release = m_Downloads.FirstOrDefault ( a => a.ReleaseId == releaseId );
 			if ( release == null ) return;
 
+			var downloadRelease = m_DownloadService.GetDownloadRelease ( releaseId );
+
 			release.CurrentDownloadVideo = videoId;
 			release.DownloadProgress = progress;
+			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
+			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
 		}
 
 		private DownloadItemModel MapToModel ( DownloadReleaseEntity downloadRelease ) {
@@ -103,8 +118,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			DeleteFilesCommand = CreateCommand<DownloadItemModel> ( DeleteFiles );
 		}
 
-		private void DeleteFiles ( DownloadItemModel item ) {
-			m_DownloadService.RemoveDownloadRelease ( item.ReleaseId );
+		private async void DeleteFiles ( DownloadItemModel item ) {
+			await m_DownloadService.RemoveDownloadRelease ( item.ReleaseId );
 
 			RefreshDownloadItems ();
 		}
