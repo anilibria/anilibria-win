@@ -23,7 +23,13 @@ namespace Anilibria.Services.Implementations {
 		public async Task RefreshPagesGroup () {
 			if ( !JumpList.IsSupported () ) return;
 
-			var jumpList = await JumpList.LoadCurrentAsync ();
+			JumpList jumpList = null;
+			try {
+				jumpList = await JumpList.LoadCurrentAsync ();
+			}
+			catch {
+				return;
+			}
 
 			var oldItems = jumpList.Items
 				.ToList ()
@@ -62,7 +68,13 @@ namespace Anilibria.Services.Implementations {
 		public async Task ChangeHistoryItems ( IDictionary<long , string> historyItems ) {
 			if ( !JumpList.IsSupported () ) return;
 
-			var jumpList = await JumpList.LoadCurrentAsync ();
+			JumpList jumpList = null;
+			try {
+				jumpList = await JumpList.LoadCurrentAsync ();
+			}
+			catch {
+				return;
+			}
 
 			var oldItems = jumpList.Items
 				.ToList ()
@@ -93,7 +105,13 @@ namespace Anilibria.Services.Implementations {
 		public async Task ChangeWatchHistoryItems ( IDictionary<long , string> historyItems ) {
 			if ( !JumpList.IsSupported () ) return;
 
-			var jumpList = await JumpList.LoadCurrentAsync ();
+			JumpList jumpList = null;
+			try {
+				jumpList = await JumpList.LoadCurrentAsync ();
+			}
+			catch {
+				return;
+			}
 
 			var oldItems = jumpList.Items
 				.ToList ()
