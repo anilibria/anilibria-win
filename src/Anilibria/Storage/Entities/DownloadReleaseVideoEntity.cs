@@ -33,6 +33,15 @@
 		}
 
 		/// <summary>
+		/// Is progress.
+		/// </summary>
+		public bool IsProgress
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Downloaded page.
 		/// </summary>
 		public string DownloadedPath

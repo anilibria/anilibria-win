@@ -91,6 +91,7 @@ namespace Anilibria.Services.Implementations {
 						Quality = quality ,
 						DownloadUrl = quality == VideoQuality.HD ? videoInfo.DownloadableHD.ToString () : videoInfo.DownloadableSD.ToString () ,
 						DownloadedSize = 0 ,
+						Id = videoInfo.Order
 					};
 					var videos = releaseItem.Videos.ToList ();
 					videos.Add ( video );
@@ -226,14 +227,17 @@ namespace Anilibria.Services.Implementations {
 			foreach ( var activeRelease in activeReleases ) {
 				var videos = activeRelease.Videos.Where ( a => !a.IsDownloaded ).ToList ();
 				foreach ( var videoFile in videos ) {
+					videoFile.IsProgress = true;
 					var downloadedFile = await DownloadFile ( videoFile.DownloadUrl , 0 , activeRelease.ReleaseId , videoFile.Id );
+					videoFile.IsProgress = false;
 					videoFile.IsDownloaded = true;
 					videoFile.DownloadedPath = downloadedFile.Path;
 
 					m_DownloadFinishedHandler?.Invoke ( activeRelease , videoFile.Id );
+
+					activeRelease.Active = activeRelease.Videos.Any ( a => a.IsDownloaded );
+					m_Collection.Update ( m_Entity );
 				}
-				activeRelease.Active = activeRelease.Videos.Any ( a => a.IsDownloaded );
-				m_Collection.Update ( m_Entity );
 			}
 
 			m_DownloadingProcessed = false;

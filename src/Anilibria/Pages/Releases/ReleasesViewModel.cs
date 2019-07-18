@@ -484,7 +484,7 @@ namespace Anilibria.Pages.Releases {
 
 		private void AddDownloadHd () => AddToDownloadReleases ( VideoQuality.HD );
 
-		private void AddToDownloadReleases ( VideoQuality videoQuality ) {
+		private async void AddToDownloadReleases ( VideoQuality videoQuality ) {
 			var downloadManager = DownloadManager.Current ();
 
 			foreach ( var selectedRelease in SelectedReleases ) {
@@ -494,6 +494,8 @@ namespace Anilibria.Pages.Releases {
 			}
 
 			RefreshSelectedReleases ();
+
+			await DownloadManager.Current ().StartDownloadProcess ();
 		}
 
 		private void DisableSeenMarkCard () {

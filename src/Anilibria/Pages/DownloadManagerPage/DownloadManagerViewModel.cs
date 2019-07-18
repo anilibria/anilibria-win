@@ -68,10 +68,10 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			var release = m_Downloads.FirstOrDefault ( a => a.ReleaseId == downloadRelease.ReleaseId );
 			if ( release == null ) return;
 
-			release.CurrentDownloadVideo = 0;
-			release.DownloadProgress = 0;
+			release.CurrentDownloadVideo = downloadRelease.Videos.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
+			release.DownloadProgress = downloadRelease.Videos.Count ( a => a.IsProgress );
 			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
-			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
+			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded && !a.IsProgress );
 		}
 
 		private void ProgressHandler ( long releaseId , int videoId , int progress ) {
@@ -80,7 +80,9 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 			var downloadRelease = m_DownloadService.GetDownloadRelease ( releaseId );
 
-			release.CurrentDownloadVideo = videoId;
+			release.CurrentDownloadVideo = downloadRelease.Videos
+				.Where ( a => a.Id == videoId )
+				.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
 			release.DownloadProgress = progress;
 			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
