@@ -18,6 +18,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 
 		private int m_DownloadProgress;
 
+		private string m_DownloadSpeed;
+
 		/// <summary>
 		/// Release identifier.
 		/// </summary>
@@ -106,6 +108,15 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		{
 			get => m_CurrentDownloadVideo;
 			set => Set ( ref m_CurrentDownloadVideo , value );
+		}
+
+		/// <summary>
+		/// Download speed.
+		/// </summary>
+		public string DownloadSpeed
+		{
+			get => m_DownloadSpeed;
+			set => Set ( ref m_DownloadSpeed , value );
 		}
 
 	}

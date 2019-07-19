@@ -54,16 +54,13 @@
 						/>
 						<TextBlock
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
-							FontSize="16">
+							FontSize="16"
+							Visibility="{Binding Active}">
 							<Run FontWeight="Bold">Скачивается серия: </Run>
 							<Run Text="{Binding CurrentDownloadVideo}"></Run>
-						</TextBlock>
-						<TextBlock
-							converters:BackgroundThemeConverter.TextMapper="TextBlock"
-							FontSize="16">
-							<Run FontWeight="Bold">Закачено: </Run>
 							<Run Text="{Binding DownloadProgress}"></Run>
-							<Run>%</Run>
+							<Run>% / </Run>
+							<Run Text="{Binding DownloadSpeed}"></Run>
 						</TextBlock>
 						<TextBlock
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
@@ -191,11 +188,35 @@
 				</StackPanel>
 			</Grid>
 			<ListView
+				MaxWidth="900"
 				converters:BackgroundThemeConverter.AnilibriaListViewStyle="Origin"
 				ItemTemplate="{StaticResource DownloadItemTemplate}"
 				Grid.Row="1"
 				ItemsSource="{Binding Downloads}">
 			</ListView>
+		</Grid>
+		<Grid
+			Grid.Row="1"
+			Grid.Column="1"
+			Visibility="{Binding NoFilteredDownloads}">
+			<StackPanel
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Orientation="Vertical">
+				<TextBlock
+					converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+					FontSize="24"
+					HorizontalAlignment="Center">
+					Нет загруженных серий
+				</TextBlock>
+				<TextBlock
+					converters:BackgroundThemeConverter.TextMapper="TextBlock"
+					FontSize="20"
+					TextWrapping="WrapWholeWords"
+					HorizontalAlignment="Center">
+					Для загрузки необходимо добавить их на странице Каталог релизов
+				</TextBlock>
+			</StackPanel>
 		</Grid>
 
 	</Grid>

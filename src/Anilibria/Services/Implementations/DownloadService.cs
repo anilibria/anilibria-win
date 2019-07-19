@@ -8,6 +8,7 @@ using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace Anilibria.Services.Implementations {
 
@@ -28,11 +29,17 @@ namespace Anilibria.Services.Implementations {
 
 		private HttpClient m_HttpClient = new HttpClient ();
 
+		private DispatcherTimer m_SpeedTimer = new DispatcherTimer ();
+
 		private bool m_DownloadingProcessed = false;
 
-		private Action<long , int , int> m_DownloadProgressHandler;
+		private Action<long , int , int , long> m_DownloadProgressHandler;
 
 		private Action<DownloadReleaseEntity , int> m_DownloadFinishedHandler;
+
+		private long m_DownloadedSize = 0;
+
+		private long m_Speed = 0;
 
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
@@ -45,6 +52,15 @@ namespace Anilibria.Services.Implementations {
 				};
 				m_Collection.Add ( m_Entity );
 			}
+			m_SpeedTimer.Interval = TimeSpan.FromSeconds ( 1 );
+			m_SpeedTimer.Tick += SpeedTimerTick;
+		}
+
+		private void SpeedTimerTick ( object sender , object e ) {
+			if ( !m_DownloadingProcessed ) return;
+
+			m_Speed = m_DownloadedSize;
+			m_DownloadedSize = 0;
 		}
 
 		/// <summary>
@@ -198,10 +214,11 @@ namespace Anilibria.Services.Implementations {
 						await fileStream.WriteAsync ( buffer , 0 , readed );
 
 						downloadedSize += readed;
+						m_DownloadedSize += readed;
 
 						var percent = Math.Round ( ( (double) downloadedSize / (double) contentLength ) * 100 );
 
-						m_DownloadProgressHandler?.Invoke ( releaseId , videoId , (int) percent );
+						m_DownloadProgressHandler?.Invoke ( releaseId , videoId , (int) percent , m_Speed );
 
 						if ( downloadedSize % BufferFlush‬ == 0 ) await fileStream.FlushAsync ();
 					}
@@ -224,6 +241,8 @@ namespace Anilibria.Services.Implementations {
 
 			m_DownloadingProcessed = true;
 
+			m_SpeedTimer.Start ();
+
 			foreach ( var activeRelease in activeReleases ) {
 				var videos = activeRelease.Videos.Where ( a => !a.IsDownloaded ).ToList ();
 				foreach ( var videoFile in videos ) {
@@ -233,12 +252,15 @@ namespace Anilibria.Services.Implementations {
 					videoFile.IsDownloaded = true;
 					videoFile.DownloadedPath = downloadedFile.Path;
 
+					activeRelease.Active = activeRelease.Videos.Any ( a => !a.IsDownloaded );
+
 					m_DownloadFinishedHandler?.Invoke ( activeRelease , videoFile.Id );
 
-					activeRelease.Active = activeRelease.Videos.Any ( a => a.IsDownloaded );
 					m_Collection.Update ( m_Entity );
 				}
 			}
+
+			m_SpeedTimer.Stop ();
 
 			m_DownloadingProcessed = false;
 		}
@@ -247,7 +269,7 @@ namespace Anilibria.Services.Implementations {
 		/// Set download progress.
 		/// </summary>
 		/// <param name="progressHandler">Progress handler.</param>
-		public void SetDownloadProgress ( Action<long , int , int> progressHandler ) => m_DownloadProgressHandler = progressHandler;
+		public void SetDownloadProgress ( Action<long , int , int, long> progressHandler ) => m_DownloadProgressHandler = progressHandler;
 
 		/// <summary>
 		/// Set download finished.

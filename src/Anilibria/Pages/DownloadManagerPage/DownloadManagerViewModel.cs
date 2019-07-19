@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Anilibria.Helpers;
 using Anilibria.MVVM;
 using Anilibria.Pages.DownloadManagerPage.PresentationClasses;
 using Anilibria.Services;
@@ -53,6 +54,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private IEnumerable<ReleaseEntity> m_Releases = Enumerable.Empty<ReleaseEntity> ();
 
+		private bool m_NoFilteredDownloads;
+
 		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			m_DownloadService.SetDownloadProgress ( ProgressHandler );
@@ -71,10 +74,11 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.CurrentDownloadVideo = downloadRelease.Videos.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
 			release.DownloadProgress = downloadRelease.Videos.Count ( a => a.IsProgress );
 			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
+			release.DownloadSpeed = "";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded && !a.IsProgress );
 		}
 
-		private void ProgressHandler ( long releaseId , int videoId , int progress ) {
+		private void ProgressHandler ( long releaseId , int videoId , int progress , long speed ) {
 			var release = m_Downloads.FirstOrDefault ( a => a.ReleaseId == releaseId );
 			if ( release == null ) return;
 
@@ -85,6 +89,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
 			release.DownloadProgress = progress;
 			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
+			release.DownloadSpeed = FileHelper.GetFileSize ( speed ) + "/с";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
 		}
 
@@ -99,6 +104,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
 				DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded ) ,
 				DownloadingVideos = 0 ,
+				DownloadSpeed = "" ,
 				NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded )
 			};
 		}
@@ -155,6 +161,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			Downloads = m_DownloadService.GetDownloads ( type )
 				.Select ( MapToModel )
 				.ToList ();
+			NoFilteredDownloads = !Downloads.Any ();
 		}
 
 		public void NavigateTo ( object parameter ) => RefreshDownloadItems ();
@@ -175,6 +182,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		{
 			get => m_IsMultipleSelect;
 			set => Set ( ref m_IsMultipleSelect , value );
+		}
+
+		/// <summary>
+		/// Not filtered downloads count.
+		/// </summary>
+		public bool NoFilteredDownloads
+		{
+			get => m_NoFilteredDownloads;
+			set => Set ( ref m_NoFilteredDownloads , value );
 		}
 
 		/// <summary>

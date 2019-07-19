@@ -32,7 +32,7 @@ namespace Anilibria.Services {
 		/// Set download progress.
 		/// </summary>
 		/// <param name="progressHandler">Progress handler.</param>
-		void SetDownloadProgress ( Action<long , int , int> progressHandler );
+		void SetDownloadProgress ( Action<long , int , int, long> progressHandler );
 
 		/// <summary>
 		/// Set download finished.

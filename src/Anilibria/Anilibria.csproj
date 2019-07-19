@@ -204,6 +204,7 @@
     <Compile Include="Converters\TextBlockHighlight.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />
     <Compile Include="GlobalState\LaunchParameters.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Pages\AboutPage\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>

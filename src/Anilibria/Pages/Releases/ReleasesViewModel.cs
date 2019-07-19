@@ -1,4 +1,5 @@
 ﻿using Anilibria.Collections;
+using Anilibria.Helpers;
 using Anilibria.MVVM;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
@@ -80,8 +81,6 @@ namespace Anilibria.Pages.Releases {
 		private readonly ISynchronizationService m_SynchronizeService;
 
 		private readonly IAnalyticsService m_AnalyticsService;
-
-		private readonly string[] m_FileSizes = { "B" , "KB" , "MB" , "GB" , "TB" };
 
 		private ObservableCollection<TorrentDownloadModeModel> m_TorrentDownloadModes = new ObservableCollection<TorrentDownloadModeModel> (
 			new List<TorrentDownloadModeModel> {
@@ -1241,21 +1240,6 @@ namespace Anilibria.Pages.Releases {
 			return entity.Days ?? new Dictionary<int , IEnumerable<long>> ();
 		}
 
-		/// <summary>
-		/// Get file size.
-		/// </summary>
-		/// <param name="size">Size.</param>
-		/// <returns>Readable size.</returns>
-		private string GetFileSize ( long size ) {
-			var readableSize = size;
-			int order = 0;
-			while ( readableSize >= 1024 && order < m_FileSizes.Length - 1 ) {
-				order++;
-				readableSize = readableSize / 1024;
-			}
-			return readableSize + " " + m_FileSizes[order];
-		}
-
 		private IOrderedEnumerable<ReleaseEntity> OrderReleases ( IEnumerable<ReleaseEntity> releases ) {
 			switch ( m_SelectedSortingItem.Type ) {
 				case SortingItemType.DateLastUpdate:
@@ -1457,7 +1441,7 @@ namespace Anilibria.Pages.Releases {
 							Completed = torrent.Completed ,
 							Quality = $"[{torrent.Quality}]" ,
 							Series = torrent.Series ,
-							Size = GetFileSize ( torrent.Size ) ,
+							Size = FileHelper.GetFileSize ( torrent.Size ) ,
 							Url = torrent.Url
 						}
 					)?.ToList () ?? Enumerable.Empty<TorrentModel> () ,
