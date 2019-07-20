@@ -56,8 +56,9 @@
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							FontSize="16"
 							Visibility="{Binding Active}">
-							<Run FontWeight="Bold">Скачивается серия: </Run>
+							<Run>Скачивается </Run>
 							<Run Text="{Binding CurrentDownloadVideo}"></Run>
+							<Run> серия </Run>
 							<Run Text="{Binding DownloadProgress}"></Run>
 							<Run>% / </Run>
 							<Run Text="{Binding DownloadSpeed}"></Run>
