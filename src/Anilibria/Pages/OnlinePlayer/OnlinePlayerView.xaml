@@ -1379,56 +1379,84 @@
 													<FontIcon Glyph="&#xE713;" />
 												</Button>
 											</StackPanel>
+											<StackPanel
+												Grid.Column="1"
+												HorizontalAlignment="Center"
+												Orientation="Horizontal"
+												Margin="0 0 0 16">
+												<Button
+													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.PreviousTrackCommand}"
+													IsTabStop="False"
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xE100;"/>
+												</Button>
+												
+												<Button
+													x:Name='SkipBackwardButton'
+													IsTabStop="False"
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xED3C;"/>
+												</Button>
+
+												<Button
+													x:Name='RewindButton'
+													IsTabStop="False"
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xEB9E;"/>
+												</Button>
+
+												<Button
+													x:Name='PlayPauseButton'
+													IsTabStop="False"
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<SymbolIcon x:Name='PlayPauseSymbol' Symbol='Play' />
+												</Button>
+
+												<Button
+													x:Name='FastForwardButton'
+													IsTabStop="False"
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xEB9D;"/>
+												</Button>
+												<Button
+													x:Name='SkipForwardButton'
+													IsTabStop="False"
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xED3D;"/>
+												</Button>
+
+												<Button
+													Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.NextTrackCommand}"
+													IsTabStop="False"
+													Width="50"
+													Style='{StaticResource PlayerFlyoutButtonStyle}'>
+													<FontIcon Glyph="&#xE101;"/>
+												</Button>
+											</StackPanel>
 											<CommandBar
 												x:Name="MediaControlsCommandBar"
 												Grid.Column="1"
 												Margin='0 0 0 5'
 												Style='{StaticResource CommandBarStyle}'
-												HorizontalAlignment="Center">
+												HorizontalAlignment="Center"
+												Visibility="Collapsed">
 												<CommandBar.PrimaryCommands>
 													<AppBarButton x:Name='AudioTracksSelectionButton'
 														Icon='Character'
 														Style='{StaticResource AppBarButtonStyle}'
 														MediaTransportControlsHelper.DropoutOrder='5'
 														Visibility='Collapsed'/>
-
 													<AppBarButton x:Name='StopButton'
 														Icon='Stop'
 														Style='{StaticResource AppBarButtonStyle}'
 														MediaTransportControlsHelper.DropoutOrder='1'
 														Visibility='Collapsed'/>
-													<AppBarButton
-														ToolTipService.ToolTip="Перейти на предыдущее видео"
-														Icon='Previous'
-														Style='{StaticResource AppBarButtonStyle}'
-														Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.PreviousTrackCommand}"
-													/>
-													<AppBarButton x:Name='SkipBackwardButton'
-														Style='{StaticResource AppBarButtonStyle}'
-														MediaTransportControlsHelper.DropoutOrder='5'
-														IsTabStop="False"
-														Visibility='Collapsed'>
-														<AppBarButton.Icon>
-															<FontIcon Glyph="&#xED3C;" />
-														</AppBarButton.Icon>
-													</AppBarButton>
-													<AppBarButton x:Name='RewindButton'
-														Style='{StaticResource AppBarButtonStyle}'
-														MediaTransportControlsHelper.DropoutOrder='2'
-														IsTabStop="False"
-														Visibility='Collapsed'>
-														<AppBarButton.Icon>
-															<FontIcon Glyph="&#xEB9E;"/>
-														</AppBarButton.Icon>
-													</AppBarButton>
-													<AppBarButton x:Name='PlayPauseButton'
-														Style='{StaticResource AppBarButtonStyle}'
-														IsTabStop="False"
-														MediaTransportControlsHelper.DropoutOrder='11'>
-														<AppBarButton.Icon>
-															<SymbolIcon x:Name='PlayPauseSymbol' Symbol='Play' />
-														</AppBarButton.Icon>
-													</AppBarButton>
 													<AppBarButton x:Name='CCSelectionButton'
 														Style='{StaticResource AppBarButtonStyle}'
 														MediaTransportControlsHelper.DropoutOrder='9'
@@ -1437,30 +1465,6 @@
 															<FontIcon Glyph="&#xE7F0;"/>
 														</AppBarButton.Icon>
 													</AppBarButton>
-													<AppBarButton x:Name='FastForwardButton'
-														Style='{StaticResource AppBarButtonStyle}'
-														IsTabStop="False"
-														MediaTransportControlsHelper.DropoutOrder='3'
-														Visibility='Collapsed'>
-														<AppBarButton.Icon>
-															<FontIcon Glyph="&#xEB9D;"/>
-														</AppBarButton.Icon>
-													</AppBarButton>
-													<AppBarButton x:Name='SkipForwardButton'
-														Style='{StaticResource AppBarButtonStyle}'
-														IsTabStop="False"
-														MediaTransportControlsHelper.DropoutOrder='5'
-														Visibility='Collapsed'>
-														<AppBarButton.Icon>
-															<FontIcon Glyph="&#xED3D;" />
-														</AppBarButton.Icon>
-													</AppBarButton>
-													<AppBarButton
-														ToolTipService.ToolTip="Перейти на следующее видео"
-														Icon='Next'
-														Style='{StaticResource AppBarButtonStyle}'
-														Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.NextTrackCommand}"
-													/>
 													<AppBarButton x:Name='PlaybackRateButton'
 														Style='{StaticResource OnlinePlayerAppButton}'
 														MediaTransportControlsHelper.DropoutOrder='4'
