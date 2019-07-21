@@ -8,7 +8,7 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 	/// </summary>
 	public class DownloadItemModel : ViewModel {
 		
-		private int m_DownloadedVideos;
+		private int m_DownloadedHdVideos;
 		
 		private int m_DownloadingVideos;
 		
@@ -19,6 +19,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		private int m_DownloadProgress;
 
 		private string m_DownloadSpeed;
+
+		private int m_DownloadedSdVideos;
 
 		/// <summary>
 		/// Release identifier.
@@ -66,12 +68,21 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		}
 
 		/// <summary>
-		/// Downloaded videos.
+		/// Downloaded Hd videos.
 		/// </summary>
-		public int DownloadedVideos
+		public int DownloadedHdVideos
 		{
-			get => m_DownloadedVideos;
-			set => Set ( ref m_DownloadedVideos , value );
+			get => m_DownloadedHdVideos;
+			set => Set ( ref m_DownloadedHdVideos , value );
+		}
+
+		/// <summary>
+		/// Downloaded Sd videos.
+		/// </summary>
+		public int DownloadedSdVideos
+		{
+			get => m_DownloadedSdVideos;
+			set => Set ( ref m_DownloadedSdVideos , value );
 		}
 
 		/// <summary>

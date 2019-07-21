@@ -66,8 +66,12 @@
 						<TextBlock
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							FontSize="16">
-							<Run FontWeight="Bold">Скачанных серий: </Run>
-							<Run Text="{Binding DownloadedVideos}"></Run>
+							<Run FontWeight="Bold">Скачано серий: </Run>
+							<Run>HD</Run>
+							<Run Text="{Binding DownloadedHdVideos}"></Run>
+							<Run> / </Run>
+							<Run>SD</Run>
+							<Run Text="{Binding DownloadedSdVideos}"></Run>
 						</TextBlock>
 					</StackPanel>
 					<Grid
@@ -75,17 +79,17 @@
 						<StackPanel Orientation="Vertical">
 							<Button
 								Margin="0 8 8 0"
-								Width="80"
+								Width="100"
 								converters:BackgroundThemeConverter.ActionButton="Origin">
 								Смотреть
 							</Button>
 							<Button
 								Margin="0 8 8 0"
-								Width="80"
+								Width="100"
 								Command="{Binding ElementName=DownloadContainer, Path=DataContext.DeleteFilesCommand}"
 								CommandParameter="{Binding}"
 								converters:BackgroundThemeConverter.ActionButton="Origin">
-								Удалить
+								Удалить все
 							</Button>
 						</StackPanel>
 					</Grid>

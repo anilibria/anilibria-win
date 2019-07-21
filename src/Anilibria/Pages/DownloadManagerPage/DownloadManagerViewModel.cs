@@ -73,7 +73,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 			release.CurrentDownloadVideo = downloadRelease.Videos.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
 			release.DownloadProgress = downloadRelease.Videos.Count ( a => a.IsProgress );
-			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
+			release.DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.HD );
+			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = "";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded && !a.IsProgress );
 		}
@@ -88,7 +89,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				.Where ( a => a.Id == videoId )
 				.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
 			release.DownloadProgress = progress;
-			release.DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded );
+			release.DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.HD );
+			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = FileHelper.GetFileSize ( speed ) + "/с";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
 		}
@@ -102,7 +104,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				Active = downloadRelease.Active ,
 				Title = release?.Title ,
 				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
-				DownloadedVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded ) ,
+				DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded ) ,
 				DownloadingVideos = 0 ,
 				DownloadSpeed = "" ,
 				NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded )
