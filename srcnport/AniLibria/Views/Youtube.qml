@@ -12,7 +12,7 @@ Page {
     signal navigateFrom()
 
     onWidthChanged: {
-        const columnCount = parseInt(page.width / 400);
+        const columnCount = parseInt(page.width / 500);
         itemGrid.columns = columnCount < 1 ? 1 : columnCount;
     }
 
@@ -62,22 +62,27 @@ Page {
                 Repeater {
                     model: synchronizeService.releases
                     Rectangle {
-                        width: 460
+                        width: 480
                         height: 260
                         radius: 10
                         color: "#f2f2f2"
-                        Row {
+                        Grid {
+                            columnSpacing: 3
+                            columns: 2
+                            bottomPadding: 4
+                            leftPadding: 4
+                            topPadding: 4
+                            rightPadding: 4
                             Image {
                                 source: modelData.poster
-                                fillMode: Image.PreserveAspectCrop //Image.PreserveAspectFit
+                                fillMode: Image.PreserveAspectCrop
                                 width: 180
-                                height: 260
+                                height: 252
                                 layer.enabled: true
                                 layer.effect: OpacityMask {
                                     maskSource: mask
                                 }
                             }
-
                             Column {
                                 Text {
                                     textFormat: Text.RichText
