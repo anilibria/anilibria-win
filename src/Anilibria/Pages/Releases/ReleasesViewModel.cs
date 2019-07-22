@@ -186,6 +186,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsDarkTheme;
 
+		private bool m_IsShowPosterPreview;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -1455,7 +1457,7 @@ namespace Anilibria.Pages.Releases {
 							HDQuality = videoOnline.HD ,
 							SDQuality = videoOnline.SD ,
 							FullHDQuality = videoOnline.FullHD ,
-							DownloadableHD = videoOnline.DownloadableHD,
+							DownloadableHD = videoOnline.DownloadableHD ,
 							DownloadableSD = videoOnline.DownloadableSD
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
@@ -2045,6 +2047,15 @@ namespace Anilibria.Pages.Releases {
 		{
 			get => m_FavoriteMarkTypes;
 			set => Set ( ref m_FavoriteMarkTypes , value );
+		}
+
+		/// <summary>
+		/// Is show poster preview.
+		/// </summary>
+		public bool IsShowPosterPreview
+		{
+			get => m_IsShowPosterPreview;
+			set => Set ( ref m_IsShowPosterPreview , value );
 		}
 
 		/// <summary>

@@ -41,8 +41,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void Dispatcher_AcceleratorKeyActivated ( CoreDispatcher sender , AcceleratorKeyEventArgs args ) {
-			var element = FocusManager.GetFocusedElement();
-			if (element is TextBox) return;
+			var element = FocusManager.GetFocusedElement ();
+			if ( element is TextBox ) return;
 			if ( m_ViewModel.IsShowReleaseCard ) return;
 
 			if ( args.VirtualKey == VirtualKey.Menu ) m_AltPressed = !args.KeyStatus.WasKeyDown;
@@ -54,11 +54,22 @@ namespace Anilibria.Pages.Releases {
 
 		private void GlobalKeyUpHandler ( CoreWindow sender , KeyEventArgs args ) {
 			if ( Visibility != Visibility.Visible ) return;
-			var element = FocusManager.GetFocusedElement();
-			if (element is TextBox) return;
+			var element = FocusManager.GetFocusedElement ();
+			if ( element is TextBox ) return;
+
+			if ( args.VirtualKey == VirtualKey.Escape ) {
+				if ( m_ViewModel.IsShowPosterPreview ) {
+					m_ViewModel.IsShowPosterPreview = false;
+					return;
+				}
+				if ( m_ViewModel.IsShowReleaseCard ) {
+					Rectangle_Tapped ( null , null );
+					return;
+				}
+			}
+
 			if ( m_ViewModel.IsShowReleaseCard ) return;
 
-			if ( args.VirtualKey == VirtualKey.Escape ) Rectangle_Tapped ( null , null );
 
 			if ( args.VirtualKey == VirtualKey.F ) {
 				if ( m_ControlPressed ) {
@@ -292,6 +303,14 @@ namespace Anilibria.Pages.Releases {
 		private void MarkSeenMark_Tapped ( object sender , TappedRoutedEventArgs e ) {
 			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
 			e.Handled = true;
+		}
+
+		private void ClosePosterPreview_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			m_ViewModel.IsShowPosterPreview = false;
+		}
+
+		private void CardPosterBorder_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			m_ViewModel.IsShowPosterPreview = true;
 		}
 
 	}
