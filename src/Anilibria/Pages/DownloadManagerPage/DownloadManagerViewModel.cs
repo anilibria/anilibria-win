@@ -77,6 +77,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = "";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded && !a.IsProgress );
+			release.Active = downloadRelease.Active;
 		}
 
 		private void ProgressHandler ( long releaseId , int videoId , int progress , long speed ) {

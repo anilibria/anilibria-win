@@ -194,7 +194,7 @@ namespace Anilibria.Services.Implementations {
 			m_Collection.Update ( m_Entity );
 		}
 
-		private async Task<StorageFile> DownloadFile ( string url , long offset , long releaseId , int videoId ) {
+		private async Task<StorageFile> DownloadFile ( string url , long offset , long releaseId , int videoId , Action<ulong> changeSizeHandler ) {
 			long contentLength = 0;
 			long downloadedSize = offset;
 			byte[] buffer = new byte[BufferSize];
@@ -215,6 +215,7 @@ namespace Anilibria.Services.Implementations {
 
 						downloadedSize += readed;
 						m_DownloadedSize += readed;
+						changeSizeHandler?.Invoke ( (ulong) downloadedSize );
 
 						var percent = Math.Round ( ( (double) downloadedSize / (double) contentLength ) * 100 );
 
@@ -247,9 +248,25 @@ namespace Anilibria.Services.Implementations {
 				var videos = activeRelease.Videos.Where ( a => !a.IsDownloaded ).ToList ();
 				foreach ( var videoFile in videos ) {
 					videoFile.IsProgress = true;
-					var downloadedFile = await DownloadFile ( videoFile.DownloadUrl , 0 , activeRelease.ReleaseId , videoFile.Id );
+					StorageFile downloadedFile = null;
+					try {
+						downloadedFile = await DownloadFile (
+							videoFile.DownloadUrl ,
+							0 ,
+							activeRelease.ReleaseId ,
+							videoFile.Id ,
+							( newDownloadSize ) => {
+								videoFile.DownloadedSize = newDownloadSize;
+								m_Collection.Update ( m_Entity );
+							}
+						);
+					}
+					catch {
+						continue;
+					}
 					videoFile.IsProgress = false;
 					videoFile.IsDownloaded = true;
+					videoFile.DownloadedSize = ( await downloadedFile.GetBasicPropertiesAsync () ).Size;
 					videoFile.DownloadedPath = downloadedFile.Path;
 
 					activeRelease.Active = activeRelease.Videos.Any ( a => !a.IsDownloaded );
@@ -269,7 +286,7 @@ namespace Anilibria.Services.Implementations {
 		/// Set download progress.
 		/// </summary>
 		/// <param name="progressHandler">Progress handler.</param>
-		public void SetDownloadProgress ( Action<long , int , int, long> progressHandler ) => m_DownloadProgressHandler = progressHandler;
+		public void SetDownloadProgress ( Action<long , int , int , long> progressHandler ) => m_DownloadProgressHandler = progressHandler;
 
 		/// <summary>
 		/// Set download finished.

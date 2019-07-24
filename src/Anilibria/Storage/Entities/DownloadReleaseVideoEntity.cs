@@ -17,7 +17,7 @@
 		/// <summary>
 		/// Downloaded size.
 		/// </summary>
-		public long DownloadedSize
+		public ulong DownloadedSize
 		{
 			get;
 			set;

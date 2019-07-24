@@ -22,6 +22,10 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 
 		private int m_DownloadedSdVideos;
 
+		private bool m_Active;
+
+		private int m_Order;
+
 		/// <summary>
 		/// Release identifier.
 		/// </summary>
@@ -36,8 +40,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		/// </summary>
 		public int Order
 		{
-			get;
-			set;
+			get => m_Order;
+			set => Set ( ref m_Order , value );
 		}
 
 		/// <summary>
@@ -45,8 +49,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		/// </summary>
 		public bool Active
 		{
-			get;
-			set;
+			get => m_Active;
+			set => Set ( ref m_Active , value );
 		}
 
 		/// <summary>
