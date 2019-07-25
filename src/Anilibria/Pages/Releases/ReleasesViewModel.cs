@@ -310,13 +310,13 @@ namespace Anilibria.Pages.Releases {
 					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
-					Title = "Релизы с новыми сериями",
+					Title = "Новые серии",
 					Type = SectionType.NewOnlineSeries,
 					SortingMode = SortingItemType.DateLastUpdate,
 					SortingDirection = SortingDirectionType.Descending,
 				},
 				new SectionModel {
-					Title = "Релизы с обновленными торрентами",
+					Title = "Обновленные торренты",
 					Type = SectionType.NewTorrentSeries,
 					SortingMode = SortingItemType.DateLastUpdate,
 					SortingDirection = SortingDirectionType.Descending,
