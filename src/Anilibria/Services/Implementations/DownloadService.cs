@@ -194,28 +194,51 @@ namespace Anilibria.Services.Implementations {
 			m_Collection.Update ( m_Entity );
 		}
 
-		private async Task<StorageFile> DownloadFile ( string url , long offset , long releaseId , int videoId , Action<ulong> changeSizeHandler ) {
+		private async Task<StorageFile> DownloadFile ( string url , long offset , long releaseId , int videoId , Action<ulong , string> changeSizeHandler , string downloadedPath ) {
 			long contentLength = 0;
-			long downloadedSize = offset;
+			long downloadedSize = 0;
+			var isResumes = false;
+			var isNeedAppend = false;
 			byte[] buffer = new byte[BufferSize];
 			using ( var response = await m_HttpClient.GetAsync ( url , HttpCompletionOption.ResponseHeadersRead ) ) {
 				if ( !response.Content.Headers.ContentLength.HasValue ) throw new NotSupportedException ( "Files without content lenght not supported" );
 
 				contentLength = response.Content.Headers.ContentLength.Value;
 
-				var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( "temp_downloading" , CreationCollisionOption.GenerateUniqueName );
+				StorageFile file = null;
+				if ( string.IsNullOrEmpty ( downloadedPath ) ) {
+					file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( "temp_downloading" , CreationCollisionOption.GenerateUniqueName );
+				}
+				else {
+					isNeedAppend = true;
+					file = await StorageFile.GetFileFromPathAsync ( downloadedPath );
+				}
 
 				using ( var fileStream = await file.OpenStreamForWriteAsync () )
 				using ( var stream = await response.Content.ReadAsStreamAsync () ) {
+					if ( isNeedAppend ) fileStream.Position = fileStream.Length;
 					while ( true ) {
+						if ( buffer.Length < BufferSize ) buffer = new byte[BufferSize];
+
 						var readed = await stream.ReadAsync ( buffer , 0 , BufferSize );
 						if ( readed == 0 ) break;
 
+						downloadedSize += readed;
+						if ( offset > 0 && downloadedSize <= offset ) continue;
+
+						if ( offset > 0 && !isResumes ) {
+							var difference = downloadedSize - offset;
+							var cuttedBuffer = new byte[difference];
+							Buffer.BlockCopy ( buffer , 0 , cuttedBuffer , 0 , (int) difference );
+							buffer = cuttedBuffer;
+							readed = (int) difference;
+							isResumes = true;
+						}
+
 						await fileStream.WriteAsync ( buffer , 0 , readed );
 
-						downloadedSize += readed;
 						m_DownloadedSize += readed;
-						changeSizeHandler?.Invoke ( (ulong) downloadedSize );
+						changeSizeHandler?.Invoke ( (ulong) downloadedSize , file.Path );
 
 						var percent = Math.Round ( ( (double) downloadedSize / (double) contentLength ) * 100 );
 
@@ -245,20 +268,26 @@ namespace Anilibria.Services.Implementations {
 			m_SpeedTimer.Start ();
 
 			foreach ( var activeRelease in activeReleases ) {
-				var videos = activeRelease.Videos.Where ( a => !a.IsDownloaded ).ToList ();
+				var videos = activeRelease.Videos
+					.Where ( a => !a.IsDownloaded )
+					.OrderByDescending ( a => a.IsProgress )
+					.ThenBy ( a => a.Id )
+					.ToList ();
 				foreach ( var videoFile in videos ) {
 					videoFile.IsProgress = true;
 					StorageFile downloadedFile = null;
 					try {
 						downloadedFile = await DownloadFile (
 							videoFile.DownloadUrl ,
-							0 ,
+							(long) videoFile.DownloadedSize ,
 							activeRelease.ReleaseId ,
 							videoFile.Id ,
-							( newDownloadSize ) => {
+							( newDownloadSize , filePath ) => {
 								videoFile.DownloadedSize = newDownloadSize;
+								if ( string.IsNullOrEmpty ( videoFile.DownloadedPath ) ) videoFile.DownloadedPath = filePath;
 								m_Collection.Update ( m_Entity );
-							}
+							} ,
+							videoFile.DownloadedPath
 						);
 					}
 					catch {

@@ -223,6 +223,5 @@
 				</TextBlock>
 			</StackPanel>
 		</Grid>
-
 	</Grid>
 </UserControl>
