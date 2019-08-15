@@ -96,6 +96,18 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
 		}
 
+		private string GetDisplayQuality ( VideoQuality videoQuality ) {
+			switch ( videoQuality ) {
+				case VideoQuality.SD:
+					return "SD";
+				case VideoQuality.HD:
+					return "HD";
+				case VideoQuality.FullHD:
+					return "FullHD";
+				default: throw new NotSupportedException ( $"Quality {videoQuality} not supported." );
+			}
+		}
+
 		private DownloadItemModel MapToModel ( DownloadReleaseEntity downloadRelease ) {
 			var release = m_Releases.FirstOrDefault ( a => a.Id == downloadRelease.ReleaseId );
 
@@ -108,7 +120,19 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded ) ,
 				DownloadingVideos = 0 ,
 				DownloadSpeed = "" ,
-				NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded )
+				NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded ) ,
+				Videos = new ObservableCollection<DownloadVideoItemModel> (
+						downloadRelease.Videos
+							.Select (
+								a => new DownloadVideoItemModel {
+									Name = $"Серия {a.Id}" ,
+									DownloadedSize = FileHelper.GetFileSize ( Convert.ToInt64 ( a.DownloadedSize ) ) ,
+									IsDownloaded = a.IsDownloaded ,
+									Quality = GetDisplayQuality ( a.Quality )
+								}
+							)
+							.ToList ()
+					)
 			};
 		}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Anilibria.MVVM;
 
 namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
@@ -7,11 +8,11 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 	/// Download item model.
 	/// </summary>
 	public class DownloadItemModel : ViewModel {
-		
+
 		private int m_DownloadedHdVideos;
-		
+
 		private int m_DownloadingVideos;
-		
+
 		private int m_NotDownloadedVideos;
 
 		private int m_CurrentDownloadVideo;
@@ -25,6 +26,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		private bool m_Active;
 
 		private int m_Order;
+
+		private ObservableCollection<DownloadVideoItemModel> m_Videos;
 
 		/// <summary>
 		/// Release identifier.
@@ -132,6 +135,15 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		{
 			get => m_DownloadSpeed;
 			set => Set ( ref m_DownloadSpeed , value );
+		}
+
+		/// <summary>
+		/// Downloading/downloaded videos.
+		/// </summary>
+		public ObservableCollection<DownloadVideoItemModel> Videos
+		{
+			get => m_Videos;
+			set => Set ( ref m_Videos , value );
 		}
 
 	}

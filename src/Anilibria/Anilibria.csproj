@@ -226,6 +226,7 @@
     <Compile Include="Pages\DownloadManagerPage\DownloadManagerViewModel.cs" />
     <Compile Include="Pages\DownloadManagerPage\PresentationClasses\DownloadSectionItem.cs" />
     <Compile Include="Pages\DownloadManagerPage\PresentationClasses\DownloadSectionType.cs" />
+    <Compile Include="Pages\DownloadManagerPage\PresentationClasses\DownloadVideoItemModel.cs" />
     <Compile Include="Pages\HomePage\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
