@@ -25,9 +25,9 @@
 					</Grid.ColumnDefinitions>
 
 					<Border
-						Height="300"
-						Width="200"
-						Margin="8"
+						Height="190"
+						Width="120"
+						Margin="0 0 8 0"
 						Grid.Column="0"
 						converters:BackgroundThemeConverter.BorderMapper="ImageBorderColor"
 						BorderThickness="2"
@@ -66,17 +66,13 @@
 						<TextBlock
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							FontSize="16">
-							<Run FontWeight="Bold">Скачано серий: </Run>
 							<Run>HD</Run>
 							<Run Text="{Binding DownloadedHdVideos}"></Run>
 							<Run> / </Run>
 							<Run>SD</Run>
 							<Run Text="{Binding DownloadedSdVideos}"></Run>
 						</TextBlock>
-					</StackPanel>
-					<Grid
-						Grid.Column="2">
-						<StackPanel Orientation="Vertical">
+						<StackPanel Orientation="Horizontal">
 							<Button
 								Margin="0 8 8 0"
 								Width="100"
@@ -89,10 +85,10 @@
 								Command="{Binding ElementName=DownloadContainer, Path=DataContext.DeleteFilesCommand}"
 								CommandParameter="{Binding}"
 								converters:BackgroundThemeConverter.ActionButton="Origin">
-								Удалить все
+								Удалить
 							</Button>
 						</StackPanel>
-					</Grid>
+					</StackPanel>
 				</Grid>
 			</Border>
 		</DataTemplate>
@@ -158,12 +154,17 @@
 		<Grid
 			Grid.Row="1"
 			Grid.Column="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
 			<Grid
 				Grid.Row="0"
+				Grid.ColumnSpan="2"
 				Margin="0 6 0 4">
 				<StackPanel
 					Orientation="Horizontal"
@@ -193,12 +194,21 @@
 				</StackPanel>
 			</Grid>
 			<ListView
+				Grid.Column="0"
+				Grid.Row="1"
 				MaxWidth="900"
 				converters:BackgroundThemeConverter.AnilibriaListViewStyle="Origin"
 				ItemTemplate="{StaticResource DownloadItemTemplate}"
-				Grid.Row="1"
 				ItemsSource="{Binding Downloads}">
 			</ListView>
+			<Grid
+				Grid.Column="1"
+				Grid.Row="1"
+				CornerRadius="8"
+				Margin="0 0 8 8"
+				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground">
+				<TextBlock>dsfasdfasdf</TextBlock>
+			</Grid>
 		</Grid>
 		<Grid
 			Grid.Row="1"
