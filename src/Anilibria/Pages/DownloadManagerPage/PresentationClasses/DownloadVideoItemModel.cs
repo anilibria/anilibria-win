@@ -1,11 +1,17 @@
-﻿using Anilibria.Storage.Entities;
+﻿using Anilibria.MVVM;
 
 namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
-	
+
 	/// <summary>
 	/// Download video item model.
 	/// </summary>
-	public class DownloadVideoItemModel {
+	public class DownloadVideoItemModel : ViewModel {
+
+		private bool m_IsDownloaded;
+
+		private string m_downloadedSize;
+
+		private bool m_isProgress;
 
 		/// <summary>
 		/// Identifier.
@@ -21,8 +27,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		/// </summary>
 		public string DownloadedSize
 		{
-			get;
-			set;
+			get => m_downloadedSize;
+			set => Set ( ref m_downloadedSize , value );
 		}
 
 		/// <summary>
@@ -30,8 +36,17 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		/// </summary>
 		public bool IsDownloaded
 		{
-			get;
-			set;
+			get => m_IsDownloaded;
+			set => Set ( ref m_IsDownloaded , value );
+		}
+
+		/// <summary>
+		/// Is progress.
+		/// </summary>
+		public bool IsProgress
+		{
+			get => m_isProgress;
+			set => Set ( ref m_isProgress , value );
 		}
 
 		/// <summary>
