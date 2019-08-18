@@ -331,6 +331,28 @@ namespace Anilibria.Services.Implementations {
 				.FirstOrDefault ( a => a.ReleaseId == releaseId );
 		}
 
+		/// <summary>
+		/// Remove download file.
+		/// </summary>
+		/// <param name="releaseId">Release identifier.</param>
+		/// <param name="videoId">Video identifier.</param>
+		/// <param name="videoQuality">Video quality.</param>
+		public async Task RemoveDownloadFile ( long releaseId , int videoId , VideoQuality videoQuality ) {
+			var releaseItem = m_Entity.DownloadingReleases.FirstOrDefault ( a => a.ReleaseId == releaseId );
+			if ( releaseItem == null ) return;
+
+			var files = releaseItem.Videos.Where ( a => a.Id == videoId && a.Quality == videoQuality ).ToList ();
+			releaseItem.Videos = releaseItem.Videos.Where ( a => a.Id != videoId && a.Quality != videoQuality ).ToList ();
+
+			foreach ( var file in files ) {
+				if ( file.IsDownloaded ) {
+					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
+					await storageFile.DeleteAsync ();
+				}
+			}
+			m_Collection.Update ( m_Entity );
+		}
+
 	}
 
 }

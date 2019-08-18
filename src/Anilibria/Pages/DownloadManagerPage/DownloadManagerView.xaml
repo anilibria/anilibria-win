@@ -155,8 +155,8 @@
 			Grid.Row="1"
 			Grid.Column="1">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-				<ColumnDefinition />
+				<ColumnDefinition Width="5*" />
+				<ColumnDefinition Width="5*" />
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
@@ -197,9 +197,11 @@
 				Grid.Column="0"
 				Grid.Row="1"
 				MaxWidth="900"
+				Margin="2 0 4 0"
 				converters:BackgroundThemeConverter.AnilibriaListViewStyle="Origin"
 				ItemTemplate="{StaticResource DownloadItemTemplate}"
-				ItemsSource="{Binding Downloads}">
+				ItemsSource="{Binding Downloads}"
+				SelectedItem="{Binding SelectedDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 			</ListView>
 			<Grid
 				Grid.Column="1"
@@ -207,7 +209,53 @@
 				CornerRadius="8"
 				Margin="0 0 8 8"
 				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground">
-				<TextBlock>dsfasdfasdf</TextBlock>
+				<ScrollViewer>
+					<ItemsControl
+						Margin="18 0 0 0"
+						ItemsSource="{Binding SelectedDownload.Videos}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<StackPanel Orientation="Vertical" />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Grid
+									Margin="5">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition />
+										<ColumnDefinition  Width="Auto" />
+									</Grid.ColumnDefinitions>
+									<StackPanel Orientation="Vertical">
+										<TextBlock
+											converters:BackgroundThemeConverter.TextMapper="TextBlock"
+											VerticalAlignment="Center">
+											<Run Text="{Binding Name}"></Run>
+											<Run Text=" / "></Run>
+											<Run Text="{Binding Quality}"></Run>
+										</TextBlock>
+										<TextBlock
+											converters:BackgroundThemeConverter.TextMapper="TextBlock"
+											VerticalAlignment="Center">
+											<Run Text="{Binding DownloadedSize}"></Run>
+										</TextBlock>
+									</StackPanel>
+									<Button
+										Grid.Column="2"
+										Margin="0 1 18 1"
+										Width="100"
+										Command="{Binding ElementName=DownloadContainer, Path=DataContext.DeleteVideoCommand}"
+										CommandParameter="{Binding Identifier}"
+										VerticalAlignment="Center"
+										converters:BackgroundThemeConverter.ActionButton="Origin">
+										Удалить
+									</Button>
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
 			</Grid>
 		</Grid>
 		<Grid

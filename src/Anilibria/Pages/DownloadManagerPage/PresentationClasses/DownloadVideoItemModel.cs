@@ -16,6 +16,15 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		/// <summary>
 		/// Identifier.
 		/// </summary>
+		public string Identifier
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Name.
+		/// </summary>
 		public string Name
 		{
 			get;

@@ -55,6 +55,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private IEnumerable<ReleaseEntity> m_Releases = Enumerable.Empty<ReleaseEntity> ();
 
 		private bool m_NoFilteredDownloads;
+		private DownloadItemModel m_SelectedDownload;
 
 		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
@@ -108,6 +109,18 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			}
 		}
 
+		private VideoQuality GetEnumQuality ( string videoQuality ) {
+			switch ( videoQuality ) {
+				case "SD":
+					return VideoQuality.SD;
+				case "HD":
+					return VideoQuality.HD;
+				case "FullHD":
+					return VideoQuality.FullHD;
+				default: throw new NotSupportedException ( $"Quality {videoQuality} not supported." );
+			}
+		}
+
 		private DownloadItemModel MapToModel ( DownloadReleaseEntity downloadRelease ) {
 			var release = m_Releases.FirstOrDefault ( a => a.Id == downloadRelease.ReleaseId );
 
@@ -125,10 +138,11 @@ namespace Anilibria.Pages.DownloadManagerPage {
 					downloadRelease.Videos
 						.Select (
 							a => new DownloadVideoItemModel {
+								Identifier = $"{a.Id}{a.Quality}" ,
 								Name = $"Серия {a.Id}" ,
 								DownloadedSize = FileHelper.GetFileSize ( Convert.ToInt64 ( a.DownloadedSize ) ) ,
 								IsDownloaded = a.IsDownloaded ,
-								Quality = GetDisplayQuality ( a.Quality ),
+								Quality = GetDisplayQuality ( a.Quality ) ,
 								IsProgress = a.IsProgress
 							}
 						)
@@ -152,6 +166,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private void CreateCommands () {
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
 			DeleteFilesCommand = CreateCommand<DownloadItemModel> ( DeleteFiles );
+			DeleteVideoCommand = CreateCommand<string> ( DeleteVideo );
+		}
+
+		private async void DeleteVideo ( string identifier ) {
+			var id = identifier.Replace ( "D" , "" ).Replace ( "H" , "" ).Replace ( "S" , "" );
+			var quality = identifier.Replace ( id , "" );
+			await m_DownloadService.RemoveDownloadFile ( SelectedDownload.ReleaseId , Convert.ToInt32 ( id ) , GetEnumQuality ( quality ) );
+
+			RefreshDownloadItems ();
 		}
 
 		private async void DeleteFiles ( DownloadItemModel item ) {
@@ -231,6 +254,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		}
 
 		/// <summary>
+		/// Selected download.
+		/// </summary>
+		public DownloadItemModel SelectedDownload
+		{
+			get => m_SelectedDownload;
+			set => Set ( ref m_SelectedDownload , value );
+		}
+
+		/// <summary>
 		/// Filter by name.
 		/// </summary>
 		public DownloadSectionItem SelectedSection
@@ -275,6 +307,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// Delete files command.
 		/// </summary>
 		public ICommand DeleteFilesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Delete video command.
+		/// </summary>
+		public ICommand DeleteVideoCommand
 		{
 			get;
 			set;
