@@ -33,9 +33,9 @@ namespace Anilibria.Services.Implementations {
 
 		private bool m_DownloadingProcessed = false;
 
-		private Action<long , int , int , long> m_DownloadProgressHandler;
+		private Action<long , int , int , long , VideoQuality , long> m_DownloadProgressHandler;
 
-		private Action<DownloadReleaseEntity , int> m_DownloadFinishedHandler;
+		private Action<DownloadReleaseEntity , int , long , VideoQuality> m_DownloadFinishedHandler;
 
 		private long m_DownloadedSize = 0;
 
@@ -194,7 +194,7 @@ namespace Anilibria.Services.Implementations {
 			m_Collection.Update ( m_Entity );
 		}
 
-		private async Task<StorageFile> DownloadFile ( string url , long offset , long releaseId , int videoId , Action<ulong , string> changeSizeHandler , string downloadedPath ) {
+		private async Task<StorageFile> DownloadFile ( string url , long offset , long releaseId , int videoId , VideoQuality videoQuality , Action<ulong , string> changeSizeHandler , string downloadedPath ) {
 			long contentLength = 0;
 			long downloadedSize = 0;
 			var isResumes = false;
@@ -242,7 +242,7 @@ namespace Anilibria.Services.Implementations {
 
 						var percent = Math.Round ( ( (double) downloadedSize / (double) contentLength ) * 100 );
 
-						m_DownloadProgressHandler?.Invoke ( releaseId , videoId , (int) percent , m_Speed );
+						m_DownloadProgressHandler?.Invoke ( releaseId , videoId , (int) percent , m_Speed , videoQuality , downloadedSize );
 
 						if ( downloadedSize % BufferFlush‬ == 0 ) await fileStream.FlushAsync ();
 					}
@@ -282,6 +282,7 @@ namespace Anilibria.Services.Implementations {
 							(long) videoFile.DownloadedSize ,
 							activeRelease.ReleaseId ,
 							videoFile.Id ,
+							videoFile.Quality ,
 							( newDownloadSize , filePath ) => {
 								videoFile.DownloadedSize = newDownloadSize;
 								if ( string.IsNullOrEmpty ( videoFile.DownloadedPath ) ) videoFile.DownloadedPath = filePath;
@@ -300,7 +301,7 @@ namespace Anilibria.Services.Implementations {
 
 					activeRelease.Active = activeRelease.Videos.Any ( a => !a.IsDownloaded );
 
-					m_DownloadFinishedHandler?.Invoke ( activeRelease , videoFile.Id );
+					m_DownloadFinishedHandler?.Invoke ( activeRelease , videoFile.Id , (long) videoFile.DownloadedSize , videoFile.Quality );
 
 					m_Collection.Update ( m_Entity );
 				}
@@ -315,13 +316,13 @@ namespace Anilibria.Services.Implementations {
 		/// Set download progress.
 		/// </summary>
 		/// <param name="progressHandler">Progress handler.</param>
-		public void SetDownloadProgress ( Action<long , int , int , long> progressHandler ) => m_DownloadProgressHandler = progressHandler;
+		public void SetDownloadProgress ( Action<long , int , int , long , VideoQuality , long> progressHandler ) => m_DownloadProgressHandler = progressHandler;
 
 		/// <summary>
 		/// Set download finished.
 		/// </summary>
 		/// <param name="finishHandler">Finish handler.</param>
-		public void SetDownloadFinished ( Action<DownloadReleaseEntity , int> finishHandler ) => m_DownloadFinishedHandler = finishHandler;
+		public void SetDownloadFinished ( Action<DownloadReleaseEntity , int , long , VideoQuality> finishHandler ) => m_DownloadFinishedHandler = finishHandler;
 
 		/// <summary>
 		/// Get download release.
@@ -341,14 +342,16 @@ namespace Anilibria.Services.Implementations {
 			var releaseItem = m_Entity.DownloadingReleases.FirstOrDefault ( a => a.ReleaseId == releaseId );
 			if ( releaseItem == null ) return;
 
-			var files = releaseItem.Videos.Where ( a => a.Id == videoId && a.Quality == videoQuality ).ToList ();
-			releaseItem.Videos = releaseItem.Videos.Where ( a => a.Id != videoId && a.Quality != videoQuality ).ToList ();
+			var videoFile = releaseItem.Videos.Where ( a => a.Id == videoId && a.Quality == videoQuality ).FirstOrDefault ();
+			if ( videoFile == null ) return;
 
-			foreach ( var file in files ) {
-				if ( file.IsDownloaded ) {
-					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
-					await storageFile.DeleteAsync ();
-				}
+			releaseItem.Videos = releaseItem.Videos
+				.Where ( a => a != videoFile )
+				.ToList ();
+
+			if ( videoFile.IsDownloaded ) {
+				var storageFile = await StorageFile.GetFileFromPathAsync ( videoFile.DownloadedPath );
+				await storageFile.DeleteAsync ();
 			}
 			m_Collection.Update ( m_Entity );
 		}

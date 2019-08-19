@@ -67,6 +67,15 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 			set;
 		}
 
+		/// <summary>
+		/// Order.
+		/// </summary>
+		public int Order
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

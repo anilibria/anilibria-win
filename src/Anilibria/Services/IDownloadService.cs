@@ -32,13 +32,13 @@ namespace Anilibria.Services {
 		/// Set download progress.
 		/// </summary>
 		/// <param name="progressHandler">Progress handler.</param>
-		void SetDownloadProgress ( Action<long , int , int, long> progressHandler );
+		void SetDownloadProgress ( Action<long , int , int , long , VideoQuality , long> progressHandler );
 
 		/// <summary>
 		/// Set download finished.
 		/// </summary>
 		/// <param name="finishHandler">Finish handler.</param>
-		void SetDownloadFinished ( Action<DownloadReleaseEntity , int> finishHandler );
+		void SetDownloadFinished ( Action<DownloadReleaseEntity , int , long , VideoQuality> finishHandler );
 
 		/// <summary>
 		/// Set download file.
@@ -62,7 +62,7 @@ namespace Anilibria.Services {
 		/// <param name="releaseId">Release identifier.</param>
 		/// <param name="videoId">Video identifier.</param>
 		/// <param name="videoQuality">Video quality.</param>
-		Task RemoveDownloadFile(long releaseId, int videoId, VideoQuality videoQuality);
+		Task RemoveDownloadFile ( long releaseId , int videoId , VideoQuality videoQuality );
 
 		/// <summary>
 		/// Remove download file.

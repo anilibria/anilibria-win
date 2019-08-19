@@ -55,6 +55,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private IEnumerable<ReleaseEntity> m_Releases = Enumerable.Empty<ReleaseEntity> ();
 
 		private bool m_NoFilteredDownloads;
+
 		private DownloadItemModel m_SelectedDownload;
 
 		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
@@ -68,7 +69,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 		}
 
-		private void FinishHandler ( DownloadReleaseEntity downloadRelease , int videoId ) {
+		private void FinishHandler ( DownloadReleaseEntity downloadRelease , int videoId , long downloaded , VideoQuality videoQuality ) {
 			var release = m_Downloads.FirstOrDefault ( a => a.ReleaseId == downloadRelease.ReleaseId );
 			if ( release == null ) return;
 
@@ -79,9 +80,17 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.DownloadSpeed = "";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded && !a.IsProgress );
 			release.Active = downloadRelease.Active;
+
+			var displayQuality = GetDisplayQuality ( videoQuality );
+			var video = release.Videos.Where ( a => a.Order == videoId && a.Quality == displayQuality ).FirstOrDefault ();
+			if ( video == null ) return;
+
+			video.IsProgress = false;
+			video.DownloadedSize = FileHelper.GetFileSize ( downloaded );
+			video.IsDownloaded = true;
 		}
 
-		private void ProgressHandler ( long releaseId , int videoId , int progress , long speed ) {
+		private void ProgressHandler ( long releaseId , int videoId , int progress , long speed , VideoQuality quality , long downloaded ) {
 			var release = m_Downloads.FirstOrDefault ( a => a.ReleaseId == releaseId );
 			if ( release == null ) return;
 
@@ -95,6 +104,13 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = FileHelper.GetFileSize ( speed ) + "/с";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
+
+			var displayQuality = GetDisplayQuality ( quality );
+			var video = release.Videos.Where ( a => a.Order == videoId && a.Quality == displayQuality ).FirstOrDefault ();
+			if ( video == null ) return;
+
+			video.IsProgress = true;
+			video.DownloadedSize = FileHelper.GetFileSize ( downloaded );
 		}
 
 		private string GetDisplayQuality ( VideoQuality videoQuality ) {
@@ -136,9 +152,11 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded ) ,
 				Videos = new ObservableCollection<DownloadVideoItemModel> (
 					downloadRelease.Videos
+						.OrderBy ( a => a.Id )
 						.Select (
 							a => new DownloadVideoItemModel {
 								Identifier = $"{a.Id}{a.Quality}" ,
+								Order = a.Id ,
 								Name = $"Серия {a.Id}" ,
 								DownloadedSize = FileHelper.GetFileSize ( Convert.ToInt64 ( a.DownloadedSize ) ) ,
 								IsDownloaded = a.IsDownloaded ,
@@ -193,6 +211,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		public void RefreshDownloadItems () {
 			if ( !m_Releases.Any () ) RefreshAfterSynchronize ( null );
 
+			var selectedReleaseId = SelectedDownload?.ReleaseId;
+
 			DownloadItemsMode type = DownloadItemsMode.All;
 			switch ( m_SelectedSection.Type ) {
 				case DownloadSectionType.All:
@@ -213,6 +233,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				.Select ( MapToModel )
 				.ToList ();
 			NoFilteredDownloads = !Downloads.Any ();
+
+			if ( selectedReleaseId.HasValue ) SelectedDownload = Downloads.FirstOrDefault ( a => a.ReleaseId == selectedReleaseId.Value );
 		}
 
 		public void NavigateTo ( object parameter ) => RefreshDownloadItems ();
