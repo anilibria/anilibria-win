@@ -275,14 +275,14 @@
 					converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 					FontSize="24"
 					HorizontalAlignment="Center">
-					Нет загруженных серий
+					Нет релизов по фильтру
 				</TextBlock>
 				<TextBlock
 					converters:BackgroundThemeConverter.TextMapper="TextBlock"
 					FontSize="20"
 					TextWrapping="WrapWholeWords"
 					HorizontalAlignment="Center">
-					Для загрузки необходимо добавить их на странице Каталог релизов
+					Загрузки добавляются на странице Каталог релизов
 				</TextBlock>
 			</StackPanel>
 		</Grid>

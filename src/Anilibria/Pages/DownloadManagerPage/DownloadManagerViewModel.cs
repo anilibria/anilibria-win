@@ -185,6 +185,11 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
 			DeleteFilesCommand = CreateCommand<DownloadItemModel> ( DeleteFiles );
 			DeleteVideoCommand = CreateCommand<string> ( DeleteVideo );
+			FilterCommand = CreateCommand ( Filter );
+		}
+
+		private void Filter () {
+			RefreshDownloadItems ();
 		}
 
 		private async void DeleteVideo ( string identifier ) {
@@ -208,6 +213,12 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		public void NavigateFrom () {
 		}
 
+		private IEnumerable<DownloadItemModel> FilterDownloads ( IEnumerable<DownloadItemModel> downloadItems ) {
+			if ( !string.IsNullOrEmpty ( FilterByName ) ) downloadItems = downloadItems.Where ( a => a.Title.Contains ( FilterByName ) ).ToList ();
+
+			return downloadItems;
+		}
+
 		public void RefreshDownloadItems () {
 			if ( !m_Releases.Any () ) RefreshAfterSynchronize ( null );
 
@@ -229,9 +240,10 @@ namespace Anilibria.Pages.DownloadManagerPage {
 					break;
 				default: throw new NotSupportedException ( $"Type {type} not supported" );
 			}
-			Downloads = m_DownloadService.GetDownloads ( type )
+			var downloads = m_DownloadService.GetDownloads ( type )
 				.Select ( MapToModel )
 				.ToList ();
+			Downloads = FilterDownloads ( downloads );
 			NoFilteredDownloads = !Downloads.Any ();
 
 			if ( selectedReleaseId.HasValue ) SelectedDownload = Downloads.FirstOrDefault ( a => a.ReleaseId == selectedReleaseId.Value );
@@ -338,6 +350,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// Delete video command.
 		/// </summary>
 		public ICommand DeleteVideoCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Filter command.
+		/// </summary>
+		public ICommand FilterCommand
 		{
 			get;
 			set;
