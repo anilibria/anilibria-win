@@ -129,6 +129,50 @@
 			Grid.Column="0"
 			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
 			Width="48">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
+				<Button
+					x:Name="Settings"
+					Style="{StaticResource IconsButtonStyle}"
+					Width="48"
+					RelativePanel.AlignTopWithPanel="True"
+					ToolTipService.ToolTip="Настройки">
+					<Button.Flyout>
+						<Flyout
+							converters:BackgroundThemeConverter.CommonFlyout="Origin">
+							<Flyout.FlyoutPresenterStyle>
+								<Style TargetType="FlyoutPresenter">
+									<Setter Property="Background" Value="#e6e6e6" />
+									<Setter Property="BorderThickness" Value="1" />
+									<Setter Property="BorderBrush" Value="Black" />
+								</Style>
+							</Flyout.FlyoutPresenterStyle>
+							<StackPanel
+								Orientation="Vertical"
+								Margin="2 0 2 4">
+								<TextBlock
+									Margin="0 4 0 0"
+									converters:BackgroundThemeConverter.TextMapper="TextBlock">
+									Показывать уведомления
+								</TextBlock>
+								<ToggleSwitch
+									converters:BackgroundThemeConverter.ToggleSwitch="Origin"
+									Margin="0 4 0 0"
+									OnContent="Показывать"
+									OffContent="Не показывать"
+									FontSize="12"
+									IsOn="{Binding IsFullNotification, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+								/>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+					<controls:SettingsIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="{StaticResource IconSize}"
+						IconColor="White"
+					/>
+				</Button>
+			</RelativePanel>
 		</Border>
 		<Border
 			Grid.Row="0"

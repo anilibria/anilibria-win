@@ -7,10 +7,12 @@ using System.Windows.Input;
 using Anilibria.Helpers;
 using Anilibria.MVVM;
 using Anilibria.Pages.DownloadManagerPage.PresentationClasses;
+using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Services.Implementations;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Windows.Storage;
 
 namespace Anilibria.Pages.DownloadManagerPage {
 
@@ -18,6 +20,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 	/// Download manager view model.
 	/// </summary>
 	public class DownloadManagerViewModel : ViewModel, INavigation {
+
+		private const string IsFullNotificationSettings = "DownloadManagerViewModelIsFullNotification";
 
 		private string m_FilterByName;
 
@@ -58,15 +62,23 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private DownloadItemModel m_SelectedDownload;
 
+		private bool m_IsFullNotification;
+
 		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			m_DownloadService.SetDownloadProgress ( ProgressHandler );
 			m_DownloadService.SetDownloadFinished ( FinishHandler );
 			m_ReleaseCollection = dataContext.GetCollection<ReleaseEntity> ();
 			CreateCommands ();
+			RestoreSettings ();
 
 			m_SelectedSection = m_Sections.First ();
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
+		}
+
+		private void RestoreSettings () {
+			var values = ApplicationData.Current.RoamingSettings.Values;
+			if ( values.ContainsKey ( IsFullNotificationSettings ) ) IsFullNotification = (bool) values[IsFullNotificationSettings];
 		}
 
 		private void FinishHandler ( DownloadReleaseEntity downloadRelease , int videoId , long downloaded , VideoQuality videoQuality ) {
@@ -88,6 +100,16 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			video.IsProgress = false;
 			video.DownloadedSize = FileHelper.GetFileSize ( downloaded );
 			video.IsDownloaded = true;
+
+			if ( IsFullNotification ) {
+				ObserverEvents.FireEvent (
+					"showMessage" ,
+					new MessageModel {
+						Header = $"Скачана {video.Name} {video.Quality}" ,
+						Message = $"В релизе " + release.Title
+					}
+				);
+			}
 		}
 
 		private void ProgressHandler ( long releaseId , int videoId , int progress , long speed , VideoQuality quality , long downloaded ) {
@@ -317,6 +339,20 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		{
 			get => m_Sections;
 			set => Set ( ref m_Sections , value );
+		}
+
+		/// <summary>
+		/// Is full notification.
+		/// </summary>
+		public bool IsFullNotification
+		{
+			get => m_IsFullNotification;
+			set
+			{
+				if ( !Set ( ref m_IsFullNotification , value ) ) return;
+
+				ApplicationData.Current.RoamingSettings.Values[IsFullNotificationSettings] = value;
+			}
 		}
 
 		/// <summary>
