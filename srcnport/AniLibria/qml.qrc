@@ -24,5 +24,10 @@
         <file>Assets/Icons/rewind.svg</file>
         <file>Assets/Icons/skip.svg</file>
         <file>Assets/Icons/speaker.svg</file>
+        <file>anilibriaService.js</file>
+        <file>QuickPromise/promise.js</file>
+        <file>QuickPromise/Promise.qml</file>
+        <file>QuickPromise/PromiseTimer.qml</file>
+        <file>QuickPromise/qmldir</file>
     </qresource>
 </RCC>

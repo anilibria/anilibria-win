@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.0
 import QtGraphicalEffects 1.12
 import Anilibria.Services 1.0
 import "Views"
+import "./anilibriaService.js" as AnilibriaService
 
 ApplicationWindow {
     id: window
