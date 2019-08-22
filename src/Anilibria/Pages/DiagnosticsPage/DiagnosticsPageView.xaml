@@ -20,6 +20,15 @@
 		<StackPanel>
 			<TextBlock>Диагностическая страница</TextBlock>
 		</StackPanel>
+		<StackPanel
+			Grid.Row="1"
+			Grid.Column="0"
+			Orientation="Vertical">
+			<Button>Экспорт релизов</Button>
+			<Button>Импорт релизов</Button>
+			<Button>Экспорт пользовательских данных</Button>
+			<Button>Импорт пользовательских данных</Button>
+		</StackPanel>
 		<Grid Grid.Row="0" Grid.Column="1">
 			<Button Click="Button_Click">Вернуться в приложение</Button>
 		</Grid>
