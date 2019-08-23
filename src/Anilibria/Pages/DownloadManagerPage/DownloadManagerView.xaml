@@ -254,7 +254,53 @@
 				Margin="0 0 8 8"
 				Visibility="{Binding NoFilteredDownloads, Converter={StaticResource InverseBoolConverter}}"
 				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground">
-				<ScrollViewer>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<StackPanel
+					Grid.Row="0"
+					Orientation="Horizontal">
+					<Border
+							Height="210"
+							Width="140"
+							Margin="8 8 8 0"
+							Grid.Column="0"
+							converters:BackgroundThemeConverter.BorderMapper="ImageBorderColor"
+							BorderThickness="2"
+							CornerRadius="5">
+						<Border.Background>
+							<ImageBrush
+									Stretch="UniformToFill"
+									converters:CacheImageBrushConverter.ImageId="{Binding SelectedDownload.ReleaseId}"
+									converters:CacheImageBrushConverter.ImageGroup="Poster"
+									converters:CacheImageBrushConverter.ImagePath="{Binding SelectedDownload.Poster}"
+								/>
+						</Border.Background>
+					</Border>
+					<StackPanel
+						Margin="8 8 8 0"
+						Orientation="Vertical">
+						<TextBlock
+							FontSize="20"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+							TextWrapping="WrapWholeWords"
+							MaxLines="4"
+							Text="{Binding SelectedDownload.Title}"
+						/>
+						<TextBlock
+							converters:BackgroundThemeConverter.TextMapper="TextBlock"
+							FontSize="16">
+							<Run>HD</Run>
+							<Run Text="{Binding SelectedDownload.DownloadedHdVideos}"></Run>
+							<Run> / </Run>
+							<Run>SD</Run>
+							<Run Text="{Binding SelectedDownload.DownloadedSdVideos}"></Run>
+						</TextBlock>
+					</StackPanel>
+				</StackPanel>
+				<ScrollViewer
+					Grid.Row="1">
 					<ItemsControl
 						Margin="12 6 0 4"
 						ItemsSource="{Binding SelectedDownload.Videos}">
