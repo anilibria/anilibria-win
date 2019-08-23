@@ -17,6 +17,7 @@ SOURCES += \
     Classes/Models/releaseitemmodel.cpp \
     Classes/Models/releasemodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
+    Classes/Services/releasesservice.cpp \
     Classes/Services/synchronizationservice.cpp \
     main.cpp
 
@@ -38,4 +39,5 @@ HEADERS += \
     Classes/Models/releaseitemmodel.h \
     Classes/Models/releasemodel.h \
     Classes/Services/anilibriaapiservice.h \
+    Classes/Services/releasesservice.h \
     Classes/Services/synchronizationservice.h

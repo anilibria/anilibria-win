@@ -1,11 +1,10 @@
 .import "./QuickPromise/promise.js" as PromiseLibrary
-const Promise = PromiseLibrary.QPromise;
 
 const WebSiteUrl = "https://www.anilibria.tv";
 const ApiIndexUrl = WebSiteUrl + "/public/api/index.php";
 
 function executePostRequest(url, form, callback, failCallback) {
-    return new Promise(
+    return PromiseLibrary.promise(
         (resolve, reject) => {
             const request = new XMLHttpRequest();
             request.open("POST", url);
@@ -27,8 +26,8 @@ function executePostRequest(url, form, callback, failCallback) {
     );
 }
 
-function getReleases() {
-    return executePostRequest(ApiIndexUrl, { query: "list", page: "1", perPage: "2000"  });
+function getReleases(page, perPage) {
+    return executePostRequest(ApiIndexUrl, { query: "list", page: page.toString(), perPage: perPage.toString() });
 }
 
 
