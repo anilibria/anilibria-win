@@ -200,6 +200,8 @@
     <Compile Include="Converters\CacheImageBrushConverter.cs" />
     <Compile Include="Converters\CacheImageConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\IsNotNullConverter.cs" />
+    <Compile Include="Converters\IsNullValueConverter.cs" />
     <Compile Include="Converters\MediaSourceConverter.cs" />
     <Compile Include="Converters\TextBlockHighlight.cs" />
     <Compile Include="Converters\TextBlockHtmlConverter.cs" />

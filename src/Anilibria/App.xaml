@@ -8,6 +8,8 @@
 		<x:Double x:Key="IconSize">28</x:Double>
 
 		<converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+		<converters:IsNullValueConverter x:Key="IsNullValueConverter" />
+		<converters:IsNotNullConverter x:Key="IsNotNullConverter" />
 
 		<Style x:Key="AnilibriaPasswordBox" TargetType="PasswordBox">
 			<Setter Property="Foreground" Value="Black" />
