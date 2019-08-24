@@ -77,6 +77,21 @@ namespace Anilibria.Services {
 		/// <param name="releaseId">Release identifier.</param>
 		Task RemoveDownloadRelease ( long releaseId );
 
+		/// <summary>
+		/// Pause download.
+		/// </summary>
+		void PauseDownload ();
+
+		/// <summary>
+		/// Resume download.
+		/// </summary>
+		void ResumeDownload ();
+
+		/// <summary>
+		/// Is can download pause.
+		/// </summary>
+		bool IsCanPauseDownload ();
+
 	}
 
 }

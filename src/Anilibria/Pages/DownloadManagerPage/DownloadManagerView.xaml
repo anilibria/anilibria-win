@@ -133,10 +133,38 @@
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<Button
-					x:Name="Settings"
+					x:Name="Resume"
 					Style="{StaticResource IconsButtonStyle}"
 					Width="48"
 					RelativePanel.AlignTopWithPanel="True"
+					ToolTipService.ToolTip="Начать закачку"
+					Command="{Binding StartDownloadCommand}"
+					IsEnabled="{Binding IsPaused}">
+					<controls:PlayIcon
+						IconWidth="28"
+						IconHeight="28"
+						IconColor="{Binding PlayColor}"
+					/>
+				</Button>
+				<Button
+					x:Name="Pause"
+					Style="{StaticResource IconsButtonStyle}"
+					Width="48"
+					RelativePanel.Below="Resume"
+					ToolTipService.ToolTip="Приостановить закачку"
+					Command="{Binding PauseDownloadCommand}"
+					IsEnabled="{Binding IsPaused, Converter={StaticResource InverseBoolConverter}}">
+					<controls:PauseIcon
+						IconWidth="{StaticResource IconSize}"
+						IconHeight="{StaticResource IconSize}"
+						IconColor="{Binding PauseColor}"
+					/>
+				</Button>
+				<Button
+					x:Name="Settings"
+					Style="{StaticResource IconsButtonStyle}"
+					Width="48"
+					RelativePanel.Below="Pause"
 					ToolTipService.ToolTip="Настройки">
 					<Button.Flyout>
 						<Flyout

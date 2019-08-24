@@ -1,0 +1,25 @@
+﻿<UserControl
+	x:Class="Anilibria.Controls.PlayIcon"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	d:DesignHeight="300"
+	d:DesignWidth="400">
+
+	<Viewbox
+		Margin="0"
+		x:Name="IconViewbox"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
+		<PathIcon
+			VerticalAlignment="Top"
+			x:Name="IconViewboxPath"
+			Data="M30,0C13.458,0,0,13.458,0,30s13.458,30,30,30s30-13.458,30-30S46.542,0,30,0z M45.563,30.826l-22,15
+				C23.394,45.941,23.197,46,23,46c-0.16,0-0.321-0.038-0.467-0.116C22.205,45.711,22,45.371,22,45V15c0-0.371,0.205-0.711,0.533-0.884
+				c0.328-0.174,0.724-0.15,1.031,0.058l22,15C45.836,29.36,46,29.669,46,30S45.836,30.64,45.563,30.826z"
+		/>
+	</Viewbox>
+	
+</UserControl>

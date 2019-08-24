@@ -41,6 +41,8 @@ namespace Anilibria.Services.Implementations {
 
 		private long m_Speed = 0;
 
+		private bool m_PauseDownloading = false;
+
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
 			m_Collection = m_DataContext.GetCollection<DownloadFileEntity> ();
@@ -218,6 +220,11 @@ namespace Anilibria.Services.Implementations {
 				using ( var stream = await response.Content.ReadAsStreamAsync () ) {
 					if ( isNeedAppend ) fileStream.Position = fileStream.Length;
 					while ( true ) {
+						if ( m_PauseDownloading ) {
+							await Task.Delay ( 500 );
+							continue;
+						}
+
 						if ( buffer.Length < BufferSize ) buffer = new byte[BufferSize];
 
 						var readed = await stream.ReadAsync ( buffer , 0 , BufferSize );
@@ -355,6 +362,21 @@ namespace Anilibria.Services.Implementations {
 			}
 			m_Collection.Update ( m_Entity );
 		}
+
+		/// <summary>
+		/// Pause download.
+		/// </summary>
+		public bool IsCanPauseDownload () => m_DownloadingProcessed;
+
+		/// <summary>
+		/// Pause download.
+		/// </summary>
+		public void PauseDownload () => m_PauseDownloading = true;
+
+		/// <summary>
+		/// Resume download.
+		/// </summary>
+		public void ResumeDownload () => m_PauseDownloading = false;
 
 	}
 

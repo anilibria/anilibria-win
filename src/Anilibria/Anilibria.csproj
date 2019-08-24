@@ -172,7 +172,13 @@
     <Compile Include="Controls\OpenEyeIcon.xaml.cs">
       <DependentUpon>OpenEyeIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PauseIcon.xaml.cs">
+      <DependentUpon>PauseIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerButtonControl.cs" />
+    <Compile Include="Controls\PlayIcon.xaml.cs">
+      <DependentUpon>PlayIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PointingGridControl.cs" />
     <Compile Include="Controls\RefreshIcon.xaml.cs">
       <DependentUpon>RefreshIcon.xaml</DependentUpon>
@@ -507,6 +513,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\OpenEyeIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PauseIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlayIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

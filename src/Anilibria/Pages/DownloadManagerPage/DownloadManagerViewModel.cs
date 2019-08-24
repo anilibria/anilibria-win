@@ -13,6 +13,8 @@ using Anilibria.Services.Implementations;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.Storage;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace Anilibria.Pages.DownloadManagerPage {
 
@@ -32,6 +34,10 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private IDownloadService m_DownloadService;
 
 		private readonly IEntityCollection<ReleaseEntity> m_ReleaseCollection;
+
+		private readonly Brush LightGrayColor = new SolidColorBrush ( Color.FromArgb ( 255 , 211 , 211 , 211 ) );
+
+		private readonly Brush WhiteColor = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) );
 
 		private ObservableCollection<DownloadSectionItem> m_Sections = new ObservableCollection<DownloadSectionItem> (
 			new List<DownloadSectionItem> {
@@ -64,6 +70,12 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private bool m_IsFullNotification;
 
+		private bool m_IsPaused;
+
+		private Brush m_PauseColor;
+
+		private Brush m_PlayColor;
+
 		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			m_DownloadService.SetDownloadProgress ( ProgressHandler );
@@ -73,6 +85,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			RestoreSettings ();
 
 			m_SelectedSection = m_Sections.First ();
+			m_PauseColor = WhiteColor;
+			m_PlayColor = LightGrayColor;
 			ObserverEvents.SubscribeOnEvent ( "synchronizedReleases" , RefreshAfterSynchronize );
 		}
 
@@ -208,11 +222,27 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			DeleteFilesCommand = CreateCommand<DownloadItemModel> ( DeleteFiles );
 			DeleteVideoCommand = CreateCommand<string> ( DeleteVideo );
 			FilterCommand = CreateCommand ( Filter );
+			StartDownloadCommand = CreateCommand ( StartDownload );
+			PauseDownloadCommand = CreateCommand ( PauseDownload );
 		}
 
-		private void Filter () {
-			RefreshDownloadItems ();
+		private void PauseDownload () {
+			if ( !m_DownloadService.IsCanPauseDownload () ) return;
+
+			IsPaused = true;
+			PlayColor = WhiteColor;
+			PauseColor = LightGrayColor;
+			m_DownloadService.PauseDownload ();
 		}
+
+		private void StartDownload () {
+			IsPaused = false;
+			PauseColor = WhiteColor;
+			PlayColor = LightGrayColor;
+			m_DownloadService.ResumeDownload ();
+		}
+
+		private void Filter () => RefreshDownloadItems ();
 
 		private async void DeleteVideo ( string identifier ) {
 			var id = identifier.Replace ( "D" , "" ).Replace ( "H" , "" ).Replace ( "S" , "" );
@@ -298,6 +328,33 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		{
 			get => m_NoFilteredDownloads;
 			set => Set ( ref m_NoFilteredDownloads , value );
+		}
+
+		/// <summary>
+		/// Is paused.
+		/// </summary>
+		public bool IsPaused
+		{
+			get => m_IsPaused;
+			set => Set ( ref m_IsPaused , value );
+		}
+
+		/// <summary>
+		/// Pause color.
+		/// </summary>
+		public Brush PauseColor
+		{
+			get => m_PauseColor;
+			set => Set ( ref m_PauseColor , value );
+		}
+
+		/// <summary>
+		/// Play color.
+		/// </summary>
+		public Brush PlayColor
+		{
+			get => m_PlayColor;
+			set => Set ( ref m_PlayColor , value );
 		}
 
 		/// <summary>
@@ -395,6 +452,24 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// Filter command.
 		/// </summary>
 		public ICommand FilterCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Start download command.
+		/// </summary>
+		public ICommand StartDownloadCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Pause download command.
+		/// </summary>
+		public ICommand PauseDownloadCommand
 		{
 			get;
 			set;
