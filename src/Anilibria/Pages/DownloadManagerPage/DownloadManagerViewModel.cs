@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Anilibria.Helpers;
 using Anilibria.MVVM;
 using Anilibria.Pages.DownloadManagerPage.PresentationClasses;
+using Anilibria.Pages.OnlinePlayer.PresentationClasses;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Services.Implementations;
@@ -182,7 +183,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				Active = downloadRelease.Active ,
 				Title = release?.Title ,
 				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
-				DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded ) ,
+				DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.HD ) ,
+				DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD ) ,
 				DownloadingVideos = 0 ,
 				DownloadSpeed = "" ,
 				NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded ) ,
@@ -224,6 +226,16 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			FilterCommand = CreateCommand ( Filter );
 			StartDownloadCommand = CreateCommand ( StartDownload );
 			PauseDownloadCommand = CreateCommand ( PauseDownload );
+			WatchReleaseCommand = CreateCommand<DownloadItemModel> ( WatchRelease );
+		}
+
+		private void WatchRelease ( DownloadItemModel downloadRelease ) {
+			ChangePage (
+				"Player" ,
+				new ReleaseLinkModel {
+					ReleaseId = downloadRelease.ReleaseId
+				}
+			);
 		}
 
 		private void PauseDownload () {
@@ -302,6 +314,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		}
 
 		public void NavigateTo ( object parameter ) => RefreshDownloadItems ();
+
+		/// <summary>
+		/// Change page handler.
+		/// </summary>
+		public Action<string , object> ChangePage
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Filter by name.
@@ -470,6 +491,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// Pause download command.
 		/// </summary>
 		public ICommand PauseDownloadCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Watch release command.
+		/// </summary>
+		public ICommand WatchReleaseCommand
 		{
 			get;
 			set;

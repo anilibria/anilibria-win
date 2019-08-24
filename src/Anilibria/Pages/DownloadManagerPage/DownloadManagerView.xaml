@@ -41,55 +41,66 @@
 							/>
 						</Border.Background>
 					</Border>
-					<StackPanel
-						Grid.Column="1"
-						Orientation="Vertical"
-						Margin="0 8 0 8">
-						<TextBlock
-							FontSize="20"
-							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
-							TextWrapping="WrapWholeWords"
-							MaxLines="3"
-							Text="{Binding Title}"
-						/>
-						<TextBlock
-							converters:BackgroundThemeConverter.TextMapper="TextBlock"
-							FontSize="16"
-							Visibility="{Binding Active}">
-							<Run>Скачивается </Run>
-							<Run Text="{Binding CurrentDownloadVideo}"></Run>
-							<Run> серия </Run>
-							<Run Text="{Binding DownloadProgress}"></Run>
-							<Run>% / </Run>
-							<Run Text="{Binding DownloadSpeed}"></Run>
-						</TextBlock>
-						<TextBlock
-							converters:BackgroundThemeConverter.TextMapper="TextBlock"
-							FontSize="16">
-							<Run>Скачано серий</Run>
-							<Run>HD</Run>
-							<Run Text="{Binding DownloadedHdVideos}"></Run>
-							<Run> / </Run>
-							<Run>SD</Run>
-							<Run Text="{Binding DownloadedSdVideos}"></Run>
-						</TextBlock>
-						<StackPanel Orientation="Horizontal">
+					<Grid
+						Grid.Column="1">
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+						<StackPanel
+							Orientation="Vertical"
+							Margin="0 8 0 8">
+							<TextBlock
+								FontSize="20"
+								converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+								TextWrapping="WrapWholeWords"
+								MaxLines="3"
+								Text="{Binding Title}"
+							/>
+							<TextBlock
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
+								FontSize="16"
+								Visibility="{Binding Active}">
+								<Run>Скачивается </Run>
+								<Run Text="{Binding CurrentDownloadVideo}"></Run>
+								<Run> серия </Run>
+								<Run Text="{Binding DownloadProgress}"></Run>
+								<Run>% / </Run>
+								<Run Text="{Binding DownloadSpeed}"></Run>
+							</TextBlock>
+							<TextBlock
+								converters:BackgroundThemeConverter.TextMapper="TextBlock"
+								FontSize="16">
+								<Run>Скачано серий</Run>
+								<Run>HD</Run>
+								<Run Text="{Binding DownloadedHdVideos}"></Run>
+								<Run> / </Run>
+								<Run>SD</Run>
+								<Run Text="{Binding DownloadedSdVideos}"></Run>
+							</TextBlock>
+						</StackPanel>
+						<StackPanel
+							Grid.Row="1"
+							Orientation="Horizontal"
+							Margin="0 0 0 4">
 							<Button
-								Margin="0 8 8 0"
-								Width="100"
-								converters:BackgroundThemeConverter.ActionButton="Origin">
+									Margin="0 8 8 0"
+									Width="100"
+									converters:BackgroundThemeConverter.ActionButton="Origin"
+									Command="{Binding ElementName=DownloadContainer, Path=DataContext.WatchReleaseCommand}"
+									CommandParameter="{Binding}">
 								Смотреть
 							</Button>
 							<Button
-								Margin="0 8 8 0"
-								Width="100"
-								Command="{Binding ElementName=DownloadContainer, Path=DataContext.DeleteFilesCommand}"
-								CommandParameter="{Binding}"
-								converters:BackgroundThemeConverter.ActionButton="Origin">
+									Margin="0 8 8 0"
+									Width="100"
+									Command="{Binding ElementName=DownloadContainer, Path=DataContext.DeleteFilesCommand}"
+									CommandParameter="{Binding}"
+									converters:BackgroundThemeConverter.ActionButton="Origin">
 								Удалить
 							</Button>
 						</StackPanel>
-					</StackPanel>
+					</Grid>
 				</Grid>
 			</Border>
 		</DataTemplate>
@@ -209,18 +220,6 @@
 			converters:BackgroundThemeConverter.BackgroundMapper="UpperPanel">
 			<RelativePanel
 				HorizontalAlignment="Stretch">
-				<ToggleSwitch
-					converters:BackgroundThemeConverter.ToggleSwitch="Origin"
-					Margin="8 0 0 0"
-					RelativePanel.AlignLeftWithPanel="True"
-					RelativePanel.AlignTopWithPanel="True"
-					RelativePanel.AlignBottomWithPanel="True"
-					HorizontalAlignment="Center"
-					OnContent="Множественный"
-					OffContent="Одиночный"
-					FontSize="12"
-					IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-				</ToggleSwitch>
 			</RelativePanel>
 		</Border>
 

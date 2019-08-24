@@ -174,6 +174,8 @@ namespace Anilibria.Pages.Releases {
 
 		private IEntityCollection<ReleaseVideoStateEntity> m_VideoStateCollection;
 
+		private IEnumerable<ReleaseVideoStateEntity> m_SeenVideoStates = Enumerable.Empty<ReleaseVideoStateEntity> ();
+
 		private IDictionary<long , int> m_CountWachedVideos = new Dictionary<long , int> ();
 
 		private SeenMarkItem m_SelectedSeenMarkType;
@@ -214,10 +216,12 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RefreshWatchedVideo () {
-			var videoStates = m_VideoStateCollection.Find ( a => true );
+			m_SeenVideoStates = m_VideoStateCollection
+				.Find ( a => true )
+				.ToList ();
 
 			m_CountWachedVideos = new Dictionary<long , int> ();
-			foreach ( var videoState in videoStates ) {
+			foreach ( var videoState in m_SeenVideoStates ) {
 				m_CountWachedVideos.Add ( videoState.ReleaseId , videoState.VideoStates?.Count ( a => a.IsSeen ) ?? 0 );
 			}
 			if ( m_Collection == null ) return;
@@ -479,18 +483,34 @@ namespace Anilibria.Pages.Releases {
 			DisableSeenMarkCardCommand = CreateCommand ( DisableSeenMarkCard , () => IsShowReleaseCard );
 			AddDownloadHdCommand = CreateCommand ( AddDownloadHd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			AddDownloadSdCommand = CreateCommand ( AddDownloadSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			AddDownloadHdAndSdCommand = CreateCommand ( AddDownloadHdAndSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			AddDownloadNotWatchHdCommand = CreateCommand ( AddDownloadNotWatchHd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			AddDownloadNotWatchSdCommand = CreateCommand ( AddDownloadNotWatchSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			AddDownloadNotWatchHdAndSdCommand = CreateCommand ( AddDownloadNotWatchHdAndSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 		}
 
-		private void AddDownloadSd () => AddToDownloadReleases ( VideoQuality.SD );
+		private void AddDownloadNotWatchHdAndSd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.HD , VideoQuality.SD } , notWatch: true );
 
-		private void AddDownloadHd () => AddToDownloadReleases ( VideoQuality.HD );
+		private void AddDownloadNotWatchHd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.HD } , notWatch: true );
 
-		private async void AddToDownloadReleases ( VideoQuality videoQuality ) {
+		private void AddDownloadNotWatchSd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.SD } , notWatch: true );
+
+		private void AddDownloadHdAndSd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.HD , VideoQuality.SD } );
+
+		private void AddDownloadSd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.SD } );
+
+		private void AddDownloadHd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.HD } );
+
+		private async void AddToDownloadReleases ( IEnumerable<VideoQuality> videoQualities , bool notWatch = false ) {
 			var downloadManager = DownloadManager.Current ();
 
 			foreach ( var selectedRelease in SelectedReleases ) {
-				foreach ( var video in selectedRelease.OnlineVideos ) {
-					downloadManager.AddDownloadFile ( selectedRelease.Id , video , videoQuality );
+				var videos = selectedRelease.OnlineVideos;
+				if ( notWatch ) videos = videos.Where ( a => !a.IsSeen );
+				foreach ( var video in videos ) {
+					foreach ( var videoQuality in videoQualities ) {
+						downloadManager.AddDownloadFile ( selectedRelease.Id , video , videoQuality );
+					}
 				}
 			}
 
@@ -1417,6 +1437,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private ReleaseModel MapToReleaseModel ( ReleaseEntity a ) {
+			var releasesSeensVideos = m_SeenVideoStates?.FirstOrDefault ( b => b.ReleaseId == a.Id )?.VideoStates ?? Enumerable.Empty<VideoStateEntity> ();
+
 			var releaseModel = new ReleaseModel {
 				Id = a.Id ,
 				AddToFavorite = m_Favorites?.Contains ( a.Id ) ?? false ,
@@ -1458,7 +1480,8 @@ namespace Anilibria.Pages.Releases {
 							SDQuality = videoOnline.SD ,
 							FullHDQuality = videoOnline.FullHD ,
 							DownloadableHD = videoOnline.DownloadableHD ,
-							DownloadableSD = videoOnline.DownloadableSD
+							DownloadableSD = videoOnline.DownloadableSD ,
+							IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
 			};
@@ -2457,6 +2480,43 @@ namespace Anilibria.Pages.Releases {
 			get;
 			set;
 		}
+
+		/// <summary>
+		/// Add download Hd and SD command.
+		/// </summary>
+		public ICommand AddDownloadHdAndSdCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add download (only not watch) Hd videos command.
+		/// </summary>
+		public ICommand AddDownloadNotWatchHdCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add download (only not watch) Sd videos command.
+		/// </summary>
+		public ICommand AddDownloadNotWatchSdCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add download (only not watch) Hd and Sd videos command.
+		/// </summary>
+		public ICommand AddDownloadNotWatchHdAndSdCommand
+		{
+			get;
+			set;
+		}
+
 	}
 
 }

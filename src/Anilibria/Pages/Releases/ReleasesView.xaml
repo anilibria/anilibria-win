@@ -791,14 +791,38 @@
 							converters:BackgroundThemeConverter.MenuFlyout="Origin">
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"
-								Text="Скачать в качестве HD"
+								Text="Скачать все серии в качестве HD"
 								Command="{Binding AddDownloadHdCommand}"
 								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 							/>
 							<MenuFlyoutItem
 								Style="{StaticResource AnilibriaMenuFlyoutItem}"
-								Text="Скачать в качестве SD"
+								Text="Скачать все серии в качестве SD"
 								Command="{Binding AddDownloadSdCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Скачать все серии в качествах HD и SD"
+								Command="{Binding AddDownloadHdAndSdCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Скачать непросмотренные серии в качестве HD"
+								Command="{Binding AddDownloadNotWatchHdCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Скачать непросмотренные серии в качестве SD"
+								Command="{Binding AddDownloadNotWatchSdCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Скачать непросмотренные серии в качествах HD и SD"
+								Command="{Binding AddDownloadNotWatchHdAndSdCommand}"
 								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 							/>
 						</MenuFlyout>

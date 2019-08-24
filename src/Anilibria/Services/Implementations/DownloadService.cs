@@ -114,8 +114,8 @@ namespace Anilibria.Services.Implementations {
 					var videos = releaseItem.Videos.ToList ();
 					videos.Add ( video );
 					releaseItem.Videos = videos;
+					releaseItem.Active = true;
 				}
-				releaseItem.Active = true;
 			}
 
 			m_Collection.Update ( m_Entity );

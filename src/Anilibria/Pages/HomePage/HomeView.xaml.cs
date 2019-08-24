@@ -83,6 +83,7 @@ namespace Anilibria {
 		private void CreateDownloadManagerViewModel () {
 			var viewModel = DownloadManager.DataContext as DownloadManagerViewModel;
 			viewModel.ShowSidebar = ShowSidebar;
+			viewModel.ChangePage = ChangePage;
 		}
 
 		private void CreateYoutubeViewModel () {
