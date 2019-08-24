@@ -56,7 +56,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		public OnlinePlayerView () {
 			InitializeComponent ();
-			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () , StorageService.Current () , ApiService.Current () ) {
+			m_ViewModel = new OnlinePlayerViewModel ( new AnalyticsService () , StorageService.Current () , ApiService.Current () , DownloadManager.Current () ) {
 				ChangeVolumeHandler = ChangeVolumeHandler ,
 				ChangePlayback = ChangePlaybackHandler ,
 				ChangePosition = ChangePosition ,

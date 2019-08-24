@@ -75,6 +75,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private readonly IDataContext m_DataContext;
 
+		private readonly IDownloadService m_DownloadService;
+
 		private bool m_IsHD;
 
 		private bool m_IsSD;
@@ -203,10 +205,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <param name="dataContext">Data context.</param>
 		/// <param name="anilibriaApiService">Anilibria restful service.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public OnlinePlayerViewModel ( IAnalyticsService analyticsService , IDataContext dataContext , IAnilibriaApiService anilibriaApiService ) {
+		public OnlinePlayerViewModel ( IAnalyticsService analyticsService , IDataContext dataContext , IAnilibriaApiService anilibriaApiService , IDownloadService downloadService ) {
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
+			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			m_IsSD = true;
 			m_Volume = .8;
 
@@ -325,7 +328,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private async void EnableCompactMode () {
 			var enabled = await ApplicationView.GetForCurrentView ().TryEnterViewModeAsync ( ApplicationViewMode.CompactOverlay );
 			IsCompactOverlayEnabled = enabled;
-			if (enabled) ShowPlaylistButton = true;
+			if ( enabled ) ShowPlaylistButton = true;
 		}
 
 		private void PreviousTrack () {
@@ -565,6 +568,26 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( m_ReleaseVideoStateEntity.VideoStates == null ) m_ReleaseVideoStateEntity.VideoStates = new List<VideoStateEntity> ();
 		}
 
+		private void SetDownloadedPaths ( long releaseId , IEnumerable<OnlineVideoModel> onlineVideos ) {
+			var downloads = m_DownloadService.GetDownloads ( DownloadItemsMode.All );
+			var releaseDownload = downloads.Where ( a => a.ReleaseId == releaseId ).FirstOrDefault ();
+			if ( releaseDownload == null ) return;
+
+			foreach ( var onlineVideo in onlineVideos ) {
+				var downloadedVideos = releaseDownload.Videos
+					.Where ( a =>
+						a.Id == onlineVideo.Order &&
+						a.IsDownloaded
+					)
+					.ToList ();
+				var hdVideo = downloadedVideos.FirstOrDefault ( a => a.Quality == VideoQuality.HD );
+				var sdVideo = downloadedVideos.FirstOrDefault ( a => a.Quality == VideoQuality.SD );
+
+				if ( hdVideo != null ) onlineVideo.HDQuality = new Uri ( hdVideo.DownloadedPath );
+				if ( sdVideo != null ) onlineVideo.SDQuality = new Uri ( sdVideo.DownloadedPath );
+			}
+		}
+
 		/// <summary>
 		/// Start navigate to page.
 		/// </summary>
@@ -589,6 +612,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 						if ( release != null ) {
 							m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
 							SelectedRelease = MapToReleaseModel ( release );
+							SetDownloadedPaths ( SelectedRelease.Id , SelectedRelease.OnlineVideos );
 							SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 
 							ChangePlayback ( PlaybackState.Play , false );
@@ -620,7 +644,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 					m_RestorePosition = lastVideo.LastPosition;
 				}
 
-				if ( release != null ) release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
+				if ( release != null ) {
+					SetDownloadedPaths ( release.Id , release.OnlineVideos );
+
+					release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
+				}
 				SelectedRelease = release;
 				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
@@ -1114,9 +1142,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is xbox.
 		/// </summary>
-		public bool IsXbox {
+		public bool IsXbox
+		{
 			get => m_IsXbox;
-			set => Set(ref m_IsXbox, value);
+			set => Set ( ref m_IsXbox , value );
 		}
 
 		/// <summary>
