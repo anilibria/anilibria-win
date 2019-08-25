@@ -261,6 +261,14 @@ namespace Anilibria.Services.Implementations {
 			}
 		}
 
+		private DownloadReleaseVideoEntity GetNextDownloadItem ( DownloadReleaseEntity downloadRelease ) {
+			return downloadRelease.Videos
+				.Where ( a => !a.IsDownloaded )
+				.OrderByDescending ( a => a.IsProgress )
+				.ThenBy ( a => a.Id )
+				.FirstOrDefault ();
+		}
+
 		/// <summary>
 		/// Start download process.
 		/// </summary>
@@ -275,12 +283,11 @@ namespace Anilibria.Services.Implementations {
 			m_SpeedTimer.Start ();
 
 			foreach ( var activeRelease in activeReleases ) {
-				var videos = activeRelease.Videos
-					.Where ( a => !a.IsDownloaded )
-					.OrderByDescending ( a => a.IsProgress )
-					.ThenBy ( a => a.Id )
-					.ToList ();
-				foreach ( var videoFile in videos ) {
+				while ( true ) {
+					var videoFile = GetNextDownloadItem ( activeRelease );
+					if ( videoFile == null ) break;
+					if ( !activeRelease.Active ) break;
+
 					videoFile.IsProgress = true;
 					StorageFile downloadedFile = null;
 					try {
