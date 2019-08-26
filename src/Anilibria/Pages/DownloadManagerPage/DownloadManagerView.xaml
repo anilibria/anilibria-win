@@ -330,6 +330,12 @@
 							<Run>SD</Run>
 							<Run Text="{Binding SelectedDownload.DownloadedSdVideos}"></Run>
 						</TextBlock>
+						<TextBlock
+							converters:BackgroundThemeConverter.TextMapper="TextBlock"
+							FontSize="16">
+							<Run>Общий размер</Run>
+							<Run Text="{Binding SelectedDownload.AllDownloadedSize}"></Run>
+						</TextBlock>
 					</StackPanel>
 				</StackPanel>
 				<ScrollViewer
@@ -352,17 +358,33 @@
 										<ColumnDefinition  Width="Auto" />
 									</Grid.ColumnDefinitions>
 									<StackPanel Orientation="Vertical">
-										<TextBlock
-											converters:BackgroundThemeConverter.TextMapper="TextBlock"
-											VerticalAlignment="Center">
-											<Run
-												FontWeight="Bold"
-												Text="{Binding Name}"
-											/>
-											<Run
-												Text="{Binding Quality}"
-											/>
-										</TextBlock>
+										<StackPanel Orientation="Horizontal">
+											<TextBlock
+												converters:BackgroundThemeConverter.TextMapper="TextBlock"
+												VerticalAlignment="Center">
+												<Run
+													FontWeight="Bold"
+													Text="{Binding Name}"
+												/>
+												<Run
+													Text="{Binding Quality}"
+												/>
+											</TextBlock>
+											<TextBlock
+												Margin="4 0 0 0"
+												Visibility="{Binding IsProgress}"
+												converters:BackgroundThemeConverter.TextMapper="TextBlock"
+												VerticalAlignment="Center">
+												Скачивается
+											</TextBlock>
+											<TextBlock
+												Margin="4 0 0 0"
+												Visibility="{Binding IsDownloaded}"
+												converters:BackgroundThemeConverter.TextMapper="TextBlock"
+												VerticalAlignment="Center">
+												Скачан
+											</TextBlock>
+										</StackPanel>
 										<TextBlock
 											converters:BackgroundThemeConverter.TextMapper="TextBlock"
 											VerticalAlignment="Center">

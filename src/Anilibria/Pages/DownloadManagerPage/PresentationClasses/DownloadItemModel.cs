@@ -29,6 +29,8 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 
 		private ObservableCollection<DownloadVideoItemModel> m_Videos;
 
+		private string m_AllDownloadedSize;
+
 		/// <summary>
 		/// Release identifier.
 		/// </summary>
@@ -81,6 +83,15 @@ namespace Anilibria.Pages.DownloadManagerPage.PresentationClasses {
 		{
 			get => m_DownloadedHdVideos;
 			set => Set ( ref m_DownloadedHdVideos , value );
+		}
+
+		/// <summary>
+		/// All download size.
+		/// </summary>
+		public string AllDownloadedSize
+		{
+			get => m_AllDownloadedSize;
+			set => Set ( ref m_AllDownloadedSize , value );
 		}
 
 		/// <summary>

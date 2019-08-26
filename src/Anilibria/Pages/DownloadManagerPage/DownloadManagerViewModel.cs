@@ -103,6 +103,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.CurrentDownloadVideo = downloadRelease.Videos.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
 			release.DownloadProgress = downloadRelease.Videos.Count ( a => a.IsProgress );
 			release.DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.HD );
+			release.AllDownloadedSize = downloadRelease.Videos.Any () ? FileHelper.GetFileSize ( (long) downloadRelease.Videos.Sum ( a => (long) a.DownloadedSize ) ) : FileHelper.GetFileSize ( 0 );
 			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = "";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded && !a.IsProgress );
@@ -138,6 +139,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				.FirstOrDefault ( a => a.IsProgress )?.Id ?? 0;
 			release.DownloadProgress = progress;
 			release.DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.HD );
+			release.AllDownloadedSize = downloadRelease.Videos.Any () ? FileHelper.GetFileSize ( (long) downloadRelease.Videos.Sum ( a => (long) a.DownloadedSize ) ) : FileHelper.GetFileSize ( 0 );
 			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = FileHelper.GetFileSize ( speed ) + "/с";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
@@ -184,6 +186,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				Title = release?.Title ,
 				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
 				DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.HD ) ,
+				AllDownloadedSize = downloadRelease.Videos.Any () ? FileHelper.GetFileSize ( (long) downloadRelease.Videos.Sum ( a => (long) a.DownloadedSize ) ) : FileHelper.GetFileSize ( 0 ) ,
 				DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD ) ,
 				DownloadingVideos = 0 ,
 				DownloadSpeed = "" ,
