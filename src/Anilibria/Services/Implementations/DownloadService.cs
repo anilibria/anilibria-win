@@ -43,6 +43,10 @@ namespace Anilibria.Services.Implementations {
 
 		private bool m_PauseDownloading = false;
 
+		private bool m_SkipCurrentDownloadingRelease = false;
+
+		private bool m_SkipCurrentDownloadingVideo = false;
+
 		public DownloadService ( IDataContext dataContext ) {
 			m_DataContext = dataContext;
 			m_Collection = m_DataContext.GetCollection<DownloadFileEntity> ();
@@ -170,6 +174,16 @@ namespace Anilibria.Services.Implementations {
 					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
 					await storageFile.DeleteAsync ();
 				}
+				if ( file.IsProgress ) {
+					m_SkipCurrentDownloadingVideo = true;
+					while ( true ) {
+						await Task.Delay ( 50 );
+						if ( !m_SkipCurrentDownloadingVideo ) {
+							var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
+							await storageFile.DeleteAsync ();
+						}
+					}
+				}
 			}
 			m_Collection.Update ( m_Entity );
 		}
@@ -186,6 +200,17 @@ namespace Anilibria.Services.Implementations {
 				if ( file.IsDownloaded ) {
 					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
 					await storageFile.DeleteAsync ();
+				}
+				if ( file.IsProgress ) {
+					m_SkipCurrentDownloadingRelease = true;
+					while ( true ) {
+						await Task.Delay ( 200 );
+						if ( !m_SkipCurrentDownloadingRelease ) {
+							var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
+							await storageFile.DeleteAsync ();
+							break;
+						}
+					}
 				}
 			}
 
@@ -220,6 +245,8 @@ namespace Anilibria.Services.Implementations {
 				using ( var stream = await response.Content.ReadAsStreamAsync () ) {
 					if ( isNeedAppend ) fileStream.Position = fileStream.Length;
 					while ( true ) {
+						if ( m_SkipCurrentDownloadingRelease ) break;
+						if ( m_SkipCurrentDownloadingVideo ) break;
 						if ( m_PauseDownloading ) {
 							await Task.Delay ( 500 );
 							continue;
@@ -284,6 +311,7 @@ namespace Anilibria.Services.Implementations {
 
 			foreach ( var activeRelease in activeReleases ) {
 				while ( true ) {
+					if ( m_SkipCurrentDownloadingRelease ) break;
 					var videoFile = GetNextDownloadItem ( activeRelease );
 					if ( videoFile == null ) break;
 					if ( !activeRelease.Active ) break;
@@ -308,6 +336,14 @@ namespace Anilibria.Services.Implementations {
 					catch {
 						continue;
 					}
+
+					if ( m_SkipCurrentDownloadingVideo ) {
+						videoFile.IsDownloaded = true;
+						m_SkipCurrentDownloadingVideo = false;
+						continue;
+					}
+					if ( m_SkipCurrentDownloadingRelease ) break;
+
 					videoFile.IsProgress = false;
 					videoFile.IsDownloaded = true;
 					videoFile.DownloadedSize = ( await downloadedFile.GetBasicPropertiesAsync () ).Size;
@@ -319,6 +355,7 @@ namespace Anilibria.Services.Implementations {
 
 					m_Collection.Update ( m_Entity );
 				}
+				m_SkipCurrentDownloadingRelease = false;
 			}
 
 			m_SpeedTimer.Stop ();
@@ -367,6 +404,19 @@ namespace Anilibria.Services.Implementations {
 				var storageFile = await StorageFile.GetFileFromPathAsync ( videoFile.DownloadedPath );
 				await storageFile.DeleteAsync ();
 			}
+
+			if ( videoFile.IsProgress ) {
+				m_SkipCurrentDownloadingVideo = true;
+				while ( true ) {
+					await Task.Delay ( 50 );
+					if ( !m_SkipCurrentDownloadingVideo ) {
+						var storageFile = await StorageFile.GetFileFromPathAsync ( videoFile.DownloadedPath );
+						await storageFile.DeleteAsync ();
+						break;
+					}
+				}
+			}
+
 			m_Collection.Update ( m_Entity );
 		}
 
