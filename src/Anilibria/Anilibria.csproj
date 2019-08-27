@@ -221,6 +221,11 @@
       <DependentUpon>AuthorizeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\AuthorizePage\AuthorizeViewModel.cs" />
+    <Compile Include="Pages\CinemaHall\CinemaHallView.xaml.cs">
+      <DependentUpon>CinemaHallView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\CinemaHall\CinemaHallViewModel.cs" />
+    <Compile Include="Pages\CinemaHall\PresentationClasses\CinemaHallReleaseModel.cs" />
     <Compile Include="Pages\DiagnosticsPage\DiagnosticsPageView.xaml.cs">
       <DependentUpon>DiagnosticsPageView.xaml</DependentUpon>
     </Compile>
@@ -557,6 +562,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\AuthorizePage\AuthorizeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\CinemaHall\CinemaHallView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
