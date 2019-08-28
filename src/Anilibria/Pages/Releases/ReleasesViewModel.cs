@@ -254,7 +254,13 @@ namespace Anilibria.Pages.Releases {
 				m_SelectedOpenVideoMode = m_OpenVideoModes.First ();
 			}
 
-			IsDarkTheme = (bool) values[IsDarkThemeSettings];
+			if (values.ContainsKey(IsDarkThemeSettings))
+			{
+				IsDarkTheme = (bool)values[IsDarkThemeSettings];
+			} else
+			{
+				IsDarkTheme = false;
+			}
 		}
 
 		private void CreateSections () {
