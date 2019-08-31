@@ -34,6 +34,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private IDownloadService m_DownloadService;
 
+		private readonly IAnalyticsService m_AnalyticsService;
+
 		private readonly IEntityCollection<ReleaseEntity> m_ReleaseCollection;
 
 		private readonly Brush LightGrayColor = new SolidColorBrush ( Color.FromArgb ( 255 , 211 , 211 , 211 ) );
@@ -77,8 +79,9 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private Brush m_PlayColor;
 
-		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext ) {
+		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext , IAnalyticsService analyticsService ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
+			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 			m_DownloadService.SetDownloadProgress ( ProgressHandler );
 			m_DownloadService.SetDownloadFinished ( FinishHandler );
 			m_ReleaseCollection = dataContext.GetCollection<ReleaseEntity> ();
@@ -316,7 +319,10 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			if ( selectedReleaseId.HasValue ) SelectedDownload = Downloads.FirstOrDefault ( a => a.ReleaseId == selectedReleaseId.Value );
 		}
 
-		public void NavigateTo ( object parameter ) => RefreshDownloadItems ();
+		public void NavigateTo ( object parameter ) {
+			RefreshDownloadItems ();
+			m_AnalyticsService.TrackEvent ( "DownloadPage" , "NavigatedTo" , "Simple" );
+		}
 
 		/// <summary>
 		/// Change page handler.
