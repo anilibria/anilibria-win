@@ -48,6 +48,16 @@ ApplicationWindow {
         Component.onCompleted: {
             synchronizationService.synchronizeReleases();
         }
+        onSynchronizationCompleted: {
+            releasesService.loadReleasesCache();
+        }
+    }
+
+    ReleasesService {
+        id: releasesService
+        Component.onCompleted: {
+            releasesService.loadReleasesCache();
+        }
     }
 
     //TODO: Switch beetween themes
@@ -220,7 +230,7 @@ ApplicationWindow {
     Youtube {
         id: youtube
         drawer: drawer
-        synchronizeService: synchronizationService
+        releasesService: releasesService
         visible: false
     }
 }

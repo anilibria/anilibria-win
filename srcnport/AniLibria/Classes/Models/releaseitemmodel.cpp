@@ -7,7 +7,7 @@ ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
 
 void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
 {
-    setTitle(releaseModel.names().first());
+    setTitle(releaseModel.title());
     setStatus(releaseModel.status());
     setYear(releaseModel.year());
     QString fullPosterUrl = "https://www.anilibria.tv" + releaseModel.poster();

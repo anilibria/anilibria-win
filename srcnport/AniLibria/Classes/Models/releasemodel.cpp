@@ -17,18 +17,64 @@ void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
     m_Type = jsonObject.value("type").toString();
     m_Year = jsonObject.value("year").toString();
     m_Description = jsonObject.value("description").toString();
-    m_IsBlocked = jsonObject.value("blockedInfo").toObject().value("blocked").toBool(false);
     m_Rating = jsonObject.value("favorite").toInt(0);
     auto names = jsonObject.value("names").toArray();
     foreach(const QJsonValue & name, names) m_Names.append(name.toString());
+    m_Title = m_Names.first();
 
     auto voicers = jsonObject.value("voices").toArray();
     foreach(const QJsonValue & voicer, voicers) m_Voices.append(voicer.toString());
 
     auto genres = jsonObject.value("genres").toArray();
     foreach(const QJsonValue & genre, genres) m_Genres.append(genre.toString());
+}
 
+void ReleaseModel::readFromJson(const QJsonObject &json)
+{
+    m_Id = json["id"].toInt();
+    m_Code = json["code"].toString();
+    m_Poster = json["poster"].toString();
+    m_Series = json["series"].toString();
+    m_Status = json["status"].toString();
+    m_Timestamp = json["last"].toString();
+    m_Type = json["type"].toString();
+    m_Year = json["year"].toString();
+    m_Description = json["description"].toString();
+    m_Rating = json["rating"].toInt();
+    m_Title = json["title"].toString();
 
+    auto namesArray = json["names"].toArray();
+    foreach(const QJsonValue & name, namesArray) m_Names.append(name.toString());
+
+    auto voicers = json["voices"].toArray();
+    foreach(const QJsonValue & voicer, voicers) m_Voices.append(voicer.toString());
+
+    auto genres = json["genres"].toArray();
+    foreach(const QJsonValue & genre, genres) m_Genres.append(genre.toString());
+}
+
+void ReleaseModel::writeToJson(QJsonObject &json) const
+{
+    json["id"] = m_Id;
+    json["code"] = m_Code;
+    json["poster"] = m_Poster;
+    json["series"] = m_Series;
+    json["status"] = m_Status;
+    json["last"] = m_Timestamp;
+    json["type"] = m_Type;
+    json["year"] = m_Year;
+    json["description"] = m_Description;
+    json["rating"] = m_Rating;
+    json["title"] = m_Names.first();
+    QJsonArray namesArray = QJsonArray();
+    foreach(const QString & name, m_Names) namesArray.append(QJsonValue(name));
+    json["names"] = namesArray;
+    QJsonArray voicesArray = QJsonArray();
+    foreach(const QString & voice, m_Voices) voicesArray.append(QJsonValue(voice));
+    json["voices"] = voicesArray;
+    QJsonArray genresArray = QJsonArray();
+    foreach(const QString & genre, m_Genres) genresArray.append(QJsonValue(genre));
+    json["voices"] = genresArray;
 }
 
 QString ReleaseModel::code()
@@ -91,7 +137,7 @@ int ReleaseModel::rating()
     return m_Rating;
 }
 
-bool ReleaseModel::isBlocked()
+QString ReleaseModel::title()
 {
-    return m_IsBlocked;
+    return m_Title;
 }

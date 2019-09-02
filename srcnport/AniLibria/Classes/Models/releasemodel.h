@@ -18,13 +18,17 @@ private:
     QStringList m_Genres;
     QStringList m_Voices;
     QStringList m_Names;
+    QString m_Title;
     int m_Rating;
-    bool m_IsBlocked;
 
 public:
     ReleaseModel();
 
     void readFromApiModel(const QJsonObject &jsonObject);
+
+    void writeToJson(QJsonObject &json) const;
+
+    void readFromJson(const QJsonObject &json);
 
     QString code();
 
@@ -50,7 +54,7 @@ public:
 
     int rating();
 
-    bool isBlocked();
+    QString title();
 
 };
 

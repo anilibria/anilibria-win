@@ -8,7 +8,7 @@ Page {
     id: page
     property Drawer drawer
     property bool isBusy: false
-    property SynchronizationService synchronizeService
+    property ReleasesService releasesService
     signal navigateFrom()
 
     onWidthChanged: {
@@ -38,16 +38,12 @@ Page {
         onContentYChanged: {
             if (scrollview.atYEnd && !page.isBusy) {
                 page.isBusy = true;
-                synchronizationService.fillNextReleases();
+                releasesService.fillNextReleases();
                 page.isBusy = false;
             }
         }
         ScrollBar.vertical: ScrollBar {
             active: true;
-
-            /*onActiveChanged: {
-                if (!active) active = true;
-            }*/
         }
 
         ColumnLayout {
@@ -60,7 +56,7 @@ Page {
                 spacing: 4
                 //width: 540
                 Repeater {
-                    model: synchronizeService.releases
+                    model: releasesService.releases
                     Rectangle {
                         width: 480
                         height: 260

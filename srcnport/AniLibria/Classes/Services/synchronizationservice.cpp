@@ -7,84 +7,12 @@
 SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent)
 {
     m_AnilibriaApiService = new AnilibriaApiService(this);
-    m_Releases = *new QVector<ReleaseItemModel*>();
-    m_ApiReleases = QList<ReleaseModel>();
     connect(m_AnilibriaApiService,SIGNAL(allReleasesReceived(QString)),this,SLOT(saveReleasesToCache(QString)));
 }
 
 void SynchronizationService::synchronizeReleases()
 {
     m_AnilibriaApiService->getAllReleases();
-}
-
-void SynchronizationService::fillNextReleases()
-{
-    int startPosition = m_Releases.count();
-    int iterator = 0;
-
-    for (int i = startPosition; i < m_ApiReleases.count(); i++) {
-        if (iterator >= 30) break;
-
-        ReleaseItemModel * releaseItemModel = new ReleaseItemModel();
-        releaseItemModel->mapFromReleaseModel(m_ApiReleases[i]);
-        m_Releases.append(releaseItemModel);
-
-        iterator++;
-    }
-
-    emit releasesChanged();
-}
-
-QQmlListProperty<ReleaseItemModel> SynchronizationService::releases()
-{
-    return QQmlListProperty<ReleaseItemModel>(
-        this,
-        this,
-        &SynchronizationService::addRelease,
-        &SynchronizationService::releasesCount,
-        &SynchronizationService::release,
-        &SynchronizationService::clearReleases
-    );
-}
-
-void SynchronizationService::addRelease(ReleaseItemModel * release)
-{
-    m_Releases.append(release);
-}
-
-int SynchronizationService::releasesCount() const
-{
-    return m_Releases.count();
-}
-
-ReleaseItemModel *SynchronizationService::release(int index) const
-{
-    return m_Releases.at(index);
-}
-
-void SynchronizationService::clearReleases()
-{
-    m_Releases.clear();
-}
-
-void SynchronizationService::addRelease(QQmlListProperty<ReleaseItemModel> * list, ReleaseItemModel * release)
-{
-    reinterpret_cast<SynchronizationService*>(list->data)->addRelease(release);
-}
-
-int SynchronizationService::releasesCount(QQmlListProperty<ReleaseItemModel> * list)
-{
-    return reinterpret_cast<SynchronizationService*>(list->data)->releasesCount();
-}
-
-ReleaseItemModel *SynchronizationService::release(QQmlListProperty<ReleaseItemModel> * list, int index)
-{
-    return reinterpret_cast<SynchronizationService*>(list->data)->release(index);
-}
-
-void SynchronizationService::clearReleases(QQmlListProperty<ReleaseItemModel> * list)
-{
-    reinterpret_cast<SynchronizationService*>(list->data)->clearReleases();
 }
 
 void SynchronizationService::saveReleasesToCache(QString data)
@@ -102,25 +30,32 @@ void SynchronizationService::saveReleasesToCache(QString data)
         //TODO: need handle this situation
         //read from error object
     }
+    auto ApiReleases = QList<ReleaseModel>();
+
     QJsonValue payload = rootObject["data"];
     QJsonArray items = payload["items"].toArray();
     foreach(const QJsonValue & item, items) {
         ReleaseModel releaseModel = ReleaseModel();
         releaseModel.readFromApiModel(item.toObject());
-        m_ApiReleases.append(releaseModel);
+        ApiReleases.append(releaseModel);
     }
 
-    //TODO: save releases to cache
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/save.json";
+    QFile saveFile(path);
 
-    ReleaseModel item;
-    int iterator = 0;
-    foreach (item, m_ApiReleases) {
-        ReleaseItemModel * releaseItemModel = new ReleaseItemModel();
-        releaseItemModel->mapFromReleaseModel(item);
-        m_Releases.append(releaseItemModel);
-
-        if (iterator > 30) break; // maximum of page 30 items
-        iterator++;
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open save file.");
+        return;
     }
-    emit releasesChanged();
+
+    QJsonArray releasesJson;
+    foreach(const ReleaseModel & release, ApiReleases) {
+        QJsonObject jsonObject;
+        release.writeToJson(jsonObject);
+        releasesJson.append(jsonObject);
+    }
+    QJsonDocument saveDoc(releasesJson);
+    saveFile.write(saveDoc.toJson());
+
+    emit synchronizationCompleted();
 }
