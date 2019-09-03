@@ -12,7 +12,7 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private ObservableCollection<CinemaHallReleaseModel> m_Releases;
 
-		private CinemaHallReleaseModel m_SelectedRelease;
+		private ObservableCollection<CinemaHallReleaseModel> m_SelectedReleases;
 
 		public CinemaHallViewModel () {
 			CreateCommand ();
@@ -24,6 +24,13 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private void Watch () {
 			//start watch video
+		}
+
+		/// <summary>
+		/// Refresh releases.
+		/// </summary>
+		private void RefreshReleases () {
+
 		}
 
 		/// <summary>
@@ -53,10 +60,10 @@ namespace Anilibria.Pages.CinemaHall {
 		/// <summary>
 		/// Releases.
 		/// </summary>
-		public CinemaHallReleaseModel SelectedRelease
+		public ObservableCollection<CinemaHallReleaseModel> SelectedReleases
 		{
-			get => m_SelectedRelease;
-			set => Set ( ref m_SelectedRelease , value );
+			get => m_SelectedReleases;
+			set => Set ( ref m_SelectedReleases , value );
 		}
 
 		/// <summary>
