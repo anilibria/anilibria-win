@@ -65,7 +65,7 @@ ApplicationWindow {
 
     Drawer {
         id: drawer
-        width: window.width * 0.4
+        width: 300
         height: window.height
         background:  LinearGradient {
             anchors.fill: parent
@@ -212,6 +212,7 @@ ApplicationWindow {
     Releases {
         id: releases
         drawer: drawer
+        releasesService: releasesService
         visible: true
     }
 
