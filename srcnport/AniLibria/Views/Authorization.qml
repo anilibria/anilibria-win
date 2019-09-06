@@ -41,7 +41,7 @@ Page {
                 radius: 8
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width / 2
+                width: 350
                 height: 240
 
                 ColumnLayout {
@@ -87,12 +87,6 @@ Page {
                             drawer.open();
                         }
                     }
-                    /*Button {
-                        text: qsTr("Открыть сайдбар")
-                        onClicked: {
-                            drawer.open();
-                        }
-                    }*/
                 }
             }
         }
