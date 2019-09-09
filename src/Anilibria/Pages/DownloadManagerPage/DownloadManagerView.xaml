@@ -318,6 +318,8 @@
 							FontSize="20"
 							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 							TextWrapping="WrapWholeWords"
+							TextTrimming="WordEllipsis"
+							MaxWidth="250"
 							MaxLines="4"
 							Text="{Binding SelectedDownload.Title}"
 						/>

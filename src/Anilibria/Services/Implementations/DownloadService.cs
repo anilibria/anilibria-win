@@ -170,17 +170,15 @@ namespace Anilibria.Services.Implementations {
 			releaseItem.Videos = releaseItem.Videos.Where ( a => a.Id != videoId ).ToList ();
 
 			foreach ( var file in files ) {
-				if ( file.IsDownloaded ) {
-					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
-					await storageFile.DeleteAsync ();
-				}
+				if ( file.IsDownloaded ) await DeleteFile ( file.DownloadedPath );
+
 				if ( file.IsProgress ) {
 					m_SkipCurrentDownloadingVideo = true;
 					while ( true ) {
 						await Task.Delay ( 50 );
 						if ( !m_SkipCurrentDownloadingVideo ) {
-							var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
-							await storageFile.DeleteAsync ();
+							await DeleteFile ( file.DownloadedPath );
+							break;
 						}
 					}
 				}
@@ -197,17 +195,14 @@ namespace Anilibria.Services.Implementations {
 			if ( releaseItem == null ) return;
 
 			foreach ( var file in releaseItem.Videos ) {
-				if ( file.IsDownloaded ) {
-					var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
-					await storageFile.DeleteAsync ();
-				}
+				if ( file.IsDownloaded ) await DeleteFile ( file.DownloadedPath );
+
 				if ( file.IsProgress ) {
 					m_SkipCurrentDownloadingRelease = true;
 					while ( true ) {
 						await Task.Delay ( 200 );
 						if ( !m_SkipCurrentDownloadingRelease ) {
-							var storageFile = await StorageFile.GetFileFromPathAsync ( file.DownloadedPath );
-							await storageFile.DeleteAsync ();
+							await DeleteFile ( file.DownloadedPath );
 							break;
 						}
 					}
@@ -383,6 +378,15 @@ namespace Anilibria.Services.Implementations {
 				.FirstOrDefault ( a => a.ReleaseId == releaseId );
 		}
 
+		private async Task DeleteFile ( string path ) {
+			try {
+				var storageFile = await StorageFile.GetFileFromPathAsync ( path );
+				await storageFile.DeleteAsync ();
+			} catch {
+				//TODO: check file exists and another limitations
+			}
+		}
+
 		/// <summary>
 		/// Remove download file.
 		/// </summary>
@@ -400,18 +404,14 @@ namespace Anilibria.Services.Implementations {
 				.Where ( a => a != videoFile )
 				.ToList ();
 
-			if ( videoFile.IsDownloaded ) {
-				var storageFile = await StorageFile.GetFileFromPathAsync ( videoFile.DownloadedPath );
-				await storageFile.DeleteAsync ();
-			}
+			if ( videoFile.IsDownloaded ) await DeleteFile ( videoFile.DownloadedPath );
 
 			if ( videoFile.IsProgress ) {
 				m_SkipCurrentDownloadingVideo = true;
 				while ( true ) {
 					await Task.Delay ( 50 );
 					if ( !m_SkipCurrentDownloadingVideo ) {
-						var storageFile = await StorageFile.GetFileFromPathAsync ( videoFile.DownloadedPath );
-						await storageFile.DeleteAsync ();
+						await DeleteFile ( videoFile.DownloadedPath );
 						break;
 					}
 				}
