@@ -7,6 +7,7 @@ ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
 
 void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
 {
+    setSelected(false);
     setTitle(releaseModel.title());
     setStatus(releaseModel.status());
     setYear(releaseModel.year());
@@ -119,4 +120,17 @@ void ReleaseItemModel::setVoicers(const QString &voicers)
 
     m_Voicers = voicers;
     emit voicersChanged();
+}
+
+bool ReleaseItemModel::selected() const
+{
+    return m_Selected;
+}
+
+void ReleaseItemModel::setSelected(const bool selected)
+{
+    if (selected == m_Selected) return;
+
+    m_Selected = selected;
+    emit selectedChanged();
 }

@@ -82,7 +82,16 @@ Page {
                             width: 480
                             height: 260
                             radius: 10
+                            border.color: "red"
+                            border.width: modelData.selected ? 3 : 0
                             color: "#f2f2f2"
+                            MouseArea {
+                                width: 480
+                                height: 260
+                                onClicked: {
+                                    modelData.selected = !modelData.selected;
+                                }
+                            }
                             Grid {
                                 columnSpacing: 3
                                 columns: 2

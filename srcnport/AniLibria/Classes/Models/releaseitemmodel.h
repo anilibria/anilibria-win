@@ -16,6 +16,7 @@ class ReleaseItemModel : public QObject
     Q_PROPERTY(QString releaseType READ releaseType WRITE setReleaseType NOTIFY releaseTypeChanged)
     Q_PROPERTY(QString genres READ genres WRITE setGenres NOTIFY genresChanged)
     Q_PROPERTY(QString voicers READ voicers WRITE setVoicers NOTIFY voicersChanged)
+    Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
 
 private:
     QString m_Title;
@@ -26,6 +27,7 @@ private:
     QString m_ReleaseType;
     QString m_Genres;
     QString m_Voicers;
+    bool m_Selected;
 
 public:
     explicit ReleaseItemModel(QObject *parent = nullptr);
@@ -54,6 +56,9 @@ public:
     QString voicers() const;
     void setVoicers(const QString &voicers);
 
+    bool selected() const;
+    void setSelected(const bool selected);
+
     void mapFromReleaseModel(ReleaseModel & releaseModel);
 
 signals:
@@ -65,6 +70,7 @@ signals:
     void releaseTypeChanged();
     void genresChanged();
     void voicersChanged();
+    void selectedChanged();
 
 public slots:
 
