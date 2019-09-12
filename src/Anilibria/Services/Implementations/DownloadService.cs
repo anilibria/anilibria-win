@@ -378,7 +378,7 @@ namespace Anilibria.Services.Implementations {
 				.FirstOrDefault ( a => a.ReleaseId == releaseId );
 		}
 
-		private async Task DeleteFile ( string path ) {
+		private async Task DeleteFile ( string path ) { 
 			try {
 				var storageFile = await StorageFile.GetFileFromPathAsync ( path );
 				await storageFile.DeleteAsync ();

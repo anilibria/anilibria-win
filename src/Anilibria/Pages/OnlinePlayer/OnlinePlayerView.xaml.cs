@@ -247,6 +247,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( args.VirtualKey == VirtualKey.M ) OnlinePlayer.MediaPlayer.IsMuted = !OnlinePlayer.MediaPlayer.IsMuted;
 			if ( args.VirtualKey == VirtualKey.Home ) m_ViewModel.ShowPlaylistCommand.Execute ( null );
 			if ( args.VirtualKey == VirtualKey.End ) m_ViewModel.ShowPlaylistButton = true;
+
+			var element = FocusManager.GetFocusedElement ();
+			var slider = element as Slider;
+
+			var isVolumeSlider = slider != null && slider.Name == "VolumeSlider";
+			if ( isVolumeSlider ) return;
+
 			if ( args.VirtualKey == VirtualKey.Left ) {
 				var minutes = m_ViewModel.JumpMinutes;
 				var seconds = m_ViewModel.JumpSeconds;
