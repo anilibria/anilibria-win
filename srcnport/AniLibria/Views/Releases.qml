@@ -10,6 +10,8 @@ Page {
     property Drawer drawer
     property ReleasesService releasesService
     property bool selectMode
+    property variant selectedReleases: []
+    property variant openedRelease: null
 
     signal navigateFrom()
 
@@ -29,6 +31,14 @@ Page {
         width: 180
         height: 260
         radius: 10
+        visible: false
+    }
+
+    Rectangle {
+        id: cardMask
+        width: 180
+        height: 260
+        radius: 6
         visible: false
     }
 
@@ -63,6 +73,14 @@ Page {
                 Switch {
                     onCheckedChanged: {
                         page.selectMode = checked;
+                        if (!checked) {
+                            for (const selectedRelease of page.selectedReleases) {
+                                selectedRelease.selected = false;
+                            }
+                            page.selectedReleases = [];
+                        } else {
+                            page.openedRelease = null;
+                        }
                     }
                 }
             }
@@ -191,11 +209,98 @@ Page {
         }
     }
 
+    ColumnLayout {
+        id: cardContainer
+        visible: page.openedRelease ? true : false
+        anchors.fill: parent
+        spacing: 0
+        Rectangle {
+            color: "#D3D3D3"
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Grid {
+                columnSpacing: 3
+                columns: 2
+                bottomPadding: 4
+                leftPadding: 4
+                topPadding: 4
+                rightPadding: 4
+                Image {
+                    source: page.openedRelease.poster
+                    fillMode: Image.PreserveAspectCrop
+                    width: 280
+                    height: 390
+                    layer.enabled: true
+                    layer.effect: OpacityMask {
+                        maskSource: cardMask
+                    }
+                }
+                Column {
+                    Text {
+                        textFormat: Text.RichText
+                        color: "#a32727"
+                        font.pointSize: 12
+                        width: 280
+                        leftPadding: 8
+                        topPadding: 6
+                        wrapMode: Text.WordWrap
+                        maximumLineCount: 3
+                        text: qsTr(page.openedRelease.title)
+                    }
+                    Text {
+                        textFormat: Text.RichText
+                        font.pointSize: 10
+                        leftPadding: 8
+                        topPadding: 4
+                        text: qsTr("<b>Статус:</b> ") + qsTr(page.openedRelease.status)
+                    }
+                    Text {
+                        font.pointSize: 10
+                        leftPadding: 8
+                        topPadding: 4
+                        text: qsTr("<b>Год:</b> ") + qsTr(page.openedRelease.year)
+                    }
+                    Text {
+                        textFormat: Text.RichText
+                        font.pointSize: 10
+                        leftPadding: 8
+                        topPadding: 4
+                        width: 280
+                        wrapMode: Text.WordWrap
+                        maximumLineCount: 2
+                        text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease.releaseType)
+                    }
+                    Text {
+                        font.pointSize: 10
+                        leftPadding: 8
+                        topPadding: 4
+                        width: 280
+                        wrapMode: Text.WordWrap
+                        maximumLineCount: 2
+                        text: qsTr("<b>Жанры:</b> ") + qsTr(page.openedRelease.genres)
+                    }
+                    Text {
+                        font.pointSize: 10
+                        leftPadding: 8
+                        topPadding: 4
+                        width: 280
+                        wrapMode: Text.WordWrap
+                        maximumLineCount: 2
+                        text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease.voicers)
+                    }
+                }
+            }
+        }
+
+    }
+
     function selectItem(item) {
         if (page.selectMode) {
+            if (page.openedRelease) page.openedRelease = null;
             item.selected = !item.selected;
+            selectedReleases.push(item);
         } else {
-            //TODO: open release card
+            page.openedRelease = item;
         }
     }
 }

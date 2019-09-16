@@ -5,7 +5,7 @@ Item {
     id: rootItem
     signal pressed()
     property string iconSource
-    height: 40
+    height: 60
 
 
     MouseArea {
@@ -18,8 +18,8 @@ Item {
                 opacity: .6
             }
             leftPadding: 7
-            topPadding: 4
-            bottomPadding: 4
+            topPadding: 10
+            bottomPadding: 10
             icon.color: "transparent"
             icon.source: iconSource
             onClicked: {
