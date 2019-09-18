@@ -74,7 +74,7 @@ void ReleaseModel::writeToJson(QJsonObject &json) const
     json["voices"] = voicesArray;
     QJsonArray genresArray = QJsonArray();
     foreach(const QString & genre, m_Genres) genresArray.append(QJsonValue(genre));
-    json["voices"] = genresArray;
+    json["genres"] = genresArray;
 }
 
 QString ReleaseModel::code()

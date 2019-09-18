@@ -286,3 +286,4 @@ __pycache__/
 *.xsd.cs
 /installer/Output/AnilibriaInstallerSetup.exe
 /installer/AnilibriaInstaller.exe
+/srcnport/AniLibria/AniLibria.pro.user.4.10-pre1

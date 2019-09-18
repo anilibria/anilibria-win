@@ -11,6 +11,7 @@ Page {
     property ReleasesService releasesService
     property bool selectMode
     property variant selectedReleases: []
+    property bool isBusy: false
     property variant openedRelease: null
 
     signal navigateFrom()
@@ -220,13 +221,14 @@ Page {
             Layout.fillHeight: true
             Grid {
                 columnSpacing: 3
-                columns: 2
+                columns: 3
                 bottomPadding: 4
                 leftPadding: 4
                 topPadding: 4
                 rightPadding: 4
                 Image {
-                    source: page.openedRelease.poster
+                    id: cardPoster
+                    source: page.openedRelease ? page.openedRelease.poster : '../Assets/Icons/donate.jpg'
                     fillMode: Image.PreserveAspectCrop
                     width: 280
                     height: 390
@@ -236,6 +238,7 @@ Page {
                     }
                 }
                 Column {
+                    width: page.width - cardButtons.width - cardPoster.width
                     Text {
                         textFormat: Text.RichText
                         color: "#a32727"
@@ -245,20 +248,20 @@ Page {
                         topPadding: 6
                         wrapMode: Text.WordWrap
                         maximumLineCount: 3
-                        text: qsTr(page.openedRelease.title)
+                        text: qsTr(page.openedRelease ? page.openedRelease.title : '')
                     }
                     Text {
                         textFormat: Text.RichText
                         font.pointSize: 10
                         leftPadding: 8
                         topPadding: 4
-                        text: qsTr("<b>Статус:</b> ") + qsTr(page.openedRelease.status)
+                        text: qsTr("<b>Статус:</b> ") + qsTr(page.openedRelease ? page.openedRelease.status : '')
                     }
                     Text {
                         font.pointSize: 10
                         leftPadding: 8
                         topPadding: 4
-                        text: qsTr("<b>Год:</b> ") + qsTr(page.openedRelease.year)
+                        text: qsTr("<b>Год:</b> ") + qsTr(page.openedRelease ? page.openedRelease.year : '')
                     }
                     Text {
                         textFormat: Text.RichText
@@ -268,7 +271,7 @@ Page {
                         width: 280
                         wrapMode: Text.WordWrap
                         maximumLineCount: 2
-                        text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease.releaseType)
+                        text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease ? page.openedRelease.releaseType : '')
                     }
                     Text {
                         font.pointSize: 10
@@ -277,7 +280,7 @@ Page {
                         width: 280
                         wrapMode: Text.WordWrap
                         maximumLineCount: 2
-                        text: qsTr("<b>Жанры:</b> ") + qsTr(page.openedRelease.genres)
+                        text: qsTr("<b>Жанры:</b> ") + qsTr(page.openedRelease ? page.openedRelease.genres : '')
                     }
                     Text {
                         font.pointSize: 10
@@ -286,7 +289,18 @@ Page {
                         width: 280
                         wrapMode: Text.WordWrap
                         maximumLineCount: 2
-                        text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease.voicers)
+                        text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease ? page.openedRelease.voicers : '')
+                    }
+                }
+                Column {
+                    id: cardButtons
+                    width: 62
+                    AppPanelButton {
+                        iconSource: "../Assets/Icons/menu.svg"
+                        width: 60
+                        onPressed: {
+                            page.openedRelease = null;
+                        }
                     }
                 }
             }
