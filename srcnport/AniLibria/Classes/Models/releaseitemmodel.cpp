@@ -16,6 +16,8 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setReleaseType(releaseModel.type());
     setVoicers(releaseModel.voices().join(", "));
     setGenres(releaseModel.genres().join(", "));
+    setDescription(releaseModel.description());
+    setSeason(releaseModel.season());
 }
 
 QString ReleaseItemModel::title() const
@@ -133,4 +135,17 @@ void ReleaseItemModel::setSelected(const bool selected)
 
     m_Selected = selected;
     emit selectedChanged();
+}
+
+QString ReleaseItemModel::season() const
+{
+    return m_Season;
+}
+
+void ReleaseItemModel::setSeason(const QString &season)
+{
+    if (season == m_Season) return;
+
+    m_Season = season;
+    emit seasonChanged();
 }

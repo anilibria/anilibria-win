@@ -243,7 +243,7 @@ Page {
                         textFormat: Text.RichText
                         color: "#a32727"
                         font.pointSize: 12
-                        width: 280
+                        width: parent.width
                         leftPadding: 8
                         topPadding: 6
                         wrapMode: Text.WordWrap
@@ -264,11 +264,17 @@ Page {
                         text: qsTr("<b>Год:</b> ") + qsTr(page.openedRelease ? page.openedRelease.year : '')
                     }
                     Text {
+                        font.pointSize: 10
+                        leftPadding: 8
+                        topPadding: 4
+                        text: qsTr("<b>Сезон:</b> ") + qsTr(page.openedRelease ? page.openedRelease.season : '')
+                    }
+                    Text {
                         textFormat: Text.RichText
                         font.pointSize: 10
                         leftPadding: 8
                         topPadding: 4
-                        width: 280
+                        width: parent.width
                         wrapMode: Text.WordWrap
                         maximumLineCount: 2
                         text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease ? page.openedRelease.releaseType : '')
@@ -277,7 +283,7 @@ Page {
                         font.pointSize: 10
                         leftPadding: 8
                         topPadding: 4
-                        width: 280
+                        width: parent.width
                         wrapMode: Text.WordWrap
                         maximumLineCount: 2
                         text: qsTr("<b>Жанры:</b> ") + qsTr(page.openedRelease ? page.openedRelease.genres : '')
@@ -286,17 +292,26 @@ Page {
                         font.pointSize: 10
                         leftPadding: 8
                         topPadding: 4
-                        width: 280
+                        width: parent.width
                         wrapMode: Text.WordWrap
                         maximumLineCount: 2
                         text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease ? page.openedRelease.voicers : '')
+                    }
+                    Text {
+                        textFormat: Text.RichText
+                        font.pointSize: 10
+                        leftPadding: 8
+                        topPadding: 4
+                        width: parent.width
+                        wrapMode: Text.WordWrap
+                        text: qsTr("<b>Описание:</b> ") + qsTr(page.openedRelease ? page.openedRelease.description : '')
                     }
                 }
                 Column {
                     id: cardButtons
                     width: 62
                     AppPanelButton {
-                        iconSource: "../Assets/Icons/menu.svg"
+                        iconSource: "../Assets/Icons/close.svg"
                         width: 60
                         onPressed: {
                             page.openedRelease = null;

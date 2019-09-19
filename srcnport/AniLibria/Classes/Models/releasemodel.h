@@ -19,6 +19,7 @@ private:
     QStringList m_Voices;
     QStringList m_Names;
     QString m_Title;
+    QString m_Season;
     int m_Rating;
 
 public:
@@ -45,6 +46,8 @@ public:
     QString year();
 
     QString description();
+
+    QString season();
 
     QStringList genres();
 
