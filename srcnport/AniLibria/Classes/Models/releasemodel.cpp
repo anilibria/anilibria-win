@@ -80,6 +80,11 @@ void ReleaseModel::writeToJson(QJsonObject &json) const
     json["genres"] = genresArray;
 }
 
+int ReleaseModel::id()
+{
+    return m_Id;
+}
+
 QString ReleaseModel::code()
 {
     return m_Code;

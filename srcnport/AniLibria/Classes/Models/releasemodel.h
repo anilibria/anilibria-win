@@ -31,6 +31,8 @@ public:
 
     void readFromJson(const QJsonObject &json);
 
+    int id();
+
     QString code();
 
     QString series();

@@ -18,6 +18,7 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setGenres(releaseModel.genres().join(", "));
     setDescription(releaseModel.description());
     setSeason(releaseModel.season());
+    setId(releaseModel.id());
 }
 
 QString ReleaseItemModel::title() const
@@ -148,4 +149,17 @@ void ReleaseItemModel::setSeason(const QString &season)
 
     m_Season = season;
     emit seasonChanged();
+}
+
+int ReleaseItemModel::id() const
+{
+    return m_Id;
+}
+
+void ReleaseItemModel::setId(const int id)
+{
+    if (id == m_Id) return;
+
+    m_Id = id;
+    emit idChanged();
 }

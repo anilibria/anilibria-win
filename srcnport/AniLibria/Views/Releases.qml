@@ -15,6 +15,7 @@ Page {
     property variant openedRelease: null
 
     signal navigateFrom()
+    signal watchRelease(int releaseId)
 
     onWidthChanged: {
         const columnCount = parseInt(page.width / 520);
@@ -219,102 +220,113 @@ Page {
             color: "#D3D3D3"
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Grid {
-                columnSpacing: 3
-                columns: 3
-                bottomPadding: 4
-                leftPadding: 4
-                topPadding: 4
-                rightPadding: 4
-                Image {
-                    id: cardPoster
-                    source: page.openedRelease ? page.openedRelease.poster : '../Assets/Icons/donate.jpg'
-                    fillMode: Image.PreserveAspectCrop
-                    width: 280
-                    height: 390
-                    layer.enabled: true
-                    layer.effect: OpacityMask {
-                        maskSource: cardMask
+            Column {
+                Grid {
+                    columnSpacing: 3
+                    columns: 3
+                    bottomPadding: 4
+                    leftPadding: 4
+                    topPadding: 4
+                    rightPadding: 4
+                    Image {
+                        id: cardPoster
+                        source: page.openedRelease ? page.openedRelease.poster : '../Assets/Icons/donate.jpg'
+                        fillMode: Image.PreserveAspectCrop
+                        width: 280
+                        height: 390
+                        layer.enabled: true
+                        layer.effect: OpacityMask {
+                            maskSource: cardMask
+                        }
+                    }
+                    Column {
+                        width: page.width - cardButtons.width - cardPoster.width
+                        enabled: !!page.openedRelease
+                        Text {
+                            textFormat: Text.RichText
+                            color: "#a32727"
+                            font.pointSize: 12
+                            width: parent.width
+                            leftPadding: 8
+                            topPadding: 6
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 3
+                            text: qsTr(page.openedRelease ? page.openedRelease.title : '')
+                        }
+                        Text {
+                            textFormat: Text.RichText
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            text: qsTr("<b>Статус:</b> ") + qsTr(page.openedRelease ? page.openedRelease.status : '')
+                        }
+                        Text {
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            text: qsTr("<b>Год:</b> ") + qsTr(page.openedRelease ? page.openedRelease.year : '')
+                        }
+                        Text {
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            text: qsTr("<b>Сезон:</b> ") + qsTr(page.openedRelease ? page.openedRelease.season : '')
+                        }
+                        Text {
+                            textFormat: Text.RichText
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            width: parent.width
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 2
+                            text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease ? page.openedRelease.releaseType : '')
+                        }
+                        Text {
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            width: parent.width
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 2
+                            text: qsTr("<b>Жанры:</b> ") + qsTr(page.openedRelease ? page.openedRelease.genres : '')
+                        }
+                        Text {
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            width: parent.width
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 2
+                            text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease ? page.openedRelease.voicers : '')
+                        }
+                        Text {
+                            textFormat: Text.RichText
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            width: parent.width
+                            wrapMode: Text.WordWrap
+                            text: qsTr("<b>Описание:</b> ") + qsTr(page.openedRelease ? page.openedRelease.description : '')
+                        }
+                    }
+                    Column {
+                        id: cardButtons
+                        width: 62
+                        AppPanelButton {
+                            iconSource: "../Assets/Icons/close.svg"
+                            width: 60
+                            onPressed: {
+                                page.openedRelease = null;
+                            }
+                        }
                     }
                 }
-                Column {
-                    width: page.width - cardButtons.width - cardPoster.width
-                    Text {
-                        textFormat: Text.RichText
-                        color: "#a32727"
-                        font.pointSize: 12
-                        width: parent.width
-                        leftPadding: 8
-                        topPadding: 6
-                        wrapMode: Text.WordWrap
-                        maximumLineCount: 3
-                        text: qsTr(page.openedRelease ? page.openedRelease.title : '')
-                    }
-                    Text {
-                        textFormat: Text.RichText
-                        font.pointSize: 10
-                        leftPadding: 8
-                        topPadding: 4
-                        text: qsTr("<b>Статус:</b> ") + qsTr(page.openedRelease ? page.openedRelease.status : '')
-                    }
-                    Text {
-                        font.pointSize: 10
-                        leftPadding: 8
-                        topPadding: 4
-                        text: qsTr("<b>Год:</b> ") + qsTr(page.openedRelease ? page.openedRelease.year : '')
-                    }
-                    Text {
-                        font.pointSize: 10
-                        leftPadding: 8
-                        topPadding: 4
-                        text: qsTr("<b>Сезон:</b> ") + qsTr(page.openedRelease ? page.openedRelease.season : '')
-                    }
-                    Text {
-                        textFormat: Text.RichText
-                        font.pointSize: 10
-                        leftPadding: 8
-                        topPadding: 4
-                        width: parent.width
-                        wrapMode: Text.WordWrap
-                        maximumLineCount: 2
-                        text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease ? page.openedRelease.releaseType : '')
-                    }
-                    Text {
-                        font.pointSize: 10
-                        leftPadding: 8
-                        topPadding: 4
-                        width: parent.width
-                        wrapMode: Text.WordWrap
-                        maximumLineCount: 2
-                        text: qsTr("<b>Жанры:</b> ") + qsTr(page.openedRelease ? page.openedRelease.genres : '')
-                    }
-                    Text {
-                        font.pointSize: 10
-                        leftPadding: 8
-                        topPadding: 4
-                        width: parent.width
-                        wrapMode: Text.WordWrap
-                        maximumLineCount: 2
-                        text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease ? page.openedRelease.voicers : '')
-                    }
-                    Text {
-                        textFormat: Text.RichText
-                        font.pointSize: 10
-                        leftPadding: 8
-                        topPadding: 4
-                        width: parent.width
-                        wrapMode: Text.WordWrap
-                        text: qsTr("<b>Описание:</b> ") + qsTr(page.openedRelease ? page.openedRelease.description : '')
-                    }
-                }
-                Column {
-                    id: cardButtons
-                    width: 62
-                    AppPanelButton {
-                        iconSource: "../Assets/Icons/close.svg"
-                        width: 60
-                        onPressed: {
-                            page.openedRelease = null;
+                Row {
+                    Button {
+                        text: qsTr("Смотреть")
+                        onClicked: {
+                            watchRelease(page.openedRelease.id);
                         }
                     }
                 }
