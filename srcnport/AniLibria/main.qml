@@ -214,6 +214,10 @@ ApplicationWindow {
         drawer: drawer
         releasesService: releasesService
         visible: true
+        onWatchRelease: {
+            videoplayer.setReleaseVideo(releaseId, -1);
+            window.showPage("videoplayer");
+        }
     }
 
     Authorization {

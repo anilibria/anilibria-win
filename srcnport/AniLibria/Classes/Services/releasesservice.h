@@ -23,8 +23,8 @@ public:
     explicit ReleasesService(QObject *parent = nullptr);
 
     Q_INVOKABLE void fillNextReleases();
-
     Q_INVOKABLE void loadReleasesCache();
+    Q_INVOKABLE ReleaseItemModel* getRelease(int releaseId);
 
     QQmlListProperty<ReleaseItemModel> releases();
     void addRelease(ReleaseItemModel*);

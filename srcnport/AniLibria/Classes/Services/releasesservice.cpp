@@ -1,4 +1,5 @@
 #include "releasesservice.h"
+#include "../Models/releaseitemmodel.h"
 
 ReleasesService::ReleasesService(QObject *parent) : QObject(parent)
 {
@@ -51,6 +52,18 @@ void ReleasesService::loadReleasesCache()
     }
 
     fillNextReleases();
+}
+
+ReleaseItemModel *ReleasesService::getRelease(int releaseId)
+{
+    ReleaseItemModel * findRelease = nullptr;
+    foreach(ReleaseItemModel *release, m_Releases) {
+        if (release->id() == releaseId) {
+            findRelease = release;
+            break;
+        }
+    }
+    return findRelease;
 }
 
 QQmlListProperty<ReleaseItemModel> ReleasesService::releases()

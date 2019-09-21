@@ -4,8 +4,11 @@ import QtMultimedia 5.12
 import "../Controls"
 
 Page {
+    id: _page
     property Drawer drawer
     property bool isFullScreen: false
+    property var selectedRelease: null
+
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
     signal changeFullScreenMode(bool fullScreen)
@@ -13,7 +16,8 @@ Page {
         player.pause();
     }
     onSetReleaseVideo: {
-        // get seria
+        const release = releasesService.getRelease(releaseId);
+        if (release) _page.selectedRelease = release;
     }
 
     anchors.fill: parent
