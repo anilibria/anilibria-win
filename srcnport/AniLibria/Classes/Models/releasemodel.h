@@ -2,6 +2,7 @@
 #define RELEASEMODEL_H
 
 #include <QtCore>
+#include "onlinevideomodel.h"
 
 class ReleaseModel
 {
@@ -18,6 +19,7 @@ private:
     QStringList m_Genres;
     QStringList m_Voices;
     QStringList m_Names;
+    QList<OnlineVideoModel> m_Videos;
     QString m_Title;
     QString m_Season;
     int m_Rating;
@@ -60,6 +62,8 @@ public:
     int rating();
 
     QString title();
+
+    QList<OnlineVideoModel> videos();
 
 };
 

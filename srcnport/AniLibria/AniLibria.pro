@@ -16,6 +16,7 @@ SOURCES += \
     Classes/Models/onlinevideomodel.cpp \
     Classes/Models/releaseitemmodel.cpp \
     Classes/Models/releasemodel.cpp \
+    Classes/Models/releasevideomodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
     Classes/Services/releasesservice.cpp \
     Classes/Services/synchronizationservice.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     Classes/Models/onlinevideomodel.h \
     Classes/Models/releaseitemmodel.h \
     Classes/Models/releasemodel.h \
+    Classes/Models/releasevideomodel.h \
     Classes/Services/anilibriaapiservice.h \
     Classes/Services/releasesservice.h \
     Classes/Services/synchronizationservice.h

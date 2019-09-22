@@ -1,9 +1,6 @@
+#include <QtCore>
 #include "releaseitemmodel.h"
-
-ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
-{
-
-}
+#include "releasevideomodel.h"
 
 void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
 {
@@ -19,6 +16,22 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setDescription(releaseModel.description());
     setSeason(releaseModel.season());
     setId(releaseModel.id());
+    QList<OnlineVideoModel> releaseVideos = releaseModel.videos();
+    foreach(OnlineVideoModel video, releaseVideos) {
+        auto videoModel = new ReleaseVideoModel(this);
+        videoModel->setId(video.id());
+        videoModel->setSd(video.sd());
+        videoModel->setHd(video.hd());
+        videoModel->setFullhd(video.fullhd());
+        videoModel->setSrchd(video.sourcehd());
+        videoModel->setSrcsd(video.sourcesd());
+        m_Videos.append(videoModel);
+    }
+}
+
+ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
+{
+    m_Videos = QList<ReleaseVideoModel*>();
 }
 
 QString ReleaseItemModel::title() const
@@ -162,4 +175,9 @@ void ReleaseItemModel::setId(const int id)
 
     m_Id = id;
     emit idChanged();
+}
+
+QQmlListProperty<ReleaseVideoModel> ReleaseItemModel::videos()
+{
+    return QQmlListProperty<ReleaseVideoModel>(this, m_Videos);
 }

@@ -3,7 +3,7 @@
 
 ReleaseModel::ReleaseModel()
 {
-
+    m_Videos = QList<OnlineVideoModel>();
 }
 
 void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
@@ -28,6 +28,13 @@ void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
 
     auto genres = jsonObject.value("genres").toArray();
     foreach(const QJsonValue & genre, genres) m_Genres.append(genre.toString());
+
+    auto videos = jsonObject.value("playlist").toArray();
+    foreach(QJsonValue video, videos) {
+        auto videoModel = OnlineVideoModel();
+        videoModel.readFromApiModel(video.toObject());
+        m_Videos.append(videoModel);
+    }
 }
 
 void ReleaseModel::readFromJson(const QJsonObject &json)
@@ -53,6 +60,13 @@ void ReleaseModel::readFromJson(const QJsonObject &json)
 
     auto genres = json["genres"].toArray();
     foreach(const QJsonValue & genre, genres) m_Genres.append(genre.toString());
+
+    auto videos = json["playlist"].toArray();
+    foreach(QJsonValue video, videos) {
+        auto videoModel = OnlineVideoModel();
+        videoModel.readFromApiModel(video.toObject());
+        m_Videos.append(videoModel);
+    }
 }
 
 void ReleaseModel::writeToJson(QJsonObject &json) const
@@ -78,6 +92,14 @@ void ReleaseModel::writeToJson(QJsonObject &json) const
     QJsonArray genresArray = QJsonArray();
     foreach(const QString & genre, m_Genres) genresArray.append(QJsonValue(genre));
     json["genres"] = genresArray;
+
+    QJsonArray playlistArray = QJsonArray();
+    foreach(OnlineVideoModel video, m_Videos) {
+        QJsonObject jsonObject;
+        video.writeToJson(jsonObject);
+        playlistArray.append(jsonObject);
+    }
+    json["playlist"] = playlistArray;
 }
 
 int ReleaseModel::id()
@@ -153,4 +175,9 @@ int ReleaseModel::rating()
 QString ReleaseModel::title()
 {
     return m_Title;
+}
+
+QList<OnlineVideoModel> ReleaseModel::videos()
+{
+    return m_Videos;
 }
