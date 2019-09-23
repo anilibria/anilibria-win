@@ -254,11 +254,10 @@ namespace Anilibria.Pages.Releases {
 				m_SelectedOpenVideoMode = m_OpenVideoModes.First ();
 			}
 
-			if (values.ContainsKey(IsDarkThemeSettings))
-			{
-				IsDarkTheme = (bool)values[IsDarkThemeSettings];
-			} else
-			{
+			if ( values.ContainsKey ( IsDarkThemeSettings ) ) {
+				IsDarkTheme = (bool) values[IsDarkThemeSettings];
+			}
+			else {
 				IsDarkTheme = false;
 			}
 		}
@@ -399,10 +398,14 @@ namespace Anilibria.Pages.Releases {
 
 		private async void RefreshAfterSynchronize ( object parameter ) {
 			IsShowReleaseCard = false;
+
+			await RefreshFavorites ();
+			var needRefresh = RefreshNotification ( needSendToasts: true );
+
+			if ( !needRefresh ) return;
+
 			RefreshReleases ();
 			RefreshSelectedReleases ();
-			await RefreshFavorites ();
-			RefreshNotification ( needSendToasts: true );
 		}
 
 
@@ -909,10 +912,10 @@ namespace Anilibria.Pages.Releases {
 			return newTorrents.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Count ();
 		}
 
-		private void RefreshNotification ( bool needSendToasts = false ) {
+		private bool RefreshNotification ( bool needSendToasts = false ) {
 			var collection = m_DataContext.GetCollection<ChangesEntity> ();
 			m_Changes = collection.FirstOrDefault ();
-			if ( m_Changes == null ) return;
+			if ( m_Changes == null ) return false;
 
 			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
 			if ( m_Changes.NewOnlineSeries.Any () ) {
@@ -928,10 +931,10 @@ namespace Anilibria.Pages.Releases {
 			IsNewTorrentSeries = NewTorrentSeriesCount > 0;
 			IsShowNotification = NewReleasesCount > 0 || NewOnlineSeriesCount > 0 || NewTorrentSeriesCount > 0;
 
-			if ( !needSendToasts ) return;
+			if ( !needSendToasts ) return false;
 
 			var historyChanges = m_DataContext.GetCollection<HistoryChangeEntity> ().FirstOrDefault ();
-			if ( historyChanges == null ) return;
+			if ( historyChanges == null ) return false;
 
 			var historyOnlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
 			if ( historyChanges.NewOnlineSeries != null && historyChanges.NewOnlineSeries.Any () && historyChanges.ReleaseOnlineSeries != null ) {
@@ -945,11 +948,16 @@ namespace Anilibria.Pages.Releases {
 					.ToArray ();
 			}
 
+			var newReleasesNotification = NewReleasesCount > historyChanges.NewReleases.Count ();
+			var newOnlineSeries = NewOnlineSeriesCount > GetCountOnlineSeries ( historyOnlineSeriesReleases , historyChanges.NewOnlineSeries );
+			var newTorrentSeries = NewTorrentSeriesCount > GetCountTorrentSeries ( historyChanges.NewTorrentSeries );
+
 			SendToastByChanges (
-				NewReleasesCount > historyChanges.NewReleases.Count () ,
-				NewOnlineSeriesCount > GetCountOnlineSeries ( historyOnlineSeriesReleases , historyChanges.NewOnlineSeries ) ,
-				NewTorrentSeriesCount > GetCountTorrentSeries ( historyChanges.NewTorrentSeries )
+				newReleasesNotification ,
+				newOnlineSeries ,
+				newTorrentSeries
 			);
+			return newReleasesNotification || newOnlineSeries || newTorrentSeries;
 		}
 
 		private LocalFavoriteEntity GetLocalFavorites ( IEntityCollection<LocalFavoriteEntity> collection ) {
