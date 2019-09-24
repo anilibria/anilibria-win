@@ -8,6 +8,7 @@ Page {
     property Drawer drawer
     property bool isFullScreen: false
     property var selectedRelease: null
+    property string videoSource: ""
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -18,6 +19,9 @@ Page {
     onSetReleaseVideo: {
         const release = releasesService.getRelease(releaseId);
         if (release) _page.selectedRelease = release;
+        console.log(_page.selectedRelease.videos[0].sd);
+        _page.videoSource = _page.selectedRelease.videos[0].sd;
+        player.play();
     }
 
     anchors.fill: parent
@@ -28,8 +32,7 @@ Page {
 
     MediaPlayer {
         id: player
-        source: "https://de10.anilibria.tv/videos/ts/3996/0105-sd/playlist.m3u8"
-        //source: "D:\ChromeDownload\test.mp4"
+        source: _page.videoSource
         autoPlay: false
         onPlaybackStateChanged: {
             playButton.visible = playbackState === MediaPlayer.PausedState || playbackState === MediaPlayer.StoppedState;
@@ -63,7 +66,7 @@ Page {
         id: controlPanel
         color: "white"
         anchors.bottom: parent.bottom
-        width: parent.width
+        width: _page.width
         height: 70
         Row {
             spacing: 5
