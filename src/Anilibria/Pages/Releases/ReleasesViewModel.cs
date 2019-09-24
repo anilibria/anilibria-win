@@ -190,6 +190,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsShowPosterPreview;
 
+		private bool m_IsDirectRefreshing = false;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -397,15 +399,16 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void RefreshAfterSynchronize ( object parameter ) {
-			IsShowReleaseCard = false;
 
 			await RefreshFavorites ();
 			var needRefresh = RefreshNotification ( needSendToasts: true );
 
-			if ( !needRefresh ) return;
-
-			RefreshReleases ();
-			RefreshSelectedReleases ();
+			if ( needRefresh || m_IsDirectRefreshing ) {
+				m_IsDirectRefreshing = false;
+				IsShowReleaseCard = false;
+				RefreshReleases ();
+				RefreshSelectedReleases ();
+			}
 		}
 
 
@@ -874,6 +877,8 @@ namespace Anilibria.Pages.Releases {
 		private async void Refresh () {
 			IsRefreshing = true;
 			RaiseCanExecuteChanged ( RefreshCommand );
+
+			m_IsDirectRefreshing = true;
 
 			await m_SynchronizeService.SynchronizeReleases ();
 
