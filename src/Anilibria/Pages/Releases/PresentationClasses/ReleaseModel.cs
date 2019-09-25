@@ -12,12 +12,18 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		private bool m_AddToFavorite;
 
 		private OnlineVideoModel m_PrefferedOpenedVideo;
-		
+
 		private int m_CountSeenVideoOnline;
-		
+
 		private string m_DisplaySeenVideoOnline;
 
 		private bool m_IsSeen;
+
+		private int m_TorrentsCount;
+
+		private int m_CountVideoOnline;
+
+		private string m_Announce;
 
 		/// <summary>
 		/// Identifier.
@@ -42,8 +48,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		/// </summary>
 		public string Announce
 		{
-			get;
-			set;
+			get => m_Announce;
+			set => Set ( ref m_Announce , value );
 		}
 
 		/// <summary>
@@ -186,8 +192,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		/// </summary>
 		public int CountVideoOnline
 		{
-			get;
-			set;
+			get => m_CountVideoOnline;
+			set => Set ( ref m_CountVideoOnline , value );
 		}
 
 		/// <summary>
@@ -240,8 +246,8 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		/// </summary>
 		public int TorrentsCount
 		{
-			get;
-			set;
+			get => m_TorrentsCount;
+			set => Set ( ref m_TorrentsCount , value );
 		}
 
 		/// <summary>

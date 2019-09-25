@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<SynchronizationService>("Anilibria.Services", 1, 0, "SynchronizationService");
     qmlRegisterType<ReleaseItemModel>("Anilibria.Models", 1, 0, "ReleaseModel");
     qmlRegisterType<ReleasesService>("Anilibria.Services", 1, 0, "ReleasesService");
+    qmlRegisterType<ReleaseVideoModel>("Anilibria.Models", 1, 0, "ReleaseVideoModel");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

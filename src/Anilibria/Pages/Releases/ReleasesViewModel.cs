@@ -408,6 +408,43 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = false;
 				RefreshReleases ();
 				RefreshSelectedReleases ();
+			} else {
+				RefreshReleasesCache ();
+
+				foreach ( var releaseItem in m_Collection ) {
+					var originalRelease = m_AllReleases.FirstOrDefault ( a => a.Id == releaseItem.Id );
+					if ( originalRelease == null ) continue;
+
+					releaseItem.Announce = originalRelease.Announce;
+					releaseItem.CountVideoOnline = originalRelease.Playlist?.Count () ?? 0;
+					releaseItem.TorrentsCount = originalRelease?.Torrents?.Count () ?? 0;
+					releaseItem.Torrents = originalRelease?.Torrents?
+						.Select (
+							torrent =>
+								new TorrentModel {
+									Completed = torrent.Completed ,
+									Quality = $"[{torrent.Quality}]" ,
+									Series = torrent.Series ,
+									Size = FileHelper.GetFileSize ( torrent.Size ) ,
+									Url = torrent.Url
+								}
+						)?.ToList () ?? Enumerable.Empty<TorrentModel> ();
+					var releasesSeensVideos = m_SeenVideoStates?.FirstOrDefault ( b => b.ReleaseId == releaseItem.Id )?.VideoStates ?? Enumerable.Empty<VideoStateEntity> ();
+					releaseItem.OnlineVideos = originalRelease.Playlist?
+						.Select (
+							videoOnline =>
+								new OnlineVideoModel {
+									Order = videoOnline.Id ,
+									Title = videoOnline.Title ,
+									HDQuality = videoOnline.HD ,
+									SDQuality = videoOnline.SD ,
+									FullHDQuality = videoOnline.FullHD ,
+									DownloadableHD = videoOnline.DownloadableHD ,
+									DownloadableSD = videoOnline.DownloadableSD ,
+									IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
+								}
+						)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
+				}
 			}
 		}
 
@@ -1256,9 +1293,7 @@ namespace Anilibria.Pages.Releases {
 		/// Refresh releases.
 		/// </summary>
 		private void RefreshReleases () {
-			m_AllReleases = GetReleasesByCurrentMode ();
-			m_SchedulesReleases = GetScheduleReleases ();
-			EmptyReleases = m_AllReleases.Count () == 0;
+			RefreshReleasesCache ();
 
 			if ( GroupedGridVisible ) {
 				GroupingCollection = GetGroupedReleases ();
@@ -1271,6 +1306,12 @@ namespace Anilibria.Pages.Releases {
 				};
 				RaisePropertyChanged ( () => Collection );
 			}
+		}
+
+		private void RefreshReleasesCache () {
+			m_AllReleases = GetReleasesByCurrentMode ();
+			m_SchedulesReleases = GetScheduleReleases ();
+			EmptyReleases = m_AllReleases.Count () == 0;
 		}
 
 		private IDictionary<int , IEnumerable<long>> GetScheduleReleases () {
