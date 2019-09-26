@@ -19,7 +19,11 @@ Page {
     onSetReleaseVideo: {
         const release = releasesService.getRelease(releaseId);
         if (release) _page.selectedRelease = release;
-        console.log(_page.selectedRelease.videos[0].sd);
+        _videos.clear();
+        for (let i = 0; i < _page.selectedRelease.videos.length; i++) {
+            const video = _page.selectedRelease.videos[i];
+            _videos.append({ title: video.title });
+        }
         _page.videoSource = _page.selectedRelease.videos[0].sd;
         player.play();
     }
@@ -28,6 +32,10 @@ Page {
 
     background: Rectangle {
         color: "black"
+    }
+
+    ListModel {
+        id: _videos
     }
 
     MediaPlayer {
@@ -60,6 +68,21 @@ Page {
     VideoOutput {
         source: player
         anchors.fill: parent
+    }
+
+    Rectangle {
+        anchors.top: parent.top
+        width: 140
+        height: _page.height - controlPanel.height - 20
+        color: "red"
+
+        ListView {
+            anchors.fill: parent
+            model: _videos
+            delegate: Text {
+                text: title
+            }
+        }
     }
 
     Rectangle {

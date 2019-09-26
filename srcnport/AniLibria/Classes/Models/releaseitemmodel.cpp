@@ -25,6 +25,7 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
         videoModel->setFullhd(video.fullhd());
         videoModel->setSrchd(video.sourcehd());
         videoModel->setSrcsd(video.sourcesd());
+        videoModel->setTitle(video.title());
         m_Videos.append(videoModel);
     }
 }
