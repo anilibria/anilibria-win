@@ -536,7 +536,10 @@ namespace Anilibria.Pages.Releases {
 			AddDownloadNotWatchHdCommand = CreateCommand ( AddDownloadNotWatchHd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			AddDownloadNotWatchSdCommand = CreateCommand ( AddDownloadNotWatchSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			AddDownloadNotWatchHdAndSdCommand = CreateCommand ( AddDownloadNotWatchHdAndSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			RefreshCurrentListCommand = CreateCommand ( RefreshCurrentList );
 		}
+
+		private void RefreshCurrentList () => RefreshReleases ();
 
 		private void AddDownloadNotWatchHdAndSd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.HD , VideoQuality.SD } , notWatch: true );
 
@@ -2572,6 +2575,15 @@ namespace Anilibria.Pages.Releases {
 		/// Add download (only not watch) Hd and Sd videos command.
 		/// </summary>
 		public ICommand AddDownloadNotWatchHdAndSdCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Refresh current list command.
+		/// </summary>
+		public ICommand RefreshCurrentListCommand
 		{
 			get;
 			set;
