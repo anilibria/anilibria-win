@@ -22,7 +22,7 @@ Page {
         _videos.clear();
         for (let i = 0; i < _page.selectedRelease.videos.length; i++) {
             const video = _page.selectedRelease.videos[i];
-            _videos.append({ title: video.title });
+            _videos.append({ title: video.title, sd: video.sd });
         }
         _page.videoSource = _page.selectedRelease.videos[0].sd;
         player.play();
@@ -51,7 +51,6 @@ Page {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            //drawer.open();
             if (player.playbackState === MediaPlayer.PlayingState) {
                 player.pause();
                 return;
@@ -74,13 +73,26 @@ Page {
         anchors.top: parent.top
         width: 140
         height: _page.height - controlPanel.height - 20
-        color: "red"
+        color: "#82ffffff"
 
         ListView {
+            id: _videosListView
             anchors.fill: parent
             model: _videos
-            delegate: Text {
-                text: title
+            delegate: Rectangle {
+                color: "#82ffffff"
+                height: 36
+                width: _videosListView.width
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        _page.videoSource = sd;
+                    }
+                }
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: title
+                }
             }
         }
     }
