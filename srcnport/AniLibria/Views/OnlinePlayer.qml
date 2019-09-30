@@ -9,33 +9,38 @@ Page {
     property bool isFullScreen: false
     property var selectedRelease: null
     property string videoSource: ""
+    property var releaseVideos: []
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
     signal changeFullScreenMode(bool fullScreen)
+
     onNavigateFrom: {
         player.pause();
     }
     onSetReleaseVideo: {
         const release = releasesService.getRelease(releaseId);
         if (release) _page.selectedRelease = release;
-        _videos.clear();
+
+        const videos = [];
         for (let i = 0; i < _page.selectedRelease.videos.length; i++) {
             const video = _page.selectedRelease.videos[i];
-            _videos.append({ title: video.title, sd: video.sd });
+            videos.push({ title: video.title, sd: video.sd, id: video.id });
         }
-        _page.videoSource = _page.selectedRelease.videos[0].sd;
-        player.play();
+        videos.sort(
+            (left, right) => {
+                if (left.id === right.id) return 0;
+                return left.id > right.id ? 1 : -1;
+            }
+        );
+
+        _page.releaseVideos = videos;
     }
 
     anchors.fill: parent
 
     background: Rectangle {
         color: "black"
-    }
-
-    ListModel {
-        id: _videos
     }
 
     MediaPlayer {
@@ -70,28 +75,45 @@ Page {
     }
 
     Rectangle {
+        id: seriesPopup
         anchors.top: parent.top
         width: 140
         height: _page.height - controlPanel.height - 20
         color: "#82ffffff"
 
-        ListView {
-            id: _videosListView
-            anchors.fill: parent
-            model: _videos
-            delegate: Rectangle {
-                color: "#82ffffff"
-                height: 36
-                width: _videosListView.width
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        _page.videoSource = sd;
+        Flickable {
+            width: seriesPopup.width
+            height: seriesPopup.height
+            contentWidth: seriesPopup.width
+            contentHeight: itemsContent.height
+            clip: true
+
+            ScrollBar.vertical: ScrollBar {
+                active: true
+            }
+
+            Column {
+                id: itemsContent
+                Repeater {
+                    model: _page.releaseVideos
+                    delegate: Row {
+                        Rectangle {
+                            height: 40
+                            width: seriesPopup.width
+                            color: "#82ffffff"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    _page.videoSource = modelData.sd;
+                                    player.play();
+                                }
+                            }
+                            Text {
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: modelData.title
+                            }
+                        }
                     }
-                }
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: title
                 }
             }
         }
