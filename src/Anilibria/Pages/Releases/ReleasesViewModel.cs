@@ -190,6 +190,8 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsShowPosterPreview;
 
+		private bool m_IsDirectRefreshing = false;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -254,11 +256,10 @@ namespace Anilibria.Pages.Releases {
 				m_SelectedOpenVideoMode = m_OpenVideoModes.First ();
 			}
 
-			if (values.ContainsKey(IsDarkThemeSettings))
-			{
-				IsDarkTheme = (bool)values[IsDarkThemeSettings];
-			} else
-			{
+			if ( values.ContainsKey ( IsDarkThemeSettings ) ) {
+				IsDarkTheme = (bool) values[IsDarkThemeSettings];
+			}
+			else {
 				IsDarkTheme = false;
 			}
 		}
@@ -398,11 +399,53 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void RefreshAfterSynchronize ( object parameter ) {
-			IsShowReleaseCard = false;
-			RefreshReleases ();
-			RefreshSelectedReleases ();
+
 			await RefreshFavorites ();
-			RefreshNotification ( needSendToasts: true );
+			var needRefresh = RefreshNotification ( needSendToasts: true );
+
+			if ( needRefresh || m_IsDirectRefreshing ) {
+				m_IsDirectRefreshing = false;
+				IsShowReleaseCard = false;
+				RefreshReleases ();
+				RefreshSelectedReleases ();
+			} else {
+				RefreshReleasesCache ();
+
+				foreach ( var releaseItem in m_Collection ) {
+					var originalRelease = m_AllReleases.FirstOrDefault ( a => a.Id == releaseItem.Id );
+					if ( originalRelease == null ) continue;
+
+					releaseItem.Announce = originalRelease.Announce;
+					releaseItem.CountVideoOnline = originalRelease.Playlist?.Count () ?? 0;
+					releaseItem.TorrentsCount = originalRelease?.Torrents?.Count () ?? 0;
+					releaseItem.Torrents = originalRelease?.Torrents?
+						.Select (
+							torrent =>
+								new TorrentModel {
+									Completed = torrent.Completed ,
+									Quality = $"[{torrent.Quality}]" ,
+									Series = torrent.Series ,
+									Size = FileHelper.GetFileSize ( torrent.Size ) ,
+									Url = torrent.Url
+								}
+						)?.ToList () ?? Enumerable.Empty<TorrentModel> ();
+					var releasesSeensVideos = m_SeenVideoStates?.FirstOrDefault ( b => b.ReleaseId == releaseItem.Id )?.VideoStates ?? Enumerable.Empty<VideoStateEntity> ();
+					releaseItem.OnlineVideos = originalRelease.Playlist?
+						.Select (
+							videoOnline =>
+								new OnlineVideoModel {
+									Order = videoOnline.Id ,
+									Title = videoOnline.Title ,
+									HDQuality = videoOnline.HD ,
+									SDQuality = videoOnline.SD ,
+									FullHDQuality = videoOnline.FullHD ,
+									DownloadableHD = videoOnline.DownloadableHD ,
+									DownloadableSD = videoOnline.DownloadableSD ,
+									IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
+								}
+						)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
+				}
+			}
 		}
 
 
@@ -493,7 +536,10 @@ namespace Anilibria.Pages.Releases {
 			AddDownloadNotWatchHdCommand = CreateCommand ( AddDownloadNotWatchHd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			AddDownloadNotWatchSdCommand = CreateCommand ( AddDownloadNotWatchSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			AddDownloadNotWatchHdAndSdCommand = CreateCommand ( AddDownloadNotWatchHdAndSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			RefreshCurrentListCommand = CreateCommand ( RefreshCurrentList );
 		}
+
+		private void RefreshCurrentList () => RefreshReleases ();
 
 		private void AddDownloadNotWatchHdAndSd () => AddToDownloadReleases ( new VideoQuality[] { VideoQuality.HD , VideoQuality.SD } , notWatch: true );
 
@@ -872,6 +918,8 @@ namespace Anilibria.Pages.Releases {
 			IsRefreshing = true;
 			RaiseCanExecuteChanged ( RefreshCommand );
 
+			m_IsDirectRefreshing = true;
+
 			await m_SynchronizeService.SynchronizeReleases ();
 
 			IsRefreshing = false;
@@ -909,10 +957,10 @@ namespace Anilibria.Pages.Releases {
 			return newTorrents.Where ( a => IsFavoriteNotifications ? m_Favorites.Contains ( a.Key ) : true ).Count ();
 		}
 
-		private void RefreshNotification ( bool needSendToasts = false ) {
+		private bool RefreshNotification ( bool needSendToasts = false ) {
 			var collection = m_DataContext.GetCollection<ChangesEntity> ();
 			m_Changes = collection.FirstOrDefault ();
-			if ( m_Changes == null ) return;
+			if ( m_Changes == null ) return false;
 
 			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
 			if ( m_Changes.NewOnlineSeries.Any () ) {
@@ -928,10 +976,10 @@ namespace Anilibria.Pages.Releases {
 			IsNewTorrentSeries = NewTorrentSeriesCount > 0;
 			IsShowNotification = NewReleasesCount > 0 || NewOnlineSeriesCount > 0 || NewTorrentSeriesCount > 0;
 
-			if ( !needSendToasts ) return;
+			if ( !needSendToasts ) return false;
 
 			var historyChanges = m_DataContext.GetCollection<HistoryChangeEntity> ().FirstOrDefault ();
-			if ( historyChanges == null ) return;
+			if ( historyChanges == null ) return false;
 
 			var historyOnlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
 			if ( historyChanges.NewOnlineSeries != null && historyChanges.NewOnlineSeries.Any () && historyChanges.ReleaseOnlineSeries != null ) {
@@ -945,11 +993,16 @@ namespace Anilibria.Pages.Releases {
 					.ToArray ();
 			}
 
+			var newReleasesNotification = NewReleasesCount > historyChanges.NewReleases.Count ();
+			var newOnlineSeries = NewOnlineSeriesCount > GetCountOnlineSeries ( historyOnlineSeriesReleases , historyChanges.NewOnlineSeries );
+			var newTorrentSeries = NewTorrentSeriesCount > GetCountTorrentSeries ( historyChanges.NewTorrentSeries );
+
 			SendToastByChanges (
-				NewReleasesCount > historyChanges.NewReleases.Count () ,
-				NewOnlineSeriesCount > GetCountOnlineSeries ( historyOnlineSeriesReleases , historyChanges.NewOnlineSeries ) ,
-				NewTorrentSeriesCount > GetCountTorrentSeries ( historyChanges.NewTorrentSeries )
+				newReleasesNotification ,
+				newOnlineSeries ,
+				newTorrentSeries
 			);
+			return newReleasesNotification || newOnlineSeries || newTorrentSeries;
 		}
 
 		private LocalFavoriteEntity GetLocalFavorites ( IEntityCollection<LocalFavoriteEntity> collection ) {
@@ -1243,9 +1296,7 @@ namespace Anilibria.Pages.Releases {
 		/// Refresh releases.
 		/// </summary>
 		private void RefreshReleases () {
-			m_AllReleases = GetReleasesByCurrentMode ();
-			m_SchedulesReleases = GetScheduleReleases ();
-			EmptyReleases = m_AllReleases.Count () == 0;
+			RefreshReleasesCache ();
 
 			if ( GroupedGridVisible ) {
 				GroupingCollection = GetGroupedReleases ();
@@ -1258,6 +1309,12 @@ namespace Anilibria.Pages.Releases {
 				};
 				RaisePropertyChanged ( () => Collection );
 			}
+		}
+
+		private void RefreshReleasesCache () {
+			m_AllReleases = GetReleasesByCurrentMode ();
+			m_SchedulesReleases = GetScheduleReleases ();
+			EmptyReleases = m_AllReleases.Count () == 0;
 		}
 
 		private IDictionary<int , IEnumerable<long>> GetScheduleReleases () {
@@ -2518,6 +2575,15 @@ namespace Anilibria.Pages.Releases {
 		/// Add download (only not watch) Hd and Sd videos command.
 		/// </summary>
 		public ICommand AddDownloadNotWatchHdAndSdCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Refresh current list command.
+		/// </summary>
+		public ICommand RefreshCurrentListCommand
 		{
 			get;
 			set;

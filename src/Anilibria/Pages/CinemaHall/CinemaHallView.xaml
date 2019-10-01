@@ -1,14 +1,74 @@
 ﻿<Page
-    x:Class="Anilibria.Pages.CinemaHall.CinemaHallView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Anilibria.Pages.CinemaHall"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	x:Class="Anilibria.Pages.CinemaHall.CinemaHallView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:converters="using:Anilibria.Converters"
+	xmlns:controls="using:Anilibria.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+	<Grid
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
 
-    </Grid>
+		<Border
+			Grid.Row="0"
+			Grid.Column="0"
+			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
+			MinHeight="44"
+			Width="48">
+			<Button
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Style="{StaticResource IconsButtonStyle}"
+				Command="{Binding ShowSidebarCommand}">
+				<controls:HumburgerIcon
+					IconWidth="{StaticResource IconSize}"
+					IconHeight="{StaticResource IconSize}"
+					IconColor="White"
+				/>
+			</Button>
+		</Border>
+		<Border
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
+			Width="48">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
+			</RelativePanel>
+		</Border>
+		<Border
+			Grid.Row="0"
+			Grid.Column="1"
+			converters:BackgroundThemeConverter.BackgroundMapper="UpperPanel">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
+			</RelativePanel>
+		</Border>
+
+		<!-- ItemTemplate="{StaticResource DownloadItemTemplate}" -->
+		<ListView
+				x:Name="CinemaHallReleases"
+				Grid.Column="0"
+				Grid.Row="1"
+				Width="450"
+				HorizontalAlignment="Right"
+				Margin="2 0 4 0"
+				converters:BackgroundThemeConverter.AnilibriaListViewStyle="Origin"
+				
+				ItemsSource="{Binding Releases}"
+				SelectedItem="{Binding SelectedReleases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+		</ListView>
+	</Grid>
 </Page>

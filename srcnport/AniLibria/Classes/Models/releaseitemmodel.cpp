@@ -1,13 +1,11 @@
+#include <QtCore>
 #include "releaseitemmodel.h"
-
-ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
-{
-
-}
+#include "releasevideomodel.h"
 
 void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
 {
-    setTitle(releaseModel.names().first());
+    setSelected(false);
+    setTitle(releaseModel.title());
     setStatus(releaseModel.status());
     setYear(releaseModel.year());
     QString fullPosterUrl = "https://www.anilibria.tv" + releaseModel.poster();
@@ -15,6 +13,26 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setReleaseType(releaseModel.type());
     setVoicers(releaseModel.voices().join(", "));
     setGenres(releaseModel.genres().join(", "));
+    setDescription(releaseModel.description());
+    setSeason(releaseModel.season());
+    setId(releaseModel.id());
+    QList<OnlineVideoModel> releaseVideos = releaseModel.videos();
+    foreach(OnlineVideoModel video, releaseVideos) {
+        auto videoModel = new ReleaseVideoModel(this);
+        videoModel->setId(video.id());
+        videoModel->setSd(video.sd());
+        videoModel->setHd(video.hd());
+        videoModel->setFullhd(video.fullhd());
+        videoModel->setSrchd(video.sourcehd());
+        videoModel->setSrcsd(video.sourcesd());
+        videoModel->setTitle(video.title());
+        m_Videos.append(videoModel);
+    }
+}
+
+ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
+{
+    m_Videos = QList<ReleaseVideoModel*>();
 }
 
 QString ReleaseItemModel::title() const
@@ -119,4 +137,48 @@ void ReleaseItemModel::setVoicers(const QString &voicers)
 
     m_Voicers = voicers;
     emit voicersChanged();
+}
+
+bool ReleaseItemModel::selected() const
+{
+    return m_Selected;
+}
+
+void ReleaseItemModel::setSelected(const bool selected)
+{
+    if (selected == m_Selected) return;
+
+    m_Selected = selected;
+    emit selectedChanged();
+}
+
+QString ReleaseItemModel::season() const
+{
+    return m_Season;
+}
+
+void ReleaseItemModel::setSeason(const QString &season)
+{
+    if (season == m_Season) return;
+
+    m_Season = season;
+    emit seasonChanged();
+}
+
+int ReleaseItemModel::id() const
+{
+    return m_Id;
+}
+
+void ReleaseItemModel::setId(const int id)
+{
+    if (id == m_Id) return;
+
+    m_Id = id;
+    emit idChanged();
+}
+
+QQmlListProperty<ReleaseVideoModel> ReleaseItemModel::videos()
+{
+    return QQmlListProperty<ReleaseVideoModel>(this, m_Videos);
 }

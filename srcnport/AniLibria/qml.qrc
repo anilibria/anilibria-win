@@ -29,5 +29,6 @@
         <file>QuickPromise/Promise.qml</file>
         <file>QuickPromise/PromiseTimer.qml</file>
         <file>QuickPromise/qmldir</file>
+        <file>Assets/Icons/close.svg</file>
     </qresource>
 </RCC>

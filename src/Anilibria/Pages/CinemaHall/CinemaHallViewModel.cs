@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.CinemaHall.PresentationClasses;
@@ -12,7 +15,11 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private ObservableCollection<CinemaHallReleaseModel> m_Releases;
 
-		private CinemaHallReleaseModel m_SelectedRelease;
+		private ObservableCollection<CinemaHallReleaseModel> m_SelectedReleases;
+
+		private bool m_IsMultipleSelect;
+
+		private CinemaHallReleaseModel m_OpenedRelease;
 
 		public CinemaHallViewModel () {
 			CreateCommand ();
@@ -27,10 +34,32 @@ namespace Anilibria.Pages.CinemaHall {
 		}
 
 		/// <summary>
+		/// Refresh releases.
+		/// </summary>
+		private void RefreshReleases () {
+			Releases = new ObservableCollection<CinemaHallReleaseModel> ();
+		}
+
+		private void RefreshSelectedReleases () {
+			SelectedReleases = new ObservableCollection<CinemaHallReleaseModel> ();
+			SelectedReleases.CollectionChanged += SelectedReleasesChanged;
+		}
+
+		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
+			RaiseCommands ();
+
+			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
+				OpenedRelease = SelectedReleases.First ();
+
+				RefreshSelectedReleases ();
+			}
+		}
+
+		/// <summary>
 		/// Navigate from.
 		/// </summary>
 		public void NavigateFrom () {
-			
+
 		}
 
 		/// <summary>
@@ -38,7 +67,16 @@ namespace Anilibria.Pages.CinemaHall {
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
-			
+
+		}
+
+		/// <summary>
+		/// Is multiple select.
+		/// </summary>
+		public bool IsMultipleSelect
+		{
+			get => m_IsMultipleSelect;
+			set => Set ( ref m_IsMultipleSelect , value );
 		}
 
 		/// <summary>
@@ -53,10 +91,19 @@ namespace Anilibria.Pages.CinemaHall {
 		/// <summary>
 		/// Releases.
 		/// </summary>
-		public CinemaHallReleaseModel SelectedRelease
+		public ObservableCollection<CinemaHallReleaseModel> SelectedReleases
 		{
-			get => m_SelectedRelease;
-			set => Set ( ref m_SelectedRelease , value );
+			get => m_SelectedReleases;
+			set => Set ( ref m_SelectedReleases , value );
+		}
+
+		/// <summary>
+		/// Opened release.
+		/// </summary>
+		public CinemaHallReleaseModel OpenedRelease
+		{
+			get => m_OpenedRelease;
+			set => Set ( ref m_OpenedRelease , value );
 		}
 
 		/// <summary>

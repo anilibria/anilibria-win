@@ -1307,6 +1307,7 @@
 			<RelativePanel
 				HorizontalAlignment="Stretch">
 				<ToggleSwitch
+					x:Name="MultiMode"
 					converters:BackgroundThemeConverter.ToggleSwitch="Origin"
 					Margin="8 0 0 0"
 					RelativePanel.AlignLeftWithPanel="True"
@@ -1318,6 +1319,13 @@
 					FontSize="12"
 					IsOn="{Binding IsMultipleSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 				</ToggleSwitch>
+				<Button
+					RelativePanel.RightOf="MultiMode"
+					converters:BackgroundThemeConverter.ActionButton="Origin"
+					Margin="4 8 0 0"
+					Command="{Binding RefreshCurrentListCommand}">
+					Обновить список
+				</Button>
 				<StackPanel
 					Visibility="{Binding IsAuthorized}"
 					RelativePanel.AlignRightWithPanel="True"

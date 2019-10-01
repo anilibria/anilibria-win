@@ -2,6 +2,7 @@
 #define RELEASEMODEL_H
 
 #include <QtCore>
+#include "onlinevideomodel.h"
 
 class ReleaseModel
 {
@@ -18,13 +19,21 @@ private:
     QStringList m_Genres;
     QStringList m_Voices;
     QStringList m_Names;
+    QList<OnlineVideoModel> m_Videos;
+    QString m_Title;
+    QString m_Season;
     int m_Rating;
-    bool m_IsBlocked;
 
 public:
     ReleaseModel();
 
     void readFromApiModel(const QJsonObject &jsonObject);
+
+    void writeToJson(QJsonObject &json) const;
+
+    void readFromJson(const QJsonObject &json);
+
+    int id();
 
     QString code();
 
@@ -42,6 +51,8 @@ public:
 
     QString description();
 
+    QString season();
+
     QStringList genres();
 
     QStringList voices();
@@ -50,7 +61,9 @@ public:
 
     int rating();
 
-    bool isBlocked();
+    QString title();
+
+    QList<OnlineVideoModel> videos();
 
 };
 

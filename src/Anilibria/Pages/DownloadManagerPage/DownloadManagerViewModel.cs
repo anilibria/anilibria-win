@@ -110,7 +110,8 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = "";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded && !a.IsProgress );
-			release.Active = downloadRelease.Active;
+			release.Active = downloadRelease.Active && downloadRelease.Videos.Any ( a => a.IsProgress );
+
 
 			var displayQuality = GetDisplayQuality ( videoQuality );
 			var video = release.Videos.Where ( a => a.Order == videoId && a.Quality == displayQuality ).FirstOrDefault ();
@@ -146,6 +147,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			release.DownloadedSdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.SD );
 			release.DownloadSpeed = FileHelper.GetFileSize ( speed ) + "/с";
 			release.NotDownloadedVideos = downloadRelease.Videos.Count ( a => !a.IsDownloaded );
+			release.Active = downloadRelease.Active && downloadRelease.Videos.Any ( a => a.IsProgress );
 
 			var displayQuality = GetDisplayQuality ( quality );
 			var video = release.Videos.Where ( a => a.Order == videoId && a.Quality == displayQuality ).FirstOrDefault ();
@@ -185,7 +187,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			return new DownloadItemModel {
 				ReleaseId = downloadRelease.ReleaseId ,
 				Order = downloadRelease.Order ,
-				Active = downloadRelease.Active ,
+				Active = downloadRelease.Active && downloadRelease.Videos.Any ( a => a.IsProgress ) ,
 				Title = release?.Title ,
 				Poster = ApiService.Current ().GetUrl ( release?.Poster ) ,
 				DownloadedHdVideos = downloadRelease.Videos.Count ( a => a.IsDownloaded && a.Quality == VideoQuality.HD ) ,

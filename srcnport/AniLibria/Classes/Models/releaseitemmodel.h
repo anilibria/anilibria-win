@@ -2,7 +2,9 @@
 #define RELEASEITEMMODEL_H
 
 #include <QObject>
+#include <QQmlListProperty>
 #include "releasemodel.h"
+#include "releasevideomodel.h"
 
 class ReleaseItemModel : public QObject
 {
@@ -16,6 +18,10 @@ class ReleaseItemModel : public QObject
     Q_PROPERTY(QString releaseType READ releaseType WRITE setReleaseType NOTIFY releaseTypeChanged)
     Q_PROPERTY(QString genres READ genres WRITE setGenres NOTIFY genresChanged)
     Q_PROPERTY(QString voicers READ voicers WRITE setVoicers NOTIFY voicersChanged)
+    Q_PROPERTY(QString season READ season WRITE setSeason NOTIFY seasonChanged)
+    Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
+    Q_PROPERTY(QQmlListProperty<ReleaseVideoModel> videos READ videos)
 
 private:
     QString m_Title;
@@ -26,6 +32,10 @@ private:
     QString m_ReleaseType;
     QString m_Genres;
     QString m_Voicers;
+    QString m_Season;
+    int m_Id;
+    bool m_Selected;
+    QList<ReleaseVideoModel*> m_Videos;
 
 public:
     explicit ReleaseItemModel(QObject *parent = nullptr);
@@ -54,6 +64,17 @@ public:
     QString voicers() const;
     void setVoicers(const QString &voicers);
 
+    bool selected() const;
+    void setSelected(const bool selected);
+
+    QString season() const;
+    void setSeason(const QString &season);
+
+    int id() const;
+    void setId(const int id);
+
+    QQmlListProperty<ReleaseVideoModel> videos();
+
     void mapFromReleaseModel(ReleaseModel & releaseModel);
 
 signals:
@@ -65,6 +86,9 @@ signals:
     void releaseTypeChanged();
     void genresChanged();
     void voicersChanged();
+    void selectedChanged();
+    void seasonChanged();
+    void idChanged();
 
 public slots:
 

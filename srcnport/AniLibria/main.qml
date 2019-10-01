@@ -48,6 +48,16 @@ ApplicationWindow {
         Component.onCompleted: {
             synchronizationService.synchronizeReleases();
         }
+        onSynchronizationCompleted: {
+            releasesService.loadReleasesCache();
+        }
+    }
+
+    ReleasesService {
+        id: releasesService
+        Component.onCompleted: {
+            releasesService.loadReleasesCache();
+        }
     }
 
     //TODO: Switch beetween themes
@@ -55,7 +65,7 @@ ApplicationWindow {
 
     Drawer {
         id: drawer
-        width: window.width * 0.4
+        width: 300
         height: window.height
         background:  LinearGradient {
             anchors.fill: parent
@@ -202,7 +212,12 @@ ApplicationWindow {
     Releases {
         id: releases
         drawer: drawer
+        releasesService: releasesService
         visible: true
+        onWatchRelease: {
+            videoplayer.setReleaseVideo(releaseId, -1);
+            window.showPage("videoplayer");
+        }
     }
 
     Authorization {
@@ -220,7 +235,7 @@ ApplicationWindow {
     Youtube {
         id: youtube
         drawer: drawer
-        synchronizeService: synchronizationService
+        releasesService: releasesService
         visible: false
     }
 }
