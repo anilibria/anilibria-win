@@ -10,6 +10,7 @@ Page {
     property var selectedRelease: null
     property string videoSource: ""
     property var releaseVideos: []
+    property var selectedVideo: null
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -35,6 +36,9 @@ Page {
         );
 
         _page.releaseVideos = videos;
+        const firstVideo = videos[0];
+        _page.selectedVideo = firstVideo.id;
+        _page.videoSource = firstVideo.sd;
     }
 
     anchors.fill: parent
@@ -79,7 +83,7 @@ Page {
         anchors.top: parent.top
         width: 140
         height: _page.height - controlPanel.height - 20
-        color: "#82ffffff"
+        color: "transparent"
 
         Flickable {
             width: seriesPopup.width
@@ -100,16 +104,20 @@ Page {
                         Rectangle {
                             height: 40
                             width: seriesPopup.width
-                            color: "#82ffffff"
+                            color: _page.selectedVideo === modelData.id ? "#64c25656" : "#C8ffffff"
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
+                                    _page.selectedVideo = modelData.id;
                                     _page.videoSource = modelData.sd;
                                     player.play();
                                 }
                             }
                             Text {
+                                color: _page.selectedVideo === modelData.id ? "white" : "black"
                                 anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
                                 text: modelData.title
                             }
                         }
@@ -121,7 +129,7 @@ Page {
 
     Rectangle {
         id: controlPanel
-        color: "white"
+        color: "#82ffffff"
         anchors.bottom: parent.bottom
         width: _page.width
         height: 70
