@@ -135,7 +135,47 @@ Page {
         height: 70
         Row {
             spacing: 5
-            AppPanelButton {
+            IconButton {
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/step-backward.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    if (_page.selectedVideo === 1) return;
+
+                    _page.selectedVideo--;
+
+                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                    player.play();
+                }
+            }
+            IconButton {
+                id: playButton
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/play-button.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    player.play();
+                }
+            }
+            IconButton {
+                id: pauseButton
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/pause.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    player.pause();
+                }
+            }
+            /*AppPanelButton {
                 id: playButton
                 iconSource: "../Assets/Icons/play-button.svg"
                 width: 40
@@ -150,11 +190,21 @@ Page {
                 onPressed: {
                     player.pause();
                 }
-            }
-            Button {
-                text: qsTr("Переход вперед")
-                onClicked: {
-                    if (player.seekable) player.seek(5000);
+            }*/
+            IconButton {
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/step-forward.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    if (_page.selectedVideo === _page.releaseVideos.length) return;
+
+                    _page.selectedVideo++;
+
+                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                    player.play();
                 }
             }
         }

@@ -30,5 +30,8 @@
         <file>QuickPromise/PromiseTimer.qml</file>
         <file>QuickPromise/qmldir</file>
         <file>Assets/Icons/close.svg</file>
+        <file>Controls/IconButton.qml</file>
+        <file>Assets/Icons/step-backward.svg</file>
+        <file>Assets/Icons/step-forward.svg</file>
     </qresource>
 </RCC>
