@@ -10,9 +10,9 @@ Page {
     property Drawer drawer
     property ReleasesService releasesService
     property bool selectMode
-    property variant selectedReleases: []
+    property var selectedReleases: []
     property bool isBusy: false
-    property variant openedRelease: null
+    property var openedRelease: null
 
     signal navigateFrom()
     signal watchRelease(int releaseId)
@@ -53,10 +53,14 @@ Page {
             width: 40
             Layout.fillHeight: true
             Column {
-                AppPanelButton {
-                    iconSource: "../Assets/Icons/menu.svg"
-                    width: panelContainer.width
-                    onPressed: {
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/menu.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
                         drawer.open();
                     }
                 }

@@ -10,6 +10,7 @@ Page {
     property var selectedRelease: null
     property string videoSource: ""
     property var releaseVideos: []
+    property var selectedVideo: null
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -35,6 +36,9 @@ Page {
         );
 
         _page.releaseVideos = videos;
+        const firstVideo = videos[0];
+        _page.selectedVideo = firstVideo.id;
+        _page.videoSource = firstVideo.sd;
     }
 
     anchors.fill: parent
@@ -79,7 +83,7 @@ Page {
         anchors.top: parent.top
         width: 140
         height: _page.height - controlPanel.height - 20
-        color: "#82ffffff"
+        color: "transparent"
 
         Flickable {
             width: seriesPopup.width
@@ -100,16 +104,20 @@ Page {
                         Rectangle {
                             height: 40
                             width: seriesPopup.width
-                            color: "#82ffffff"
+                            color: _page.selectedVideo === modelData.id ? "#64c25656" : "#C8ffffff"
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
+                                    _page.selectedVideo = modelData.id;
                                     _page.videoSource = modelData.sd;
                                     player.play();
                                 }
                             }
                             Text {
+                                color: _page.selectedVideo === modelData.id ? "white" : "black"
                                 anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
                                 text: modelData.title
                             }
                         }
@@ -121,13 +129,53 @@ Page {
 
     Rectangle {
         id: controlPanel
-        color: "white"
+        color: "#82ffffff"
         anchors.bottom: parent.bottom
         width: _page.width
         height: 70
         Row {
             spacing: 5
-            AppPanelButton {
+            IconButton {
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/step-backward.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    if (_page.selectedVideo === 1) return;
+
+                    _page.selectedVideo--;
+
+                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                    player.play();
+                }
+            }
+            IconButton {
+                id: playButton
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/play-button.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    player.play();
+                }
+            }
+            IconButton {
+                id: pauseButton
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/pause.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    player.pause();
+                }
+            }
+            /*AppPanelButton {
                 id: playButton
                 iconSource: "../Assets/Icons/play-button.svg"
                 width: 40
@@ -142,11 +190,21 @@ Page {
                 onPressed: {
                     player.pause();
                 }
-            }
-            Button {
-                text: qsTr("Переход вперед")
-                onClicked: {
-                    if (player.seekable) player.seek(5000);
+            }*/
+            IconButton {
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/step-forward.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    if (_page.selectedVideo === _page.releaseVideos.length) return;
+
+                    _page.selectedVideo++;
+
+                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                    player.play();
                 }
             }
         }
