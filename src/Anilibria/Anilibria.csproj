@@ -366,6 +366,7 @@
     <Compile Include="Storage\Entities\YoutubeEntity.cs" />
     <Compile Include="Storage\IDataContext.cs" />
     <Compile Include="ThemeChanger\ControlsThemeChanger.cs" />
+    <Compile Include="ThemeChanger\SubscribeItemModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

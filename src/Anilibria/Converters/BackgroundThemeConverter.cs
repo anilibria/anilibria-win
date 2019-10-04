@@ -6,12 +6,14 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 
-namespace Anilibria.Converters {
+namespace Anilibria.Converters
+{
 
 	/// <summary>
 	/// Background theme converter.
 	/// </summary>
-	public class BackgroundThemeConverter {
+	public class BackgroundThemeConverter
+	{
 
 		public static readonly DependencyProperty BackgroundMapperProperty =
 			DependencyProperty.RegisterAttached (
@@ -40,11 +42,15 @@ namespace Anilibria.Converters {
 
 			SetBackground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 
-			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => {
-					SetBackground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
-				}
-			);
+			var frameworkElement = ( element as FrameworkElement );
+			if ( frameworkElement != null) frameworkElement.Unloaded += FrameworkElementUnloaded;
+
+			ControlsThemeChanger.RegisterSubscriber ( "BackgroundMapper" , element , SubscribeBackgroundMapper );
+		}
+
+		private static void SubscribeBackgroundMapper ( string name , DependencyObject element ) {
+			var themeResourceName = element.GetValue ( BackgroundMapperProperty ).ToString ();
+			SetBackground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 		}
 
 		public static void SetBackgroundMapper ( DependencyObject textBlock , string value ) {
@@ -76,11 +82,15 @@ namespace Anilibria.Converters {
 
 			SetForeground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 
-			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => {
-					SetForeground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
-				}
-			);
+			var frameworkElement = ( element as FrameworkElement );
+			if ( frameworkElement != null ) frameworkElement.Unloaded += FrameworkElementUnloaded;
+
+			ControlsThemeChanger.RegisterSubscriber ( "ForegroundMapper" , element , SubscribeForegroundMapper );
+		}
+
+		private static void SubscribeForegroundMapper ( string name , DependencyObject element ) {
+			var themeResourceName = element.GetValue ( ForegroundMapperProperty ).ToString ();
+			SetForeground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 		}
 
 		public static void SetForegroundMapper ( DependencyObject textBlock , string value ) {
@@ -112,12 +122,16 @@ namespace Anilibria.Converters {
 
 			SetBorderBrush ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 
-			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => {
-					SetBorderBrush ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
-				}
-			);
+			( element as FrameworkElement ).Unloaded += FrameworkElementUnloaded;
+
+			ControlsThemeChanger.RegisterSubscriber ( "BorderMapper" , element , SubscribeBorderMapper );
 		}
+
+		private static void SubscribeBorderMapper ( string name , DependencyObject element ) {
+			var themeResourceName = element.GetValue ( BorderMapperProperty ).ToString ();
+			SetBorderBrush ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+		}
+
 
 		public static void SetBorderMapper ( DependencyObject textBlock , string value ) => textBlock.SetValue ( BorderMapperProperty , value );
 
@@ -150,11 +164,21 @@ namespace Anilibria.Converters {
 
 			SetTextColor ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 
-			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => {
-					SetTextColor ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
-				}
-			);
+			var frameworkElement = ( element as FrameworkElement );
+			if ( frameworkElement != null ) frameworkElement.Unloaded += FrameworkElementUnloaded;
+
+			ControlsThemeChanger.RegisterSubscriber ( "TextMapper" , element , SubscribeTextMapper );
+		}
+
+		private static void SubscribeTextMapper ( string name , DependencyObject element ) {
+			var themeResourceName = element.GetValue ( TextMapperProperty ).ToString ();
+			SetTextColor ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
+		}
+
+		private static void FrameworkElementUnloaded ( object sender , RoutedEventArgs e ) {
+			( sender as FrameworkElement ).Unloaded -= FrameworkElementUnloaded;
+
+			ControlsThemeChanger.UnRegisterSubscriber ( (DependencyObject) sender );
 		}
 
 		public static void SetTextMapper ( DependencyObject textBlock , string value ) => textBlock.SetValue ( TextMapperProperty , value );
@@ -188,7 +212,9 @@ namespace Anilibria.Converters {
 			SetMenuFlyoutStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetMenuFlyoutStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"MenuFlyout" ,
+				element ,
+				( string name , DependencyObject target ) => SetMenuFlyoutStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -222,7 +248,9 @@ namespace Anilibria.Converters {
 			SetFlyoutStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetFlyoutStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"CommonFlyout" ,
+				element,
+				( string name, DependencyObject target ) => SetFlyoutStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -257,7 +285,9 @@ namespace Anilibria.Converters {
 			SetMenuFlyoutItemStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetMenuFlyoutItemStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"MenuFlyoutItemFlyout" ,
+				element ,
+				( string name , DependencyObject target ) => SetMenuFlyoutItemStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -291,7 +321,9 @@ namespace Anilibria.Converters {
 			SetToggleSwitchStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetToggleSwitchStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"ToggleSwitch" ,
+				element ,
+				( string name , DependencyObject target ) => SetToggleSwitchStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -326,7 +358,9 @@ namespace Anilibria.Converters {
 			SetActionButtonStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetActionButtonStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"ActionButton" ,
+				element ,
+				( string name , DependencyObject target ) => SetActionButtonStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -360,7 +394,9 @@ namespace Anilibria.Converters {
 			SetAnilibriaTextBoxStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetAnilibriaTextBoxStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"AnilibriaTextBox" ,
+				element ,
+				( string name , DependencyObject target ) => SetAnilibriaTextBoxStyle ( element , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -394,7 +430,9 @@ namespace Anilibria.Converters {
 			SetCloseIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetCloseIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"CloseIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetCloseIconStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -428,7 +466,9 @@ namespace Anilibria.Converters {
 			SetFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"FavoriteIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetFavoriteIconStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -460,10 +500,10 @@ namespace Anilibria.Converters {
 			var themeResourceName = e.NewValue.ToString ();
 
 			SetRemoveFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
-
-			ControlsThemeChanger.RegisterSubscriber (
+			///////////////////////TODO!!!!!!
+			/*ControlsThemeChanger.RegisterSubscriber (
 				( string name ) => SetRemoveFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
-			);
+			);*/
 		}
 
 		public static void SetRemoveFavoriteIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( RemoveFavoriteIconProperty , value );
@@ -497,7 +537,9 @@ namespace Anilibria.Converters {
 			SetChatIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetChatIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"ChatIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetChatIconStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -532,7 +574,9 @@ namespace Anilibria.Converters {
 			SetOpenEyeIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetOpenEyeIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"OpenEyeIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetOpenEyeIconStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -566,7 +610,9 @@ namespace Anilibria.Converters {
 			SetAnilibriaComboBoxStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetAnilibriaComboBoxStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"AnilibriaComboBox" ,
+				element ,
+				( string name , DependencyObject target ) => SetAnilibriaComboBoxStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -600,7 +646,9 @@ namespace Anilibria.Converters {
 			SetAnilibriaSidebarStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetAnilibriaSidebarStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"AnilibriaSidebar" ,
+				element ,
+				( string name , DependencyObject target ) => SetAnilibriaSidebarStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -634,7 +682,9 @@ namespace Anilibria.Converters {
 			SetAnilibriaSidebarListStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetAnilibriaSidebarListStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"AnilibriaSidebarList" ,
+				element ,
+				( string name , DependencyObject target ) => SetAnilibriaSidebarListStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -668,7 +718,9 @@ namespace Anilibria.Converters {
 			SetAnilibriaPasswordBoxStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetAnilibriaPasswordBoxStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"AnilibriaPasswordBox" ,
+				element ,
+				( string name , DependencyObject target ) => SetAnilibriaPasswordBoxStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -702,7 +754,9 @@ namespace Anilibria.Converters {
 			SetAnilibriaIconStyle ( element , ControlsThemeChanger.CurrentTheme () , themeResourceName );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetAnilibriaIconStyle ( element , ControlsThemeChanger.CurrentTheme () , themeResourceName )
+				"AnilibriaIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetAnilibriaIconStyle ( target , ControlsThemeChanger.CurrentTheme () , themeResourceName )
 			);
 		}
 
@@ -736,7 +790,9 @@ namespace Anilibria.Converters {
 			SetAnilibriaListViewGlobalStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
 			ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetAnilibriaListViewGlobalStyle ( element , ControlsThemeChanger.CurrentTheme () )
+				"AnilibriaIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetAnilibriaListViewGlobalStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 

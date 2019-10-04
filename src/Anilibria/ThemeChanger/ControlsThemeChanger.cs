@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-namespace Anilibria.ThemeChanger {
+namespace Anilibria.ThemeChanger
+{
 
 	/// <summary>
 	/// Controls theme changer.
 	/// </summary>
-	public static class ControlsThemeChanger {
+	public static class ControlsThemeChanger
+	{
 
 		public const string DefaultTheme = "default";
 
@@ -16,7 +20,7 @@ namespace Anilibria.ThemeChanger {
 
 		private static string m_ThemeName = DefaultTheme;
 
-		private static List<Action<string>> m_Subscribers = new List<Action<string>> ();
+		private static List<SubscribeItemModel> m_Subscribers = new List<SubscribeItemModel> ();
 
 		private static Dictionary<string , Brush> m_DefaultBrushes = new Dictionary<string , Brush> {
 			["TextBlockForeground"] = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) ) ,
@@ -55,7 +59,7 @@ namespace Anilibria.ThemeChanger {
 		public static void ChangeTheme ( string themeName ) {
 			m_ThemeName = themeName;
 
-			foreach ( var subscriber in m_Subscribers ) subscriber ( themeName );
+			foreach ( var subscriber in m_Subscribers ) subscriber.Handler ( themeName , subscriber.Element );
 		}
 
 		/// <summary>
@@ -81,14 +85,31 @@ namespace Anilibria.ThemeChanger {
 		/// <summary>
 		/// Register new subscriber.
 		/// </summary>
-		/// <param name="subscriber">Subscriber.</param>
-		public static void RegisterSubscriber ( Action<string> subscriber ) => m_Subscribers.Add ( subscriber );
+		/// <param name="handler">Subscriber.</param>
+		public static void RegisterSubscriber ( string name , DependencyObject element , Action<string , DependencyObject> handler ) {
+			if ( m_Subscribers.Any ( a => a.Element == element && a.Name == name ) ) return;
+
+			m_Subscribers.Add (
+				new SubscribeItemModel {
+					Name = name ,
+					Element = element ,
+					Handler = handler
+				}
+			);
+		}
 
 		/// <summary>
 		/// Unregister subscriber.
 		/// </summary>
 		/// <param name="subscriber">Subscriber.</param>
-		public static void UnRegisterSubscriber ( Action<string> subscriber ) => m_Subscribers.Remove ( subscriber );
+		public static void UnRegisterSubscriber ( DependencyObject element ) {
+			var allSubscribes = m_Subscribers
+				.Where ( a => a.Element == element )
+				.ToList ();
+			foreach ( var subscribe in allSubscribes ) {
+				m_Subscribers.Remove ( subscribe );
+			}
+		}
 
 	}
 
