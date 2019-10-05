@@ -39,6 +39,7 @@ Page {
         const firstVideo = videos[0];
         _page.selectedVideo = firstVideo.id;
         _page.videoSource = firstVideo.sd;
+        player.play();
     }
 
     anchors.fill: parent
@@ -134,6 +135,7 @@ Page {
         width: _page.width
         height: 70
         Row {
+            anchors.centerIn: parent
             spacing: 5
             IconButton {
                 width: 40
@@ -175,22 +177,6 @@ Page {
                     player.pause();
                 }
             }
-            /*AppPanelButton {
-                id: playButton
-                iconSource: "../Assets/Icons/play-button.svg"
-                width: 40
-                onPressed: {
-                    player.play();
-                }
-            }
-            AppPanelButton {
-                id: pauseButton
-                iconSource: "../Assets/Icons/pause.svg"
-                width: 40
-                onPressed: {
-                    player.pause();
-                }
-            }*/
             IconButton {
                 width: 40
                 height: 40
