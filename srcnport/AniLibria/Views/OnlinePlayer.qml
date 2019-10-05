@@ -56,6 +56,9 @@ Page {
             playButton.visible = playbackState === MediaPlayer.PausedState || playbackState === MediaPlayer.StoppedState;
             pauseButton.visible = playbackState === MediaPlayer.PlayingState;
         }
+        onVolumeChanged: {
+            volumeSlider.value = volume * 100;
+        }
     }
 
     MouseArea {
@@ -135,6 +138,22 @@ Page {
         width: _page.width
         height: 70
         Row {
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            Slider {
+                width: 60
+                height: 40
+                id: volumeSlider
+                from: 0
+                value: 10
+                to: 100
+                onMoved: {
+                    player.volume = value / 100;
+                }
+            }
+        }
+
+        Row {
             anchors.centerIn: parent
             spacing: 5
             IconButton {
@@ -194,6 +213,10 @@ Page {
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        volumeSlider.value = player.volume * 100;
     }
 }
 
