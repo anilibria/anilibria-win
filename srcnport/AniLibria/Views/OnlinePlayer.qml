@@ -5,7 +5,6 @@ import "../Controls"
 
 Page {
     id: _page
-    property Drawer drawer
     property bool isFullScreen: false
     property var selectedRelease: null
     property string videoSource: ""
@@ -78,6 +77,7 @@ Page {
         }
     }
     VideoOutput {
+        id: videoOutput
         source: player
         anchors.fill: parent
     }
@@ -138,8 +138,31 @@ Page {
         width: _page.width
         height: 70
         Row {
+            spacing: 5
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
+            IconButton {
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/menu.svg"
+                iconWidth: 29
+                iconHeight: 29
+                onButtonPressed: {
+                    drawer.open();
+                }
+            }
+            IconButton {
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/speaker.svg"
+                iconWidth: 24
+                iconHeight: 24
+                onButtonPressed: {
+                    player.muted = !player.muted;
+                }
+            }
             Slider {
                 width: 60
                 height: 40
@@ -210,6 +233,31 @@ Page {
 
                     _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
                     player.play();
+                }
+            }
+        }
+
+        Row {
+            spacing: 5
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+
+            IconButton {
+                width: 40
+                height: 40
+                iconColor: "black"
+                iconPath: "../Assets/Icons/resize.svg"
+                iconWidth: 29
+                iconHeight: 29
+                onButtonPressed: {
+                    switch (videoOutput.fillMode) {
+                        case VideoOutput.PreserveAspectFit:
+                            videoOutput.fillMode = VideoOutput.PreserveAspectCrop;
+                            break;
+                        case VideoOutput.PreserveAspectCrop:
+                            videoOutput.fillMode = VideoOutput.PreserveAspectFit;
+                            break;
+                    }
                 }
             }
         }

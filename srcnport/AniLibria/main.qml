@@ -60,9 +60,6 @@ ApplicationWindow {
         }
     }
 
-    //TODO: Switch beetween themes
-    //Material.theme: Material.Dark
-
     Drawer {
         id: drawer
         width: 300
@@ -198,7 +195,7 @@ ApplicationWindow {
 
     OnlinePlayer {
         id: videoplayer
-        drawer: drawer
+        /*drawer: drawer*/
         visible: false
         onChangeFullScreenMode: {
             if (fullScreen) {

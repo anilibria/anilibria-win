@@ -287,3 +287,7 @@ __pycache__/
 /installer/Output/AnilibriaInstallerSetup.exe
 /installer/AnilibriaInstaller.exe
 /srcnport/AniLibria/AniLibria.pro.user.4.10-pre1
+/srcnport/Makefile.Release
+/srcnport/Makefile.Debug
+/srcnport/Makefile
+/srcnport/.qmake.stash
