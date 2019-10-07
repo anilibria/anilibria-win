@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.3
 import QtMultimedia 5.12
 import "../Controls"
 
@@ -10,6 +11,7 @@ Page {
     property string videoSource: ""
     property var releaseVideos: []
     property var selectedVideo: null
+    property real lastMovedPosition: 0
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -57,6 +59,9 @@ Page {
         }
         onVolumeChanged: {
             volumeSlider.value = volume * 100;
+        }
+        onPositionChanged: {
+            if (!playerLocation.pressed) playerLocation.value = position;
         }
     }
 
@@ -136,127 +141,156 @@ Page {
         color: "#82ffffff"
         anchors.bottom: parent.bottom
         width: _page.width
-        height: 70
-        Row {
-            spacing: 5
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            IconButton {
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/menu.svg"
-                iconWidth: 29
-                iconHeight: 29
-                onButtonPressed: {
-                    drawer.open();
-                }
-            }
-            IconButton {
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/speaker.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    player.muted = !player.muted;
-                }
-            }
+        height: 80
+
+        Column {
+            width: controlPanel.width
+
             Slider {
-                width: 60
-                height: 40
-                id: volumeSlider
-                from: 0
-                value: 10
-                to: 100
+                id: playerLocation
+                height: 20
+                width: controlPanel.width
+                from: 1
+                value: 1
+                to: player.duration
+                onPressedChanged: {
+                    if (!pressed && _page.lastMovedPosition > 0) {
+                        player.seek(_page.lastMovedPosition);
+                        _page.lastMovedPosition = 0;
+                    }
+                }
+
                 onMoved: {
-                    player.volume = value / 100;
+                    if (pressed) _page.lastMovedPosition = value;
                 }
             }
-        }
 
-        Row {
-            anchors.centerIn: parent
-            spacing: 5
-            IconButton {
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/step-backward.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    if (_page.selectedVideo === 1) return;
+            Item {
+                height: 60
+                width: controlPanel.width
 
-                    _page.selectedVideo--;
-
-                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
-                    player.play();
+                Row {
+                    spacing: 5
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/menu.svg"
+                        iconWidth: 29
+                        iconHeight: 29
+                        onButtonPressed: {
+                            drawer.open();
+                        }
+                    }
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/speaker.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            player.muted = !player.muted;
+                        }
+                    }
+                    Slider {
+                        width: 60
+                        height: 40
+                        id: volumeSlider
+                        from: 0
+                        value: 10
+                        to: 100
+                        onMoved: {
+                            player.volume = value / 100;
+                        }
+                    }
                 }
-            }
-            IconButton {
-                id: playButton
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/play-button.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    player.play();
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 5
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/step-backward.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            if (_page.selectedVideo === 1) return;
+
+                            _page.selectedVideo--;
+
+                            _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                            player.play();
+                        }
+                    }
+                    IconButton {
+                        id: playButton
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/play-button.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            player.play();
+                        }
+                    }
+                    IconButton {
+                        id: pauseButton
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/pause.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            player.pause();
+                        }
+                    }
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/step-forward.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            if (_page.selectedVideo === _page.releaseVideos.length) return;
+
+                            _page.selectedVideo++;
+
+                            _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                            player.play();
+                        }
+                    }
                 }
-            }
-            IconButton {
-                id: pauseButton
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/pause.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    player.pause();
-                }
-            }
-            IconButton {
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/step-forward.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    if (_page.selectedVideo === _page.releaseVideos.length) return;
 
-                    _page.selectedVideo++;
+                Row {
+                    spacing: 5
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
 
-                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
-                    player.play();
-                }
-            }
-        }
-
-        Row {
-            spacing: 5
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-
-            IconButton {
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/resize.svg"
-                iconWidth: 29
-                iconHeight: 29
-                onButtonPressed: {
-                    switch (videoOutput.fillMode) {
-                        case VideoOutput.PreserveAspectFit:
-                            videoOutput.fillMode = VideoOutput.PreserveAspectCrop;
-                            break;
-                        case VideoOutput.PreserveAspectCrop:
-                            videoOutput.fillMode = VideoOutput.PreserveAspectFit;
-                            break;
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/resize.svg"
+                        iconWidth: 29
+                        iconHeight: 29
+                        onButtonPressed: {
+                            switch (videoOutput.fillMode) {
+                                case VideoOutput.PreserveAspectFit:
+                                    videoOutput.fillMode = VideoOutput.PreserveAspectCrop;
+                                    break;
+                                case VideoOutput.PreserveAspectCrop:
+                                    videoOutput.fillMode = VideoOutput.PreserveAspectFit;
+                                    break;
+                            }
+                        }
                     }
                 }
             }
