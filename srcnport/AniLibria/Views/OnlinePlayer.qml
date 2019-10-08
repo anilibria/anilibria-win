@@ -12,6 +12,7 @@ Page {
     property var releaseVideos: []
     property var selectedVideo: null
     property real lastMovedPosition: 0
+    property string videoQuality: "sd"
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -39,7 +40,9 @@ Page {
         _page.releaseVideos = videos;
         const firstVideo = videos[0];
         _page.selectedVideo = firstVideo.id;
-        _page.videoSource = firstVideo.sd;
+        if (!firstVideo[_page.videoQuality]) _page.videoQuality = "sd";
+
+        _page.videoSource = firstVideo[_page.videoQuality];
         player.play();
     }
 
@@ -118,7 +121,7 @@ Page {
                                 anchors.fill: parent
                                 onClicked: {
                                     _page.selectedVideo = modelData.id;
-                                    _page.videoSource = modelData.sd;
+                                    _page.videoSource = modelData[_page.videoQuality];
                                     player.play();
                                 }
                             }
@@ -223,7 +226,7 @@ Page {
 
                             _page.selectedVideo--;
 
-                            _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                            _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
                             player.play();
                         }
                     }
@@ -263,7 +266,7 @@ Page {
 
                             _page.selectedVideo++;
 
-                            _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
+                            _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
                             player.play();
                         }
                     }
