@@ -13,6 +13,7 @@ Page {
     property var selectedVideo: null
     property real lastMovedPosition: 0
     property string videoQuality: "sd"
+    property string displayVideoPosition: "00:00:00"
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -46,6 +47,11 @@ Page {
         player.play();
     }
 
+    function getZeroBasedDigit(digit) {
+        if (digit < 10) return `0${digit}`;
+        return `${digit}`;
+    }
+
     anchors.fill: parent
 
     background: Rectangle {
@@ -65,6 +71,17 @@ Page {
         }
         onPositionChanged: {
             if (!playerLocation.pressed) playerLocation.value = position;
+
+            let seconds = position / 1000;
+
+            const days = Math.floor(seconds / (3600 * 24));
+            seconds -= days * 3600 * 24;
+            const hours = Math.floor(seconds / 3600);
+            seconds -= hours * 3600;
+            const minutes = Math.floor(seconds / 60);
+            seconds  -= minutes * 60;
+
+            _page.displayVideoPosition = `${getZeroBasedDigit(hours)}:${getZeroBasedDigit(minutes)}:${getZeroBasedDigit(Math.round(seconds))}`;
         }
     }
 
@@ -144,7 +161,7 @@ Page {
         color: "#82ffffff"
         anchors.bottom: parent.bottom
         width: _page.width
-        height: 80
+        height: 100
 
         Column {
             width: controlPanel.width
@@ -165,6 +182,60 @@ Page {
 
                 onMoved: {
                     if (pressed) _page.lastMovedPosition = value;
+                }
+            }
+
+            Item {
+                height: 20
+                width: controlPanel.width
+
+                Text {
+                    text: _page.displayVideoPosition
+                }
+
+                Row {
+                    height: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Rectangle {
+                        height: 20
+                        width: 60
+                        color: "lightgray"
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "black"
+                            text: "1080p"
+                        }
+                    }
+                    Rectangle {
+                        height: 20
+                        width: 60
+                        color: "lightgray"
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "black"
+                            text: "720p"
+                        }
+                    }
+                    Rectangle {
+                        height: 20
+                        width: 60
+                        color: "lightgray"
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "black"
+                            text: "480p"
+                        }
+                    }
+                }
+
+                Text {
+                    height: 20
+                    anchors.right: parent.right
+                    anchors.rightMargin: 4
+                    text: "1:00:00"
                 }
             }
 
