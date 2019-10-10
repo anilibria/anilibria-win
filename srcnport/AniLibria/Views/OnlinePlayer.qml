@@ -11,7 +11,9 @@ Page {
     property string videoSource: ""
     property var releaseVideos: []
     property var selectedVideo: null
+    property bool isFullHdAllowed: false
     property real lastMovedPosition: 0
+    property real restorePosition: 0
     property string videoQuality: "sd"
     property string displayVideoPosition: "00:00:00"
 
@@ -29,7 +31,7 @@ Page {
         const videos = [];
         for (let i = 0; i < _page.selectedRelease.videos.length; i++) {
             const video = _page.selectedRelease.videos[i];
-            videos.push({ title: video.title, sd: video.sd, id: video.id });
+            videos.push({ title: video.title, sd: video.sd, id: video.id, hd: video.hd, fullhd: video.fullhd });
         }
         videos.sort(
             (left, right) => {
@@ -41,6 +43,7 @@ Page {
         _page.releaseVideos = videos;
         const firstVideo = videos[0];
         _page.selectedVideo = firstVideo.id;
+        _page.isFullHdAllowed = "fullhd" in firstVideo;
         if (!firstVideo[_page.videoQuality]) _page.videoQuality = "sd";
 
         _page.videoSource = firstVideo[_page.videoQuality];
@@ -69,6 +72,12 @@ Page {
         onVolumeChanged: {
             volumeSlider.value = volume * 100;
         }
+        onStatusChanged: {
+            if (status === MediaPlayer.Buffered && _page.restorePosition > 0) {
+                player.seek(_page.restorePosition);
+            }
+        }
+
         onPositionChanged: {
             if (!playerLocation.pressed) playerLocation.value = position;
 
@@ -138,6 +147,7 @@ Page {
                                 anchors.fill: parent
                                 onClicked: {
                                     _page.selectedVideo = modelData.id;
+                                    _page.isFullHdAllowed = "fullhd" in modelData;
                                     _page.videoSource = modelData[_page.videoQuality];
                                     player.play();
                                 }
@@ -196,37 +206,51 @@ Page {
                 Row {
                     height: 20
                     anchors.horizontalCenter: parent.horizontalCenter
-                    Rectangle {
+                    ToggleButton {
                         height: 20
                         width: 60
-                        color: "lightgray"
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: "black"
-                            text: "1080p"
+                        text: "1080p"
+                        visible: _page.isFullHdAllowed
+                        isChecked: _page.videoQuality === `fullhd`
+                        onButtonClicked: {
+                            _page.videoQuality = `fullhd`;
+                            _page.restorePosition = player.position;
+
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+
+                            _page.videoSource = video[_page.videoQuality];
+                            player.play();
+
                         }
                     }
-                    Rectangle {
+                    ToggleButton {
                         height: 20
                         width: 60
-                        color: "lightgray"
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: "black"
-                            text: "720p"
+                        text: "720p"
+                        isChecked: _page.videoQuality === `hd`
+                        onButtonClicked: {
+                            _page.videoQuality = `hd`;
+                            _page.restorePosition = player.position;
+
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+
+                            _page.videoSource = video[_page.videoQuality];
+                            player.play();                            
                         }
                     }
-                    Rectangle {
+                    ToggleButton {
                         height: 20
                         width: 60
-                        color: "lightgray"
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: "black"
-                            text: "480p"
+                        text: "480p"
+                        isChecked: _page.videoQuality === `sd`
+                        onButtonClicked: {
+                            _page.videoQuality = `sd`;
+                            _page.restorePosition = player.position;
+
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+
+                            _page.videoSource = video[_page.videoQuality];
+                            player.play();
                         }
                     }
                 }
@@ -296,6 +320,8 @@ Page {
                             if (_page.selectedVideo === 1) return;
 
                             _page.selectedVideo--;
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+                            _page.isFullHdAllowed = "fullhd" in video;
 
                             _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
                             player.play();
@@ -336,6 +362,8 @@ Page {
                             if (_page.selectedVideo === _page.releaseVideos.length) return;
 
                             _page.selectedVideo++;
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+                            _page.isFullHdAllowed = "fullhd" in video;
 
                             _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
                             player.play();
