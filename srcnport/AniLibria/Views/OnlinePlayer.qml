@@ -16,6 +16,7 @@ Page {
     property real restorePosition: 0
     property string videoQuality: "sd"
     property string displayVideoPosition: "00:00:00"
+    property string displayEndVideoPosition: "00:00:00"
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -55,6 +56,17 @@ Page {
         return `${digit}`;
     }
 
+    function getDisplayTimeFromSeconds(seconds) {
+        const days = Math.floor(seconds / (3600 * 24));
+        seconds -= days * 3600 * 24;
+        const hours = Math.floor(seconds / 3600);
+        seconds -= hours * 3600;
+        const minutes = Math.floor(seconds / 60);
+        seconds  -= minutes * 60;
+
+        return `${getZeroBasedDigit(hours)}:${getZeroBasedDigit(minutes)}:${getZeroBasedDigit(Math.round(seconds))}`;
+    }
+
     anchors.fill: parent
 
     background: Rectangle {
@@ -81,16 +93,8 @@ Page {
         onPositionChanged: {
             if (!playerLocation.pressed) playerLocation.value = position;
 
-            let seconds = position / 1000;
-
-            const days = Math.floor(seconds / (3600 * 24));
-            seconds -= days * 3600 * 24;
-            const hours = Math.floor(seconds / 3600);
-            seconds -= hours * 3600;
-            const minutes = Math.floor(seconds / 60);
-            seconds  -= minutes * 60;
-
-            _page.displayVideoPosition = `${getZeroBasedDigit(hours)}:${getZeroBasedDigit(minutes)}:${getZeroBasedDigit(Math.round(seconds))}`;
+            _page.displayVideoPosition = `${_page.getDisplayTimeFromSeconds(position / 1000)} из ${_page.getDisplayTimeFromSeconds(duration / 1000)}`;
+            _page.displayEndVideoPosition = _page.getDisplayTimeFromSeconds((duration - position) / 1000);
         }
     }
 
@@ -235,7 +239,7 @@ Page {
                             const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
 
                             _page.videoSource = video[_page.videoQuality];
-                            player.play();                            
+                            player.play();
                         }
                     }
                     ToggleButton {
@@ -259,7 +263,7 @@ Page {
                     height: 20
                     anchors.right: parent.right
                     anchors.rightMargin: 4
-                    text: "1:00:00"
+                    text: _page.displayEndVideoPosition
                 }
             }
 
@@ -324,7 +328,6 @@ Page {
                             _page.isFullHdAllowed = "fullhd" in video;
 
                             _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
-                            player.play();
                         }
                     }
                     IconButton {
@@ -366,7 +369,6 @@ Page {
                             _page.isFullHdAllowed = "fullhd" in video;
 
                             _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
-                            player.play();
                         }
                     }
                 }
