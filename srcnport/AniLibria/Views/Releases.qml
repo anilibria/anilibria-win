@@ -7,8 +7,6 @@ import "../Controls"
 
 Page {
     id: page
-    property Drawer drawer
-    property ReleasesService releasesService
     property bool selectMode
     property var selectedReleases: []
     property bool isBusy: false

@@ -1,10 +1,20 @@
+#include <QDebug>
 #include "releasesservice.h"
 #include "../Models/releaseitemmodel.h"
+#include "releaseloader.h"
 
 ReleasesService::ReleasesService(QObject *parent) : QObject(parent)
 {
+    m_NeedUpdate = false;
     m_Releases = *new QVector<ReleaseItemModel*>();
     m_ApiReleases = QList<ReleaseModel>();
+    m_ReleaseLoader = new ReleaseLoader();
+    m_LoadedReleaseThread = new QThread();
+
+    connect(m_LoadedReleaseThread, SIGNAL(started()), m_ReleaseLoader, SLOT(loadReleases()));
+    connect(m_LoadedReleaseThread, &QThread::finished, this, &ReleasesService::loadedReleasesFinished);
+    connect(m_ReleaseLoader, &ReleaseLoader::loadedReleases, this, &ReleasesService::loadedReleases);
+    m_ReleaseLoader->moveToThread(m_LoadedReleaseThread);
 }
 
 void ReleasesService::fillNextReleases()
@@ -13,7 +23,7 @@ void ReleasesService::fillNextReleases()
     int iterator = 0;
 
     for (int i = startPosition; i < m_ApiReleases.count(); i++) {
-        if (iterator >= 30) break;
+        if (iterator >= 20) break;
 
         ReleaseItemModel * releaseItemModel = new ReleaseItemModel();
         releaseItemModel->mapFromReleaseModel(m_ApiReleases[i]);
@@ -27,31 +37,12 @@ void ReleasesService::fillNextReleases()
 
 void ReleasesService::loadReleasesCache()
 {
-    auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/save.json";
-    if (!QFileInfo::exists(path)) return;
-
-    QFile file(path);
-
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning("Couldn't open save file.");
+    if (m_LoadedReleaseThread->isRunning()) {
+        m_NeedUpdate = true;
         return;
     }
 
-    QByteArray saveData = file.readAll();
-    file.close();
-
-    QJsonDocument releasesDocument(QJsonDocument::fromJson(saveData));
-    auto releasesArray = releasesDocument.array();
-
-    m_ApiReleases.clear();
-
-    foreach(const QJsonValue & release, releasesArray) {
-        auto releaseModel = ReleaseModel();
-        releaseModel.readFromJson(release.toObject());
-        m_ApiReleases.append(releaseModel);
-    }
-
-    fillNextReleases();
+    m_LoadedReleaseThread->start();
 }
 
 ReleaseItemModel *ReleasesService::getRelease(int releaseId)
@@ -96,6 +87,18 @@ ReleaseItemModel *ReleasesService::release(int index) const
 void ReleasesService::clearReleases()
 {
     m_Releases.clear();
+}
+
+void ReleasesService::loadedReleases()
+{
+    m_LoadedReleaseThread->quit();
+    m_ApiReleases = m_ReleaseLoader->releases();
+    fillNextReleases();
+}
+
+void ReleasesService::loadedReleasesFinished()
+{
+    if (m_NeedUpdate) loadReleasesCache();
 }
 
 void ReleasesService::addRelease(QQmlListProperty<ReleaseItemModel> * list, ReleaseItemModel * release)
