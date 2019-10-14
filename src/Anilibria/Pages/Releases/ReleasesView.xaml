@@ -197,7 +197,7 @@
 						<Grid
 							Grid.Row="1"
 							VerticalAlignment="Bottom"
-							Height="28">
+							Height="60">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition Width="Auto" />
@@ -205,7 +205,47 @@
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition />
 							</Grid.ColumnDefinitions>
-							<Grid Grid.Column="0" VerticalAlignment="Center">
+							<Grid.RowDefinitions>
+								<RowDefinition></RowDefinition>
+								<RowDefinition></RowDefinition>
+							</Grid.RowDefinitions>
+							<Button
+								Grid.ColumnSpan="5"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								converters:BackgroundThemeConverter.ActionButton="Origin"
+								Tapped="ReleaseAdditionalActions_Tapped">
+								<FlyoutBase.AttachedFlyout>
+									<MenuFlyout
+										converters:BackgroundThemeConverter.MenuFlyout="Origin">
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Добавить в избранное"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.AddReleaseToFavoritesCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding AddToFavorite, Converter={StaticResource InverseBoolConverter}}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Удалить из избранного"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.RemoveReleaseFromFavoritesCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding AddToFavorite}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Смотреть"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.WatchVideoCommand}"
+											CommandParameter="{Binding}"
+										/>
+									</MenuFlyout>
+								</FlyoutBase.AttachedFlyout>
+								Действия
+							</Button>
+							<Grid
+								Grid.Column="0"
+								VerticalAlignment="Center"
+								Grid.Row="1">
 								<TextBlock
 									Height="20"
 									FontFamily="Segoe MDL2 Assets"
@@ -214,7 +254,10 @@
 									&#xEB51;
 								</TextBlock>
 							</Grid>
-							<Grid Grid.Column="1" VerticalAlignment="Top">
+							<Grid
+								Grid.Column="1"
+								VerticalAlignment="Top"
+								Grid.Row="1">
 								<TextBlock
 									Height="20"
 									Margin="4 0 0 0"
@@ -225,17 +268,7 @@
 							</Grid>
 							<Grid
 								Grid.Column="2"
-								Visibility="{Binding AddToFavorite, Converter={StaticResource InverseBoolConverter}}"
-								VerticalAlignment="Top"
-								Margin="10 -2 0 0">
-								<Button
-									converters:BackgroundThemeConverter.ActionButton="Origin"
-									Command="{Binding Add}">
-									В избранное
-								</Button>
-							</Grid>
-							<Grid
-								Grid.Column="2"
+								Grid.Row="1"
 								VerticalAlignment="Center"
 								Visibility="{Binding AddToFavorite}"
 								Margin="4 0 0 2">
@@ -250,6 +283,7 @@
 							</Grid>
 							<Grid
 								Grid.Column="3"
+								Grid.Row="1"
 								VerticalAlignment="Top"
 								Visibility="{Binding AddToFavorite}">
 								<TextBlock
@@ -1855,6 +1889,7 @@
 								converters:BackgroundThemeConverter.ActionButton="Origin"
 								RightTapped="Button_RightTapped"
 								Tapped="Button_Tapped">
+								
 								<FlyoutBase.AttachedFlyout>
 									<Flyout
 										x:Name="OnlineVideoAttachFlyout"

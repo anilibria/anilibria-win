@@ -539,6 +539,25 @@ namespace Anilibria.Pages.Releases {
 			AddDownloadNotWatchSdCommand = CreateCommand ( AddDownloadNotWatchSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			AddDownloadNotWatchHdAndSdCommand = CreateCommand ( AddDownloadNotWatchHdAndSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			RefreshCurrentListCommand = CreateCommand ( RefreshCurrentList );
+			WatchVideoCommand = CreateCommand<ReleaseModel> ( WatchVideo );
+			AddReleaseToFavoritesCommand = CreateCommand<ReleaseModel> ( AddReleaseToFavorites );
+			RemoveReleaseFromFavoritesCommand = CreateCommand<ReleaseModel> ( RemoveReleaseFromFavorites );
+		}
+
+		private async void RemoveReleaseFromFavorites ( ReleaseModel release ) {
+			await m_AnilibriaApiService.RemoveUserFavorites ( release.Id );
+
+			await RefreshFavorites ();
+		}
+
+		private async void AddReleaseToFavorites ( ReleaseModel release ) {
+			await m_AnilibriaApiService.AddUserFavorites ( release.Id );
+
+			await RefreshFavorites ();
+		}
+
+		private void WatchVideo ( ReleaseModel release ) {
+			ChangePage ( "Player" , new List<ReleaseModel> { release } );
 		}
 
 		private void RefreshCurrentList () => RefreshReleases ();
@@ -2586,6 +2605,33 @@ namespace Anilibria.Pages.Releases {
 		/// Refresh current list command.
 		/// </summary>
 		public ICommand RefreshCurrentListCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Watch video command.
+		/// </summary>
+		public ICommand WatchVideoCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add release to favorites command.
+		/// </summary>
+		public ICommand AddReleaseToFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove release from favorites command.
+		/// </summary>
+		public ICommand RemoveReleaseFromFavoritesCommand
 		{
 			get;
 			set;

@@ -313,6 +313,9 @@ namespace Anilibria.Pages.Releases {
 			m_ViewModel.IsShowPosterPreview = true;
 		}
 
+		private void ReleaseAdditionalActions_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+		}
 	}
 
 }
