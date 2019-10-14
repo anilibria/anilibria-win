@@ -1245,9 +1245,9 @@
 								/>
 								<TextBlock
 									Margin="0 4 0 0"
-									converters:BackgroundThemeConverter.TextMapper="TextBlock">
-									Тема
-								</TextBlock>
+									converters:BackgroundThemeConverter.TextMapper="TextBlock"
+									Text="Тема"
+								/>
 								<ToggleSwitch
 									converters:BackgroundThemeConverter.ToggleSwitch="Origin"
 									Margin="0 4 0 0"

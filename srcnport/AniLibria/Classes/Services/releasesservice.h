@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQmlListProperty>
 #include "../Models/releaseitemmodel.h"
+#include "releaseloader.h"
 
 class ReleasesService : public QObject
 {
@@ -13,6 +14,9 @@ class ReleasesService : public QObject
 private:
     QVector<ReleaseItemModel*> m_Releases;
     QList<ReleaseModel> m_ApiReleases;
+    ReleaseLoader* m_ReleaseLoader;
+    QThread *m_LoadedReleaseThread;
+    bool m_NeedUpdate;
 
     static void addRelease(QQmlListProperty<ReleaseItemModel>*, ReleaseItemModel*);
     static int releasesCount(QQmlListProperty<ReleaseItemModel>*);
@@ -36,6 +40,8 @@ signals:
     void releasesChanged();
 
 public slots:
+    void loadedReleases();
+    void loadedReleasesFinished();
 };
 
 #endif // RELEASESSERVICE_H

@@ -60,9 +60,6 @@ ApplicationWindow {
         }
     }
 
-    //TODO: Switch beetween themes
-    //Material.theme: Material.Dark
-
     Drawer {
         id: drawer
         width: 300
@@ -198,7 +195,6 @@ ApplicationWindow {
 
     OnlinePlayer {
         id: videoplayer
-        drawer: drawer
         visible: false
         onChangeFullScreenMode: {
             if (fullScreen) {
@@ -211,8 +207,6 @@ ApplicationWindow {
 
     Releases {
         id: releases
-        drawer: drawer
-        releasesService: releasesService
         visible: true
         onWatchRelease: {
             videoplayer.setReleaseVideo(releaseId, -1);

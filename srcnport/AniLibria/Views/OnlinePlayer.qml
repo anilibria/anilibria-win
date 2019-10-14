@@ -1,16 +1,22 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.3
 import QtMultimedia 5.12
 import "../Controls"
 
 Page {
     id: _page
-    property Drawer drawer
     property bool isFullScreen: false
     property var selectedRelease: null
     property string videoSource: ""
     property var releaseVideos: []
     property var selectedVideo: null
+    property bool isFullHdAllowed: false
+    property real lastMovedPosition: 0
+    property real restorePosition: 0
+    property string videoQuality: "sd"
+    property string displayVideoPosition: "00:00:00"
+    property string displayEndVideoPosition: "00:00:00"
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder)
@@ -26,7 +32,7 @@ Page {
         const videos = [];
         for (let i = 0; i < _page.selectedRelease.videos.length; i++) {
             const video = _page.selectedRelease.videos[i];
-            videos.push({ title: video.title, sd: video.sd, id: video.id });
+            videos.push({ title: video.title, sd: video.sd, id: video.id, hd: video.hd, fullhd: video.fullhd });
         }
         videos.sort(
             (left, right) => {
@@ -38,7 +44,27 @@ Page {
         _page.releaseVideos = videos;
         const firstVideo = videos[0];
         _page.selectedVideo = firstVideo.id;
-        _page.videoSource = firstVideo.sd;
+        _page.isFullHdAllowed = "fullhd" in firstVideo;
+        if (!firstVideo[_page.videoQuality]) _page.videoQuality = "sd";
+
+        _page.videoSource = firstVideo[_page.videoQuality];
+        player.play();
+    }
+
+    function getZeroBasedDigit(digit) {
+        if (digit < 10) return `0${digit}`;
+        return `${digit}`;
+    }
+
+    function getDisplayTimeFromSeconds(seconds) {
+        const days = Math.floor(seconds / (3600 * 24));
+        seconds -= days * 3600 * 24;
+        const hours = Math.floor(seconds / 3600);
+        seconds -= hours * 3600;
+        const minutes = Math.floor(seconds / 60);
+        seconds  -= minutes * 60;
+
+        return `${getZeroBasedDigit(hours)}:${getZeroBasedDigit(minutes)}:${getZeroBasedDigit(Math.round(seconds))}`;
     }
 
     anchors.fill: parent
@@ -54,6 +80,21 @@ Page {
         onPlaybackStateChanged: {
             playButton.visible = playbackState === MediaPlayer.PausedState || playbackState === MediaPlayer.StoppedState;
             pauseButton.visible = playbackState === MediaPlayer.PlayingState;
+        }
+        onVolumeChanged: {
+            volumeSlider.value = volume * 100;
+        }
+        onStatusChanged: {
+            if (status === MediaPlayer.Buffered && _page.restorePosition > 0) {
+                player.seek(_page.restorePosition);
+            }
+        }
+
+        onPositionChanged: {
+            if (!playerLocation.pressed) playerLocation.value = position;
+
+            _page.displayVideoPosition = `${_page.getDisplayTimeFromSeconds(position / 1000)} из ${_page.getDisplayTimeFromSeconds(duration / 1000)}`;
+            _page.displayEndVideoPosition = _page.getDisplayTimeFromSeconds((duration - position) / 1000);
         }
     }
 
@@ -74,6 +115,7 @@ Page {
         }
     }
     VideoOutput {
+        id: videoOutput
         source: player
         anchors.fill: parent
     }
@@ -109,7 +151,8 @@ Page {
                                 anchors.fill: parent
                                 onClicked: {
                                     _page.selectedVideo = modelData.id;
-                                    _page.videoSource = modelData.sd;
+                                    _page.isFullHdAllowed = "fullhd" in modelData;
+                                    _page.videoSource = modelData[_page.videoQuality];
                                     player.play();
                                 }
                             }
@@ -132,82 +175,234 @@ Page {
         color: "#82ffffff"
         anchors.bottom: parent.bottom
         width: _page.width
-        height: 70
-        Row {
-            spacing: 5
-            IconButton {
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/step-backward.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    if (_page.selectedVideo === 1) return;
+        height: 100
 
-                    _page.selectedVideo--;
+        Column {
+            width: controlPanel.width
 
-                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
-                    player.play();
+            Slider {
+                id: playerLocation
+                height: 20
+                width: controlPanel.width
+                from: 1
+                value: 1
+                to: player.duration
+                onPressedChanged: {
+                    if (!pressed && _page.lastMovedPosition > 0) {
+                        player.seek(_page.lastMovedPosition);
+                        _page.lastMovedPosition = 0;
+                    }
+                }
+
+                onMoved: {
+                    if (pressed) _page.lastMovedPosition = value;
                 }
             }
-            IconButton {
-                id: playButton
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/play-button.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    player.play();
-                }
-            }
-            IconButton {
-                id: pauseButton
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/pause.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    player.pause();
-                }
-            }
-            /*AppPanelButton {
-                id: playButton
-                iconSource: "../Assets/Icons/play-button.svg"
-                width: 40
-                onPressed: {
-                    player.play();
-                }
-            }
-            AppPanelButton {
-                id: pauseButton
-                iconSource: "../Assets/Icons/pause.svg"
-                width: 40
-                onPressed: {
-                    player.pause();
-                }
-            }*/
-            IconButton {
-                width: 40
-                height: 40
-                iconColor: "black"
-                iconPath: "../Assets/Icons/step-forward.svg"
-                iconWidth: 24
-                iconHeight: 24
-                onButtonPressed: {
-                    if (_page.selectedVideo === _page.releaseVideos.length) return;
 
-                    _page.selectedVideo++;
+            Item {
+                height: 20
+                width: controlPanel.width
 
-                    _page.videoSource = _page.releaseVideos[_page.selectedVideo].sd;
-                    player.play();
+                Text {
+                    text: _page.displayVideoPosition
+                }
+
+                Row {
+                    height: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    ToggleButton {
+                        height: 20
+                        width: 60
+                        text: "1080p"
+                        visible: _page.isFullHdAllowed
+                        isChecked: _page.videoQuality === `fullhd`
+                        onButtonClicked: {
+                            _page.videoQuality = `fullhd`;
+                            _page.restorePosition = player.position;
+
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+
+                            _page.videoSource = video[_page.videoQuality];
+                            player.play();
+
+                        }
+                    }
+                    ToggleButton {
+                        height: 20
+                        width: 60
+                        text: "720p"
+                        isChecked: _page.videoQuality === `hd`
+                        onButtonClicked: {
+                            _page.videoQuality = `hd`;
+                            _page.restorePosition = player.position;
+
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+
+                            _page.videoSource = video[_page.videoQuality];
+                            player.play();
+                        }
+                    }
+                    ToggleButton {
+                        height: 20
+                        width: 60
+                        text: "480p"
+                        isChecked: _page.videoQuality === `sd`
+                        onButtonClicked: {
+                            _page.videoQuality = `sd`;
+                            _page.restorePosition = player.position;
+
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+
+                            _page.videoSource = video[_page.videoQuality];
+                            player.play();
+                        }
+                    }
+                }
+
+                Text {
+                    height: 20
+                    anchors.right: parent.right
+                    anchors.rightMargin: 4
+                    text: _page.displayEndVideoPosition
+                }
+            }
+
+            Item {
+                height: 60
+                width: controlPanel.width
+
+                Row {
+                    spacing: 5
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/menu.svg"
+                        iconWidth: 29
+                        iconHeight: 29
+                        onButtonPressed: {
+                            drawer.open();
+                        }
+                    }
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/speaker.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            player.muted = !player.muted;
+                        }
+                    }
+                    Slider {
+                        width: 60
+                        height: 40
+                        id: volumeSlider
+                        from: 0
+                        value: 10
+                        to: 100
+                        onMoved: {
+                            player.volume = value / 100;
+                        }
+                    }
+                }
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 5
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/step-backward.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            if (_page.selectedVideo === 1) return;
+
+                            _page.selectedVideo--;
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+                            _page.isFullHdAllowed = "fullhd" in video;
+
+                            _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+                        }
+                    }
+                    IconButton {
+                        id: playButton
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/play-button.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            player.play();
+                        }
+                    }
+                    IconButton {
+                        id: pauseButton
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/pause.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            player.pause();
+                        }
+                    }
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/step-forward.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            if (_page.selectedVideo === _page.releaseVideos.length) return;
+
+                            _page.selectedVideo++;
+                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+                            _page.isFullHdAllowed = "fullhd" in video;
+
+                            _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+                        }
+                    }
+                }
+
+                Row {
+                    spacing: 5
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/resize.svg"
+                        iconWidth: 29
+                        iconHeight: 29
+                        onButtonPressed: {
+                            switch (videoOutput.fillMode) {
+                                case VideoOutput.PreserveAspectFit:
+                                    videoOutput.fillMode = VideoOutput.PreserveAspectCrop;
+                                    break;
+                                case VideoOutput.PreserveAspectCrop:
+                                    videoOutput.fillMode = VideoOutput.PreserveAspectFit;
+                                    break;
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        volumeSlider.value = player.volume * 100;
     }
 }
 

@@ -403,6 +403,8 @@ namespace Anilibria.Pages.Releases {
 			await RefreshFavorites ();
 			var needRefresh = RefreshNotification ( needSendToasts: true );
 
+			if ( !m_Collection.Any () ) needRefresh = true;
+
 			if ( needRefresh || m_IsDirectRefreshing ) {
 				m_IsDirectRefreshing = false;
 				IsShowReleaseCard = false;

@@ -6,14 +6,12 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 
-namespace Anilibria.Converters
-{
+namespace Anilibria.Converters {
 
 	/// <summary>
 	/// Background theme converter.
 	/// </summary>
-	public class BackgroundThemeConverter
-	{
+	public class BackgroundThemeConverter {
 
 		public static readonly DependencyProperty BackgroundMapperProperty =
 			DependencyProperty.RegisterAttached (
@@ -43,7 +41,7 @@ namespace Anilibria.Converters
 			SetBackground ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 
 			var frameworkElement = ( element as FrameworkElement );
-			if ( frameworkElement != null) frameworkElement.Unloaded += FrameworkElementUnloaded;
+			if ( frameworkElement != null ) frameworkElement.Unloaded += FrameworkElementUnloaded;
 
 			ControlsThemeChanger.RegisterSubscriber ( "BackgroundMapper" , element , SubscribeBackgroundMapper );
 		}
@@ -164,8 +162,8 @@ namespace Anilibria.Converters
 
 			SetTextColor ( element , ControlsThemeChanger.GetThemeResource ( themeResourceName ) );
 
-			var frameworkElement = ( element as FrameworkElement );
-			if ( frameworkElement != null ) frameworkElement.Unloaded += FrameworkElementUnloaded;
+			/*var frameworkElement = ( element as FrameworkElement );
+			if ( frameworkElement != null ) frameworkElement.Unloaded += FrameworkElementUnloaded;*/
 
 			ControlsThemeChanger.RegisterSubscriber ( "TextMapper" , element , SubscribeTextMapper );
 		}
@@ -249,8 +247,8 @@ namespace Anilibria.Converters
 
 			ControlsThemeChanger.RegisterSubscriber (
 				"CommonFlyout" ,
-				element,
-				( string name, DependencyObject target ) => SetFlyoutStyle ( target , ControlsThemeChanger.CurrentTheme () )
+				element ,
+				( string name , DependencyObject target ) => SetFlyoutStyle ( target , ControlsThemeChanger.CurrentTheme () )
 			);
 		}
 
@@ -465,11 +463,14 @@ namespace Anilibria.Converters
 
 			SetFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
 
-			ControlsThemeChanger.RegisterSubscriber (
-				"FavoriteIcon" ,
-				element ,
-				( string name , DependencyObject target ) => SetFavoriteIconStyle ( target , ControlsThemeChanger.CurrentTheme () )
-			);
+			var frameworkElement = ( element as FrameworkElement );
+			if ( frameworkElement != null ) frameworkElement.Unloaded += FrameworkElementUnloaded;
+
+			ControlsThemeChanger.RegisterSubscriber ( "FavoriteIcon" , element , SubscribeFavoriteIcon );
+		}
+
+		private static void SubscribeFavoriteIcon ( string name , DependencyObject element ) {
+			SetFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
 		}
 
 		public static void SetFavoriteIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( FavoriteIconProperty , value );
@@ -500,10 +501,12 @@ namespace Anilibria.Converters
 			var themeResourceName = e.NewValue.ToString ();
 
 			SetRemoveFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
-			///////////////////////TODO!!!!!!
-			/*ControlsThemeChanger.RegisterSubscriber (
-				( string name ) => SetRemoveFavoriteIconStyle ( element , ControlsThemeChanger.CurrentTheme () )
-			);*/
+
+			ControlsThemeChanger.RegisterSubscriber (
+				"RemoveFavoriteIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetRemoveFavoriteIconStyle ( target , ControlsThemeChanger.CurrentTheme () )
+			);
 		}
 
 		public static void SetRemoveFavoriteIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( RemoveFavoriteIconProperty , value );

@@ -33,5 +33,7 @@
         <file>Controls/IconButton.qml</file>
         <file>Assets/Icons/step-backward.svg</file>
         <file>Assets/Icons/step-forward.svg</file>
+        <file>Assets/Icons/resize.svg</file>
+        <file>Controls/ToggleButton.qml</file>
     </qresource>
 </RCC>
