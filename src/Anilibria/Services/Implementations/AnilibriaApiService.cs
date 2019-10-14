@@ -356,7 +356,7 @@ namespace Anilibria.Services.Implementations {
 			var content = await result.Content.ReadAsStringAsync ();
 
 			var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList<FavoriteModel>>> ( content );
-			if ( !responseModel.Status ) {
+			if ( responseModel == null || !responseModel.Status ) {
 				//TODO: handle error
 			}
 		}
