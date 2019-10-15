@@ -212,7 +212,7 @@
 							<Button
 								Grid.ColumnSpan="5"
 								VerticalAlignment="Bottom"
-								HorizontalAlignment="Right"
+								HorizontalAlignment="Center"
 								converters:BackgroundThemeConverter.ActionButton="Origin"
 								Tapped="ReleaseAdditionalActions_Tapped">
 								<FlyoutBase.AttachedFlyout>
@@ -234,13 +234,27 @@
 										/>
 										<MenuFlyoutItem
 											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Отметить как просмотренное"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.AddSeenMarkFromQuickActionsCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding IsSeen, Converter={StaticResource InverseBoolConverter}}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Отметить как не просмотренное"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.RemoveSeenMarkFromQuickActionsCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding IsSeen}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 											Text="Смотреть"
 											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.WatchVideoCommand}"
 											CommandParameter="{Binding}"
 										/>
 									</MenuFlyout>
 								</FlyoutBase.AttachedFlyout>
-								Действия
+								Быстрые действия
 							</Button>
 							<Grid
 								Grid.Column="0"

@@ -542,6 +542,16 @@ namespace Anilibria.Pages.Releases {
 			WatchVideoCommand = CreateCommand<ReleaseModel> ( WatchVideo );
 			AddReleaseToFavoritesCommand = CreateCommand<ReleaseModel> ( AddReleaseToFavorites );
 			RemoveReleaseFromFavoritesCommand = CreateCommand<ReleaseModel> ( RemoveReleaseFromFavorites );
+			AddSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( AddSeenMarkFromQuickActions );
+			RemoveSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( RemoveSeenMarkFromQuickActions );
+		}
+
+		private void RemoveSeenMarkFromQuickActions ( ReleaseModel release ) {
+			RemoveSeenMark ( new List<long> { release.Id } );
+		}
+
+		private void AddSeenMarkFromQuickActions ( ReleaseModel release ) {
+			EnableSeenMark ( new List<long> { release.Id } );
 		}
 
 		private async void RemoveReleaseFromFavorites ( ReleaseModel release ) {
@@ -2632,6 +2642,24 @@ namespace Anilibria.Pages.Releases {
 		/// Remove release from favorites command.
 		/// </summary>
 		public ICommand RemoveReleaseFromFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add seen mark from quick actions command.
+		/// </summary>
+		public ICommand AddSeenMarkFromQuickActionsCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove seen mark from quick actions command.
+		/// </summary>
+		public ICommand RemoveSeenMarkFromQuickActionsCommand
 		{
 			get;
 			set;
