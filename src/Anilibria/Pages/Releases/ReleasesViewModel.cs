@@ -376,6 +376,10 @@ namespace Anilibria.Pages.Releases {
 						Name = "История просмотра",
 						Type = SortingItemType.HistoryWatch,
 					},
+					new SortingItemModel {
+						Name = "Сезон",
+						Type = SortingItemType.Season
+					},
 				}
 			);
 
@@ -1376,6 +1380,8 @@ namespace Anilibria.Pages.Releases {
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.LastViewTimestamp ) : releases.OrderByDescending ( a => a.LastViewTimestamp );
 				case SortingItemType.HistoryWatch:
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.LastWatchTimestamp ) : releases.OrderByDescending ( a => a.LastWatchTimestamp );
+				case SortingItemType.Season:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Season ) : releases.OrderByDescending ( a => a.Season );
 				default: throw new NotSupportedException ( $"Sorting sorting item {m_SelectedSortingItem}." );
 			}
 		}
