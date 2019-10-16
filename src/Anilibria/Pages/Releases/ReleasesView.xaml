@@ -899,9 +899,12 @@
 						<Button.Flyout>
 							<Flyout
 								converters:BackgroundThemeConverter.CommonFlyout="Origin">
-								<StackPanel HorizontalAlignment="Stretch">
+								<StackPanel
+									HorizontalAlignment="Stretch"
+									Width="300">
 									<Button
 										HorizontalAlignment="Stretch"
+										Width="200"
 										converters:BackgroundThemeConverter.ActionButton="Origin"
 										Command="{Binding ClearFiltersCommands}">
 										Очистить фильтры
@@ -911,15 +914,25 @@
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Жанры
 									</TextBlock>
-									<controls:TimingTextBox
-										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
-										Width="200"
-										Margin="4 0 4 4"
-										IsSpellCheckEnabled="False"
-										Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-										PlaceholderText="Вводите через запятую"
-										TimeoutCommand="{Binding FilterCommand}"
-									/>
+									<StackPanel
+										Orientation="Horizontal">
+										<controls:TimingTextBox
+											converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
+											Width="200"
+											Margin="4 0 4 4"
+											IsSpellCheckEnabled="False"
+											Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											PlaceholderText="Вводите через запятую"
+											TimeoutCommand="{Binding FilterCommand}"
+										/>
+										<ToggleSwitch
+											converters:BackgroundThemeConverter.ToggleSwitch="Origin"
+											IsOn="{Binding GenresAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											OnContent="И"
+											OffContent="ИЛИ"
+											Width="100">
+										</ToggleSwitch>
+									</StackPanel>
 									<TextBlock
 										Margin="4 0 4 4"
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
@@ -929,6 +942,7 @@
 										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
+										HorizontalAlignment="Left"
 										IsSpellCheckEnabled="False"
 										Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										PlaceholderText="Вводите через запятую"
@@ -943,6 +957,7 @@
 										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
+										HorizontalAlignment="Left"
 										IsSpellCheckEnabled="False"
 										Text="{Binding FilterBySeasons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										PlaceholderText="Вводите через запятую"
@@ -953,15 +968,23 @@
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Озвучка
 									</TextBlock>
-									<controls:TimingTextBox
-										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
-										Width="200"
-										Margin="4 0 4 4"
-										IsSpellCheckEnabled="False"
-										Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-										PlaceholderText="Вводите через запятую"
-										TimeoutCommand="{Binding FilterCommand}"
-									/>
+									<StackPanel Orientation="Horizontal">
+										<controls:TimingTextBox
+											converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
+											Width="200"
+											Margin="4 0 4 4"
+											IsSpellCheckEnabled="False"
+											Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											PlaceholderText="Вводите через запятую"
+											TimeoutCommand="{Binding FilterCommand}"
+										/>
+										<ToggleSwitch
+											converters:BackgroundThemeConverter.ToggleSwitch="Origin"
+											IsOn="{Binding VoicesAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											OnContent="И"
+											OffContent="ИЛИ">
+										</ToggleSwitch>
+									</StackPanel>
 									<TextBlock
 										Margin="4 0 4 4"
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
@@ -971,6 +994,7 @@
 										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
+										HorizontalAlignment="Left"
 										IsSpellCheckEnabled="False"
 										Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										TimeoutCommand="{Binding FilterCommand}"
@@ -985,6 +1009,7 @@
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
+										HorizontalAlignment="Left"
 										Text="{Binding FilterByStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										PlaceholderText="Вводите через запятую"
 										TimeoutCommand="{Binding FilterCommand}"
@@ -999,6 +1024,7 @@
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
+										HorizontalAlignment="Left"
 										Text="{Binding FilterByDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										TimeoutCommand="{Binding FilterCommand}"
 									/>

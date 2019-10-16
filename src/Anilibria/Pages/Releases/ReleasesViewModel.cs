@@ -192,6 +192,10 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsDirectRefreshing = false;
 
+		private bool m_GenresAll;
+
+		private bool m_VoicesAll;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -1397,6 +1401,11 @@ namespace Anilibria.Pages.Releases {
 				) ?? false;
 		}
 
+		private bool AllInArrayCaseSensitive ( IEnumerable<string> filterValues , IEnumerable<string> originalValues ) {
+			var intersectedValues = originalValues.Intersect ( filterValues );
+			return filterValues.SequenceEqual ( intersectedValues );
+		}
+
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
 			if ( releases == null ) return Enumerable.Empty<ReleaseEntity> ();
 
@@ -1409,7 +1418,12 @@ namespace Anilibria.Pages.Releases {
 			}
 			if ( !string.IsNullOrEmpty ( FilterByGenres ) ) {
 				var genres = FilterByGenres.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
+				if ( m_GenresAll ) {
+					releases = releases.Where ( a => a.Genres != null ? AllInArrayCaseSensitive ( genres , a.Genres ) : false );
+				}
+				else {
+					releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
+				}
 			}
 			if ( !string.IsNullOrEmpty ( FilterBySeasons ) ) {
 				var seasons = FilterBySeasons.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
@@ -1421,7 +1435,12 @@ namespace Anilibria.Pages.Releases {
 			}
 			if ( !string.IsNullOrEmpty ( FilterByVoicers ) ) {
 				var voicers = FilterByVoicers.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
+				if ( m_VoicesAll ) {
+					releases = releases.Where ( a => a.Voices != null ? AllInArrayCaseSensitive ( voicers , a.Voices ) : false );
+				}
+				else {
+					releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
+				}
 			}
 			switch ( SelectedFavoriteMarkType.Type ) {
 				case FavoriteMarkType.Favorited:
@@ -2246,6 +2265,34 @@ namespace Anilibria.Pages.Releases {
 		{
 			get;
 			set;
+		}
+
+		/// <summary>
+		/// Genres OR.
+		/// </summary>
+		public bool GenresAll
+		{
+			get => m_GenresAll;
+			set
+			{
+				if ( !Set ( ref m_GenresAll , value ) ) return;
+
+				Filter ();
+			}
+		}
+
+		/// <summary>
+		/// Voices OR.
+		/// </summary>
+		public bool VoicesAll
+		{
+			get => m_VoicesAll;
+			set
+			{
+				if ( !Set ( ref m_VoicesAll , value ) ) return;
+
+				Filter ();
+			}
 		}
 
 		/// <summary>
