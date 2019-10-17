@@ -418,7 +418,8 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = false;
 				RefreshReleases ();
 				RefreshSelectedReleases ();
-			} else {
+			}
+			else {
 				RefreshReleasesCache ();
 
 				foreach ( var releaseItem in m_Collection ) {
@@ -1402,8 +1403,11 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private bool AllInArrayCaseSensitive ( IEnumerable<string> filterValues , IEnumerable<string> originalValues ) {
-			var intersectedValues = originalValues.Intersect ( filterValues );
-			return filterValues.SequenceEqual ( intersectedValues );
+			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
+			var processedOriginalValues = originalValues.Where ( a => a != null ).Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
+
+			var intersectedValues = processedOriginalValues.Intersect ( processedFilterValues );
+			return processedFilterValues.SequenceEqual ( intersectedValues );
 		}
 
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
