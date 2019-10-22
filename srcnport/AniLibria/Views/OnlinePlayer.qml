@@ -140,7 +140,8 @@ Page {
         }
         onPositionChanged: {
             if (player.playbackState === MediaPlayer.PlayingState) {
-                //playerTimer.restart();
+                _page.setControlVisible(true);
+                playerTimer.restart();
             }
         }
     }
