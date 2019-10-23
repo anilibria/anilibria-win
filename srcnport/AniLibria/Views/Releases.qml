@@ -324,13 +324,43 @@ Page {
                         }
                     }
                 }
-                Row {
+                Rectangle {
+                    color: "transparent"
+                    width: cardContainer.width
+                    height: 60
+
+                    Button {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 10
+                        anchors.left: parent.left
+                        text: qsTr("Скачать")
+                        onClicked: {
+                        }
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 100
+                        text: "Доступно 0 серий онлайн"
+                    }
+
                     Button {
                         text: qsTr("Смотреть")
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
                         onClicked: {
                             watchRelease(page.openedRelease.id);
                         }
                     }
+
+                    Row {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                    }
+
                 }
             }
         }
