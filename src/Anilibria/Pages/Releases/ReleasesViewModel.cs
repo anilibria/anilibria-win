@@ -1194,10 +1194,10 @@ namespace Anilibria.Pages.Releases {
 
 			m_Favorites = favorites.Concat ( localFavorites.Releases );
 			if ( GroupedGridVisible ) {
-				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
 			}
 			else {
-				foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+				foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
 			}
 
 			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
