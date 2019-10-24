@@ -130,6 +130,8 @@ Page {
                                     width: 480
                                     height: 260
                                     onClicked: {
+                                        if (page.openedRelease) return;
+
                                         page.selectItem(modelData);
                                     }
                                 }
@@ -342,7 +344,8 @@ Page {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: 100
-                        text: "Доступно 0 серий онлайн"
+                        font.pixelSize: 14
+                        text: "Доступно "+ (page.openedRelease ? page.openedRelease.countOnlineVideos : "0" ) + " серий онлайн"
                     }
 
                     Button {

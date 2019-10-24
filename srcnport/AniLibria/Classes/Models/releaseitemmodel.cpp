@@ -28,6 +28,7 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
         videoModel->setTitle(video.title());
         m_Videos.append(videoModel);
     }
+    setCountOnlineVideos(releaseVideos.length());
 }
 
 ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
@@ -176,6 +177,19 @@ void ReleaseItemModel::setId(const int id)
 
     m_Id = id;
     emit idChanged();
+}
+
+int ReleaseItemModel::countOnlineVideos() const
+{
+    return m_CountOnlineVideos;
+}
+
+void ReleaseItemModel::setCountOnlineVideos(const int countOnlineVideos)
+{
+    if (countOnlineVideos == m_CountOnlineVideos) return;
+
+    m_CountOnlineVideos = countOnlineVideos;
+    emit countOnlineVideosChanged();
 }
 
 QQmlListProperty<ReleaseVideoModel> ReleaseItemModel::videos()
