@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include "onlinevideomodel.h"
+#include "releasetorrentmodel.h"
 
 class ReleaseModel
 {
@@ -20,6 +21,7 @@ private:
     QStringList m_Voices;
     QStringList m_Names;
     QList<OnlineVideoModel> m_Videos;
+    QList<ReleaseTorrentModel> m_Torrents;
     QString m_Title;
     QString m_Season;
     int m_Rating;
@@ -64,6 +66,8 @@ public:
     QString title();
 
     QList<OnlineVideoModel> videos();
+
+    QList<ReleaseTorrentModel> torrents();
 
 };
 

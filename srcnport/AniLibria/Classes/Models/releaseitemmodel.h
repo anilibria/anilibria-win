@@ -23,6 +23,7 @@ class ReleaseItemModel : public QObject
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
     Q_PROPERTY(QQmlListProperty<ReleaseVideoModel> videos READ videos)
     Q_PROPERTY(int countOnlineVideos READ countOnlineVideos WRITE setCountOnlineVideos NOTIFY countOnlineVideosChanged)
+    Q_PROPERTY(int countTorrents READ countTorrents WRITE setCountTorrents NOTIFY countTorrentsChanged)
 
 private:
     QString m_Title;
@@ -35,6 +36,7 @@ private:
     QString m_Voicers;
     QString m_Season;
     int m_CountOnlineVideos;
+    int m_CountTorrents;
     int m_Id;
     bool m_Selected;
     QList<ReleaseVideoModel*> m_Videos;
@@ -78,6 +80,9 @@ public:
     int countOnlineVideos() const;
     void setCountOnlineVideos(const int countOnlineVideos);
 
+    int countTorrents() const;
+    void setCountTorrents(const int countTorrents);
+
     QQmlListProperty<ReleaseVideoModel> videos();
 
     void mapFromReleaseModel(ReleaseModel & releaseModel);
@@ -95,6 +100,7 @@ signals:
     void seasonChanged();
     void idChanged();
     void countOnlineVideosChanged();
+    void countTorrentsChanged();
 
 public slots:
 

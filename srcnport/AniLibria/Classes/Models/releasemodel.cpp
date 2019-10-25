@@ -1,9 +1,11 @@
 #include "releasemodel.h"
 #include "onlinevideomodel.h"
+#include "releasetorrentmodel.h"
 
 ReleaseModel::ReleaseModel()
 {
     m_Videos = QList<OnlineVideoModel>();
+    m_Torrents = QList<ReleaseTorrentModel>();
 }
 
 void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
@@ -34,6 +36,13 @@ void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
         auto videoModel = OnlineVideoModel();
         videoModel.readFromApiModel(video.toObject());
         m_Videos.append(videoModel);
+    }
+
+    auto torrents = jsonObject.value("torrents").toArray();
+    foreach(QJsonValue torrent, torrents) {
+        auto torrentModel = ReleaseTorrentModel();
+        torrentModel.readFromApiModel(torrent.toObject());
+        m_Torrents.append(torrentModel);
     }
 }
 
@@ -66,6 +75,13 @@ void ReleaseModel::readFromJson(const QJsonObject &json)
         auto videoModel = OnlineVideoModel();
         videoModel.readFromApiModel(video.toObject());
         m_Videos.append(videoModel);
+    }
+
+    auto torrents = json["torrents"].toArray();
+    foreach(QJsonValue torrent, torrents) {
+        auto torrentModel = ReleaseTorrentModel();
+        torrentModel.readFromApiModel(torrent.toObject());
+        m_Torrents.append(torrentModel);
     }
 }
 
@@ -100,6 +116,15 @@ void ReleaseModel::writeToJson(QJsonObject &json) const
         playlistArray.append(jsonObject);
     }
     json["playlist"] = playlistArray;
+
+
+    QJsonArray torrentsArray = QJsonArray();
+    foreach(ReleaseTorrentModel torrent, m_Torrents) {
+        QJsonObject jsonObject;
+        torrent.writeToJson(jsonObject);
+        torrentsArray.append(jsonObject);
+    }
+    json["torrents"] = torrentsArray;
 }
 
 int ReleaseModel::id()
@@ -180,4 +205,9 @@ QString ReleaseModel::title()
 QList<OnlineVideoModel> ReleaseModel::videos()
 {
     return m_Videos;
+}
+
+QList<ReleaseTorrentModel> ReleaseModel::torrents()
+{
+    return m_Torrents;
 }

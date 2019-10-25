@@ -342,6 +342,14 @@ Page {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 100
+                        font.pixelSize: 14
+                        text: "Доступно "+ (page.openedRelease ? page.openedRelease.countTorrents : "0" ) + " торрентов"
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: 100
                         font.pixelSize: 14
