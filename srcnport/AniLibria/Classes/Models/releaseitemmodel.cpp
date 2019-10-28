@@ -16,6 +16,7 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setDescription(releaseModel.description());
     setSeason(releaseModel.season());
     setId(releaseModel.id());
+    setCode(releaseModel.code());
     QList<OnlineVideoModel> releaseVideos = releaseModel.videos();
     foreach(OnlineVideoModel video, releaseVideos) {
         auto videoModel = new ReleaseVideoModel(this);
@@ -165,6 +166,19 @@ void ReleaseItemModel::setSeason(const QString &season)
 
     m_Season = season;
     emit seasonChanged();
+}
+
+QString ReleaseItemModel::code() const
+{
+    return m_Code;
+}
+
+void ReleaseItemModel::setCode(const QString &code)
+{
+    if (code == m_Code) return;
+
+    m_Code = code;
+    emit codeChanged();
 }
 
 int ReleaseItemModel::id() const

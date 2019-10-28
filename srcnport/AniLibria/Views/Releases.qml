@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import QtWebView 1.1
 import QtGraphicalEffects 1.0
 import Anilibria.Services 1.0
 import "../Controls"
@@ -226,6 +227,7 @@ Page {
             Layout.fillHeight: true
             Column {
                 Grid {
+                    id: releaseInfo
                     columnSpacing: 3
                     columns: 3
                     bottomPadding: 4
@@ -372,6 +374,16 @@ Page {
                         anchors.rightMargin: 10
                     }
 
+                }
+                WebView {
+                    id: webView
+                    visible: page.openedRelease ? true : false
+                    width: cardContainer.width
+                    height: cardContainer.height - releaseInfo.height - 60
+                    url: page.openedRelease ? "https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/" + page.openedRelease.code + ".html" : "_blank";
+                    onLoadingChanged: {
+                        //if (loadRequest.errorString) console.error(loadRequest.errorString);
+                    }
                 }
             }
         }
