@@ -69,6 +69,7 @@ Page {
         ColumnLayout {
             Layout.fillHeight: true
             Layout.fillWidth: true
+            spacing: 2
 
             Rectangle {
                 Layout.fillWidth: true
@@ -87,6 +88,21 @@ Page {
                             page.openedRelease = null;
                         }
                     }
+                }
+            }
+
+            Rectangle {
+                id: filtersContainer
+                Layout.preferredWidth: 240
+                Layout.alignment: Qt.AlignHCenter
+                Layout.preferredHeight: 26
+                color: "transparent"
+
+                RoundedTextBox {
+                    width: filtersContainer.width
+                    height: 24
+                    textContent: ""
+                    placeholder: "Введите название релиза"
                 }
             }
 
