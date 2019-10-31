@@ -74,7 +74,6 @@ namespace Anilibria.Services.Implementations {
 				Announce = release.Announce ,
 				Description = release.Description ,
 				Genres = release.Genres.ToArray () ,
-				Moon = release.Moon ,
 				Rating = release.Favorite?.Rating ?? 0 ,
 				Blocked = release.BlockedInfo?.Blocked ?? false ,
 				BlockedReason = release.BlockedInfo?.Reason ?? "" ,
