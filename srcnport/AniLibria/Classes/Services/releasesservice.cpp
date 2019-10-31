@@ -92,7 +92,9 @@ void ReleasesService::clearReleases()
 void ReleasesService::loadedReleases()
 {
     m_LoadedReleaseThread->quit();
+    m_NeedUpdate = false;
     m_ApiReleases = m_ReleaseLoader->releases();
+    m_Releases.clear();
     fillNextReleases();
 }
 

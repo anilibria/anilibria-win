@@ -67,10 +67,28 @@ Page {
         return `${getZeroBasedDigit(hours)}:${getZeroBasedDigit(minutes)}:${getZeroBasedDigit(Math.round(seconds))}`;
     }
 
+    function setControlVisible(visible) {
+        if (visible) {
+            seriesPopup.opacity = 1;
+            controlPanel.opacity = 1;
+        } else {
+            seriesPopup.opacity = 0;
+            controlPanel.opacity = 0;
+        }
+    }
+
     anchors.fill: parent
 
     background: Rectangle {
         color: "black"
+    }
+
+    Timer {
+        id: playerTimer
+        interval: 2000
+        running: false
+        repeat: true
+        onTriggered: _page.setControlVisible(false)
     }
 
     MediaPlayer {
@@ -80,6 +98,12 @@ Page {
         onPlaybackStateChanged: {
             playButton.visible = playbackState === MediaPlayer.PausedState || playbackState === MediaPlayer.StoppedState;
             pauseButton.visible = playbackState === MediaPlayer.PlayingState;
+            if (playbackState === MediaPlayer.PlayingState) {
+                playerTimer.start();
+            } else {
+                playerTimer.stop();
+                _page.setControlVisible(true);
+            }
         }
         onVolumeChanged: {
             volumeSlider.value = volume * 100;
@@ -100,7 +124,8 @@ Page {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: {
+        hoverEnabled: true
+        onClicked: {            
             if (player.playbackState === MediaPlayer.PlayingState) {
                 player.pause();
                 return;
@@ -112,6 +137,12 @@ Page {
         onDoubleClicked: {
             isFullScreen = !isFullScreen;
             changeFullScreenMode(isFullScreen);
+        }
+        onPositionChanged: {
+            if (player.playbackState === MediaPlayer.PlayingState) {
+                _page.setControlVisible(true);
+                playerTimer.restart();
+            }
         }
     }
     VideoOutput {
@@ -167,6 +198,10 @@ Page {
                     }
                 }
             }
+        }
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200 }
         }
     }
 
@@ -398,6 +433,10 @@ Page {
                     }
                 }
             }
+        }
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200 }
         }
     }
 

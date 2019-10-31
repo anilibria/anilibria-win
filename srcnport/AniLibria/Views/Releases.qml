@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import QtWebView 1.1
 import QtGraphicalEffects 1.0
 import Anilibria.Services 1.0
 import "../Controls"
@@ -68,6 +69,7 @@ Page {
         ColumnLayout {
             Layout.fillHeight: true
             Layout.fillWidth: true
+            spacing: 2
 
             Rectangle {
                 Layout.fillWidth: true
@@ -86,6 +88,21 @@ Page {
                             page.openedRelease = null;
                         }
                     }
+                }
+            }
+
+            Rectangle {
+                id: filtersContainer
+                Layout.preferredWidth: 240
+                Layout.alignment: Qt.AlignHCenter
+                Layout.preferredHeight: 26
+                color: "transparent"
+
+                RoundedTextBox {
+                    width: filtersContainer.width
+                    height: 24
+                    textContent: ""
+                    placeholder: "Введите название релиза"
                 }
             }
 
@@ -130,6 +147,8 @@ Page {
                                     width: 480
                                     height: 260
                                     onClicked: {
+                                        if (page.openedRelease) return;
+
                                         page.selectItem(modelData);
                                     }
                                 }
@@ -224,6 +243,7 @@ Page {
             Layout.fillHeight: true
             Column {
                 Grid {
+                    id: releaseInfo
                     columnSpacing: 3
                     columns: 3
                     bottomPadding: 4
@@ -324,12 +344,61 @@ Page {
                         }
                     }
                 }
-                Row {
+                Rectangle {
+                    color: "transparent"
+                    width: cardContainer.width
+                    height: 60
+
+                    Button {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 10
+                        anchors.left: parent.left
+                        text: qsTr("Скачать")
+                        onClicked: {
+                        }
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 100
+                        font.pixelSize: 14
+                        text: "Доступно "+ (page.openedRelease ? page.openedRelease.countTorrents : "0" ) + " торрентов"
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 100
+                        font.pixelSize: 14
+                        text: "Доступно "+ (page.openedRelease ? page.openedRelease.countOnlineVideos : "0" ) + " серий онлайн"
+                    }
+
                     Button {
                         text: qsTr("Смотреть")
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
                         onClicked: {
                             watchRelease(page.openedRelease.id);
                         }
+                    }
+
+                    Row {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                    }
+
+                }
+                WebView {
+                    id: webView
+                    visible: page.openedRelease ? true : false
+                    width: cardContainer.width
+                    height: cardContainer.height - releaseInfo.height - 60
+                    url: page.openedRelease ? "https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/" + page.openedRelease.code + ".html" : "_blank";
+                    onLoadingChanged: {
+                        //if (loadRequest.errorString) console.error(loadRequest.errorString);
                     }
                 }
             }

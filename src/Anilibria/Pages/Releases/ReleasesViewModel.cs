@@ -192,6 +192,10 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_IsDirectRefreshing = false;
 
+		private bool m_GenresAll;
+
+		private bool m_VoicesAll;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -376,6 +380,10 @@ namespace Anilibria.Pages.Releases {
 						Name = "История просмотра",
 						Type = SortingItemType.HistoryWatch,
 					},
+					new SortingItemModel {
+						Name = "Сезон",
+						Type = SortingItemType.Season
+					},
 				}
 			);
 
@@ -410,7 +418,8 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = false;
 				RefreshReleases ();
 				RefreshSelectedReleases ();
-			} else {
+			}
+			else {
 				RefreshReleasesCache ();
 
 				foreach ( var releaseItem in m_Collection ) {
@@ -539,6 +548,35 @@ namespace Anilibria.Pages.Releases {
 			AddDownloadNotWatchSdCommand = CreateCommand ( AddDownloadNotWatchSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			AddDownloadNotWatchHdAndSdCommand = CreateCommand ( AddDownloadNotWatchHdAndSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			RefreshCurrentListCommand = CreateCommand ( RefreshCurrentList );
+			WatchVideoCommand = CreateCommand<ReleaseModel> ( WatchVideo );
+			AddReleaseToFavoritesCommand = CreateCommand<ReleaseModel> ( AddReleaseToFavorites );
+			RemoveReleaseFromFavoritesCommand = CreateCommand<ReleaseModel> ( RemoveReleaseFromFavorites );
+			AddSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( AddSeenMarkFromQuickActions );
+			RemoveSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( RemoveSeenMarkFromQuickActions );
+		}
+
+		private void RemoveSeenMarkFromQuickActions ( ReleaseModel release ) {
+			RemoveSeenMark ( new List<long> { release.Id } );
+		}
+
+		private void AddSeenMarkFromQuickActions ( ReleaseModel release ) {
+			EnableSeenMark ( new List<long> { release.Id } );
+		}
+
+		private async void RemoveReleaseFromFavorites ( ReleaseModel release ) {
+			await m_AnilibriaApiService.RemoveUserFavorites ( release.Id );
+
+			await RefreshFavorites ();
+		}
+
+		private async void AddReleaseToFavorites ( ReleaseModel release ) {
+			await m_AnilibriaApiService.AddUserFavorites ( release.Id );
+
+			await RefreshFavorites ();
+		}
+
+		private void WatchVideo ( ReleaseModel release ) {
+			ChangePage ( "Player" , new List<ReleaseModel> { release } );
 		}
 
 		private void RefreshCurrentList () => RefreshReleases ();
@@ -1156,10 +1194,10 @@ namespace Anilibria.Pages.Releases {
 
 			m_Favorites = favorites.Concat ( localFavorites.Releases );
 			if ( GroupedGridVisible ) {
-				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
 			}
 			else {
-				foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites.Contains ( release.Id );
+				foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
 			}
 
 			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
@@ -1347,6 +1385,8 @@ namespace Anilibria.Pages.Releases {
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.LastViewTimestamp ) : releases.OrderByDescending ( a => a.LastViewTimestamp );
 				case SortingItemType.HistoryWatch:
 					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.LastWatchTimestamp ) : releases.OrderByDescending ( a => a.LastWatchTimestamp );
+				case SortingItemType.Season:
+					return m_SelectedSortingDirection.Type == SortingDirectionType.Ascending ? releases.OrderBy ( a => a.Season ) : releases.OrderByDescending ( a => a.Season );
 				default: throw new NotSupportedException ( $"Sorting sorting item {m_SelectedSortingItem}." );
 			}
 		}
@@ -1362,6 +1402,14 @@ namespace Anilibria.Pages.Releases {
 				) ?? false;
 		}
 
+		private bool AllInArrayCaseSensitive ( IEnumerable<string> filterValues , IEnumerable<string> originalValues ) {
+			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
+			var processedOriginalValues = originalValues.Where ( a => a != null ).Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
+
+			var intersectedValues = processedOriginalValues.Intersect ( processedFilterValues );
+			return processedFilterValues.SequenceEqual ( intersectedValues );
+		}
+
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
 			if ( releases == null ) return Enumerable.Empty<ReleaseEntity> ();
 
@@ -1374,7 +1422,12 @@ namespace Anilibria.Pages.Releases {
 			}
 			if ( !string.IsNullOrEmpty ( FilterByGenres ) ) {
 				var genres = FilterByGenres.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
+				if ( m_GenresAll ) {
+					releases = releases.Where ( a => a.Genres != null ? AllInArrayCaseSensitive ( genres , a.Genres ) : false );
+				}
+				else {
+					releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
+				}
 			}
 			if ( !string.IsNullOrEmpty ( FilterBySeasons ) ) {
 				var seasons = FilterBySeasons.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
@@ -1386,7 +1439,12 @@ namespace Anilibria.Pages.Releases {
 			}
 			if ( !string.IsNullOrEmpty ( FilterByVoicers ) ) {
 				var voicers = FilterByVoicers.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
-				releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
+				if ( m_VoicesAll ) {
+					releases = releases.Where ( a => a.Voices != null ? AllInArrayCaseSensitive ( voicers , a.Voices ) : false );
+				}
+				else {
+					releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
+				}
 			}
 			switch ( SelectedFavoriteMarkType.Type ) {
 				case FavoriteMarkType.Favorited:
@@ -2214,6 +2272,34 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		/// <summary>
+		/// Genres OR.
+		/// </summary>
+		public bool GenresAll
+		{
+			get => m_GenresAll;
+			set
+			{
+				if ( !Set ( ref m_GenresAll , value ) ) return;
+
+				Filter ();
+			}
+		}
+
+		/// <summary>
+		/// Voices OR.
+		/// </summary>
+		public bool VoicesAll
+		{
+			get => m_VoicesAll;
+			set
+			{
+				if ( !Set ( ref m_VoicesAll , value ) ) return;
+
+				Filter ();
+			}
+		}
+
+		/// <summary>
 		/// Show sidebar command.
 		/// </summary>
 		public ICommand ShowSidebarCommand
@@ -2586,6 +2672,51 @@ namespace Anilibria.Pages.Releases {
 		/// Refresh current list command.
 		/// </summary>
 		public ICommand RefreshCurrentListCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Watch video command.
+		/// </summary>
+		public ICommand WatchVideoCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add release to favorites command.
+		/// </summary>
+		public ICommand AddReleaseToFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove release from favorites command.
+		/// </summary>
+		public ICommand RemoveReleaseFromFavoritesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add seen mark from quick actions command.
+		/// </summary>
+		public ICommand AddSeenMarkFromQuickActionsCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Remove seen mark from quick actions command.
+		/// </summary>
+		public ICommand RemoveSeenMarkFromQuickActionsCommand
 		{
 			get;
 			set;

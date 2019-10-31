@@ -23,6 +23,8 @@
 
 		HistoryWatch,
 
+		Season,
+
 	};
 
 }

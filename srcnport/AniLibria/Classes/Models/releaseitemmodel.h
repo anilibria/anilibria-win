@@ -20,8 +20,11 @@ class ReleaseItemModel : public QObject
     Q_PROPERTY(QString voicers READ voicers WRITE setVoicers NOTIFY voicersChanged)
     Q_PROPERTY(QString season READ season WRITE setSeason NOTIFY seasonChanged)
     Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(QString code READ code WRITE setCode NOTIFY codeChanged)
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
     Q_PROPERTY(QQmlListProperty<ReleaseVideoModel> videos READ videos)
+    Q_PROPERTY(int countOnlineVideos READ countOnlineVideos WRITE setCountOnlineVideos NOTIFY countOnlineVideosChanged)
+    Q_PROPERTY(int countTorrents READ countTorrents WRITE setCountTorrents NOTIFY countTorrentsChanged)
 
 private:
     QString m_Title;
@@ -33,6 +36,9 @@ private:
     QString m_Genres;
     QString m_Voicers;
     QString m_Season;
+    QString m_Code;
+    int m_CountOnlineVideos;
+    int m_CountTorrents;
     int m_Id;
     bool m_Selected;
     QList<ReleaseVideoModel*> m_Videos;
@@ -70,8 +76,17 @@ public:
     QString season() const;
     void setSeason(const QString &season);
 
+    QString code() const;
+    void setCode(const QString &code);
+
     int id() const;
     void setId(const int id);
+
+    int countOnlineVideos() const;
+    void setCountOnlineVideos(const int countOnlineVideos);
+
+    int countTorrents() const;
+    void setCountTorrents(const int countTorrents);
 
     QQmlListProperty<ReleaseVideoModel> videos();
 
@@ -89,6 +104,9 @@ signals:
     void selectedChanged();
     void seasonChanged();
     void idChanged();
+    void countOnlineVideosChanged();
+    void countTorrentsChanged();
+    void codeChanged();
 
 public slots:
 

@@ -16,6 +16,7 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
     setDescription(releaseModel.description());
     setSeason(releaseModel.season());
     setId(releaseModel.id());
+    setCode(releaseModel.code());
     QList<OnlineVideoModel> releaseVideos = releaseModel.videos();
     foreach(OnlineVideoModel video, releaseVideos) {
         auto videoModel = new ReleaseVideoModel(this);
@@ -28,6 +29,8 @@ void ReleaseItemModel::mapFromReleaseModel(ReleaseModel &releaseModel)
         videoModel->setTitle(video.title());
         m_Videos.append(videoModel);
     }
+    setCountOnlineVideos(releaseVideos.length());
+    setCountTorrents(releaseModel.torrents().length());
 }
 
 ReleaseItemModel::ReleaseItemModel(QObject *parent) : QObject(parent)
@@ -165,6 +168,19 @@ void ReleaseItemModel::setSeason(const QString &season)
     emit seasonChanged();
 }
 
+QString ReleaseItemModel::code() const
+{
+    return m_Code;
+}
+
+void ReleaseItemModel::setCode(const QString &code)
+{
+    if (code == m_Code) return;
+
+    m_Code = code;
+    emit codeChanged();
+}
+
 int ReleaseItemModel::id() const
 {
     return m_Id;
@@ -176,6 +192,32 @@ void ReleaseItemModel::setId(const int id)
 
     m_Id = id;
     emit idChanged();
+}
+
+int ReleaseItemModel::countOnlineVideos() const
+{
+    return m_CountOnlineVideos;
+}
+
+void ReleaseItemModel::setCountOnlineVideos(const int countOnlineVideos)
+{
+    if (countOnlineVideos == m_CountOnlineVideos) return;
+
+    m_CountOnlineVideos = countOnlineVideos;
+    emit countOnlineVideosChanged();
+}
+
+int ReleaseItemModel::countTorrents() const
+{
+    return m_CountTorrents;
+}
+
+void ReleaseItemModel::setCountTorrents(const int countTorrents)
+{
+    if (countTorrents == m_CountTorrents) return;
+
+    m_CountTorrents = countTorrents;
+    emit countTorrentsChanged();
 }
 
 QQmlListProperty<ReleaseVideoModel> ReleaseItemModel::videos()

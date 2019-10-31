@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QtWebView>
 #include "Classes/Services/synchronizationservice.h"
 #include "Classes/Models/releaseitemmodel.h"
 #include "Classes/Services/releasesservice.h"
@@ -9,6 +10,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+    QtWebView::initialize();
 
     qmlRegisterType<SynchronizationService>("Anilibria.Services", 1, 0, "SynchronizationService");
     qmlRegisterType<ReleaseItemModel>("Anilibria.Models", 1, 0, "ReleaseModel");

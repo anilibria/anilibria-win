@@ -197,7 +197,7 @@
 						<Grid
 							Grid.Row="1"
 							VerticalAlignment="Bottom"
-							Height="28">
+							Height="60">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition Width="Auto" />
@@ -205,7 +205,61 @@
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition />
 							</Grid.ColumnDefinitions>
-							<Grid Grid.Column="0" VerticalAlignment="Center">
+							<Grid.RowDefinitions>
+								<RowDefinition></RowDefinition>
+								<RowDefinition></RowDefinition>
+							</Grid.RowDefinitions>
+							<Button
+								Grid.ColumnSpan="5"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Center"
+								converters:BackgroundThemeConverter.ActionButton="Origin"
+								Tapped="ReleaseAdditionalActions_Tapped">
+								<FlyoutBase.AttachedFlyout>
+									<MenuFlyout
+										converters:BackgroundThemeConverter.MenuFlyout="Origin">
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Добавить в избранное"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.AddReleaseToFavoritesCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding AddToFavorite, Converter={StaticResource InverseBoolConverter}}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Удалить из избранного"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.RemoveReleaseFromFavoritesCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding AddToFavorite}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Отметить как просмотренное"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.AddSeenMarkFromQuickActionsCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding IsSeen, Converter={StaticResource InverseBoolConverter}}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Отметить как не просмотренное"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.RemoveSeenMarkFromQuickActionsCommand}"
+											CommandParameter="{Binding}"
+											IsEnabled="{Binding IsSeen}"
+										/>
+										<MenuFlyoutItem
+											converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+											Text="Смотреть"
+											Command="{Binding ElementName=ReleasesContainer, Path=DataContext.WatchVideoCommand}"
+											CommandParameter="{Binding}"
+										/>
+									</MenuFlyout>
+								</FlyoutBase.AttachedFlyout>
+								Быстрые действия
+							</Button>
+							<Grid
+								Grid.Column="0"
+								VerticalAlignment="Center"
+								Grid.Row="1">
 								<TextBlock
 									Height="20"
 									FontFamily="Segoe MDL2 Assets"
@@ -214,7 +268,10 @@
 									&#xEB51;
 								</TextBlock>
 							</Grid>
-							<Grid Grid.Column="1" VerticalAlignment="Top">
+							<Grid
+								Grid.Column="1"
+								VerticalAlignment="Top"
+								Grid.Row="1">
 								<TextBlock
 									Height="20"
 									Margin="4 0 0 0"
@@ -225,17 +282,7 @@
 							</Grid>
 							<Grid
 								Grid.Column="2"
-								Visibility="{Binding AddToFavorite, Converter={StaticResource InverseBoolConverter}}"
-								VerticalAlignment="Top"
-								Margin="10 -2 0 0">
-								<Button
-									converters:BackgroundThemeConverter.ActionButton="Origin"
-									Command="{Binding Add}">
-									В избранное
-								</Button>
-							</Grid>
-							<Grid
-								Grid.Column="2"
+								Grid.Row="1"
 								VerticalAlignment="Center"
 								Visibility="{Binding AddToFavorite}"
 								Margin="4 0 0 2">
@@ -250,6 +297,7 @@
 							</Grid>
 							<Grid
 								Grid.Column="3"
+								Grid.Row="1"
 								VerticalAlignment="Top"
 								Visibility="{Binding AddToFavorite}">
 								<TextBlock
@@ -851,9 +899,12 @@
 						<Button.Flyout>
 							<Flyout
 								converters:BackgroundThemeConverter.CommonFlyout="Origin">
-								<StackPanel HorizontalAlignment="Stretch">
+								<StackPanel
+									HorizontalAlignment="Stretch"
+									Width="300">
 									<Button
 										HorizontalAlignment="Stretch"
+										Width="200"
 										converters:BackgroundThemeConverter.ActionButton="Origin"
 										Command="{Binding ClearFiltersCommands}">
 										Очистить фильтры
@@ -863,15 +914,25 @@
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Жанры
 									</TextBlock>
-									<controls:TimingTextBox
-										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
-										Width="200"
-										Margin="4 0 4 4"
-										IsSpellCheckEnabled="False"
-										Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-										PlaceholderText="Вводите через запятую"
-										TimeoutCommand="{Binding FilterCommand}"
-									/>
+									<StackPanel
+										Orientation="Horizontal">
+										<controls:TimingTextBox
+											converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
+											Width="200"
+											Margin="4 0 4 4"
+											IsSpellCheckEnabled="False"
+											Text="{Binding FilterByGenres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											PlaceholderText="Вводите через запятую"
+											TimeoutCommand="{Binding FilterCommand}"
+										/>
+										<ToggleSwitch
+											converters:BackgroundThemeConverter.ToggleSwitch="Origin"
+											IsOn="{Binding GenresAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											OnContent="И"
+											OffContent="ИЛИ"
+											Width="100">
+										</ToggleSwitch>
+									</StackPanel>
 									<TextBlock
 										Margin="4 0 4 4"
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
@@ -881,6 +942,7 @@
 										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
+										HorizontalAlignment="Left"
 										IsSpellCheckEnabled="False"
 										Text="{Binding FilterByYears, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										PlaceholderText="Вводите через запятую"
@@ -895,6 +957,7 @@
 										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
+										HorizontalAlignment="Left"
 										IsSpellCheckEnabled="False"
 										Text="{Binding FilterBySeasons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										PlaceholderText="Вводите через запятую"
@@ -905,15 +968,23 @@
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
 										Озвучка
 									</TextBlock>
-									<controls:TimingTextBox
-										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
-										Width="200"
-										Margin="4 0 4 4"
-										IsSpellCheckEnabled="False"
-										Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-										PlaceholderText="Вводите через запятую"
-										TimeoutCommand="{Binding FilterCommand}"
-									/>
+									<StackPanel Orientation="Horizontal">
+										<controls:TimingTextBox
+											converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
+											Width="200"
+											Margin="4 0 4 4"
+											IsSpellCheckEnabled="False"
+											Text="{Binding FilterByVoicers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											PlaceholderText="Вводите через запятую"
+											TimeoutCommand="{Binding FilterCommand}"
+										/>
+										<ToggleSwitch
+											converters:BackgroundThemeConverter.ToggleSwitch="Origin"
+											IsOn="{Binding VoicesAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+											OnContent="И"
+											OffContent="ИЛИ">
+										</ToggleSwitch>
+									</StackPanel>
 									<TextBlock
 										Margin="4 0 4 4"
 										converters:BackgroundThemeConverter.TextMapper="TextBlock">
@@ -923,6 +994,7 @@
 										converters:BackgroundThemeConverter.AnilibriaTextBox="Origin"
 										Width="200"
 										Margin="4 0 4 4"
+										HorizontalAlignment="Left"
 										IsSpellCheckEnabled="False"
 										Text="{Binding FilterByType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										TimeoutCommand="{Binding FilterCommand}"
@@ -937,6 +1009,7 @@
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
+										HorizontalAlignment="Left"
 										Text="{Binding FilterByStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										PlaceholderText="Вводите через запятую"
 										TimeoutCommand="{Binding FilterCommand}"
@@ -951,6 +1024,7 @@
 										Width="200"
 										Margin="4 0 4 4"
 										IsSpellCheckEnabled="False"
+										HorizontalAlignment="Left"
 										Text="{Binding FilterByDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 										TimeoutCommand="{Binding FilterCommand}"
 									/>
@@ -1616,7 +1690,9 @@
 						</TextBlock>
 						<TextBlock
 							x:Name="GenresFiltersMenuTextBlock"
+							Width="450"
 							TextWrapping="WrapWholeWords"
+							TextTrimming="WordEllipsis"
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							RightTapped="GenresFiltersMenuTextBlock_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
@@ -1646,7 +1722,9 @@
 						</TextBlock>
 						<TextBlock
 							x:Name="VoicesFiltersMenuTextBlock"
+							Width="450"
 							TextWrapping="WrapWholeWords"
+							TextTrimming="WordEllipsis"
 							converters:BackgroundThemeConverter.TextMapper="TextBlock"
 							RightTapped="VoicesFiltersMenuTextBlock_RightTapped"
 							ToolTipService.ToolTip="Вы можете вставлять данные из этого поля в фильтры. Нажмите правую кнопку мыши на тексте и выберите нужный пункт для вставки">
@@ -1855,6 +1933,7 @@
 								converters:BackgroundThemeConverter.ActionButton="Origin"
 								RightTapped="Button_RightTapped"
 								Tapped="Button_Tapped">
+								
 								<FlyoutBase.AttachedFlyout>
 									<Flyout
 										x:Name="OnlineVideoAttachFlyout"

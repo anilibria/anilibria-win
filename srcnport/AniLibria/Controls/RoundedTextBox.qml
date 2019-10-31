@@ -2,9 +2,11 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 
 Rectangle {
+    id: _roundedTextBox
     property string textContent: ""
+    property string placeholder: ""
     height: 20
-    radius: height/2
+    radius: height / 2
     border.width: 1
     border.color: "#999"
 
@@ -12,7 +14,7 @@ Rectangle {
         id: flick
         anchors.fill: parent
         anchors.leftMargin: 6
-        anchors.topMargin: 3
+        anchors.topMargin: (_roundedTextBox.height / 2) - (edit.height / 2)
         anchors.rightMargin: 6
         contentWidth: edit.paintedWidth
         contentHeight: edit.paintedHeight
@@ -36,6 +38,12 @@ Rectangle {
             focus: true
             text: textContent
             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+
+            Text {
+                text: placeholder
+                color: "#aaa"
+                visible: placeholder && !edit.text
+            }
         }
     }
 }

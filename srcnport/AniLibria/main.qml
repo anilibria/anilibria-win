@@ -14,6 +14,7 @@ ApplicationWindow {
     minimumWidth: 800
     minimumHeight: 600
     height: 600
+    //flags: Qt.FramelessWindowHint | Qt.WindowMinimizeButtonHint | Qt.Window
     title: qsTr("AniLibria")
     property string currentPageId: "release"
 
