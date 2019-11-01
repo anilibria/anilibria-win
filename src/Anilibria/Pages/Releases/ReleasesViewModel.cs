@@ -407,8 +407,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void RefreshAfterSynchronize ( object parameter ) {
-
 			await RefreshFavorites ();
+			RefreshReleasesCache ();
 			var needRefresh = RefreshNotification ( needSendToasts: true );
 
 			if ( !m_Collection.Any () ) needRefresh = true;
@@ -420,8 +420,6 @@ namespace Anilibria.Pages.Releases {
 				RefreshSelectedReleases ();
 			}
 			else {
-				RefreshReleasesCache ();
-
 				foreach ( var releaseItem in m_Collection ) {
 					var originalRelease = m_AllReleases.FirstOrDefault ( a => a.Id == releaseItem.Id );
 					if ( originalRelease == null ) continue;
