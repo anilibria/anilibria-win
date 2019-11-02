@@ -5,6 +5,7 @@ Rectangle {
     id: _roundedTextBox
     property string textContent: ""
     property string placeholder: ""
+    property alias fontSize: edit.font.pixelSize
     height: 20
     radius: height / 2
     border.width: 1
@@ -42,6 +43,7 @@ Rectangle {
             Text {
                 text: placeholder
                 color: "#aaa"
+                font.pixelSize: fontSize
                 visible: placeholder && !edit.text
             }
         }

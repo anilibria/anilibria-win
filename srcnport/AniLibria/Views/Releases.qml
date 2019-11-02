@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import QtWebView 1.1
+import QtQuick.Controls.Styles 1.4
 import QtGraphicalEffects 1.0
 import Anilibria.Services 1.0
 import "../Controls"
@@ -95,13 +96,14 @@ Page {
                 id: filtersContainer
                 Layout.preferredWidth: 240
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredHeight: 26
+                Layout.preferredHeight: 44
                 color: "transparent"
 
                 RoundedTextBox {
                     width: filtersContainer.width
-                    height: 24
+                    height: 30
                     textContent: ""
+                    fontSize: 16
                     placeholder: "Введите название релиза"
                 }
             }
