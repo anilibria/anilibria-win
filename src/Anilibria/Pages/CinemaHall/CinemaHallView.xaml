@@ -6,8 +6,7 @@
 	xmlns:controls="using:Anilibria.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	mc:Ignorable="d"
-	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	mc:Ignorable="d">
 
 	<Grid
 		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
@@ -57,7 +56,6 @@
 			</RelativePanel>
 		</Border>
 
-		<!-- ItemTemplate="{StaticResource DownloadItemTemplate}" -->
 		<ListView
 				x:Name="CinemaHallReleases"
 				Grid.Column="0"

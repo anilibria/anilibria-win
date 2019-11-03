@@ -27,6 +27,11 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private void CreateCommand () {
 			WatchCommand = CreateCommand ( Watch );
+			ReorderCommand = CreateCommand ( Reorder );
+		}
+
+		private void Reorder () {
+			
 		}
 
 		private void Watch () {
@@ -110,6 +115,15 @@ namespace Anilibria.Pages.CinemaHall {
 		/// Watch command.
 		/// </summary>
 		public ICommand WatchCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Redorder command.
+		/// </summary>
+		public ICommand ReorderCommand
 		{
 			get;
 			set;
