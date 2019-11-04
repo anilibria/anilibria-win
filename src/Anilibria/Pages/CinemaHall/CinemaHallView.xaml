@@ -56,7 +56,7 @@
 			</RelativePanel>
 		</Border>
 
-		<ListView
+		<!--<ListView
 				x:Name="CinemaHallReleases"
 				Grid.Column="0"
 				Grid.Row="1"
@@ -67,6 +67,6 @@
 				
 				ItemsSource="{Binding Releases}"
 				SelectedItem="{Binding SelectedReleases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-		</ListView>
+		</ListView>-->
 	</Grid>
 </Page>

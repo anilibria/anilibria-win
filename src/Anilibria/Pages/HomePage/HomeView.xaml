@@ -14,6 +14,7 @@
 	xmlns:controls="using:Anilibria.Controls"
 	xmlns:converters="using:Anilibria.Converters"
 	xmlns:downloadmanager="using:Anilibria.Pages.DownloadManagerPage"
+	xmlns:cinemahall="using:Anilibria.Pages.CinemaHall"
 	xmlns:protocolpage="using:Anilibria.Pages.ProtocolsPages"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
@@ -154,6 +155,12 @@
 										IconColor="White"
 										Visibility="{Binding IsDownloadManagerPage}"
 									/>
+									<controls:PopcornIcon
+										IconWidth="28"
+										IconHeight="28"
+										IconColor="White"
+										Visibility="{Binding IsCinemaHallPage}"
+									/>
 									<TextBlock
 										Text="{Binding Name}"
 										VerticalAlignment="Center"
@@ -227,6 +234,10 @@
 				/>
 				<downloadmanager:DownloadManagerView
 					x:Name="DownloadManager"
+					Visibility="Collapsed"
+				/>
+				<cinemahall:CinemaHallView
+					x:Name="CinemaHall"
 					Visibility="Collapsed"
 				/>
 			</Grid>

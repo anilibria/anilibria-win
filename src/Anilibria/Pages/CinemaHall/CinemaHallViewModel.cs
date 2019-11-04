@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.CinemaHall.PresentationClasses;
+using Anilibria.Pages.OnlinePlayer.PresentationClasses;
 
 namespace Anilibria.Pages.CinemaHall {
 
@@ -28,6 +29,11 @@ namespace Anilibria.Pages.CinemaHall {
 		private void CreateCommand () {
 			WatchCommand = CreateCommand ( Watch );
 			ReorderCommand = CreateCommand ( Reorder );
+			ShowSidebarCommand = CreateCommand ( OpenSidebar );
+		}
+
+		private void OpenSidebar () {
+			ShowSidebar ();
 		}
 
 		private void Reorder () {
@@ -35,7 +41,14 @@ namespace Anilibria.Pages.CinemaHall {
 		}
 
 		private void Watch () {
-			//start watch video
+			ChangePage (
+				"Player" ,
+				new ReleaseLinkModel {
+					//TODO: change to cinemahall model
+					//ReleaseId = downloadRelease.ReleaseId
+				}
+			);
+
 		}
 
 		/// <summary>
@@ -73,6 +86,24 @@ namespace Anilibria.Pages.CinemaHall {
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
 
+		}
+
+		/// <summary>
+		/// Show sidebar.
+		/// </summary>
+		public Action ShowSidebar
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Change page.
+		/// </summary>
+		public Action<string , object> ChangePage
+		{
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -124,6 +155,15 @@ namespace Anilibria.Pages.CinemaHall {
 		/// Redorder command.
 		/// </summary>
 		public ICommand ReorderCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Show sidebar command.
+		/// </summary>
+		public ICommand ShowSidebarCommand
 		{
 			get;
 			set;

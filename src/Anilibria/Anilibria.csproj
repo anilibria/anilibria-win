@@ -152,6 +152,9 @@
     <Compile Include="Controls\DonateIcon.xaml.cs">
       <DependentUpon>DonateIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PopcornIcon.xaml.cs">
+      <DependentUpon>PopcornIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DownloadIcon.xaml.cs">
       <DependentUpon>DownloadIcon.xaml</DependentUpon>
     </Compile>
@@ -494,6 +497,10 @@
     <Page Include="Controls\DonateIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PopcornIcon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\DownloadIcon.xaml">
       <SubType>Designer</SubType>

@@ -106,6 +106,15 @@ namespace Anilibria.Pages.HomePage.PresentationClasses {
 			set;
 		}
 
+		/// <summary>
+		/// Is cinema hall page.
+		/// </summary>
+		public bool IsCinemaHallPage
+		{
+			get;
+			set;
+		}
+
 	}
 
 }
