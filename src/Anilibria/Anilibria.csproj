@@ -348,6 +348,7 @@
     <Compile Include="Services\PresentationClasses\TorrentItem.cs" />
     <Compile Include="Services\PresentationClasses\TouchReleaseModel.cs" />
     <Compile Include="Services\PresentationClasses\UserModel.cs" />
+    <Compile Include="Storage\Entities\CinemaHallReleaseEntity.cs" />
     <Compile Include="Storage\Entities\VideoQuality.cs" />
     <Compile Include="Services\PresentationClasses\YoutubeModel.cs" />
     <Compile Include="Storage\Entities\ChangesEntity.cs" />

@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Anilibria.Services.Implementations;
+using Windows.UI.Xaml.Controls;
 
 namespace Anilibria.Pages.CinemaHall {
 
@@ -10,7 +11,7 @@ namespace Anilibria.Pages.CinemaHall {
 		public CinemaHallView () {
 			InitializeComponent ();
 
-			DataContext = new CinemaHallViewModel ();
+			DataContext = new CinemaHallViewModel ( StorageService.Current () , new AnalyticsService () );
 		}
 
 	}

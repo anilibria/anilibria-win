@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -6,6 +7,9 @@ using System.Windows.Input;
 using Anilibria.MVVM;
 using Anilibria.Pages.CinemaHall.PresentationClasses;
 using Anilibria.Pages.OnlinePlayer.PresentationClasses;
+using Anilibria.Services;
+using Anilibria.Storage;
+using Anilibria.Storage.Entities;
 
 namespace Anilibria.Pages.CinemaHall {
 
@@ -22,7 +26,18 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private CinemaHallReleaseModel m_OpenedRelease;
 
-		public CinemaHallViewModel () {
+		private bool m_IsEmptyList;
+
+		private readonly IDataContext m_DataContext;
+
+		private readonly IAnalyticsService m_AnalyticsService;
+
+		private CinemaHallReleaseEntity m_ReleasesEntity;
+
+		public CinemaHallViewModel ( IDataContext dataContext , IAnalyticsService analyticsService ) {
+			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
+			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
+
 			CreateCommand ();
 		}
 
@@ -37,7 +52,7 @@ namespace Anilibria.Pages.CinemaHall {
 		}
 
 		private void Reorder () {
-			
+
 		}
 
 		private void Watch () {
@@ -86,6 +101,19 @@ namespace Anilibria.Pages.CinemaHall {
 		/// <param name="parameter">Parameter.</param>
 		public void NavigateTo ( object parameter ) {
 
+			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
+			m_ReleasesEntity = collection.FirstOrDefault ();
+
+			if ( m_ReleasesEntity == null ) {
+				m_ReleasesEntity = new CinemaHallReleaseEntity {
+					NewReleases = new List<long> ()
+				};
+				collection.Add ( m_ReleasesEntity );
+			}
+
+			IsEmptyList = !m_ReleasesEntity.NewReleases.Any ();
+
+			m_AnalyticsService.TrackEvent ( "CinemaHallpage" , "NavigatedTo" , "Simple" );
 		}
 
 		/// <summary>
@@ -113,6 +141,15 @@ namespace Anilibria.Pages.CinemaHall {
 		{
 			get => m_IsMultipleSelect;
 			set => Set ( ref m_IsMultipleSelect , value );
+		}
+
+		/// <summary>
+		/// Is empty list.
+		/// </summary>
+		public bool IsEmptyList
+		{
+			get => m_IsEmptyList;
+			set => Set ( ref m_IsEmptyList , value );
 		}
 
 		/// <summary>
