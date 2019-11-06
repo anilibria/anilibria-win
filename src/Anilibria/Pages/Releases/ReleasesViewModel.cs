@@ -551,6 +551,27 @@ namespace Anilibria.Pages.Releases {
 			RemoveReleaseFromFavoritesCommand = CreateCommand<ReleaseModel> ( RemoveReleaseFromFavorites );
 			AddSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( AddSeenMarkFromQuickActions );
 			RemoveSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( RemoveSeenMarkFromQuickActions );
+			AddReleasesToCinemaHallCommand = CreateCommand ( AddReleasesToCinemaHall , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+		}
+
+		private void AddReleasesToCinemaHall () {
+			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
+			var releasesEntity = collection.FirstOrDefault ();
+
+			if ( releasesEntity == null ) {
+				releasesEntity = new CinemaHallReleaseEntity {
+					NewReleases = new List<long> ()
+				};
+				collection.Add ( releasesEntity );
+			}
+
+			var releases = releasesEntity.NewReleases.ToList();
+			foreach ( var selectedRelease in SelectedReleases ) releases.Add ( selectedRelease.Id );
+
+			releasesEntity.NewReleases = releases.ToHashSet ().ToList ();
+			collection.Update ( releasesEntity );
+
+			RefreshSelectedReleases ();
 		}
 
 		private void RemoveSeenMarkFromQuickActions ( ReleaseModel release ) {
@@ -2715,6 +2736,15 @@ namespace Anilibria.Pages.Releases {
 		/// Remove seen mark from quick actions command.
 		/// </summary>
 		public ICommand RemoveSeenMarkFromQuickActionsCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Add releases to cinema hall command.
+		/// </summary>
+		public ICommand AddReleasesToCinemaHallCommand
 		{
 			get;
 			set;

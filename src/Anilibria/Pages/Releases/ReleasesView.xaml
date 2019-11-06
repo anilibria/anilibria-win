@@ -1262,9 +1262,32 @@
 					/>
 				</Button>
 				<Button
+					x:Name="CinemaHallButton"
+					RelativePanel.Below="RandomReleaseButton"
+					Style="{StaticResource IconsButtonStyle}"
+					Height="40"
+					ToolTipService.ToolTip="Чтобы снять или поставить отметку о просмотре необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
+					<controls:PopcornIcon
+						IconWidth="28"
+						IconHeight="28"
+						IconColor="White"
+					/>
+					<Button.Flyout>
+						<MenuFlyout
+							converters:BackgroundThemeConverter.MenuFlyout="Origin">
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Добавить релизы в кинозал"
+								Command="{Binding AddReleasesToCinemaHallCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
+						</MenuFlyout>
+					</Button.Flyout>
+				</Button>
+				<Button
 					x:Name="Settings"
 					Style="{StaticResource IconsButtonStyle}"
-					RelativePanel.Below="RandomReleaseButton"
+					RelativePanel.Below="CinemaHallButton"
 					ToolTipService.ToolTip="Настройки">
 					<Button.Flyout>
 						<Flyout

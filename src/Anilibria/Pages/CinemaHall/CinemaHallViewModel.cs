@@ -113,6 +113,8 @@ namespace Anilibria.Pages.CinemaHall {
 
 			IsEmptyList = !m_ReleasesEntity.NewReleases.Any ();
 
+			//m_Releases = new ObservableCollection<CinemaHallReleaseModel>()
+
 			m_AnalyticsService.TrackEvent ( "CinemaHallpage" , "NavigatedTo" , "Simple" );
 		}
 
