@@ -32,11 +32,16 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private readonly IAnalyticsService m_AnalyticsService;
 
+		private readonly IAnilibriaApiService m_AnilibriaApiService;
+
 		private CinemaHallReleaseEntity m_ReleasesEntity;
 
-		public CinemaHallViewModel ( IDataContext dataContext , IAnalyticsService analyticsService ) {
+		private CinemaHallReleaseModel m_ReorderItem;
+
+		public CinemaHallViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , IAnalyticsService analyticsService ) {
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
+			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 
 			CreateCommand ();
 		}
@@ -113,9 +118,58 @@ namespace Anilibria.Pages.CinemaHall {
 
 			IsEmptyList = !m_ReleasesEntity.NewReleases.Any ();
 
-			//m_Releases = new ObservableCollection<CinemaHallReleaseModel>()
+			var releasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
+			var releases = releasesCollection.All ();
+
+			var releasesDictionary = releases.ToDictionary ( a => a.Id );
+
+			var cinemaHallReleases = new List<CinemaHallReleaseModel> ();
+			var iterator = -1;
+			foreach ( var releaseId in m_ReleasesEntity.NewReleases ) {
+				var releaseModel = releasesDictionary[releaseId];
+				cinemaHallReleases.Add (
+					new CinemaHallReleaseModel {
+						Title = releaseModel.Title ,
+						Description = releaseModel.Description ,
+						Order = iterator ,
+						Poster = m_AnilibriaApiService.GetUrl ( releaseModel.Poster ) ,
+						ReleaseId = releaseModel.Id
+					}
+				);
+			}
+
+			RefreshReleases ( cinemaHallReleases );
 
 			m_AnalyticsService.TrackEvent ( "CinemaHallpage" , "NavigatedTo" , "Simple" );
+		}
+
+		private void RefreshReleases ( List<CinemaHallReleaseModel> cinemaHallReleases ) {
+			Releases = new ObservableCollection<CinemaHallReleaseModel> ( cinemaHallReleases );
+			Releases.CollectionChanged += Releases_CollectionChanged;
+		}
+
+		private void Releases_CollectionChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
+			switch ( e.Action ) {
+				case NotifyCollectionChangedAction.Remove:
+					m_ReorderItem = (CinemaHallReleaseModel) e.OldItems[0];
+					break;
+				case NotifyCollectionChangedAction.Add:
+					if ( m_ReorderItem == null ) return;
+
+					var releases = m_ReleasesEntity.NewReleases.ToList ();
+
+					releases.Remove ( m_ReorderItem.ReleaseId );
+					releases.Insert ( e.NewStartingIndex , m_ReorderItem.ReleaseId );
+
+					m_ReorderItem = null;
+
+					m_ReleasesEntity.NewReleases = releases;
+
+					var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
+					collection.Update ( m_ReleasesEntity );
+
+					break;
+			}
 		}
 
 		/// <summary>

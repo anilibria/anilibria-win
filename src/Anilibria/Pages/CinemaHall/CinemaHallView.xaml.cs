@@ -11,7 +11,7 @@ namespace Anilibria.Pages.CinemaHall {
 		public CinemaHallView () {
 			InitializeComponent ();
 
-			DataContext = new CinemaHallViewModel ( StorageService.Current () , new AnalyticsService () );
+			DataContext = new CinemaHallViewModel ( ApiService.Current () , StorageService.Current () , new AnalyticsService () );
 		}
 
 	}

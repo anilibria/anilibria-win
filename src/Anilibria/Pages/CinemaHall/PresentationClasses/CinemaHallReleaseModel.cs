@@ -31,7 +31,7 @@ namespace Anilibria.Pages.CinemaHall.PresentationClasses {
 		/// <summary>
 		/// Poster.
 		/// </summary>
-		public Uri Porter
+		public Uri Poster
 		{
 			get;
 			set;
