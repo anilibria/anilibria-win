@@ -131,6 +131,7 @@
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
     <Compile Include="Controls\BindableGridControl.cs" />
+    <Compile Include="Controls\BindableListView.cs" />
     <Compile Include="Controls\ChatIcon.xaml.cs">
       <DependentUpon>ChatIcon.xaml</DependentUpon>
     </Compile>

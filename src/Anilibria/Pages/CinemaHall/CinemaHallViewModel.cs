@@ -43,21 +43,36 @@ namespace Anilibria.Pages.CinemaHall {
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 
+			RefreshSelectedReleases ();
+
 			CreateCommand ();
 		}
 
 		private void CreateCommand () {
 			WatchCommand = CreateCommand ( Watch );
-			ReorderCommand = CreateCommand ( Reorder );
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
+			RemoveReleasesCommand = CreateCommand ( RemoveReleases , () => m_SelectedReleases.Any () );
+		}
+
+		private void RemoveReleases () {
+			var releases = m_SelectedReleases.Select ( a => a.ReleaseId ).ToList ();
+			m_ReleasesEntity.NewReleases = m_ReleasesEntity.NewReleases
+				.Where ( a => !releases.Contains ( a ) )
+				.ToList ();
+
+			RefreshSelectedReleases ();
+
+			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
+			collection.Update ( m_ReleasesEntity );
+
+			var deletedReleases = Releases
+				.Where ( a => releases.Contains ( a.ReleaseId ) )
+				.ToList ();
+			foreach ( var deletedRelease in deletedReleases ) Releases.Remove ( deletedRelease );
 		}
 
 		private void OpenSidebar () {
 			ShowSidebar ();
-		}
-
-		private void Reorder () {
-
 		}
 
 		private void Watch () {
@@ -83,15 +98,7 @@ namespace Anilibria.Pages.CinemaHall {
 			SelectedReleases.CollectionChanged += SelectedReleasesChanged;
 		}
 
-		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) {
-			RaiseCommands ();
-
-			if ( !IsMultipleSelect && SelectedReleases.Count == 1 ) {
-				OpenedRelease = SelectedReleases.First ();
-
-				RefreshSelectedReleases ();
-			}
-		}
+		private void SelectedReleasesChanged ( object sender , NotifyCollectionChangedEventArgs e ) => RaiseCommands ();
 
 		/// <summary>
 		/// Navigate from.
@@ -245,18 +252,18 @@ namespace Anilibria.Pages.CinemaHall {
 		}
 
 		/// <summary>
-		/// Redorder command.
+		/// Show sidebar command.
 		/// </summary>
-		public ICommand ReorderCommand
+		public ICommand ShowSidebarCommand
 		{
 			get;
 			set;
 		}
 
 		/// <summary>
-		/// Show sidebar command.
+		/// Remove releases command.
 		/// </summary>
-		public ICommand ShowSidebarCommand
+		public ICommand RemoveReleasesCommand
 		{
 			get;
 			set;
