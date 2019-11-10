@@ -87,6 +87,7 @@
 					RelativePanel.AlignTopWithPanel="True"
 					Style="{StaticResource IconsButtonStyle}"
 					Height="40"
+					Width="48"
 					ToolTipService.ToolTip="Чтобы добавить релизы в кинозал необходимо перевести режим выбора в множественный режим и выбрать необходимые релизы">
 					<controls:PopcornIcon
 						IconWidth="28"

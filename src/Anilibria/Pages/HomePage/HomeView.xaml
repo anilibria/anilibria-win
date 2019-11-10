@@ -156,8 +156,8 @@
 										Visibility="{Binding IsDownloadManagerPage}"
 									/>
 									<controls:PopcornIcon
-										IconWidth="28"
-										IconHeight="28"
+										IconWidth="24"
+										IconHeight="24"
 										IconColor="White"
 										Visibility="{Binding IsCinemaHallPage}"
 									/>
