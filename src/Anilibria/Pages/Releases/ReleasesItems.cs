@@ -38,7 +38,7 @@ namespace Anilibria.Pages.Releases {
 					Type = SeenMarkType.Seen
 				},
 				new SeenMarkItem {
-					Title = "Посматриваемые",
+					Title = "Просматриваемые",
 					Type = SeenMarkType.SeenNow
 				},
 				new SeenMarkItem {
