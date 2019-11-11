@@ -61,6 +61,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private ReleaseModel m_SelectedRelease;
 
+		private ObservableCollection<OnlineVideoModel> m_OnlineVideos = new ObservableCollection<OnlineVideoModel> ();
+
 		private IEnumerable<ReleaseModel> m_Releases;
 
 		private OnlineVideoModel m_SelectedOnlineVideo;
@@ -613,6 +615,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
 							SelectedRelease = MapToReleaseModel ( release );
 							SetDownloadedPaths ( SelectedRelease.Id , SelectedRelease.OnlineVideos );
+							OnlineVideos = new ObservableCollection<OnlineVideoModel> ( SelectedRelease.OnlineVideos );
 							SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 
 							ChangePlayback ( PlaybackState.Play , false );
@@ -648,6 +651,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					SetDownloadedPaths ( release.Id , release.OnlineVideos );
 
 					release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
+					OnlineVideos = new ObservableCollection<OnlineVideoModel> ( release.OnlineVideos );
 				}
 				SelectedRelease = release;
 				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
@@ -981,6 +985,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get => m_SelectedRelease;
 			set => Set ( ref m_SelectedRelease , value );
+		}
+
+		/// <summary>
+		/// Online videos.
+		/// </summary>
+		public ObservableCollection<OnlineVideoModel> OnlineVideos
+		{
+			get => m_OnlineVideos;
+			set => Set ( ref m_OnlineVideos , value );
 		}
 
 		/// <summary>

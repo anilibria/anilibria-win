@@ -1580,7 +1580,7 @@
 					Width="170"
 					MaxWidth="190"
 					HorizontalAlignment="Left"
-					ItemsSource="{Binding SelectedRelease.OnlineVideos}"
+					ItemsSource="{Binding OnlineVideos}"
 					SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
 					<ListView.ItemTemplate>
