@@ -74,6 +74,15 @@ namespace Anilibria.Pages.Releases.PresentationClasses {
 		}
 
 		/// <summary>
+		/// Release name.
+		/// </summary>
+		public string ReleaseName
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Is seen.
 		/// </summary>
 		public bool IsSeen

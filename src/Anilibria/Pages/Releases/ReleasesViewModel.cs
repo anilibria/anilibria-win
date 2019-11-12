@@ -450,6 +450,7 @@ namespace Anilibria.Pages.Releases {
 									FullHDQuality = videoOnline.FullHD ,
 									DownloadableHD = videoOnline.DownloadableHD ,
 									DownloadableSD = videoOnline.DownloadableSD ,
+									ReleaseName = releaseItem.Title,
 									IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
 								}
 						)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
@@ -565,7 +566,7 @@ namespace Anilibria.Pages.Releases {
 				collection.Add ( releasesEntity );
 			}
 
-			var releases = releasesEntity.NewReleases.ToList();
+			var releases = releasesEntity.NewReleases.ToList ();
 			foreach ( var selectedRelease in SelectedReleases ) releases.Add ( selectedRelease.Id );
 
 			releasesEntity.NewReleases = releases.ToHashSet ().ToList ();
@@ -1623,6 +1624,7 @@ namespace Anilibria.Pages.Releases {
 							FullHDQuality = videoOnline.FullHD ,
 							DownloadableHD = videoOnline.DownloadableHD ,
 							DownloadableSD = videoOnline.DownloadableSD ,
+							ReleaseName = a.Names != null ? a.Names.FirstOrDefault () : "" ,
 							IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()

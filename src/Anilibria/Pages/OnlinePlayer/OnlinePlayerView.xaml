@@ -1532,6 +1532,55 @@
 			</Setter>
 		</Style>
 
+		<DataTemplate x:Key="SeriesListViewItemTemplate">
+			<Grid
+				HorizontalAlignment="Stretch"
+				Width="145">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<TextBlock
+					Grid.Column="0"
+					Foreground="Black"
+					VerticalAlignment="Center"
+					Text="{Binding Title}"
+				/>
+				<Button
+					Style="{StaticResource IconsButtonStyle}"
+					Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ToggleSeenMarkCommand}"
+					CommandParameter="{Binding}"
+					HorizontalAlignment="Right"
+					Grid.Column="1">
+					<Grid
+						Height="24">
+						<controls:EyeIcon
+							Visibility="{Binding IsSeen}"
+							IconWidth="20"
+							IconHeight="20"
+							IconColor="Black"
+							IconStroke="Black"
+							IconStrokeThickness="4"
+						/>
+						<controls:EyeIcon
+							Visibility="{Binding IsSeen, Converter={StaticResource InverseBoolConverter}}"
+							IconWidth="20"
+							IconHeight="20"
+							IconColor="Black"
+							IconStroke="Black"
+							IconStrokeThickness="0"
+						/>
+					</Grid>
+				</Button>
+			</Grid>
+		</DataTemplate>
+
+		<CollectionViewSource
+			x:Name="GroupedSeriesSource"
+			Source="{Binding GroupingOnlineVideos}"
+			IsSourceGrouped="true"
+		/>
+
 	</Page.Resources>
 
 	<Grid PointerMoved="Grid_PointerMoved">
@@ -1571,65 +1620,58 @@
 					Opacity=".8"
 					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
 				</Rectangle>
-				<ListView
-					x:Name="PlaylistListView"
-					PointerEntered="PlaylistListView_PointerEntered"
-					PointerExited="PlaylistListView_PointerExited"
-					ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
-					MinWidth="170"
-					Width="170"
-					MaxWidth="190"
-					HorizontalAlignment="Left"
-					ItemsSource="{Binding OnlineVideos}"
-					SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-					Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}">
-					<ListView.ItemTemplate>
-						<DataTemplate>
-							<Grid
-								HorizontalAlignment="Stretch"
-								Width="145">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition />
-									<ColumnDefinition
-										Width="Auto"
-									/>
-								</Grid.ColumnDefinitions>
-								<TextBlock
-									Grid.Column="0"
-									Foreground="Black"
-									VerticalAlignment="Center"
-									Text="{Binding Title}"
-								/>
-								<Button
-									Style="{StaticResource IconsButtonStyle}"
-									Command="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.ToggleSeenMarkCommand}"
-									CommandParameter="{Binding}"
-									HorizontalAlignment="Right"
-									Grid.Column="1">
-									<Grid
-										Height="24">
-										<controls:EyeIcon
-											Visibility="{Binding IsSeen}"
-											IconWidth="20"
-											IconHeight="20"
-											IconColor="Black"
-											IconStroke="Black"
-											IconStrokeThickness="4"
+				<Grid
+					Visibility="{Binding IsCinemaHall, Converter={StaticResource InverseBoolConverter}}">
+					<ListView
+						x:Name="PlaylistListView"
+						PointerEntered="PlaylistListView_PointerEntered"
+						PointerExited="PlaylistListView_PointerExited"
+						ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
+						MinWidth="170"
+						Width="170"
+						MaxWidth="190"
+						HorizontalAlignment="Left"
+						ItemsSource="{Binding OnlineVideos}"
+						SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}"
+						ItemTemplate="{StaticResource SeriesListViewItemTemplate}">
+					</ListView>
+				</Grid>
+				<Grid
+					Visibility="{Binding IsCinemaHall}">
+					<ListView
+						x:Name="GroupedPlaylistListView"
+						PointerEntered="PlaylistListView_PointerEntered"
+						PointerExited="PlaylistListView_PointerExited"
+						ItemContainerStyle="{StaticResource PlayerListViewItemContainerStyle}"
+						MinWidth="260"
+						Width="260"
+						MaxWidth="260"
+						HorizontalAlignment="Left"
+						ItemsSource="{Binding Source={StaticResource GroupedSeriesSource}}"
+						SelectedItem="{Binding SelectedOnlineVideo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						Visibility="{Binding ShowPlaylistButton, Converter={StaticResource InverseBoolConverter}}"
+						ItemTemplate="{StaticResource SeriesListViewItemTemplate}">
+						<ListView.GroupStyle>
+							<GroupStyle>
+								<GroupStyle.HeaderTemplate>
+									<DataTemplate>
+										<TextBlock
+											Text="{Binding Key}"
+											converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+											FontSize="15"
+											Margin="2"
+											Foreground="Black"
+											TextTrimming="CharacterEllipsis"
+											MaxLines="4"
+											TextWrapping="WrapWholeWords"
 										/>
-										<controls:EyeIcon
-											Visibility="{Binding IsSeen, Converter={StaticResource InverseBoolConverter}}"
-											IconWidth="20"
-											IconHeight="20"
-											IconColor="Black"
-											IconStroke="Black"
-											IconStrokeThickness="0"
-										/>
-									</Grid>
-								</Button>
-							</Grid>
-						</DataTemplate>
-					</ListView.ItemTemplate>
-				</ListView>
+									</DataTemplate>
+								</GroupStyle.HeaderTemplate>
+							</GroupStyle>
+						</ListView.GroupStyle>
+					</ListView>
+				</Grid>
 				<Grid Visibility="{Binding IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}">
 					<Button
 						x:Name="OpenPlaylistButton"

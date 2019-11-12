@@ -63,6 +63,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private ObservableCollection<OnlineVideoModel> m_OnlineVideos = new ObservableCollection<OnlineVideoModel> ();
 
+		private ObservableCollection<IGrouping<string , OnlineVideoModel>> m_GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ();
+
 		private IEnumerable<ReleaseModel> m_Releases;
 
 		private OnlineVideoModel m_SelectedOnlineVideo;
@@ -200,6 +202,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_IsXbox;
 
+		private bool m_IsCinemaHall = false;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -236,6 +240,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_IsSupportedCompactOverlay = ApplicationView.GetForCurrentView ().IsViewModeSupported ( ApplicationViewMode.CompactOverlay );
 
 			m_ReleasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
+
+			//TODO: need only for debug, after it remove it
+			m_IsCinemaHall = true;
 		}
 
 		private void RestoreSettings () {
@@ -512,7 +519,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 							Order = a.Id ,
 							SDQuality = a.SD ,
 							FullHDQuality = a.FullHD ,
-							Title = a.Title
+							Title = a.Title ,
+							ReleaseName = releaseEntity.Title
 						}
 					)
 					.OrderBy ( a => a.Order )
@@ -616,6 +624,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							SelectedRelease = MapToReleaseModel ( release );
 							SetDownloadedPaths ( SelectedRelease.Id , SelectedRelease.OnlineVideos );
 							OnlineVideos = new ObservableCollection<OnlineVideoModel> ( SelectedRelease.OnlineVideos );
+							GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( SelectedRelease.OnlineVideos.GroupBy ( a => a.ReleaseName ) );
 							SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 
 							ChangePlayback ( PlaybackState.Play , false );
@@ -652,6 +661,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 					release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
 					OnlineVideos = new ObservableCollection<OnlineVideoModel> ( release.OnlineVideos );
+					GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( release.OnlineVideos.GroupBy ( a => a.ReleaseName ) );
 				}
 				SelectedRelease = release;
 				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
@@ -997,6 +1007,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		/// <summary>
+		/// Grouping online videos.
+		/// </summary>
+		public ObservableCollection<IGrouping<string , OnlineVideoModel>> GroupingOnlineVideos
+		{
+			get => m_GroupingOnlineVideos;
+			set => Set ( ref m_GroupingOnlineVideos , value );
+		}
+
+		/// <summary>
 		/// Show playlist button.
 		/// </summary>
 		public bool ShowPlaylistButton
@@ -1159,6 +1178,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		{
 			get => m_IsXbox;
 			set => Set ( ref m_IsXbox , value );
+		}
+
+		/// <summary>
+		/// Is cinema hall.
+		/// </summary>
+		public bool IsCinemaHall
+		{
+			get => m_IsCinemaHall;
+			set => Set ( ref m_IsCinemaHall , value );
 		}
 
 		/// <summary>
