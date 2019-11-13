@@ -266,6 +266,7 @@
     </Compile>
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerViewModel.cs" />
     <Compile Include="Pages\OnlinePlayer\PlaybackState.cs" />
+    <Compile Include="Pages\OnlinePlayer\PresentationClasses\CinemaHallLinkModel.cs" />
     <Compile Include="Pages\OnlinePlayer\PresentationClasses\MinuteItem.cs" />
     <Compile Include="Pages\OnlinePlayer\PresentationClasses\PlaylistButtonPosition.cs" />
     <Compile Include="Pages\OnlinePlayer\PresentationClasses\PlaylistButtonPositionItem.cs" />

@@ -19,7 +19,7 @@ namespace Anilibria.Storage.Entities {
 		/// <summary>
 		/// New releases.
 		/// </summary>
-		public IEnumerable<long> NewReleases
+		public IEnumerable<long> Releases
 		{
 			get;
 			set;

@@ -56,7 +56,7 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private void RemoveReleases () {
 			var releases = m_SelectedReleases.Select ( a => a.ReleaseId ).ToList ();
-			m_ReleasesEntity.NewReleases = m_ReleasesEntity.NewReleases
+			m_ReleasesEntity.Releases = m_ReleasesEntity.Releases
 				.Where ( a => !releases.Contains ( a ) )
 				.ToList ();
 
@@ -78,9 +78,10 @@ namespace Anilibria.Pages.CinemaHall {
 		private void Watch () {
 			ChangePage (
 				"Player" ,
-				new ReleaseLinkModel {
-					//TODO: change to cinemahall model
-					//ReleaseId = downloadRelease.ReleaseId
+				new CinemaHallLinkModel {
+					Releases = m_ReleasesEntity.Releases
+						.Select ( a => a )
+						.ToList ()
 				}
 			);
 
@@ -118,12 +119,12 @@ namespace Anilibria.Pages.CinemaHall {
 
 			if ( m_ReleasesEntity == null ) {
 				m_ReleasesEntity = new CinemaHallReleaseEntity {
-					NewReleases = new List<long> ()
+					Releases = new List<long> ()
 				};
 				collection.Add ( m_ReleasesEntity );
 			}
 
-			IsEmptyList = !m_ReleasesEntity.NewReleases.Any ();
+			IsEmptyList = !m_ReleasesEntity.Releases.Any ();
 
 			var releasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
 			var releases = releasesCollection.All ();
@@ -132,7 +133,7 @@ namespace Anilibria.Pages.CinemaHall {
 
 			var cinemaHallReleases = new List<CinemaHallReleaseModel> ();
 			var iterator = -1;
-			foreach ( var releaseId in m_ReleasesEntity.NewReleases ) {
+			foreach ( var releaseId in m_ReleasesEntity.Releases ) {
 				var releaseModel = releasesDictionary[releaseId];
 				cinemaHallReleases.Add (
 					new CinemaHallReleaseModel {
@@ -163,14 +164,14 @@ namespace Anilibria.Pages.CinemaHall {
 				case NotifyCollectionChangedAction.Add:
 					if ( m_ReorderItem == null ) return;
 
-					var releases = m_ReleasesEntity.NewReleases.ToList ();
+					var releases = m_ReleasesEntity.Releases.ToList ();
 
 					releases.Remove ( m_ReorderItem.ReleaseId );
 					releases.Insert ( e.NewStartingIndex , m_ReorderItem.ReleaseId );
 
 					m_ReorderItem = null;
 
-					m_ReleasesEntity.NewReleases = releases;
+					m_ReleasesEntity.Releases = releases;
 
 					var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
 					collection.Update ( m_ReleasesEntity );

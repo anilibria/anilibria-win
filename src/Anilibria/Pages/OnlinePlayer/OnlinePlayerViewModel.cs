@@ -240,9 +240,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_IsSupportedCompactOverlay = ApplicationView.GetForCurrentView ().IsViewModeSupported ( ApplicationViewMode.CompactOverlay );
 
 			m_ReleasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
-
-			//TODO: need only for debug, after it remove it
-			m_IsCinemaHall = true;
 		}
 
 		private void RestoreSettings () {
@@ -532,7 +529,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Save player restore state.
 		/// </summary>
 		public void SavePlayerRestoreState () {
-			if ( SelectedOnlineVideo == null ) return;
+			if ( SelectedOnlineVideo == null || SelectedRelease == null ) return;
 
 			var isNotNeedUpdatePosition = m_PlayerRestoreEntity?.ReleaseId == SelectedRelease?.Id && m_PlayerRestoreEntity?.VideoPosition > 0 && Position == 0;
 			m_PlayerRestoreEntity.ReleaseId = SelectedRelease.Id;
@@ -612,6 +609,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			UpdateVolumeState ( m_Volume );
 
+			IsCinemaHall = false;
+
 			if ( parameter == null ) {
 				if ( VideoSource != null ) {
 					ChangePlayback ( PlaybackState.Play , false );
@@ -635,9 +634,22 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			else {
 				var releaseLink = parameter as ReleaseLinkModel;
+				var cinemHallLink = parameter as CinemaHallLinkModel;
+
 				if ( releaseLink != null ) {
 					var releaseLinkEntity = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == releaseLink.ReleaseId );
 					if ( releaseLinkEntity != null ) Releases = new List<ReleaseModel> { MapToReleaseModel ( releaseLinkEntity ) };
+				}
+				else if ( cinemHallLink != null ) {
+					var cinemaHallLinkEntity = m_DataContext.GetCollection<ReleaseEntity> ()
+						.Find ( a => cinemHallLink.Releases.Contains ( a.Id ) )
+						.ToList ();
+					if ( cinemaHallLinkEntity != null ) {
+						Releases = cinemaHallLinkEntity
+							.Select ( a => MapToReleaseModel ( a ) )
+							.ToList ();
+					}
+					IsCinemaHall = true;
 				}
 				else {
 					Releases = parameter as IEnumerable<ReleaseModel>;
@@ -661,7 +673,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 					release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
 					OnlineVideos = new ObservableCollection<OnlineVideoModel> ( release.OnlineVideos );
-					GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( release.OnlineVideos.GroupBy ( a => a.ReleaseName ) );
+					GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( Releases.SelectMany ( a => a.OnlineVideos ).GroupBy ( a => a.ReleaseName ) );
 				}
 				SelectedRelease = release;
 				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );

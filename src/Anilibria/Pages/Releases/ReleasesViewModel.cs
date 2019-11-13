@@ -561,15 +561,15 @@ namespace Anilibria.Pages.Releases {
 
 			if ( releasesEntity == null ) {
 				releasesEntity = new CinemaHallReleaseEntity {
-					NewReleases = new List<long> ()
+					Releases = new List<long> ()
 				};
 				collection.Add ( releasesEntity );
 			}
 
-			var releases = releasesEntity.NewReleases.ToList ();
+			var releases = releasesEntity.Releases.ToList ();
 			foreach ( var selectedRelease in SelectedReleases ) releases.Add ( selectedRelease.Id );
 
-			releasesEntity.NewReleases = releases.ToHashSet ().ToList ();
+			releasesEntity.Releases = releases.ToHashSet ().ToList ();
 			collection.Update ( releasesEntity );
 
 			RefreshSelectedReleases ();

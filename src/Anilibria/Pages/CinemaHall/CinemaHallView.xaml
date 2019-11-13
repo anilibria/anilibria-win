@@ -106,7 +106,19 @@
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>
-
+				<Button
+					x:Name="WatchButton"
+					Style="{StaticResource IconsButtonStyle}"
+					Width="48"
+					RelativePanel.Below="CinemaHallButton"
+					ToolTipService.ToolTip="Смотреть кинозал"
+					Command="{Binding WatchCommand}">
+					<controls:PlayIcon
+						IconWidth="28"
+						IconHeight="28"
+						IconColor="White"
+					/>
+				</Button>
 			</RelativePanel>
 		</Border>
 		<Border
