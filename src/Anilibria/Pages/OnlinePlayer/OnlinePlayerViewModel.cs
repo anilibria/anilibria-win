@@ -306,7 +306,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void ToggleSeenMark ( OnlineVideoModel onlineVideo ) {
+			var videoRelease = Releases.First ( a => a.Title == onlineVideo.ReleaseName );
+			var oldSelectedRelease = m_SelectedRelease;
+			m_SelectedRelease = videoRelease;
 			FillReleaseVideoState ();
+			m_SelectedRelease = oldSelectedRelease;
 
 			var videoState = m_ReleaseVideoStateEntity.VideoStates.FirstOrDefault ( a => a.Id == onlineVideo.Order );
 			if ( videoState == null ) {
@@ -641,12 +645,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 					if ( releaseLinkEntity != null ) Releases = new List<ReleaseModel> { MapToReleaseModel ( releaseLinkEntity ) };
 				}
 				else if ( cinemHallLink != null ) {
+					var releasesIds = cinemHallLink.Releases.ToList ();
 					var cinemaHallLinkEntity = m_DataContext.GetCollection<ReleaseEntity> ()
 						.Find ( a => cinemHallLink.Releases.Contains ( a.Id ) )
 						.ToList ();
 					if ( cinemaHallLinkEntity != null ) {
 						Releases = cinemaHallLinkEntity
 							.Select ( a => MapToReleaseModel ( a ) )
+							.OrderBy ( a => releasesIds.IndexOf ( a.Id ) )
 							.ToList ();
 					}
 					IsCinemaHall = true;
@@ -692,12 +698,27 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( SelectedOnlineVideo != null ) ScrollToSelectedPlaylist ();
 
-			if ( SelectedRelease != null ) {
+
+
+			if ( SelectedRelease != null && !IsCinemaHall ) {
 				FillReleaseVideoState ();
+
 				var states = m_ReleaseVideoStateEntity.VideoStates?.ToList ();
 				foreach ( var onlinevideo in SelectedRelease.OnlineVideos ) {
 					onlinevideo.IsSeen = states?.FirstOrDefault ( a => a.Id == onlinevideo.Order )?.IsSeen ?? false;
 				}
+			}
+
+			if ( SelectedRelease != null && IsCinemaHall ) {
+				foreach ( var release in Releases ) {
+					var states = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id )?.VideoStates?.ToList ();
+					if ( states == null ) continue;
+
+					foreach ( var video in release.OnlineVideos ) {
+						video.IsSeen = states?.FirstOrDefault ( a => a.Id == video.Order )?.IsSeen ?? false;
+					}
+				}
+
 			}
 		}
 
@@ -932,6 +953,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
 				if ( m_SelectedOnlineVideo != null ) {
+					if ( SelectedRelease != null && m_SelectedOnlineVideo.ReleaseName != SelectedRelease.Title ) SelectedRelease = Releases.First ( a => a.Title == m_SelectedOnlineVideo.ReleaseName );
 					//WORKAROUND: reactive value changed only after real value changed.
 					if ( !IsVideosFlyoutVisible ) IsVideosFlyoutVisible = true;
 					IsExistsFullHD = m_SelectedOnlineVideo.FullHDQuality != null;

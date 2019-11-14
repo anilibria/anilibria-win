@@ -1658,10 +1658,9 @@
 									<DataTemplate>
 										<TextBlock
 											Text="{Binding Key}"
-											converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+											Foreground="#b32121"
 											FontSize="15"
 											Margin="2"
-											Foreground="Black"
 											TextTrimming="CharacterEllipsis"
 											MaxLines="4"
 											TextWrapping="WrapWholeWords"
