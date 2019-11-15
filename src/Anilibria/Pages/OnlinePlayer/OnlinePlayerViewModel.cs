@@ -457,8 +457,18 @@ namespace Anilibria.Pages.OnlinePlayer {
 			var order = SelectedOnlineVideo?.Order ?? -1;
 
 			if ( order > -1 && m_IsAutoTransition ) {
-				var newSeria = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == order + 1 );
-				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+				if ( !IsCinemaHall ) {
+					var newSeria = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == order + 1 );
+					if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+				}
+				else {
+					var allVideos = Releases.SelectMany ( a => a.OnlineVideos ).ToList ();
+					var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
+					if ( indexVideo < allVideos.Count - 1 ) {
+						var newSeria = allVideos.Skip ( indexVideo ).FirstOrDefault ( a => !a.IsSeen );
+						if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+					}
+				}
 			}
 		}
 
