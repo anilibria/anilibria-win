@@ -682,13 +682,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 					GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( Releases.SelectMany ( a => a.OnlineVideos ).GroupBy ( a => a.ReleaseName ) );
 				}
 				SelectedRelease = release;
-				SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
+				if ( !IsCinemaHall ) {
+					SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
-				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
+					if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 
-				if ( release != null ) {
-					release.PrefferedOpenedVideo = null;
-					await SaveReleaseWatchTimestamp ( release.Id );
+					if ( release != null ) {
+						release.PrefferedOpenedVideo = null;
+						await SaveReleaseWatchTimestamp ( release.Id );
+					}
 				}
 			}
 
@@ -697,8 +699,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 			m_AnalyticsService.TrackEvent ( "OnlinePlayer" , "Opened" , parameter == null ? "Parameter is null" : "Parameter is populated" );
 
 			if ( SelectedOnlineVideo != null ) ScrollToSelectedPlaylist ();
-
-
 
 			if ( SelectedRelease != null && !IsCinemaHall ) {
 				FillReleaseVideoState ();
@@ -718,7 +718,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 						video.IsSeen = states?.FirstOrDefault ( a => a.Id == video.Order )?.IsSeen ?? false;
 					}
 				}
+				SelectedOnlineVideo = Releases.SelectMany ( a => a.OnlineVideos ).FirstOrDefault ( a => !a.IsSeen );
 
+				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
+				await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
 			}
 		}
 
