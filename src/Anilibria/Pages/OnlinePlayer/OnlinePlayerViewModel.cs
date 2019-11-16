@@ -346,8 +346,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( SelectedOnlineVideo == null ) return;
 			if ( SelectedOnlineVideo.Order == 1 ) return;
 
-			var previousTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order - 1 );
-			if ( previousTrack != null ) SelectedOnlineVideo = previousTrack;
+			if ( !IsCinemaHall ) {
+				var previousTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order - 1 );
+				if ( previousTrack != null ) SelectedOnlineVideo = previousTrack;
+			}
+			else {
+				SetPreviousVideoInCinemaHall ();
+			}
 		}
 
 		private void NextTrack () {
@@ -355,8 +360,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( SelectedOnlineVideo == null ) return;
 			if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
 
-			var nextTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order + 1 );
-			if ( nextTrack != null ) SelectedOnlineVideo = nextTrack;
+			if ( !IsCinemaHall ) {
+				var nextTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order + 1 );
+				if ( nextTrack != null ) SelectedOnlineVideo = nextTrack;
+			}
+			else {
+				SetNextVideoInCinemaHall ();
+			}
 		}
 
 		private void ShowPlaylist () {
@@ -462,13 +472,26 @@ namespace Anilibria.Pages.OnlinePlayer {
 					if ( newSeria != null ) SelectedOnlineVideo = newSeria;
 				}
 				else {
-					var allVideos = Releases.SelectMany ( a => a.OnlineVideos ).ToList ();
-					var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
-					if ( indexVideo < allVideos.Count - 1 ) {
-						var newSeria = allVideos.Skip ( indexVideo ).FirstOrDefault ( a => !a.IsSeen );
-						if ( newSeria != null ) SelectedOnlineVideo = newSeria;
-					}
+					SetNextVideoInCinemaHall ();
 				}
+			}
+		}
+
+		private void SetNextVideoInCinemaHall () {
+			var allVideos = Releases.SelectMany ( a => a.OnlineVideos ).ToList ();
+			var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
+			if ( indexVideo < allVideos.Count - 1 ) {
+				var newSeria = allVideos.Skip ( indexVideo + 1 ).FirstOrDefault ( a => !a.IsSeen );
+				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+			}
+		}
+
+		private void SetPreviousVideoInCinemaHall () {
+			var allVideos = Releases.SelectMany ( a => a.OnlineVideos ).ToList ();
+			var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
+			if ( indexVideo > 0 ) {
+				var newSeria = allVideos.Take ( indexVideo ).Reverse ().FirstOrDefault ( a => !a.IsSeen );
+				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
 			}
 		}
 
@@ -678,7 +701,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				RaisePropertyChanged ( () => Position );
 
 				int onlineVideoIndex = release.PrefferedOpenedVideo == null ? -1 : release.PrefferedOpenedVideo.Order;
-				if ( onlineVideoIndex == -1 && m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
+				if ( !IsCinemaHall && onlineVideoIndex == -1 && m_ReleaseVideoStateEntity != null && m_ReleaseVideoStateEntity.VideoStates != null && m_ReleaseVideoStateEntity.VideoStates.Any () ) {
 					onlineVideoIndex = m_ReleaseVideoStateEntity.VideoStates.Max ( a => a.Id );
 					var lastVideo = m_ReleaseVideoStateEntity.VideoStates.First ( a => a.Id == onlineVideoIndex );
 					m_RestorePosition = lastVideo.LastPosition;
