@@ -50,6 +50,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private GamepadButtons m_PreviousStateButtons = new GamepadButtons ();
 
+		private double m_PreviousLeftTrigger = 0;
+
+		private double m_PreviousRightTrigger = 0;
+
 		CastingDevicePicker castingPicker;
 
 		private bool m_isXbox = false;
@@ -163,6 +167,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 			var previousStateButtons = m_PreviousStateButtons;
 			m_PreviousStateButtons = gamepadState.Buttons;
 
+			var previousLeftTrigger = m_PreviousLeftTrigger;
+			var previousRightTrigger = m_PreviousRightTrigger;
+			m_PreviousLeftTrigger = gamepadState.LeftTrigger;
+			m_PreviousRightTrigger = gamepadState.RightTrigger;
+
 			if ( previousStateButtons.HasFlag ( GamepadButtons.X ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.X ) ) {
 				OnlinePlayer_Tapped ( null , null );
 				return;
@@ -180,6 +189,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 			if ( previousStateButtons.HasFlag ( GamepadButtons.DPadDown ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.DPadDown ) ) {
 				m_ViewModel.ChangeVolumeCommand.Execute ( -.1 );
+				return;
+			}
+			if ( previousLeftTrigger > 0 && gamepadState.LeftTrigger == 0 ) {
+				PerformLeftJump ();
+				return;
+			}
+			if ( previousRightTrigger > 0 && gamepadState.RightTrigger == 0 ) {
+				PerformRightJump ();
 				return;
 			}
 			if ( previousStateButtons.HasFlag ( GamepadButtons.LeftShoulder ) && !gamepadState.Buttons.HasFlag ( GamepadButtons.LeftShoulder ) ) {
@@ -256,20 +273,28 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( isVolumeSlider ) return;
 
 			if ( args.VirtualKey == VirtualKey.Left ) {
-				var minutes = m_ViewModel.JumpMinutes;
-				var seconds = m_ViewModel.JumpSeconds;
-				var timeSpan = new TimeSpan ( 0 , minutes , seconds );
-				var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
-				if ( position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= timeSpan;
+				PerformLeftJump ();
 			}
 			if ( args.VirtualKey == VirtualKey.Right ) {
-				var minutes = m_ViewModel.JumpMinutes;
-				var seconds = m_ViewModel.JumpSeconds;
-				var timeSpan = new TimeSpan ( 0 , minutes , seconds );
-				var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
-				var duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
-				if ( duration - position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position += timeSpan;
+				PerformRightJump ();
 			}
+		}
+
+		private void PerformRightJump () {
+			var minutes = m_ViewModel.JumpMinutes;
+			var seconds = m_ViewModel.JumpSeconds;
+			var timeSpan = new TimeSpan ( 0 , minutes , seconds );
+			var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
+			var duration = OnlinePlayer.MediaPlayer.PlaybackSession.NaturalDuration;
+			if ( duration - position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position += timeSpan;
+		}
+
+		private void PerformLeftJump () {
+			var minutes = m_ViewModel.JumpMinutes;
+			var seconds = m_ViewModel.JumpSeconds;
+			var timeSpan = new TimeSpan ( 0 , minutes , seconds );
+			var position = OnlinePlayer.MediaPlayer.PlaybackSession.Position;
+			if ( position > timeSpan ) OnlinePlayer.MediaPlayer.PlaybackSession.Position -= timeSpan;
 		}
 
 		private async void CastingPicker_CastingDeviceSelected ( CastingDevicePicker sender , CastingDeviceSelectedEventArgs args ) {
