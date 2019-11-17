@@ -105,6 +105,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_GamepadTimer.Start ();
 				m_isXbox = true;
 				m_ViewModel.IsXbox = true;
+				PlaylistGrid.Height = 300;
 			}
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
