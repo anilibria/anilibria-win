@@ -231,7 +231,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_PlayerRestoreEntity = new PlayerRestoreEntity {
 					ReleaseId = -1 ,
 					VideoId = -1 ,
-					VideoPosition = 0
+					VideoPosition = 0,
+					IsCinemaHall = false
 				};
 				m_RestoreCollection.Add ( m_PlayerRestoreEntity );
 			}
@@ -571,6 +572,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			var isNotNeedUpdatePosition = m_PlayerRestoreEntity?.ReleaseId == SelectedRelease?.Id && m_PlayerRestoreEntity?.VideoPosition > 0 && Position == 0;
 			m_PlayerRestoreEntity.ReleaseId = SelectedRelease.Id;
 			m_PlayerRestoreEntity.VideoId = SelectedOnlineVideo.Order;
+			m_PlayerRestoreEntity.IsCinemaHall = IsCinemaHall;
 			if ( !isNotNeedUpdatePosition ) m_PlayerRestoreEntity.VideoPosition = Position;
 			m_RestoreCollection.Update ( m_PlayerRestoreEntity );
 
