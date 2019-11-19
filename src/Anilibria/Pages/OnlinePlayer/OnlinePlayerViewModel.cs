@@ -123,6 +123,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private double m_ControlPanelOpacity;
 
+		private bool m_NotUpdateSelectedRelese = false;
+
 		private ObservableCollection<PlaylistButtonPositionItem> m_PlaylistButtonPositions = new ObservableCollection<PlaylistButtonPositionItem>
 		{
 			new PlaylistButtonPositionItem
@@ -231,7 +233,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				m_PlayerRestoreEntity = new PlayerRestoreEntity {
 					ReleaseId = -1 ,
 					VideoId = -1 ,
-					VideoPosition = 0,
+					VideoPosition = 0 ,
 					IsCinemaHall = false
 				};
 				m_RestoreCollection.Add ( m_PlayerRestoreEntity );
@@ -648,30 +650,57 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			UpdateVolumeState ( m_Volume );
 
-			IsCinemaHall = false;
-
 			if ( parameter == null ) {
 				if ( VideoSource != null ) {
 					ChangePlayback ( PlaybackState.Play , false );
 				}
 				else {
-					if ( m_PlayerRestoreEntity != null && m_PlayerRestoreEntity.ReleaseId > 0 ) {
-						var release = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == m_PlayerRestoreEntity.ReleaseId );
-						if ( release != null ) {
-							m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
-							SelectedRelease = MapToReleaseModel ( release );
-							SetDownloadedPaths ( SelectedRelease.Id , SelectedRelease.OnlineVideos );
-							OnlineVideos = new ObservableCollection<OnlineVideoModel> ( SelectedRelease.OnlineVideos );
-							GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( SelectedRelease.OnlineVideos.GroupBy ( a => a.ReleaseName ) );
-							SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
+					IsCinemaHall = false;
 
-							ChangePlayback ( PlaybackState.Play , false );
-							if ( SelectedRelease != null ) await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
+					if ( m_PlayerRestoreEntity != null && m_PlayerRestoreEntity.ReleaseId > 0 ) {
+						IsCinemaHall = m_PlayerRestoreEntity.IsCinemaHall;
+						if ( IsCinemaHall ) {
+							var cinemaHallEntity = m_DataContext.GetCollection<CinemaHallReleaseEntity> ().FirstOrDefault ();
+							if ( cinemaHallEntity == null ) return;
+
+							var cinemaHallReleasesIds = cinemaHallEntity.Releases.ToList ();
+							var releases = m_DataContext.GetCollection<ReleaseEntity> ()
+								.Find ( a => true )
+								.Where ( a => cinemaHallEntity.Releases.Contains ( a.Id ) )
+								.OrderBy ( a => cinemaHallReleasesIds.IndexOf ( a.Id ) )
+								.ToList ();
+							if ( releases.Any () ) {
+								m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
+								Releases = releases
+									.Select ( a => MapToReleaseModel ( a ) )
+									.ToList ();
+								SelectedRelease = Releases.FirstOrDefault ( a => a.Id == m_PlayerRestoreEntity.ReleaseId );
+								var onlineVideos = Releases.SelectMany ( a => a.OnlineVideos ).ToList ();
+								OnlineVideos = new ObservableCollection<OnlineVideoModel> ( onlineVideos );
+								SetDownloadPathsAllReleases ();
+								m_NotUpdateSelectedRelese = true;
+								GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( onlineVideos.GroupBy ( a => a.ReleaseName ) );
+								m_NotUpdateSelectedRelese = false;
+							}
+						}
+						else {
+							var release = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == m_PlayerRestoreEntity.ReleaseId );
+							if ( release != null ) {
+								m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
+								SelectedRelease = MapToReleaseModel ( release );
+								SetDownloadedPaths ( SelectedRelease.Id , SelectedRelease.OnlineVideos );
+								OnlineVideos = new ObservableCollection<OnlineVideoModel> ( SelectedRelease.OnlineVideos );
+								SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
+								ChangePlayback ( PlaybackState.Play , false );
+								if ( SelectedRelease != null ) await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
+							}
 						}
 					}
 				}
 			}
 			else {
+				IsCinemaHall = false;
+
 				var releaseLink = parameter as ReleaseLinkModel;
 				var cinemHallLink = parameter as CinemaHallLinkModel;
 
@@ -745,18 +774,27 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 
 			if ( SelectedRelease != null && IsCinemaHall ) {
-				foreach ( var release in Releases ) {
-					var states = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id )?.VideoStates?.ToList ();
-					if ( states == null ) continue;
-
-					foreach ( var video in release.OnlineVideos ) {
-						video.IsSeen = states?.FirstOrDefault ( a => a.Id == video.Order )?.IsSeen ?? false;
-					}
+				SetDownloadPathsAllReleases ();
+				if ( parameter == null && m_PlayerRestoreEntity != null ) {
+					SelectedOnlineVideo = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 				}
-				SelectedOnlineVideo = Releases.SelectMany ( a => a.OnlineVideos ).FirstOrDefault ( a => !a.IsSeen );
+				else {
+					SelectedOnlineVideo = Releases.SelectMany ( a => a.OnlineVideos ).FirstOrDefault ( a => !a.IsSeen );
+				}
 
 				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
 				await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
+			}
+		}
+
+		private void SetDownloadPathsAllReleases () {
+			foreach ( var release in Releases ) {
+				var states = m_ReleaseStateCollection?.FirstOrDefault ( a => a.ReleaseId == release.Id )?.VideoStates?.ToList ();
+				if ( states == null ) continue;
+
+				foreach ( var video in release.OnlineVideos ) {
+					video.IsSeen = states?.FirstOrDefault ( a => a.Id == video.Order )?.IsSeen ?? false;
+				}
 			}
 		}
 
@@ -1005,7 +1043,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					}
 					IsVideosFlyoutVisible = false;
 					ChangeVideoSource ();
-					SavePlayerRestoreState ();
+					if ( !m_NotUpdateSelectedRelese ) SavePlayerRestoreState ();
 				}
 			}
 		}
@@ -1093,7 +1131,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 		public bool ShowPlaylistButton
 		{
 			get => m_ShowPlaylistButton;
-			set => Set ( ref m_ShowPlaylistButton , value );
+			set
+			{
+				if ( !Set ( ref m_ShowPlaylistButton , value ) ) return;
+
+				if ( SelectedOnlineVideo != null && !value ) ScrollToSelectedPlaylist ();
+			}
 		}
 
 		/// <summary>
