@@ -1,6 +1,7 @@
 ﻿using Anilibria.Collections;
 using Anilibria.Helpers;
 using Anilibria.MVVM;
+using Anilibria.Pages.OnlinePlayer.PresentationClasses;
 using Anilibria.Pages.PresentationClasses;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services;
@@ -23,6 +24,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.System;
 using Windows.UI.Notifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 namespace Anilibria.Pages.Releases {
@@ -553,6 +555,27 @@ namespace Anilibria.Pages.Releases {
 			AddSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( AddSeenMarkFromQuickActions );
 			RemoveSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( RemoveSeenMarkFromQuickActions );
 			AddReleasesToCinemaHallCommand = CreateCommand ( AddReleasesToCinemaHall , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
+			WatchCinemaHallCommand = CreateCommand ( WatchCinemaHall );
+		}
+
+		private async void WatchCinemaHall () {
+			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
+			var releasesEntity = collection.FirstOrDefault ();
+
+			if ( releasesEntity == null || !releasesEntity.Releases.Any()) {
+				var dialog = new MessageDialog ( "Просмотр кинозала" , "У Вас нет релизов в кинозале, добавьте релизы используя пункт \"Добавить релизы в кинозал\" для этого." );
+				await dialog.ShowAsync ();
+				return;
+			}
+
+			ChangePage (
+				"Player" ,
+				new CinemaHallLinkModel {
+					Releases = releasesEntity.Releases
+						.Select ( a => a )
+						.ToList ()
+				}
+			);
 		}
 
 		private void AddReleasesToCinemaHall () {
@@ -2747,6 +2770,15 @@ namespace Anilibria.Pages.Releases {
 		/// Add releases to cinema hall command.
 		/// </summary>
 		public ICommand AddReleasesToCinemaHallCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Watch cinema hall command.
+		/// </summary>
+		public ICommand WatchCinemaHallCommand
 		{
 			get;
 			set;
