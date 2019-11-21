@@ -452,7 +452,7 @@ namespace Anilibria.Pages.Releases {
 									FullHDQuality = videoOnline.FullHD ,
 									DownloadableHD = videoOnline.DownloadableHD ,
 									DownloadableSD = videoOnline.DownloadableSD ,
-									ReleaseName = releaseItem.Title,
+									ReleaseName = releaseItem.Title ,
 									IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
 								}
 						)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
@@ -562,8 +562,8 @@ namespace Anilibria.Pages.Releases {
 			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
 			var releasesEntity = collection.FirstOrDefault ();
 
-			if ( releasesEntity == null || !releasesEntity.Releases.Any()) {
-				var dialog = new MessageDialog ( "Просмотр кинозала" , "У Вас нет релизов в кинозале, добавьте релизы используя пункт \"Добавить релизы в кинозал\" для этого." );
+			if ( releasesEntity == null || !releasesEntity.Releases.Any () ) {
+				var dialog = new MessageDialog ( "У Вас нет релизов в кинозале, используйте пункт \"Добавить релизы в кинозал\" для добавления релизов." , "Просмотр кинозала" );
 				await dialog.ShowAsync ();
 				return;
 			}

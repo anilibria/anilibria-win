@@ -103,6 +103,12 @@
 								Command="{Binding RemoveReleasesCommand}"
 								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Удалить все релизы из кинозала"
+								Command="{Binding ClearAllReleasesCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>
