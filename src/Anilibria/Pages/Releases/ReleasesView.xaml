@@ -1281,6 +1281,12 @@
 								Command="{Binding AddReleasesToCinemaHallCommand}"
 								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 							/>
+							<MenuFlyoutItem
+								Style="{StaticResource AnilibriaMenuFlyoutItem}"
+								Text="Смотреть кинозал"
+								Command="{Binding WatchCinemaHallCommand}"
+								converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+							/>
 						</MenuFlyout>
 					</Button.Flyout>
 				</Button>

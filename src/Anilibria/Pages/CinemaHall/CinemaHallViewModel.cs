@@ -52,6 +52,21 @@ namespace Anilibria.Pages.CinemaHall {
 			WatchCommand = CreateCommand ( Watch );
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
 			RemoveReleasesCommand = CreateCommand ( RemoveReleases , () => m_SelectedReleases.Any () );
+			ClearAllReleasesCommand = CreateCommand ( ClearAllReleases , () => m_ReleasesEntity.Releases.Any () );
+		}
+
+		private void ClearAllReleases () {
+			m_ReleasesEntity.Releases = Enumerable.Empty<long> ();
+
+			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
+			collection.Update ( m_ReleasesEntity );
+
+			RefreshSelectedReleases ();
+			RefreshReleases ( Enumerable.Empty<CinemaHallReleaseModel> ().ToList () );
+
+			RaiseCommands ();
+
+			IsEmptyList = true;
 		}
 
 		private void RemoveReleases () {
@@ -265,6 +280,15 @@ namespace Anilibria.Pages.CinemaHall {
 		/// Remove releases command.
 		/// </summary>
 		public ICommand RemoveReleasesCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Clear all releases command.
+		/// </summary>
+		public ICommand ClearAllReleasesCommand
 		{
 			get;
 			set;

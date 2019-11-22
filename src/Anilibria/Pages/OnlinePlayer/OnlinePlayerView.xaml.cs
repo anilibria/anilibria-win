@@ -537,6 +537,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					if ( m_ViewModel.SelectedOnlineVideo == null ) return;
 
 					PlaylistListView.ScrollIntoView ( m_ViewModel.SelectedOnlineVideo );
+					GroupedPlaylistListView.ScrollIntoView ( m_ViewModel.SelectedOnlineVideo );
 				}
 			);
 		}

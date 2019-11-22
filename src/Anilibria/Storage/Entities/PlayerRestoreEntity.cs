@@ -41,6 +41,15 @@
 			set;
 		}
 
+		/// <summary>
+		/// Is cinema hall.
+		/// </summary>
+		public bool IsCinemaHall
+		{
+			get;
+			set;
+		}
+
 	}
 
 }
