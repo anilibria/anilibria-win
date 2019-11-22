@@ -450,7 +450,7 @@ namespace Anilibria.Pages.Releases {
 									FullHDQuality = videoOnline.FullHD ,
 									DownloadableHD = videoOnline.DownloadableHD ,
 									DownloadableSD = videoOnline.DownloadableSD ,
-									ReleaseName = releaseItem.Title,
+									ReleaseName = releaseItem.Title ,
 									IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
 								}
 						)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
@@ -848,7 +848,7 @@ namespace Anilibria.Pages.Releases {
 			await Task.WhenAll ( tasks );
 
 			await RefreshFavorites ();
-			RefreshCardFavorite ();
+			if ( OpenedRelease != null ) RefreshCardFavorite ();
 
 			ObserverEvents.FireEvent (
 				"showMessage" ,
