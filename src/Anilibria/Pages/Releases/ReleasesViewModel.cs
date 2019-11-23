@@ -871,7 +871,7 @@ namespace Anilibria.Pages.Releases {
 			await Task.WhenAll ( tasks );
 
 			await RefreshFavorites ();
-			RefreshCardFavorite ();
+			if ( OpenedRelease != null ) RefreshCardFavorite ();
 
 			ObserverEvents.FireEvent (
 				"showMessage" ,
