@@ -1620,7 +1620,7 @@ namespace Anilibria.Pages.Releases {
 				Status = a.Status ,
 				Type = a.Type ,
 				ScheduledOnDay = GetScheduleDayOnRelease ( a ) ,
-				Voices = a.Voices != null ? string.Join ( ", " , a.Voices ) : "" ,
+				Voices = a.Voices != null ? string.Join ( ", " , a.Voices.Select ( voice => voice.Replace ( "Озвучка:" , "" ).Replace ( "<b>" , "" ).Replace ( "</b>" , "" ).Replace ( "<br>" , "" ).Trim () ) ) : "" ,
 				Year = a.Year ,
 				Season = a.Season ,
 				CountVideoOnline = a.Playlist?.Count () ?? 0 ,
