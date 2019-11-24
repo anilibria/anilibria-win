@@ -347,9 +347,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void PreviousTrack () {
 			if ( !( SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) ) return;
 			if ( SelectedOnlineVideo == null ) return;
-			if ( SelectedOnlineVideo.Order == 1 ) return;
 
 			if ( !IsCinemaHall ) {
+				if ( SelectedOnlineVideo.Order == 1 ) return;
+
 				var previousTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order - 1 );
 				if ( previousTrack != null ) SelectedOnlineVideo = previousTrack;
 			}
@@ -361,9 +362,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void NextTrack () {
 			if ( !( SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) ) return;
 			if ( SelectedOnlineVideo == null ) return;
-			if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
-
+			
 			if ( !IsCinemaHall ) {
+				if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
+
 				var nextTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order + 1 );
 				if ( nextTrack != null ) SelectedOnlineVideo = nextTrack;
 			}

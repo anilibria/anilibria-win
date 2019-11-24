@@ -838,7 +838,7 @@
 					RelativePanel.Below="SeenButton"
 					Style="{StaticResource IconsButtonStyle}"
 					Height="40"
-					ToolTipService.ToolTip="Чтобы снять или поставить отметку о просмотре необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
+					ToolTipService.ToolTip="Чтобы скачать серии необходимо перевести список релизов в множественный режим посредством переключателя расположенного выше списка">
 					<controls:DownloadIcon
 						IconWidth="28"
 						IconHeight="28"
