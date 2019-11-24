@@ -1406,6 +1406,16 @@
 										Техподдержка АниЛибрии
 									</Hyperlink>
 								</TextBlock>
+								<TextBlock
+									Foreground="#a32727"
+									Margin="0 4 0 0"
+									converters:TextBlockHighlight.HyperLinkHightlight="True">
+									<Hyperlink
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+										Click="Hyperlink_Click">
+										Как пользоваться кинозалом?
+									</Hyperlink>
+								</TextBlock>
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>
