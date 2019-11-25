@@ -362,7 +362,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void NextTrack () {
 			if ( !( SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) ) return;
 			if ( SelectedOnlineVideo == null ) return;
-			
+
 			if ( !IsCinemaHall ) {
 				if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
 
@@ -745,7 +745,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 					release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
 					OnlineVideos = new ObservableCollection<OnlineVideoModel> ( release.OnlineVideos );
+					m_NotUpdateSelectedRelese = true;
 					GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( Releases.SelectMany ( a => a.OnlineVideos ).GroupBy ( a => a.ReleaseName ) );
+					m_NotUpdateSelectedRelese = false;
 				}
 				SelectedRelease = release;
 				if ( !IsCinemaHall ) {
@@ -1030,6 +1032,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
+				if ( m_NotUpdateSelectedRelese ) return;
+
 				if ( m_SelectedOnlineVideo != null ) {
 					if ( SelectedRelease != null && m_SelectedOnlineVideo.ReleaseName != SelectedRelease.Title ) SelectedRelease = Releases.First ( a => a.Title == m_SelectedOnlineVideo.ReleaseName );
 					//WORKAROUND: reactive value changed only after real value changed.
@@ -1045,7 +1049,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					}
 					IsVideosFlyoutVisible = false;
 					ChangeVideoSource ();
-					if ( !m_NotUpdateSelectedRelese ) SavePlayerRestoreState ();
+					SavePlayerRestoreState ();
 				}
 			}
 		}
