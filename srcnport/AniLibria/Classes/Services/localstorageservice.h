@@ -19,6 +19,8 @@ public:
 signals:
 
 public slots:
+    QStringList GetReleasesPage(int page);
+
 };
 
 #endif // LOCALSTORAGESERVICE_H

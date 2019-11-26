@@ -2,6 +2,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <QVariant>
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 {
@@ -22,6 +23,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
     releasesTable += "`Series` TEXT NOT NULL,";
     releasesTable += "`Status` TEXT NOT NULL,";
     releasesTable += "`Type` TEXT NOT NULL,";
+    releasesTable += "`Timestamp` INTEGER NOT NULL,";
     releasesTable += "`Year` TEXT NOT NULL,";
     releasesTable += "`Season` TEXT NOT NULL,";
     releasesTable += "`CountOnlineVideos` INTEGER NOT NULL,";
@@ -44,4 +46,24 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 LocalStorageService::~LocalStorageService()
 {
     m_Database.close();
+}
+
+QStringList LocalStorageService::GetReleasesPage(int page)
+{
+    QSqlQuery query;
+    QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
+    request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` ";
+    request += "FROM `Releases` ORDER BY `Timestamp` ASC";
+    query.exec(request);
+
+    QStringList stringList;
+    while (query.next())
+    {
+        QString resultJson;
+        int id = query.value(0).toInt();
+
+        stringList.append(resultJson);
+    }
+
+    return stringList;
 }

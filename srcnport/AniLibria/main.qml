@@ -217,13 +217,11 @@ ApplicationWindow {
 
     Authorization {
         id: authorization
-        drawer: drawer
         visible: false
     }
 
     Donate {
         id: donate
-        drawer: drawer
         visible: false
     }
 
