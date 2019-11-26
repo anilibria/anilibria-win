@@ -751,6 +751,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				}
 				SelectedRelease = release;
 				if ( !IsCinemaHall ) {
+					SelectedOnlineVideo = null;
 					SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
 					if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
