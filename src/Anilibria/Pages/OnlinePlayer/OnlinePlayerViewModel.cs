@@ -787,7 +787,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 					SelectedOnlineVideo = Releases.SelectMany ( a => a.OnlineVideos ).FirstOrDefault ( a => !a.IsSeen );
 				}
 
-				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
+				if ( SelectedOnlineVideo != null ) {
+					ChangePlayback ( PlaybackState.Play , false );
+				} else {
+					VideoSource = null;
+				}
 				await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
 			}
 		}
