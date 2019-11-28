@@ -51,9 +51,15 @@ LocalStorageService::~LocalStorageService()
 QStringList LocalStorageService::GetReleasesPage(int page)
 {
     QSqlQuery query;
+    auto skip = 10 * (page - 1);
+    QString limitClause = "";
+    limitClause.append(skip);
+    limitClause.append(",");
+    limitClause.append(page);
+
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` ";
-    request += "FROM `Releases` ORDER BY `Timestamp` ASC";
+    request += "FROM `Releases` ORDER BY `Timestamp` ASC LIMIT " + limitClause;
     query.exec(request);
 
     QStringList stringList;

@@ -44,6 +44,11 @@ ApplicationWindow {
         drawer.close();
     }
 
+    LocalStorage {
+        id: localStorage
+
+    }
+
     SynchronizationService {
         id: synchronizationService
         Component.onCompleted: {
