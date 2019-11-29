@@ -352,7 +352,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( SelectedOnlineVideo.Order == 1 ) return;
 
 				var previousTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order - 1 );
-				if ( previousTrack != null ) SelectedOnlineVideo = previousTrack;
+				if ( previousTrack != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = previousTrack;
+				}
 			}
 			else {
 				SetPreviousVideoInCinemaHall ();
