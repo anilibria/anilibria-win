@@ -367,7 +367,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
 
 				var nextTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order + 1 );
-				if ( nextTrack != null ) SelectedOnlineVideo = nextTrack;
+				if ( nextTrack != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = nextTrack;
+				}
 			}
 			else {
 				SetNextVideoInCinemaHall ();
@@ -474,7 +477,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( order > -1 && m_IsAutoTransition ) {
 				if ( !IsCinemaHall ) {
 					var newSeria = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == order + 1 );
-					if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+					if ( newSeria != null ) {
+						PositionPercent = 0;
+						SelectedOnlineVideo = newSeria;
+					}
 				}
 				else {
 					SetNextVideoInCinemaHall ();
@@ -487,7 +493,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
 			if ( indexVideo < allVideos.Count - 1 ) {
 				var newSeria = allVideos.Skip ( indexVideo + 1 ).FirstOrDefault ( a => !a.IsSeen );
-				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+				if ( newSeria != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = newSeria;
+				}
 			}
 		}
 
@@ -496,7 +505,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
 			if ( indexVideo > 0 ) {
 				var newSeria = allVideos.Take ( indexVideo ).Reverse ().FirstOrDefault ( a => !a.IsSeen );
-				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+				if ( newSeria != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = newSeria;
+				}
 			}
 		}
 
@@ -784,6 +796,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					SelectedOnlineVideo = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 				}
 				else {
+					PositionPercent = 0;
 					SelectedOnlineVideo = Releases.SelectMany ( a => a.OnlineVideos ).FirstOrDefault ( a => !a.IsSeen );
 				}
 
