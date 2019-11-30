@@ -795,6 +795,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( SelectedRelease != null && IsCinemaHall ) {
 				SetDownloadPathsAllReleases ();
+				SelectedOnlineVideo = null;
 				if ( parameter == null && m_PlayerRestoreEntity != null ) {
 					SelectedOnlineVideo = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 				}

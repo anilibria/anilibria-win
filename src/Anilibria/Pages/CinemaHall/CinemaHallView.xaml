@@ -183,7 +183,6 @@
 		</Border>
 
 		<controls:BindableListView
-			x:Name="CinemaHallReleases"
 			Grid.Column="1"
 			Grid.Row="1"
 			HorizontalAlignment="Center"
