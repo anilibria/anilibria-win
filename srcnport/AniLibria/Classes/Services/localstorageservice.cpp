@@ -3,6 +3,8 @@
 #include <QSqlQuery>
 #include <QStandardPaths>
 #include <QVariant>
+#include <QJsonDocument>
+#include "../Models/releasemodel.h"
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 {
@@ -46,6 +48,58 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 LocalStorageService::~LocalStorageService()
 {
     m_Database.close();
+}
+
+void LocalStorageService::AddRelease(const QString &release)
+{
+    ReleaseModel releaseModel;
+    QJsonParseError jsonError;
+
+    QJsonDocument doc = QJsonDocument::fromJson(release.toUtf8(), &jsonError);
+    if (jsonError.error != QJsonParseError::NoError) //TODO: need handle this situation
+
+    releaseModel.readFromJson(doc.object());
+
+    QSqlQuery query;
+    QString request = "INSERT INTO `Releases` (`Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
+    request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay`) ";
+    request += QString(" VALUES ('%1','%2', '%3') ").arg(
+        releaseModel.title(),
+        releaseModel.code(),
+        releaseModel.names().end(),
+        releaseModel.id(),
+        releaseModel.rating(),
+        releaseModel.series(),
+        releaseModel.status(),
+        releaseModel.type(),
+        releaseModel.timestamp(),
+        releaseModel.year(),
+        releaseModel.season(),
+        releaseModel.videos().length(),
+        releaseModel.torrents().length(),
+        releaseModel.description(),
+        releaseModel.announce(),
+        releaseModel.genres().join(","),
+        releaseModel.poster(),
+        releaseModel.voices().join(","),
+
+    );
+    query.exec(request);
+}
+
+void LocalStorageService::UpdateRelease(const QString& release)
+{
+    if (release.length() > 1) {
+
+    }
+}
+
+QString LocalStorageService::GetRelease(int id)
+{
+    if (id > 0) {
+
+    }
+    return "";
 }
 
 QStringList LocalStorageService::GetReleasesPage(int page)
