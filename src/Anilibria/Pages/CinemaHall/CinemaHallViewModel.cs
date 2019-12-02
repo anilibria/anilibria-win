@@ -49,7 +49,7 @@ namespace Anilibria.Pages.CinemaHall {
 		}
 
 		private void CreateCommand () {
-			WatchCommand = CreateCommand ( Watch );
+			WatchCommand = CreateCommand ( Watch , () => m_ReleasesEntity != null && m_ReleasesEntity.Releases.Any () );
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
 			RemoveReleasesCommand = CreateCommand ( RemoveReleases , () => m_SelectedReleases.Any () );
 			ClearAllReleasesCommand = CreateCommand ( ClearAllReleases , () => m_ReleasesEntity.Releases.Any () );
@@ -162,6 +162,8 @@ namespace Anilibria.Pages.CinemaHall {
 			}
 
 			RefreshReleases ( cinemaHallReleases );
+
+			RaiseCommands ();
 
 			m_AnalyticsService.TrackEvent ( "CinemaHallpage" , "NavigatedTo" , "Simple" );
 		}
