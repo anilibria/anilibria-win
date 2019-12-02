@@ -44,6 +44,11 @@ ApplicationWindow {
         drawer.close();
     }
 
+    LocalStorage {
+        id: localStorage
+
+    }
+
     SynchronizationService {
         id: synchronizationService
         Component.onCompleted: {
@@ -217,13 +222,11 @@ ApplicationWindow {
 
     Authorization {
         id: authorization
-        drawer: drawer
         visible: false
     }
 
     Donate {
         id: donate
-        drawer: drawer
         visible: false
     }
 

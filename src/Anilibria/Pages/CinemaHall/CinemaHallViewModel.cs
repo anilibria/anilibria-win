@@ -84,6 +84,8 @@ namespace Anilibria.Pages.CinemaHall {
 				.Where ( a => releases.Contains ( a.ReleaseId ) )
 				.ToList ();
 			foreach ( var deletedRelease in deletedReleases ) Releases.Remove ( deletedRelease );
+
+			IsEmptyList = !m_ReleasesEntity.Releases.Any ();
 		}
 
 		private void OpenSidebar () {

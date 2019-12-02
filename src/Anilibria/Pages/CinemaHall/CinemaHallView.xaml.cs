@@ -1,5 +1,10 @@
-﻿using Anilibria.Services.Implementations;
+﻿using System;
+using System.Threading.Tasks;
+using Anilibria.Services.Implementations;
+using Windows.ApplicationModel;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 
 namespace Anilibria.Pages.CinemaHall {
 
@@ -12,6 +17,22 @@ namespace Anilibria.Pages.CinemaHall {
 			InitializeComponent ();
 
 			DataContext = new CinemaHallViewModel ( ApiService.Current () , StorageService.Current () , new AnalyticsService () );
+		}
+
+		private async void HelpButton_Click ( object sender , Windows.UI.Xaml.RoutedEventArgs e ) {
+			await ShowCinemaHallPdf ();
+		}
+
+		private static async Task ShowCinemaHallPdf () {
+			var location = Package.Current.InstalledLocation;
+			var folder = await location.GetFolderAsync ( "Assets" );
+			var file = await folder.GetFileAsync ( "howtousecinemahall.pdf" );
+
+			await Launcher.LaunchFileAsync ( file );
+		}
+
+		private async void Hyperlink_Click ( Hyperlink sender , HyperlinkClickEventArgs args ) {
+			await ShowCinemaHallPdf ();
 		}
 
 	}

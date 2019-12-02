@@ -349,11 +349,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void PreviousTrack () {
 			if ( !( SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) ) return;
 			if ( SelectedOnlineVideo == null ) return;
-			if ( SelectedOnlineVideo.Order == 1 ) return;
 
 			if ( !IsCinemaHall ) {
+				if ( SelectedOnlineVideo.Order == 1 ) return;
+
 				var previousTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order - 1 );
-				if ( previousTrack != null ) SelectedOnlineVideo = previousTrack;
+				if ( previousTrack != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = previousTrack;
+				}
 			}
 			else {
 				SetPreviousVideoInCinemaHall ();
@@ -363,11 +367,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void NextTrack () {
 			if ( !( SelectedRelease != null && SelectedRelease.OnlineVideos != null && SelectedRelease.OnlineVideos.Any () ) ) return;
 			if ( SelectedOnlineVideo == null ) return;
-			if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
 
 			if ( !IsCinemaHall ) {
+				if ( SelectedOnlineVideo.Order == SelectedRelease.OnlineVideos.Count () ) return;
+
 				var nextTrack = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == SelectedOnlineVideo.Order + 1 );
-				if ( nextTrack != null ) SelectedOnlineVideo = nextTrack;
+				if ( nextTrack != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = nextTrack;
+				}
 			}
 			else {
 				SetNextVideoInCinemaHall ();
@@ -474,7 +482,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( order > -1 && m_IsAutoTransition ) {
 				if ( !IsCinemaHall ) {
 					var newSeria = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == order + 1 );
-					if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+					if ( newSeria != null ) {
+						PositionPercent = 0;
+						SelectedOnlineVideo = newSeria;
+					}
 				}
 				else {
 					SetNextVideoInCinemaHall ();
@@ -487,7 +498,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
 			if ( indexVideo < allVideos.Count - 1 ) {
 				var newSeria = allVideos.Skip ( indexVideo + 1 ).FirstOrDefault ( a => !a.IsSeen );
-				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+				if ( newSeria != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = newSeria;
+				}
 			}
 		}
 
@@ -496,7 +510,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 			var indexVideo = allVideos.IndexOf ( SelectedOnlineVideo );
 			if ( indexVideo > 0 ) {
 				var newSeria = allVideos.Take ( indexVideo ).Reverse ().FirstOrDefault ( a => !a.IsSeen );
-				if ( newSeria != null ) SelectedOnlineVideo = newSeria;
+				if ( newSeria != null ) {
+					PositionPercent = 0;
+					SelectedOnlineVideo = newSeria;
+				}
 			}
 		}
 
@@ -745,10 +762,13 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 					release.OnlineVideos = release.OnlineVideos?.OrderBy ( a => a.Order ).ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
 					OnlineVideos = new ObservableCollection<OnlineVideoModel> ( release.OnlineVideos );
+					m_NotUpdateSelectedRelese = true;
 					GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( Releases.SelectMany ( a => a.OnlineVideos ).GroupBy ( a => a.ReleaseName ) );
+					m_NotUpdateSelectedRelese = false;
 				}
 				SelectedRelease = release;
 				if ( !IsCinemaHall ) {
+					SelectedOnlineVideo = null;
 					SelectedOnlineVideo = onlineVideoIndex == -1 ? SelectedRelease?.OnlineVideos?.FirstOrDefault () : SelectedRelease?.OnlineVideos?.FirstOrDefault ( a => a.Order == onlineVideoIndex );
 
 					if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
@@ -777,14 +797,20 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			if ( SelectedRelease != null && IsCinemaHall ) {
 				SetDownloadPathsAllReleases ();
+				SelectedOnlineVideo = null;
 				if ( parameter == null && m_PlayerRestoreEntity != null ) {
 					SelectedOnlineVideo = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
 				}
 				else {
+					PositionPercent = 0;
 					SelectedOnlineVideo = Releases.SelectMany ( a => a.OnlineVideos ).FirstOrDefault ( a => !a.IsSeen );
 				}
 
-				if ( SelectedOnlineVideo != null ) ChangePlayback ( PlaybackState.Play , false );
+				if ( SelectedOnlineVideo != null ) {
+					ChangePlayback ( PlaybackState.Play , false );
+				} else {
+					VideoSource = null;
+				}
 				await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
 			}
 		}
@@ -1030,6 +1056,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 			{
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
+				if ( m_NotUpdateSelectedRelese ) return;
+
 				if ( m_SelectedOnlineVideo != null ) {
 					if ( SelectedRelease != null && m_SelectedOnlineVideo.ReleaseName != SelectedRelease.Title ) SelectedRelease = Releases.First ( a => a.Title == m_SelectedOnlineVideo.ReleaseName );
 					//WORKAROUND: reactive value changed only after real value changed.
@@ -1045,7 +1073,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					}
 					IsVideosFlyoutVisible = false;
 					ChangeVideoSource ();
-					if ( !m_NotUpdateSelectedRelese ) SavePlayerRestoreState ();
+					SavePlayerRestoreState ();
 				}
 			}
 		}

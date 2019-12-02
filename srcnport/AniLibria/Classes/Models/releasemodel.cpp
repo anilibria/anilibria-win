@@ -21,6 +21,7 @@ void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
     m_Description = jsonObject.value("description").toString();
     m_Rating = jsonObject.value("favorite").toInt(0);
     m_Season = jsonObject.value("season").toString();
+    m_Announce = jsonObject.value("announce").toString();
     auto names = jsonObject.value("names").toArray();
     foreach(const QJsonValue & name, names) m_Names.append(name.toString());
     m_Title = m_Names.first();
@@ -60,6 +61,7 @@ void ReleaseModel::readFromJson(const QJsonObject &json)
     m_Rating = json["rating"].toInt();
     m_Title = json["title"].toString();
     m_Season = json["season"].toString();
+    m_Announce = json["announce"].toString();
 
     auto namesArray = json["names"].toArray();
     foreach(const QJsonValue & name, namesArray) m_Names.append(name.toString());
@@ -99,6 +101,7 @@ void ReleaseModel::writeToJson(QJsonObject &json) const
     json["rating"] = m_Rating;
     json["title"] = m_Names.first();
     json["season"] = m_Season;
+    json["announce"] = m_Announce;
     QJsonArray namesArray = QJsonArray();
     foreach(const QString & name, m_Names) namesArray.append(QJsonValue(name));
     json["names"] = namesArray;
@@ -175,6 +178,11 @@ QString ReleaseModel::description()
 QString ReleaseModel::season()
 {
     return m_Season;
+}
+
+QString ReleaseModel::announce()
+{
+    return m_Announce;
 }
 
 QStringList ReleaseModel::genres()

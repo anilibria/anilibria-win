@@ -4,11 +4,13 @@ using System.Net;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services.Implementations;
 using Anilibria.ThemeChanger;
+using Windows.ApplicationModel;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 
 namespace Anilibria.Pages.Releases {
@@ -316,6 +318,15 @@ namespace Anilibria.Pages.Releases {
 		private void ReleaseAdditionalActions_Tapped ( object sender , TappedRoutedEventArgs e ) {
 			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
 		}
+
+		private async void Hyperlink_Click ( Hyperlink sender , HyperlinkClickEventArgs args ) {
+			var location = Package.Current.InstalledLocation;
+			var folder = await location.GetFolderAsync ( "Assets" );
+			var file = await folder.GetFileAsync ( "howtousecinemahall.pdf" );
+
+			await Launcher.LaunchFileAsync ( file );
+		}
+
 	}
 
 }

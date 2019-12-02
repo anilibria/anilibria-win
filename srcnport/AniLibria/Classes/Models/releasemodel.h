@@ -24,6 +24,7 @@ private:
     QList<ReleaseTorrentModel> m_Torrents;
     QString m_Title;
     QString m_Season;
+    QString m_Announce;
     int m_Rating;
 
 public:
@@ -54,6 +55,8 @@ public:
     QString description();
 
     QString season();
+
+    QString announce();
 
     QStringList genres();
 

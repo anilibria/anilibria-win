@@ -5,7 +5,6 @@ import QtQuick.Controls.Material 2.0
 import "../Controls"
 
 Page {
-    property Drawer drawer
     signal navigateFrom()
 
     background: Rectangle {
