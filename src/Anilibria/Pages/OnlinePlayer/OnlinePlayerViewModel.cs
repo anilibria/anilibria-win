@@ -309,7 +309,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void ToggleSeenMark ( OnlineVideoModel onlineVideo ) {
-			var videoRelease = Releases.FirstOrDefault ( a => a.Title == onlineVideo.ReleaseName );
+			var videoRelease = Releases.FirstOrDefault ( a => a.Id == onlineVideo.ReleaseId );
 			if ( videoRelease == null ) return;
 
 			var oldSelectedRelease = m_SelectedRelease;
@@ -576,7 +576,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 							SDQuality = a.SD ,
 							FullHDQuality = a.FullHD ,
 							Title = a.Title ,
-							ReleaseName = releaseEntity.Title
+							ReleaseName = releaseEntity.Title,
+							ReleaseId = releaseEntity.Id
 						}
 					)
 					.OrderBy ( a => a.Order )

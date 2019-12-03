@@ -453,6 +453,7 @@ namespace Anilibria.Pages.Releases {
 									DownloadableHD = videoOnline.DownloadableHD ,
 									DownloadableSD = videoOnline.DownloadableSD ,
 									ReleaseName = releaseItem.Title ,
+									ReleaseId = releaseItem.Id ,
 									IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
 								}
 						)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ();
@@ -1648,6 +1649,7 @@ namespace Anilibria.Pages.Releases {
 							DownloadableHD = videoOnline.DownloadableHD ,
 							DownloadableSD = videoOnline.DownloadableSD ,
 							ReleaseName = a.Names != null ? a.Names.FirstOrDefault () : "" ,
+							ReleaseId = a.Id ,
 							IsSeen = releasesSeensVideos.Any ( c => c.Id == videoOnline.Id && c.IsSeen )
 						}
 					)?.ToList () ?? Enumerable.Empty<OnlineVideoModel> ()
