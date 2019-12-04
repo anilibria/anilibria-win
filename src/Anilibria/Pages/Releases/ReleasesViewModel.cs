@@ -1396,7 +1396,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private void RefreshReleasesCache () {
-            m_AllReleases = GetReleasesByCurrentMode ();
+			m_AllReleases = GetReleasesByCurrentMode ();
 			m_SchedulesReleases = GetScheduleReleases ();
 			EmptyReleases = m_AllReleases.Count () == 0;
 		}
@@ -1621,7 +1621,7 @@ namespace Anilibria.Pages.Releases {
 				Status = a.Status ,
 				Type = a.Type ,
 				ScheduledOnDay = GetScheduleDayOnRelease ( a ) ,
-				Voices = a.Voices != null ? string.Join ( ", " , a.Voices.Where(voice => voice != null ).Select ( voice => voice.Replace ( "Озвучка:" , "" ).Replace ( "<b>" , "" ).Replace ( "</b>" , "" ).Replace ( "<br>" , "" ).Trim () ) ) : "" ,
+				Voices = a.Voices != null ? string.Join ( ", " , a.Voices.Where ( voice => voice != null ).Select ( voice => voice.Replace ( "Озвучка:" , "" ).Replace ( "<b>" , "" ).Replace ( "</b>" , "" ).Replace ( "<br>" , "" ).Trim () ) ) : "" ,
 				Year = a.Year ,
 				Season = a.Season ,
 				CountVideoOnline = a.Playlist?.Count () ?? 0 ,
