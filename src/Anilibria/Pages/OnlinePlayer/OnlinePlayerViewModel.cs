@@ -309,6 +309,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private void ToggleSeenMark ( OnlineVideoModel onlineVideo ) {
+			if ( onlineVideo == null ) return;
+
 			var videoRelease = Releases.FirstOrDefault ( a => a.Id == onlineVideo.ReleaseId );
 			if ( videoRelease == null ) return;
 
