@@ -1227,7 +1227,7 @@ namespace Anilibria.Pages.Releases {
 				var userModel = m_AnilibriaApiService.GetUserModel ();
 				if ( userModel != null ) {
 					var userFavorite = userFavoritesCollection.FirstOrDefault ( a => a.Id == userModel.Id );
-					if ( userFavorite != null ) favorites.AddRange ( userFavorite.Releases );
+					if ( userFavorite != null && userFavorite.Releases != null ) favorites.AddRange ( userFavorite.Releases );
 					userModel.ImageUrl = m_AnilibriaApiService.GetUrl ( userModel.Avatar );
 				}
 				UserModel = userModel;
@@ -1236,7 +1236,8 @@ namespace Anilibria.Pages.Releases {
 			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
 			var localFavorites = GetLocalFavorites ( collection );
 
-			m_Favorites = favorites.Concat ( localFavorites.Releases );
+			if ( localFavorites != null && localFavorites.Releases != null) m_Favorites = favorites.Concat ( localFavorites.Releases );
+
 			if ( GroupedGridVisible ) {
 				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
 			}
