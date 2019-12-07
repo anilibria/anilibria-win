@@ -578,7 +578,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							SDQuality = a.SD ,
 							FullHDQuality = a.FullHD ,
 							Title = a.Title ,
-							ReleaseName = releaseEntity.Title,
+							ReleaseName = releaseEntity.Title ,
 							ReleaseId = releaseEntity.Id
 						}
 					)
@@ -811,7 +811,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 				if ( SelectedOnlineVideo != null ) {
 					ChangePlayback ( PlaybackState.Play , false );
-				} else {
+				}
+				else {
 					VideoSource = null;
 				}
 				await SaveReleaseWatchTimestamp ( SelectedRelease.Id );

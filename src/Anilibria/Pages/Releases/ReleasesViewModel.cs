@@ -569,6 +569,8 @@ namespace Anilibria.Pages.Releases {
 				return;
 			}
 
+			m_AnalyticsService.TrackEvent ( "Releases" , "WatchCinemaHall" , "Start" );
+
 			ChangePage (
 				"Player" ,
 				new CinemaHallLinkModel {
@@ -597,6 +599,8 @@ namespace Anilibria.Pages.Releases {
 			collection.Update ( releasesEntity );
 
 			RefreshSelectedReleases ();
+
+			m_AnalyticsService.TrackEvent ( "Releases" , "AddReleasesToCinemaHall" , "Added" );
 		}
 
 		private void RemoveSeenMarkFromQuickActions ( ReleaseModel release ) {
@@ -651,6 +655,8 @@ namespace Anilibria.Pages.Releases {
 			}
 
 			RefreshSelectedReleases ();
+
+			m_AnalyticsService.TrackEvent ( "Releases" , "DownloadReleases" , "AddednewReleasesToDownload" );
 
 			await DownloadManager.Current ().StartDownloadProcess ();
 		}
@@ -971,6 +977,8 @@ namespace Anilibria.Pages.Releases {
 
 			IsShowReleaseCard = true;
 			await SaveReleaseViewTimestamp ( OpenedRelease.Id );
+
+			m_AnalyticsService.TrackEvent ( "Releases" , "ShowRandomRelease" , "OpenCardFromPanel" );
 		}
 
 		private async void OpenCrossRelease ( string releaseUrl ) {
