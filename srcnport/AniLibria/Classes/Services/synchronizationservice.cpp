@@ -7,17 +7,19 @@
 SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent)
 {
     m_AnilibriaApiService = new AnilibriaApiService(this);
-    connect(m_AnilibriaApiService,SIGNAL(allReleasesReceived(QString)),this,SLOT(saveReleasesToCache(QString)));
+    connect(m_AnilibriaApiService,&AnilibriaApiService::allReleasesReceived,this,&SynchronizationService::saveReleasesToCache);
+    connect(m_AnilibriaApiService,&AnilibriaApiService::scheduleReceived,this,&SynchronizationService::saveScheduleToCache);
 }
 
 void SynchronizationService::synchronizeReleases()
 {
+    //m_AnilibriaApiService->getSchedule();
     m_AnilibriaApiService->getAllReleases();
 }
 
 void SynchronizationService::saveReleasesToCache(QString data)
 {
-    QJsonParseError jsonError;
+    /*QJsonParseError jsonError;
     QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8(), &jsonError);
     if (jsonError.error != QJsonParseError::NoError){
         //qDebug() << jsonError.errorString();
@@ -55,7 +57,37 @@ void SynchronizationService::saveReleasesToCache(QString data)
         releasesJson.append(jsonObject);
     }
     QJsonDocument saveDoc(releasesJson);
-    saveFile.write(saveDoc.toJson());
+    saveFile.write(saveDoc.toJson());*/
 
-    emit synchronizationCompleted();
+    emit synchronizedReleases(data);
+}
+
+void SynchronizationService::saveScheduleToCache(QString data)
+{
+    /*QJsonParseError jsonError;
+    QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8(), &jsonError);
+    if (jsonError.error != QJsonParseError::NoError){
+        //qDebug() << jsonError.errorString();
+        //TODO: need handle this situation
+    }
+
+    auto root = doc.object();
+    auto status = root["status"].toBool();
+    if (!status) {
+        //TODO: Handle this situation
+        return;
+    }
+
+    auto scheduleDays = root["data"].toArray();
+
+
+    foreach (auto scheduleDay, scheduleDays) {
+        auto dayIndex = scheduleDay["day"].toInt();
+        auto items = scheduleDay["items"].toArray();
+        foreach (auto item, items) {
+            auto id = item["id"];
+        }
+    }*/
+
+    emit synchronizedSchedule(data);
 }

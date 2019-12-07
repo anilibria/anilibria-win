@@ -55,7 +55,17 @@ ApplicationWindow {
             synchronizationService.synchronizeReleases();
         }
         onSynchronizationCompleted: {
-            releasesService.loadReleasesCache();
+            //releasesService.loadReleasesCache();
+        }
+        onSynchronizedReleases: {
+            const jsonData = JSON.parse(data);
+
+            if (!jsonData.status) {
+                //TODO: handle error situation
+            }
+
+            const releases = jsonData.data.items;
+            for (const release of releases) localStorage.addRelease(JSON.stringify(release));
         }
     }
 

@@ -19,11 +19,14 @@ public:
     Q_INVOKABLE void synchronizeReleases();
 
 signals:
+    void synchronizedReleases(QString data);
     void synchronizationCompleted();
     void synchronizationFailed();
+    void synchronizedSchedule(QString data);
 
 public slots:
     void saveReleasesToCache(QString data);
+    void saveScheduleToCache(QString data);
 };
 
 #endif // SYNCHRONIZATIONSERVICE_H
