@@ -1393,7 +1393,7 @@
 									<Hyperlink
 										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 										NavigateUri="http://anilibriawin10.reformal.ru/">
-										Сообщить об идее/предложении
+										Сообщить идею, ошибку, задать вопрос
 									</Hyperlink>
 								</TextBlock>
 								<TextBlock
