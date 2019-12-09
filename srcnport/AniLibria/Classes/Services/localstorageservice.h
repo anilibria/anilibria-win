@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include <QSqlDatabase>
+#include "../Models/onlinevideomodel.h"
+#include "../Models/releasemodel.h"
+#include "../Models/releasetorrentmodel.h"
 
 class LocalStorageService : public QObject
 {
@@ -11,12 +14,16 @@ class LocalStorageService : public QObject
 private:
     QSqlDatabase m_Database;
 
+    QString videosToJson(QList<OnlineVideoModel>& videos);
+    QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
+    bool IsReleaseExists(int id);
+
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
     ~LocalStorageService();
 
-    Q_INVOKABLE void addRelease(const QString& release);
-    Q_INVOKABLE void updateRelease(const QString& release);
+    Q_INVOKABLE void AddOrUpdateRelease(const QString& release);
+    Q_INVOKABLE void UpdateRelease(const ReleaseModel& release);
     Q_INVOKABLE QString GetRelease(int id);
     Q_INVOKABLE QStringList GetReleasesPage(int page);
     Q_INVOKABLE void SetSchedule(QString schedule);

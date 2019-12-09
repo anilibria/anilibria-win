@@ -51,7 +51,43 @@ LocalStorageService::~LocalStorageService()
     m_Database.close();
 }
 
-void LocalStorageService::addRelease(const QString &release)
+QString LocalStorageService::videosToJson(QList<OnlineVideoModel> &videos)
+{
+    QJsonArray videosArray;
+    foreach (auto video, videos) {
+        QJsonObject jsonObject;
+        video.writeToJson(jsonObject);
+        videosArray.append(jsonObject);
+    }
+    QJsonDocument videoDocument(videosArray);
+    QString videosJson(videoDocument.toJson());
+    return videosJson;
+}
+
+QString LocalStorageService::torrentsToJson(QList<ReleaseTorrentModel> &torrents)
+{
+    QJsonArray torrentsArray;
+    foreach (auto torrent, torrents) {
+        QJsonObject jsonObject;
+        torrent.writeToJson(jsonObject);
+        torrentsArray.append(jsonObject);
+    }
+    QJsonDocument torrentDocument(torrentsArray);
+    QString torrentJson(torrentDocument.toJson());
+    return torrentJson;
+}
+
+bool LocalStorageService::IsReleaseExists(int id)
+{
+    QSqlQuery query(m_Database);
+    query.prepare("SELECT `Id` FROM `Releases` WHERE `Id` = :id");
+
+    query.bindValue(":id", id);
+
+    return query.next();
+}
+
+void LocalStorageService::AddOrUpdateRelease(const QString &release)
 {
     ReleaseModel releaseModel;
     QJsonParseError jsonError;
@@ -63,23 +99,16 @@ void LocalStorageService::addRelease(const QString &release)
 
     releaseModel.readFromApiModel(doc.object());
 
-    QJsonArray torrentsArray;
-    foreach (auto torrent, releaseModel.torrents()) {
-        QJsonObject jsonObject;
-        torrent.writeToJson(jsonObject);
-        torrentsArray.append(jsonObject);
+    if (IsReleaseExists(releaseModel.id())) {
+        UpdateRelease(releaseModel);
+        return;
     }
-    QJsonDocument torrentDocument(torrentsArray);
-    QString torrentJson(torrentDocument.toJson());
 
-    QJsonArray videosArray;
-    foreach (auto video, releaseModel.videos()) {
-        QJsonObject jsonObject;
-        video.writeToJson(jsonObject);
-        videosArray.append(jsonObject);
-    }
-    QJsonDocument videoDocument(torrentsArray);
-    QString videosJson(torrentDocument.toJson());
+    auto torrents = releaseModel.torrents();
+    auto torrentJson = torrentsToJson(torrents);
+
+    auto videos = releaseModel.videos();
+    auto videosJson = videosToJson(videos);
 
     QSqlQuery query;
     QString request = "INSERT INTO `Releases` (`Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
@@ -126,11 +155,9 @@ void LocalStorageService::addRelease(const QString &release)
 
 }
 
-void LocalStorageService::updateRelease(const QString& release)
+void LocalStorageService::UpdateRelease(const ReleaseModel& release)
 {
-    if (release.length() > 1) {
 
-    }
 }
 
 QString LocalStorageService::GetRelease(int id)
