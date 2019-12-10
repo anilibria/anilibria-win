@@ -14,7 +14,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
     m_Database.setDatabaseName(path);
     m_Database.open();
 
-    QSqlQuery query;
+    QSqlQuery query(m_Database);
 
     QString releasesTable = "CREATE TABLE IF NOT EXISTS `Releases` (";
     releasesTable += "`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,";
@@ -80,14 +80,16 @@ QString LocalStorageService::torrentsToJson(QList<ReleaseTorrentModel> &torrents
 bool LocalStorageService::IsReleaseExists(int id)
 {
     QSqlQuery query(m_Database);
-    query.prepare("SELECT `Id` FROM `Releases` WHERE `Id` = :id");
+    query.prepare("SELECT `ReleaseId` FROM `Releases` WHERE `ReleaseId` = :id");
 
     query.bindValue(":id", id);
+
+    query.exec();
 
     return query.next();
 }
 
-void LocalStorageService::AddOrUpdateRelease(const QString &release)
+void LocalStorageService::addOrUpdateRelease(const QString &release)
 {
     ReleaseModel releaseModel;
     QJsonParseError jsonError;
@@ -110,7 +112,7 @@ void LocalStorageService::AddOrUpdateRelease(const QString &release)
     auto videos = releaseModel.videos();
     auto videosJson = videosToJson(videos);
 
-    QSqlQuery query;
+    QSqlQuery query(m_Database);
     QString request = "INSERT INTO `Releases` (`Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request.append("`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay`, `MetaData`) ");
     auto values = QString(" VALUES (:title,:code,:originaltitle,:id,:rating,:series,:status,:type,:timestamp,:year,:season,:videoscount,:torrentscount,:description,:announce,:genres,:poster,:voices,:torrents,:videos,:scheduleonday,:metadata)");
@@ -146,12 +148,13 @@ void LocalStorageService::AddOrUpdateRelease(const QString &release)
     query.bindValue(":scheduleonday", "понедельник");
     query.bindValue(":metadata", "{}");
 
-    if (!query.exec()) {
+    query.exec();
+    /*if (!query.exec()) {
         auto error = query.lastError().text();
         if (error.length() > 0) {
 
         }
-    }
+    }*/
 
 }
 

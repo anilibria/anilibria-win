@@ -19,7 +19,7 @@ void ReleaseModel::readFromApiModel(const QJsonObject &jsonObject)
     m_Type = jsonObject.value("type").toString();
     m_Year = jsonObject.value("year").toString();
     m_Description = jsonObject.value("description").toString();
-    m_Rating = jsonObject.value("favorite").toInt(0);
+    m_Rating = jsonObject.value("favorite").toObject().value("rating").toInt(0);
     m_Season = jsonObject.value("season").toString();
     m_Announce = jsonObject.value("announce").toString();
     auto names = jsonObject.value("names").toArray();

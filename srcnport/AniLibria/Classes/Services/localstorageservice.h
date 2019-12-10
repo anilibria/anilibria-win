@@ -22,7 +22,7 @@ public:
     explicit LocalStorageService(QObject *parent = nullptr);
     ~LocalStorageService();
 
-    Q_INVOKABLE void AddOrUpdateRelease(const QString& release);
+    Q_INVOKABLE void addOrUpdateRelease(const QString& release);
     Q_INVOKABLE void UpdateRelease(const ReleaseModel& release);
     Q_INVOKABLE QString GetRelease(int id);
     Q_INVOKABLE QStringList GetReleasesPage(int page);
