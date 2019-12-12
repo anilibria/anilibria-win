@@ -16,17 +16,18 @@ private:
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
-    bool IsReleaseExists(int id);
-
+    bool isReleaseExists(int id);
+    void insertRelease(ReleaseModel& releaseModel);
+    void updateRelease(ReleaseModel& releaseModel);
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
     ~LocalStorageService();
 
+    Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE void addOrUpdateRelease(const QString& release);
-    Q_INVOKABLE void UpdateRelease(const ReleaseModel& release);
-    Q_INVOKABLE QString GetRelease(int id);
-    Q_INVOKABLE QStringList GetReleasesPage(int page);
-    Q_INVOKABLE void SetSchedule(QString schedule);
+    Q_INVOKABLE QString getRelease(int id);
+    Q_INVOKABLE QStringList getReleasesPage(int page);
+    Q_INVOKABLE void setSchedule(QString schedule);
 signals:
 
 public slots:
