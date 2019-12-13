@@ -7,6 +7,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QtConcurrent>
+#include <QFuture>
 #include "../Models/releasemodel.h"
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
@@ -55,25 +57,32 @@ LocalStorageService::~LocalStorageService()
 
 void LocalStorageService::updateAllReleases(const QString &releases)
 {
-    QJsonParseError jsonError;
-    QJsonDocument jsonDocument = QJsonDocument::fromJson(releases.toUtf8(), &jsonError);
+    QFuture<void> future = QtConcurrent::run(
+        [=] {
+            QJsonParseError jsonError;
+            QJsonDocument jsonDocument = QJsonDocument::fromJson(releases.toUtf8(), &jsonError);
 
-    if (m_Database.transaction()) return;
+            if (!m_Database.transaction()) return;
 
-    QJsonArray jsonReleases = jsonDocument.array();
-    foreach (QJsonValue jsonRelease,  jsonReleases) {
-        ReleaseModel releaseModel;
-        releaseModel.readFromApiModel(jsonRelease.toObject());
+            QJsonArray jsonReleases = jsonDocument.array();
+            foreach (QJsonValue jsonRelease,  jsonReleases) {
+                ReleaseModel releaseModel;
+                releaseModel.readFromApiModel(jsonRelease.toObject());
 
-        if (isReleaseExists(releaseModel.id())) {
-            updateRelease(releaseModel);
-            return;
+                if (isReleaseExists(releaseModel.id())) {
+                    updateRelease(releaseModel);
+                    return;
+                }
+
+                insertRelease(releaseModel);
+            }
+
+            if (!m_Database.commit()) {
+                m_Database.rollback();
+            }
         }
-
-        insertRelease(releaseModel);
-    }
-
-    if (!m_Database.commit()) m_Database.rollback();
+    );
+    future.waitForFinished();
 }
 
 QString LocalStorageService::videosToJson(QList<OnlineVideoModel> &videos)

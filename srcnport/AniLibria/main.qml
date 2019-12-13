@@ -65,7 +65,7 @@ ApplicationWindow {
             }
 
             const releases = jsonData.data.items;
-            for (const release of releases) localStorage.addOrUpdateRelease(JSON.stringify(release));
+            localStorage.updateAllReleases(JSON.stringify(releases));
         }
     }
 
