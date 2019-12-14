@@ -113,7 +113,7 @@
 					<Hyperlink
 						converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 						NavigateUri="tg://resolve?domain=AniLibriaTP">
-						написать в техподдержку
+						написать в техподдержку в telegram
 					</Hyperlink>
 				</TextBlock>
 				<TextBlock
