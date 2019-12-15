@@ -13,6 +13,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Classes/Models/fullreleasemodel.cpp \
     Classes/Models/onlinevideomodel.cpp \
     Classes/Models/releaseitemmodel.cpp \
     Classes/Models/releasemodel.cpp \
@@ -39,6 +40,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Classes/Models/fullreleasemodel.h \
     Classes/Models/onlinevideomodel.h \
     Classes/Models/releaseitemmodel.h \
     Classes/Models/releasemodel.h \
@@ -48,4 +50,5 @@ HEADERS += \
     Classes/Services/localstorageservice.h \
     Classes/Services/releaseloader.h \
     Classes/Services/releasesservice.h \
-    Classes/Services/synchronizationservice.h
+    Classes/Services/synchronizationservice.h \
+    globalconstants.h
