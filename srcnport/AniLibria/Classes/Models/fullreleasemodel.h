@@ -2,6 +2,7 @@
 #define FULLRELEASEMODEL_H
 
 #include <QObject>
+#include <QSqlQuery>
 
 class FullReleaseModel
 {
@@ -11,7 +12,7 @@ private:
     QString m_Code;
     QString m_Series;
     QString m_Poster;
-    QString m_Timestamp;
+    int m_Timestamp;
     QString m_Status;
     QString m_Type;
     QString m_Year;
@@ -56,6 +57,9 @@ public:
     QString season() const;
     void setSeason(const QString &season);
 
+    QString series() const;
+    void setSeries(const QString &series);
+
     QString code() const;
     void setCode(const QString &code);
 
@@ -83,8 +87,15 @@ public:
     QString videos() const;
     void setVideos(const QString& videos);
 
-    QString timestamp() const;
-    void setTimestamp(const QString& timestamp);
+    int timestamp() const;
+    void setTimestamp(const int timestamp);
+
+    QString type() const;
+    void setType(const QString& type);
+
+    void fromDatabase(QSqlQuery query);
+
+    void writeToJson(QJsonObject &json) const;
 
 };
 

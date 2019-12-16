@@ -10,6 +10,7 @@
 #include <QtConcurrent>
 #include <QFuture>
 #include "../Models/releasemodel.h"
+#include "../Models/fullreleasemodel.h"
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 {
@@ -138,10 +139,10 @@ void LocalStorageService::insertRelease(ReleaseModel &releaseModel)
 
     query.prepare(request + values);
 
-    auto voices = releaseModel.voices().join(",");
+    auto voices = releaseModel.voices().join(", ");
     if (voices.length() == 0) voices = "Не указано";
 
-    auto genres = releaseModel.genres().join(",");
+    auto genres = releaseModel.genres().join(", ");
     if (genres.length() == 0) genres = "Не указано";
 
     query.bindValue(":title", releaseModel.title());
@@ -294,33 +295,28 @@ QString LocalStorageService::getRelease(int id)
     return "";
 }
 
-QStringList LocalStorageService::getReleasesPage(int page)
+QString LocalStorageService::getReleasesByFilter()
 {
     QSqlQuery query;
-    auto skip = 10 * (page - 1);
-    QString limitClause = "";
-    limitClause.append(skip);
-    limitClause.append(",");
-    limitClause.append(page);
 
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` ";
-    request += "FROM `Releases` ORDER BY `Timestamp` ASC LIMIT " + limitClause;
+    request += "FROM `Releases` ORDER BY `Timestamp` DESC";
     query.exec(request);
 
-    QStringList stringList;
+    QJsonArray releases;
+
     while (query.next())
     {
-        QString resultJson;
-        int id = query.value(0).toInt();
-        if (id > 0) {
-
-        }
-
-        stringList.append(resultJson);
+        FullReleaseModel release;
+        release.fromDatabase(query);
+        QJsonObject jsonValue;
+        release.writeToJson(jsonValue);
+        releases.append(jsonValue);
     }
 
-    return stringList;
+    QJsonDocument saveDoc(releases);
+    return saveDoc.toJson();
 }
 
 void LocalStorageService::setSchedule(QString schedule)

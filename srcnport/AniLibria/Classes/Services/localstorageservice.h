@@ -26,7 +26,7 @@ public:
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE void addOrUpdateRelease(const QString& release);
     Q_INVOKABLE QString getRelease(int id);
-    Q_INVOKABLE QStringList getReleasesPage(int page);
+    Q_INVOKABLE QString getReleasesByFilter();
     Q_INVOKABLE void setSchedule(QString schedule);
 signals:
 

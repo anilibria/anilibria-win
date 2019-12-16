@@ -11,15 +11,22 @@ Page {
     id: page
     property bool selectMode
     property var selectedReleases: []
+    property var displayedReleases: []
+    property var allReleases: []
     property bool isBusy: false
     property var openedRelease: null
 
     signal navigateFrom()
     signal watchRelease(int releaseId)
+    signal refreshReleases()
 
     onWidthChanged: {
         const columnCount = parseInt(page.width / 520);
         itemGrid.columns = columnCount < 1 ? 1 : columnCount;
+    }
+
+    onRefreshReleases: {
+        refreshAllReleases();
     }
 
     background: Rectangle {
@@ -119,7 +126,7 @@ Page {
                 onContentYChanged: {
                     if (scrollview.atYEnd && !page.isBusy) {
                         page.isBusy = true;
-                        releasesService.fillNextReleases();
+                        fillNextReleases();
                         page.isBusy = false;
                     }
                 }
@@ -137,7 +144,7 @@ Page {
                         spacing: 4
                         //width: 540
                         Repeater {
-                            model: releasesService.releases
+                            model: page.displayedReleases
                             Rectangle {
                                 width: 480
                                 height: 260
@@ -204,7 +211,7 @@ Page {
                                             width: 280
                                             wrapMode: Text.WordWrap
                                             maximumLineCount: 2
-                                            text: qsTr("<b>Тип:</b> ") + qsTr(modelData.releaseType)
+                                            text: qsTr("<b>Тип:</b> ") + qsTr(modelData.type)
                                         }
                                         Text {
                                             font.pointSize: 10
@@ -222,7 +229,7 @@ Page {
                                             width: 280
                                             wrapMode: Text.WordWrap
                                             maximumLineCount: 2
-                                            text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voicers)
+                                            text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voices)
                                         }
                                     }
                                 }
@@ -304,7 +311,7 @@ Page {
                             width: parent.width
                             wrapMode: Text.WordWrap
                             maximumLineCount: 2
-                            text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease ? page.openedRelease.releaseType : '')
+                            text: qsTr("<b>Тип:</b> ") + qsTr(page.openedRelease ? page.openedRelease.type : '')
                         }
                         Text {
                             font.pointSize: 10
@@ -322,7 +329,7 @@ Page {
                             width: parent.width
                             wrapMode: Text.WordWrap
                             maximumLineCount: 2
-                            text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease ? page.openedRelease.voicers : '')
+                            text: qsTr("<b>Озвучка:</b> ") + qsTr(page.openedRelease ? page.openedRelease.voices : '')
                         }
                         Text {
                             textFormat: Text.RichText
@@ -373,7 +380,7 @@ Page {
                         anchors.right: parent.right
                         anchors.rightMargin: 100
                         font.pixelSize: 14
-                        text: "Доступно "+ (page.openedRelease ? page.openedRelease.countOnlineVideos : "0" ) + " серий онлайн"
+                        text: "Доступно "+ (page.openedRelease ? page.openedRelease.countVideos : "0" ) + " серий онлайн"
                     }
 
                     Button {
@@ -416,5 +423,22 @@ Page {
         } else {
             page.openedRelease = item;
         }
+    }
+
+    function fillNextReleases() {
+        const currentLenght = page.displayedReleases.length;
+        const newDisplayedReleases = page.allReleases.slice(currentLenght, currentLenght + 20);
+        page.displayedReleases = page.displayedReleases.concat(newDisplayedReleases);
+    }
+
+    function refreshAllReleases() {
+        const releasesJson = localStorage.getReleasesByFilter();
+        page.allReleases = JSON.parse(releasesJson);
+        page.displayedReleases = page.allReleases.slice(0, 20);
+
+    }
+
+    Component.onCompleted: {
+        refreshAllReleases();
     }
 }

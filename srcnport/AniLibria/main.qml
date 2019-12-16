@@ -64,8 +64,10 @@ ApplicationWindow {
                 //TODO: handle error situation
             }
 
-            const releases = jsonData.data.items;
-            localStorage.updateAllReleases(JSON.stringify(releases));
+            const jsonReleases = jsonData.data.items;
+            localStorage.updateAllReleases(JSON.stringify(jsonReleases));
+
+            releases.refreshAllReleases();
         }
     }
 

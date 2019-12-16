@@ -1,3 +1,6 @@
+#include <QSqlQuery>
+#include <QVariant>
+#include <QJsonObject>
 #include "fullreleasemodel.h"
 #include "globalconstants.h"
 
@@ -91,6 +94,16 @@ void FullReleaseModel::setSeason(const QString &season)
     m_Season = season;
 }
 
+QString FullReleaseModel::series() const
+{
+    return m_Series;
+}
+
+void FullReleaseModel::setSeries(const QString &series)
+{
+    m_Series = series;
+}
+
 QString FullReleaseModel::code() const
 {
     return m_Code;
@@ -181,12 +194,72 @@ void FullReleaseModel::setVideos(const QString &videos)
     m_Videos = videos;
 }
 
-QString FullReleaseModel::timestamp() const
+int FullReleaseModel::timestamp() const
 {
     return m_Timestamp;
 }
 
-void FullReleaseModel::setTimestamp(const QString &timestamp)
+void FullReleaseModel::setTimestamp(const int timestamp)
 {
     m_Timestamp = timestamp;
+}
+
+QString FullReleaseModel::type() const
+{
+    return m_Type;
+}
+
+void FullReleaseModel::setType(const QString &type)
+{
+    m_Type = type;
+}
+
+void FullReleaseModel::fromDatabase(QSqlQuery query)
+{
+   setId(query.value("ReleaseId").toInt());
+   setTitle(query.value("Title").toString());
+   setCode(query.value("Code").toString());
+   setOriginalName(query.value("OriginalTitle").toString());
+   setRating(query.value("Rating").toInt());
+   setSeries(query.value("Series").toString());
+   setStatus(query.value("Status").toString());
+   setType(query.value("Type").toString());
+   setTimestamp(query.value("Timestamp").toInt());
+   setYear(query.value("Year").toString());
+   setSeason(query.value("Season").toString());
+   setCountTorrents(query.value("TorrentsCount").toInt());
+   setCountOnlineVideos(query.value("CountOnlineVideos").toInt());
+   setDescription(query.value("Description").toString());
+   setAnnounce(query.value("Announce").toString());
+   setGenres(query.value("Genres").toString());
+   setPoster(query.value("Poster").toString());
+   setVoicers(query.value("Voices").toString());
+   setTorrents(query.value("Torrents").toString());
+   setVideos(query.value("Videos").toString());
+   //set(query.value("ScheduleOnDay").toString());
+   //set(query.value("MetaData").toString());
+}
+
+void FullReleaseModel::writeToJson(QJsonObject &json) const
+{
+    json["id"] = m_Id;
+    json["code"] = m_Code;
+    json["poster"] = m_Poster;
+    json["series"] = m_Series;
+    json["status"] = m_Status;
+    json["timestamp"] = m_Timestamp;
+    json["type"] = m_Type;
+    json["year"] = m_Year;
+    json["description"] = m_Description;
+    json["rating"] = m_Rating;
+    json["title"] = m_Title;
+    json["season"] = m_Season;
+    json["announce"] = m_Announce;
+    json["genres"] = m_Genres;
+    json["videos"] = m_Videos;
+    json["voices"] = m_Voices;
+    json["torrents"] = m_Torrents;
+    json["originalName"] = m_OriginalName;
+    json["countVideos"] = m_CountVideos;
+    json["countTorrents"] = m_CountTorrents;
 }
