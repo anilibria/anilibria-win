@@ -49,6 +49,16 @@ ApplicationWindow {
 
     }
 
+    WorkerScript {
+       id: parseReleasesWorker
+       source: "parseReleases.js"
+       onMessage: {
+           localStorage.updateAllReleases(messageObject.releases);
+
+           releases.refreshAllReleases();
+       }
+    }
+
     SynchronizationService {
         id: synchronizationService
         Component.onCompleted: {
@@ -58,16 +68,7 @@ ApplicationWindow {
             //releasesService.loadReleasesCache();
         }
         onSynchronizedReleases: {
-            const jsonData = JSON.parse(data);
-
-            if (!jsonData.status) {
-                //TODO: handle error situation
-            }
-
-            const jsonReleases = jsonData.data.items;
-            localStorage.updateAllReleases(JSON.stringify(jsonReleases));
-
-            releases.refreshAllReleases();
+            parseReleasesWorker.sendMessage({ releasesJson: data });
         }
     }
 
@@ -227,7 +228,7 @@ ApplicationWindow {
         id: releases
         visible: true
         onWatchRelease: {
-            videoplayer.setReleaseVideo(releaseId, -1);
+            videoplayer.setReleaseVideo(releaseId, -1, videos);
             window.showPage("videoplayer");
         }
     }

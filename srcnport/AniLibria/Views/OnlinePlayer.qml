@@ -19,30 +19,33 @@ Page {
     property string displayEndVideoPosition: "00:00:00"
 
     signal navigateFrom()
-    signal setReleaseVideo(int releaseId, int seriaOrder)
+    signal setReleaseVideo(int releaseId, int seriaOrder, string videos)
     signal changeFullScreenMode(bool fullScreen)
 
     onNavigateFrom: {
         player.pause();
     }
     onSetReleaseVideo: {
-        const release = releasesService.getRelease(releaseId);
-        if (release) _page.selectedRelease = release;
+        /*const release = releasesService.getRelease(releaseId);
+        if (release) _page.selectedRelease = release;*/
 
-        const videos = [];
-        for (let i = 0; i < _page.selectedRelease.videos.length; i++) {
-            const video = _page.selectedRelease.videos[i];
-            videos.push({ title: video.title, sd: video.sd, id: video.id, hd: video.hd, fullhd: video.fullhd });
+        const jsonVideos = JSON.parse(videos);
+
+        const releaseVideos = [];
+
+        for (let i = 0; i < jsonVideos.length; i++) {
+            const video = jsonVideos[i];
+            releaseVideos.push({ title: video.title, sd: video.sd, id: video.id, hd: video.hd, fullhd: video.fullhd });
         }
-        videos.sort(
+        releaseVideos.sort(
             (left, right) => {
                 if (left.id === right.id) return 0;
                 return left.id > right.id ? 1 : -1;
             }
         );
 
-        _page.releaseVideos = videos;
-        const firstVideo = videos[0];
+        _page.releaseVideos = releaseVideos;
+        const firstVideo = releaseVideos[0];
         _page.selectedVideo = firstVideo.id;
         _page.isFullHdAllowed = "fullhd" in firstVideo;
         if (!firstVideo[_page.videoQuality]) _page.videoQuality = "sd";

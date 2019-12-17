@@ -17,7 +17,7 @@ Page {
     property var openedRelease: null
 
     signal navigateFrom()
-    signal watchRelease(int releaseId)
+    signal watchRelease(int releaseId, string videos)
     signal refreshReleases()
 
     onWidthChanged: {
@@ -389,7 +389,7 @@ Page {
                         anchors.right: parent.right
                         anchors.rightMargin: 10
                         onClicked: {
-                            watchRelease(page.openedRelease.id);
+                            watchRelease(page.openedRelease.id, page.openedRelease.videos);
                         }
                     }
 
