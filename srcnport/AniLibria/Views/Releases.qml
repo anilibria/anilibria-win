@@ -344,10 +344,14 @@ Page {
                     Column {
                         id: cardButtons
                         width: 62
-                        AppPanelButton {
-                            iconSource: "../Assets/Icons/close.svg"
-                            width: 60
-                            onPressed: {
+                        IconButton {
+                            height: 40
+                            width: 40
+                            iconColor: "black"
+                            iconPath: "../Assets/Icons/close.svg"
+                            iconWidth: 28
+                            iconHeight: 28
+                            onButtonPressed: {
                                 page.openedRelease = null;
                             }
                         }
@@ -405,7 +409,7 @@ Page {
                     visible: page.openedRelease ? true : false
                     width: cardContainer.width
                     height: cardContainer.height - releaseInfo.height - 60
-                    url: page.openedRelease ? "https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/" + page.openedRelease.code + ".html" : "_blank";
+                    url: page.openedRelease ? "https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/" + page.openedRelease.code + ".html" : "https://vk.com/";
                     onLoadingChanged: {
                         //if (loadRequest.errorString) console.error(loadRequest.errorString);
                     }

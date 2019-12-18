@@ -9,6 +9,7 @@
 #include <QJsonValue>
 #include <QtConcurrent>
 #include <QFuture>
+#include <QDebug>
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
 
@@ -72,7 +73,7 @@ void LocalStorageService::updateAllReleases(const QString &releases)
 
                 if (isReleaseExists(releaseModel.id())) {
                     updateRelease(releaseModel);
-                    return;
+                    continue;
                 }
 
                 insertRelease(releaseModel);
@@ -179,43 +180,45 @@ void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
     auto videos = releaseModel.videos();
     auto videosJson = videosToJson(videos);
 
-    QSqlQuery query(m_Database);
-    QString request = "UPDATE `Releases` SET `Title` = :title,`Code` = :code,`OriginalTitle` = :originaltitle,`Rating` = :rating,`Series` = :series,`Status` = :status,`Type` = :type,`Timestamp` = :timestamp,";
-    request.append("`Year` = :year,`Season` = :season,`CountOnlineVideos` = :videoscount,`TorrentsCount` = :torrentscount,`Description` = :description,`Announce` = :announce,`Genres` = :genres,`Poster` = :poster,`Voices` = :voices,`Torrents = :torrents,`Videos` = :videos,`ScheduleOnDay` = :scheduleonday, `MetaData` = :metadata) ");
-    auto values = QString(" VALUES (:title,:code,:originaltitle,:rating,:series,:status,:type,:timestamp,:year,:season,:videoscount,:torrentscount,:description,:announce,:genres,:poster,:voices,:torrents,:videos,:scheduleonday,:metadata)");
-
-    query.prepare(request + values);
-
     auto voices = releaseModel.voices().join(",");
     if (voices.length() == 0) voices = "Не указано";
 
     auto genres = releaseModel.genres().join(",");
     if (genres.length() == 0) genres = "Не указано";
 
-    query.bindValue(":title", releaseModel.title());
-    query.bindValue(":code", releaseModel.code());
-    query.bindValue(":originaltitle", releaseModel.names().last());
-    query.bindValue(":id", releaseModel.id());
-    query.bindValue(":rating", releaseModel.rating());
-    query.bindValue(":series", releaseModel.series());
-    query.bindValue(":status", releaseModel.status());
-    query.bindValue(":type", releaseModel.type());
-    query.bindValue(":timestamp", releaseModel.timestamp());
-    query.bindValue(":year", releaseModel.year());
-    query.bindValue(":season", releaseModel.season());
-    query.bindValue(":videoscount", releaseModel.videos().length());
-    query.bindValue(":torrentscount", releaseModel.torrents().length());
-    query.bindValue(":description", releaseModel.description());
-    query.bindValue(":announce", releaseModel.announce());
-    query.bindValue(":genres", genres);
-    query.bindValue(":poster", releaseModel.poster());
-    query.bindValue(":voices", voices);
-    query.bindValue(":torrents", torrentJson);
-    query.bindValue(":videos", videosJson);
-    query.bindValue(":scheduleonday", "понедельник");
-    query.bindValue(":metadata", "{}");
+    QSqlQuery query(m_Database);
+    QString request = "UPDATE `Releases` SET `Title` = ?,`Code` = ?,`OriginalTitle` = ?,`Rating` = ?,`Series` = ?,`Status` = ?,`Type` = ?,`Timestamp` = ?, ";
+    request.append("`Year` = ?, `Season` = ?, `CountOnlineVideos` = ?, `TorrentsCount` = ?, `Description` = ?, `Announce` = ?, `Genres` = ?, `Poster` = ?,`Voices` = ? ");
+    //request.append("`Voices` = ?,`Torrents = ?,`Videos` = ? ");
+    request.append(" WHERE `ReleaseId` = ?");
 
-    query.exec();
+    query.prepare(request);
+
+    query.bindValue(0, releaseModel.title());
+    query.bindValue(1, releaseModel.code());
+    query.bindValue(2, releaseModel.names().last());
+    query.bindValue(3, releaseModel.rating());
+    query.bindValue(4, releaseModel.series());
+    query.bindValue(5, releaseModel.status());
+    query.bindValue(6, releaseModel.type());
+    query.bindValue(7, releaseModel.timestamp());
+    query.bindValue(8, releaseModel.year());
+    query.bindValue(9, releaseModel.season());
+    query.bindValue(10, releaseModel.videos().length());
+    query.bindValue(11, releaseModel.torrents().length());
+    query.bindValue(12, releaseModel.description());
+    query.bindValue(13, releaseModel.announce());
+    query.bindValue(14, genres);
+    query.bindValue(15, releaseModel.poster());
+    query.bindValue(16, voices);
+    /*query.bindValue(17, torrentJson);
+    query.bindValue(18, videosJson);*/
+    query.bindValue(17, releaseModel.id());
+
+    if (!query.exec()) {
+        const QString errorLine = query.lastError().text();
+        qDebug() << errorLine;
+    }
 }
 
 QString LocalStorageService::getRelease(int id)
