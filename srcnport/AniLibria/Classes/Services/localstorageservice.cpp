@@ -180,16 +180,15 @@ void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
     auto videos = releaseModel.videos();
     auto videosJson = videosToJson(videos);
 
-    auto voices = releaseModel.voices().join(",");
+    auto voices = releaseModel.voices().join(", ");
     if (voices.length() == 0) voices = "Не указано";
 
-    auto genres = releaseModel.genres().join(",");
+    auto genres = releaseModel.genres().join(", ");
     if (genres.length() == 0) genres = "Не указано";
 
     QSqlQuery query(m_Database);
     QString request = "UPDATE `Releases` SET `Title` = ?,`Code` = ?,`OriginalTitle` = ?,`Rating` = ?,`Series` = ?,`Status` = ?,`Type` = ?,`Timestamp` = ?, ";
-    request.append("`Year` = ?, `Season` = ?, `CountOnlineVideos` = ?, `TorrentsCount` = ?, `Description` = ?, `Announce` = ?, `Genres` = ?, `Poster` = ?,`Voices` = ? ");
-    //request.append("`Voices` = ?,`Torrents = ?,`Videos` = ? ");
+    request.append("`Year` = ?, `Season` = ?, `CountOnlineVideos` = ?, `TorrentsCount` = ?, `Description` = ?, `Announce` = ?, `Genres` = ?, `Poster` = ?, `Voices` = ? ");
     request.append(" WHERE `ReleaseId` = ?");
 
     query.prepare(request);
@@ -211,12 +210,25 @@ void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
     query.bindValue(14, genres);
     query.bindValue(15, releaseModel.poster());
     query.bindValue(16, voices);
-    /*query.bindValue(17, torrentJson);
-    query.bindValue(18, videosJson);*/
     query.bindValue(17, releaseModel.id());
 
     if (!query.exec()) {
         const QString errorLine = query.lastError().text();
+        qDebug() << errorLine;
+    }
+
+    QSqlQuery jsonQuery(m_Database);
+    QString jsonQueryString = "UPDATE `Releases` SET `Torrents` = ?, `Videos` = ? WHERE `ReleaseId` = " + QString::number(releaseModel.id());
+    //, `Videos` = ?
+
+    jsonQuery.prepare(jsonQueryString);
+
+    //videosJson.truncate(10);
+    jsonQuery.bindValue(0, torrentJson);//torrentJson);
+    jsonQuery.bindValue(1, videosJson); // videosJson);
+
+    if (!jsonQuery.exec()) {
+        const QString errorLine = jsonQuery.lastError().text();
         qDebug() << errorLine;
     }
 }

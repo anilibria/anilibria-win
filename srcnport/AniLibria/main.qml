@@ -17,6 +17,7 @@ ApplicationWindow {
     //flags: Qt.FramelessWindowHint | Qt.WindowMinimizeButtonHint | Qt.Window
     title: qsTr("AniLibria")
     property string currentPageId: "release"
+    property bool synchronizationEnabled: false
 
     function showPage(pageId) {
         if (currentPageId === pageId){
@@ -56,12 +57,15 @@ ApplicationWindow {
            localStorage.updateAllReleases(messageObject.releases);
 
            releases.refreshAllReleases();
+
+           window.synchronizationEnabled = false;
        }
     }
 
     SynchronizationService {
         id: synchronizationService
         Component.onCompleted: {
+            window.synchronizationEnabled = true;
             synchronizationService.synchronizeReleases();
         }
         onSynchronizationCompleted: {
@@ -227,6 +231,7 @@ ApplicationWindow {
     Releases {
         id: releases
         visible: true
+        synchronizeEnabled: window.synchronizationEnabled
         onWatchRelease: {
             videoplayer.setReleaseVideo(releaseId, -1, videos);
             window.showPage("videoplayer");

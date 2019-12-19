@@ -15,6 +15,7 @@ Page {
     property var allReleases: []
     property bool isBusy: false
     property var openedRelease: null
+    property bool synchronizeEnabled: false
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -84,17 +85,25 @@ Page {
                 Layout.preferredHeight: 45
                 height: 45
                 color: "#808080"
-                Switch {
-                    onCheckedChanged: {
-                        page.selectMode = checked;
-                        if (!checked) {
-                            for (const selectedRelease of page.selectedReleases) {
-                                selectedRelease.selected = false;
+                Row {
+                    Switch {
+                        onCheckedChanged: {
+                            page.selectMode = checked;
+                            if (!checked) {
+                                for (const selectedRelease of page.selectedReleases) {
+                                    selectedRelease.selected = false;
+                                }
+                                page.selectedReleases = [];
+                            } else {
+                                page.openedRelease = null;
                             }
-                            page.selectedReleases = [];
-                        } else {
-                            page.openedRelease = null;
                         }
+                    }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: page.synchronizeEnabled
+                        font.pointSize: 12
+                        text: "Выполняется синхронизация..."
                     }
                 }
             }
@@ -103,14 +112,14 @@ Page {
                 id: filtersContainer
                 Layout.preferredWidth: 240
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredHeight: 44
+                Layout.preferredHeight: 36
                 color: "transparent"
 
                 RoundedTextBox {
                     width: filtersContainer.width
                     height: 30
                     textContent: ""
-                    fontSize: 16
+                    fontSize: 12
                     placeholder: "Введите название релиза"
                 }
             }
