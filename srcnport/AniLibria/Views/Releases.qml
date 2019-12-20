@@ -12,7 +12,7 @@ Page {
     property bool selectMode
     property var selectedReleases: []
     property var displayedReleases: []
-    property var allReleases: []
+    property int pageIndex: 1
     property bool isBusy: false
     property var openedRelease: null
     property bool synchronizeEnabled: false
@@ -439,15 +439,14 @@ Page {
     }
 
     function fillNextReleases() {
-        const currentLenght = page.displayedReleases.length;
-        const newDisplayedReleases = page.allReleases.slice(currentLenght, currentLenght + 20);
-        page.displayedReleases = page.displayedReleases.concat(newDisplayedReleases);
+        page.pageIndex += 1;
+        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex));
+        page.displayedReleases = page.displayedReleases.concat(newReleases);
     }
 
     function refreshAllReleases() {
-        const releasesJson = localStorage.getReleasesByFilter();
-        page.allReleases = JSON.parse(releasesJson);
-        page.displayedReleases = page.allReleases.slice(0, 20);
+        page.pageIndex = 1;
+        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex));
 
     }
 

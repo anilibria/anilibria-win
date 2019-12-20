@@ -10,12 +10,14 @@
 #include <QtConcurrent>
 #include <QFuture>
 #include <QDebug>
+#include <QFutureWatcher>
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 {
     m_Database = QSqlDatabase::addDatabase("QSQLITE");
+    m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
     auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/cache.db";
     m_Database.setDatabaseName(path);
     m_Database.open();
@@ -50,6 +52,8 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 
     query.prepare(releasesTable);
     query.exec();
+
+    connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
 }
 
 LocalStorageService::~LocalStorageService()
@@ -79,12 +83,10 @@ void LocalStorageService::updateAllReleases(const QString &releases)
                 insertRelease(releaseModel);
             }
 
-            if (!m_Database.commit()) {
-                m_Database.rollback();
-            }
+            if (!m_Database.commit()) m_Database.rollback();
         }
     );
-    future.waitForFinished();
+    m_AllReleaseUpdatedWatcher->setFuture(future);
 }
 
 QString LocalStorageService::videosToJson(QList<OnlineVideoModel> &videos)
@@ -241,13 +243,15 @@ QString LocalStorageService::getRelease(int id)
     return "";
 }
 
-QString LocalStorageService::getReleasesByFilter()
+QString LocalStorageService::getReleasesByFilter(int page)
 {
     QSqlQuery query;
 
+    int startIndex = (page - 1) * 20;
+
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` ";
-    request += "FROM `Releases` ORDER BY `Timestamp` DESC";
+    request += "FROM `Releases` ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",20";
     query.exec(request);
 
     QJsonArray releases;
@@ -270,4 +274,9 @@ void LocalStorageService::setSchedule(QString schedule)
     if (schedule.length() > 0) {
 
     }
+}
+
+void LocalStorageService::allReleasesUpdated()
+{
+    emit allReleasesFinished();
 }

@@ -48,6 +48,12 @@ ApplicationWindow {
     LocalStorage {
         id: localStorage
 
+        onAllReleasesFinished: {
+            releases.refreshAllReleases();
+
+            window.synchronizationEnabled = false;
+        }
+
     }
 
     WorkerScript {
@@ -55,10 +61,6 @@ ApplicationWindow {
        source: "parseReleases.js"
        onMessage: {
            localStorage.updateAllReleases(messageObject.releases);
-
-           releases.refreshAllReleases();
-
-           window.synchronizationEnabled = false;
        }
     }
 
@@ -67,9 +69,6 @@ ApplicationWindow {
         Component.onCompleted: {
             window.synchronizationEnabled = true;
             synchronizationService.synchronizeReleases();
-        }
-        onSynchronizationCompleted: {
-            //releasesService.loadReleasesCache();
         }
         onSynchronizedReleases: {
             parseReleasesWorker.sendMessage({ releasesJson: data });

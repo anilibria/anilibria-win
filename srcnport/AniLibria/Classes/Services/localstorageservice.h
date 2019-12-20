@@ -13,6 +13,7 @@ class LocalStorageService : public QObject
 
 private:
     QSqlDatabase m_Database;
+    QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
@@ -25,12 +26,14 @@ public:
 
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE QString getRelease(int id);
-    Q_INVOKABLE QString getReleasesByFilter();
+    Q_INVOKABLE QString getReleasesByFilter(int page);
     Q_INVOKABLE void setSchedule(QString schedule);
+
 signals:
+    void allReleasesFinished();
 
 public slots:
-
+    void allReleasesUpdated();
 
 };
 
