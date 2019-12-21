@@ -151,7 +151,6 @@ Page {
                         Layout.alignment: Qt.AlignHCenter
                         columns: 2
                         spacing: 4
-                        //width: 540
                         Repeater {
                             model: page.displayedReleases
                             Rectangle {
@@ -188,6 +187,8 @@ Page {
                                         }
                                     }
                                     Column {
+                                        Layout.row: 1
+                                        Layout.column: 1
                                         Text {
                                             textFormat: Text.RichText
                                             color: "#a32727"
@@ -239,6 +240,20 @@ Page {
                                             wrapMode: Text.WordWrap
                                             maximumLineCount: 2
                                             text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voices)
+                                        }
+                                        Row {
+                                            leftPadding: 8
+                                            topPadding: 8
+                                            Image {
+                                                mipmap: true
+                                                source: '../Assets/Icons/rating.svg'
+                                                width: 22
+                                                height: 22
+                                            }
+                                            Text {
+                                                font.pixelSize: 18
+                                                text: modelData.rating
+                                            }
                                         }
                                     }
                                 }
