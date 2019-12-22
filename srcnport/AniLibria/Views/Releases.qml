@@ -186,73 +186,99 @@ Page {
                                             maskSource: mask
                                         }
                                     }
-                                    Column {
+                                    Grid {
+                                        height: 260
                                         Layout.row: 1
                                         Layout.column: 1
-                                        Text {
-                                            textFormat: Text.RichText
-                                            color: "#a32727"
-                                            font.pointSize: 12
-                                            width: 280
-                                            leftPadding: 8
-                                            topPadding: 6
-                                            wrapMode: Text.WordWrap
-                                            maximumLineCount: 3
-                                            text: qsTr(modelData.title)
-                                        }
-                                        Text {
-                                            textFormat: Text.RichText
-                                            font.pointSize: 10
-                                            leftPadding: 8
-                                            topPadding: 4
-                                            text: qsTr("<b>Статус:</b> ") + qsTr(modelData.status)
-                                        }
-                                        Text {
-                                            font.pointSize: 10
-                                            leftPadding: 8
-                                            topPadding: 4
-                                            text: qsTr("<b>Год:</b> ") + qsTr(modelData.year)
-                                        }
-                                        Text {
-                                            textFormat: Text.RichText
-                                            font.pointSize: 10
-                                            leftPadding: 8
-                                            topPadding: 4
-                                            width: 280
-                                            wrapMode: Text.WordWrap
-                                            maximumLineCount: 2
-                                            text: qsTr("<b>Тип:</b> ") + qsTr(modelData.type)
-                                        }
-                                        Text {
-                                            font.pointSize: 10
-                                            leftPadding: 8
-                                            topPadding: 4
-                                            width: 280
-                                            wrapMode: Text.WordWrap
-                                            maximumLineCount: 2
-                                            text: qsTr("<b>Жанры:</b> ") + qsTr(modelData.genres)
-                                        }
-                                        Text {
-                                            font.pointSize: 10
-                                            leftPadding: 8
-                                            topPadding: 4
-                                            width: 280
-                                            wrapMode: Text.WordWrap
-                                            maximumLineCount: 2
-                                            text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voices)
-                                        }
-                                        Row {
-                                            leftPadding: 8
-                                            topPadding: 8
-                                            Image {
-                                                mipmap: true
-                                                source: '../Assets/Icons/rating.svg'
-                                                width: 22
-                                                height: 22
+                                        rows: 2
+                                        columns: 1
+                                        Column {
+                                            id: gridItemtextContainer
+                                            Text {
+                                                textFormat: Text.RichText
+                                                color: "#a32727"
+                                                font.pointSize: 12
+                                                width: 280
+                                                leftPadding: 8
+                                                topPadding: 6
+                                                wrapMode: Text.WordWrap
+                                                maximumLineCount: 3
+                                                text: qsTr(modelData.title)
                                             }
                                             Text {
-                                                font.pixelSize: 18
-                                                text: modelData.rating
+                                                textFormat: Text.RichText
+                                                font.pointSize: 10
+                                                leftPadding: 8
+                                                topPadding: 4
+                                                text: qsTr("<b>Статус:</b> ") + qsTr(modelData.status)
+                                            }
+                                            Text {
+                                                font.pointSize: 10
+                                                leftPadding: 8
+                                                topPadding: 4
+                                                text: qsTr("<b>Год:</b> ") + qsTr(modelData.year)
+                                            }
+                                            Text {
+                                                textFormat: Text.RichText
+                                                font.pointSize: 10
+                                                leftPadding: 8
+                                                topPadding: 4
+                                                width: 280
+                                                wrapMode: Text.WordWrap
+                                                maximumLineCount: 2
+                                                text: qsTr("<b>Тип:</b> ") + qsTr(modelData.type)
+                                            }
+                                            Text {
+                                                font.pointSize: 10
+                                                leftPadding: 8
+                                                topPadding: 4
+                                                width: 280
+                                                wrapMode: Text.WordWrap
+                                                maximumLineCount: 2
+                                                text: qsTr("<b>Жанры:</b> ") + qsTr(modelData.genres)
+                                            }
+                                            Text {
+                                                font.pointSize: 10
+                                                leftPadding: 8
+                                                topPadding: 4
+                                                width: 280
+                                                wrapMode: Text.WordWrap
+                                                maximumLineCount: 2
+                                                text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voices)
+                                            }
+                                        }
+                                        Rectangle {
+                                            color: "transparent"
+                                            height: 252 - gridItemtextContainer.height
+                                            width: 280
+                                            Row {
+                                                anchors.bottom: parent.bottom
+                                                leftPadding: 8
+                                                topPadding: 8
+                                                Image {
+                                                    mipmap: true
+                                                    source: '../Assets/Icons/rating.svg'
+                                                    width: 20
+                                                    height: 20
+                                                }
+                                                Text {
+                                                    leftPadding: 4
+                                                    rightPadding: 4
+                                                    font.pixelSize: 18
+                                                    text: modelData.rating
+                                                }
+                                                ColoredIcon {
+                                                    iconSource: '../Assets/Icons/emptyfavorite.svg'
+                                                    iconWidth: 20
+                                                    iconHeight: 20
+                                                    iconColor: "#a32727"
+                                                }
+                                                Text {
+                                                    leftPadding: 4
+                                                    color: "#a32727"
+                                                    font.pixelSize: 18
+                                                    text: "В избранном"
+                                                }
                                             }
                                         }
                                     }

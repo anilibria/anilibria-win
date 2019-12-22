@@ -75,13 +75,6 @@ ApplicationWindow {
         }
     }
 
-    ReleasesService {
-        id: releasesService
-        Component.onCompleted: {
-            releasesService.loadReleasesCache();
-        }
-    }
-
     Drawer {
         id: drawer
         width: 300
@@ -249,8 +242,6 @@ ApplicationWindow {
 
     Youtube {
         id: youtube
-        drawer: drawer
-        releasesService: releasesService
         visible: false
     }
 }

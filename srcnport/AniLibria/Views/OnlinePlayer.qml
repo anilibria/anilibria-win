@@ -26,9 +26,6 @@ Page {
         player.pause();
     }
     onSetReleaseVideo: {
-        /*const release = releasesService.getRelease(releaseId);
-        if (release) _page.selectedRelease = release;*/
-
         const jsonVideos = JSON.parse(videos);
 
         const releaseVideos = [];

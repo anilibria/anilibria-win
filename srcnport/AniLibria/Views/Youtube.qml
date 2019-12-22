@@ -6,9 +6,7 @@ import Anilibria.Services 1.0
 
 Page {
     id: page
-    property Drawer drawer
     property bool isBusy: false
-    property ReleasesService releasesService
     signal navigateFrom()
 
     /*onWidthChanged: {

@@ -237,10 +237,21 @@ void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
 
 QString LocalStorageService::getRelease(int id)
 {
-    if (id > 0) {
+    QSqlQuery query;
 
-    }
-    return "";
+    query.prepare("SELECT * FROM `Releases` WHERE `ReleaseId` = ?");
+
+    query.bindValue(0, id);
+
+    if (!query.exec()) return "null";
+
+    FullReleaseModel release;
+    release.fromDatabase(query);
+    QJsonObject jsonValue;
+    release.writeToJson(jsonValue);
+
+    QJsonDocument saveDoc(jsonValue);
+    return saveDoc.toJson();
 }
 
 QString LocalStorageService::getReleasesByFilter(int page)
