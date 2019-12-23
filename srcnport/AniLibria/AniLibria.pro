@@ -15,10 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     Classes/Models/fullreleasemodel.cpp \
     Classes/Models/onlinevideomodel.cpp \
-    Classes/Models/releaseitemmodel.cpp \
     Classes/Models/releasemodel.cpp \
     Classes/Models/releasetorrentmodel.cpp \
-    Classes/Models/releasevideomodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
     Classes/Services/localstorageservice.cpp \
     Classes/Services/synchronizationservice.cpp \
@@ -40,10 +38,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     Classes/Models/fullreleasemodel.h \
     Classes/Models/onlinevideomodel.h \
-    Classes/Models/releaseitemmodel.h \
     Classes/Models/releasemodel.h \
     Classes/Models/releasetorrentmodel.h \
-    Classes/Models/releasevideomodel.h \
     Classes/Services/anilibriaapiservice.h \
     Classes/Services/localstorageservice.h \
     Classes/Services/synchronizationservice.h \

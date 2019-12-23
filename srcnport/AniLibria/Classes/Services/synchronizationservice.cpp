@@ -2,7 +2,6 @@
 #include <QQmlListProperty>
 #include "synchronizationservice.h"
 #include "../Models/releasemodel.h"
-#include "../Models/releaseitemmodel.h"
 
 SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent)
 {

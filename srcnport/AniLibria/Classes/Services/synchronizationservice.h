@@ -5,7 +5,6 @@
 #include <QObject>
 #include "anilibriaapiservice.h"
 #include "../Models/releasemodel.h"
-#include "../Models/releaseitemmodel.h"
 
 class SynchronizationService : public QObject
 {
