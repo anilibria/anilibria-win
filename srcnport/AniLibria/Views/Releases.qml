@@ -268,7 +268,7 @@ Page {
                                                     text: modelData.rating
                                                 }
                                                 ColoredIcon {
-                                                    iconSource: '../Assets/Icons/emptyfavorite.svg'
+                                                    iconSource: '../Assets/Icons/star.svg'
                                                     iconWidth: 20
                                                     iconHeight: 20
                                                     iconColor: "#a32727"
@@ -461,7 +461,10 @@ Page {
                     height: cardContainer.height - releaseInfo.height - 60
                     url: page.openedRelease ? "https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/" + page.openedRelease.code + ".html" : "https://vk.com/";
                     onLoadingChanged: {
-                        //if (loadRequest.errorString) console.error(loadRequest.errorString);
+                        if (loadRequest.errorString) console.error(loadRequest.errorString);
+                    }
+                    onUrlChanged: {
+                        console.log("changed url" + url);
                     }
                 }
             }

@@ -37,6 +37,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 29
             height: 29
+            mipmap: true
         }
 
         ColorOverlay {

@@ -40,5 +40,6 @@
         <file>Assets/Icons/favorite.svg</file>
         <file>Assets/Icons/emptyfavorite.svg</file>
         <file>Controls/ColoredIcon.qml</file>
+        <file>Assets/Icons/star.svg</file>
     </qresource>
 </RCC>

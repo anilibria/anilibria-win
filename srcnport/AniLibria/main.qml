@@ -73,6 +73,17 @@ ApplicationWindow {
         onSynchronizedReleases: {
             parseReleasesWorker.sendMessage({ releasesJson: data });
         }
+
+        onSynchronizedSchedule: {
+            const jsonData = JSON.parse(data);
+
+            if (!jsonData.status) {
+                //TODO: handle error situation
+            }
+
+            const scheduleItems = jsonData.data.items;
+            localStorage.setSchedule(scheduleItems);
+        }
     }
 
     Drawer {
