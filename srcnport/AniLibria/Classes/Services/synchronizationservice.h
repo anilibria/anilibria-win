@@ -16,6 +16,7 @@ public:
     explicit SynchronizationService(QObject *parent = nullptr);
 
     Q_INVOKABLE void synchronizeReleases();
+    Q_INVOKABLE void synchronizeSchedule();
 
 signals:
     void synchronizedReleases(QString data);

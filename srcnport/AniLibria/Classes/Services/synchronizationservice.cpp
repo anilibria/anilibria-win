@@ -12,8 +12,12 @@ SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent
 
 void SynchronizationService::synchronizeReleases()
 {
-    m_AnilibriaApiService->getSchedule();
     m_AnilibriaApiService->getAllReleases();
+}
+
+void SynchronizationService::synchronizeSchedule()
+{
+    m_AnilibriaApiService->getSchedule();
 }
 
 void SynchronizationService::saveReleasesToCache(QString data)

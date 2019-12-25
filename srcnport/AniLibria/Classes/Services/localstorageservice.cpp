@@ -53,6 +53,12 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
     query.prepare(releasesTable);
     query.exec();
 
+    query.prepare("CREATE TABLE IF NOT EXISTS `Schedule` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
+    query.exec();
+
+    query.prepare("CREATE TABLE IF NOT EXISTS `Favorites` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
+    query.exec();
+
     connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
 }
 
@@ -221,13 +227,11 @@ void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
 
     QSqlQuery jsonQuery(m_Database);
     QString jsonQueryString = "UPDATE `Releases` SET `Torrents` = ?, `Videos` = ? WHERE `ReleaseId` = " + QString::number(releaseModel.id());
-    //, `Videos` = ?
 
     jsonQuery.prepare(jsonQueryString);
 
-    //videosJson.truncate(10);
-    jsonQuery.bindValue(0, torrentJson);//torrentJson);
-    jsonQuery.bindValue(1, videosJson); // videosJson);
+    jsonQuery.bindValue(0, torrentJson);
+    jsonQuery.bindValue(1, videosJson);
 
     if (!jsonQuery.exec()) {
         const QString errorLine = jsonQuery.lastError().text();
@@ -282,9 +286,24 @@ QString LocalStorageService::getReleasesByFilter(int page)
 
 void LocalStorageService::setSchedule(QString schedule)
 {
-    if (schedule.length() > 0) {
-
+    QSqlQuery query(m_Database);
+    query.exec("SELECT * FROM `Schedule` LIMIT 1");
+    if (!query.next()) {
+        query.exec("INSERT INTO `Schedule`(`Metadata`) VALUES ('-')");
+        query.exec("SELECT * FROM `Schedule` LIMIT 1");
+        query.next();
     }
+    auto id = query.value("Id").toInt();
+
+    query.prepare("UPDATE `Schedule` SET `Metadata` = ? WHERE `Id` = ?");
+    query.bindValue(0, schedule);
+    query.bindValue(1, id);
+    query.exec();
+
+    /*if (!jsonQuery.exec()) {
+        const QString errorLine = jsonQuery.lastError().text();
+        qDebug() << errorLine;
+    }*/
 }
 
 void LocalStorageService::allReleasesUpdated()

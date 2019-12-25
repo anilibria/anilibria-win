@@ -51,6 +51,8 @@ ApplicationWindow {
         onAllReleasesFinished: {
             releases.refreshAllReleases();
 
+            synchronizationService.synchronizeSchedule();
+
             window.synchronizationEnabled = false;
         }
 
@@ -82,7 +84,7 @@ ApplicationWindow {
             }
 
             const scheduleItems = jsonData.data.items;
-            localStorage.setSchedule(scheduleItems);
+            localStorage.setSchedule(JSON.stringify(scheduleItems));
         }
     }
 

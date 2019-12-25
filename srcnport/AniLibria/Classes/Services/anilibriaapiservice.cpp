@@ -2,19 +2,16 @@
 #include <QtNetwork>
 #include <QtDebug>
 
-AnilibriaApiService::AnilibriaApiService(QObject *parent) :
-    QObject(parent),
-    m_NetworkManager()
+AnilibriaApiService::AnilibriaApiService(QObject *parent) : QObject(parent)
 {
 }
 
 void AnilibriaApiService::getAllReleases()
 {
     auto networkManager = new QNetworkAccessManager(this);
-
     QNetworkRequest request(QUrl("https://anilibriasmartservice.azurewebsites.net/public/api/index.php"));
     request.setRawHeader("User-Agent", "Anilibria CP Client");
-    request.setHeader(QNetworkRequest::ContentTypeHeader,QVariant("application/x-www-form-urlencoded"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/x-www-form-urlencoded"));
 
     QUrlQuery params;
     params.addQueryItem("query", "list");
@@ -23,34 +20,22 @@ void AnilibriaApiService::getAllReleases()
 
     connect(networkManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(getAllReleasesResponse(QNetworkReply*)));
 
-    networkManager->post(request,params.query(QUrl::FullyEncoded).toUtf8());
+    networkManager->post(request, params.query(QUrl::FullyEncoded).toUtf8());
 }
 
 void AnilibriaApiService::getSchedule()
 {
-    QNetworkRequest request(QUrl("https://www.anilibria.tv/public/api/index.php"));
+    auto networkManager = new QNetworkAccessManager(this);
+    QNetworkRequest request(QUrl("https://anilibriasmartservice.azurewebsites.net/public/api/index.php"));
     request.setRawHeader("User-Agent", "Anilibria CP Client");
-    request.setHeader(QNetworkRequest::ContentTypeHeader,QVariant("application/x-www-form-urlencoded"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/x-www-form-urlencoded"));
     QUrlQuery params;
     params.addQueryItem("query", "schedule");
     params.addQueryItem("filter", "id");
 
-    connect(
-        m_NetworkManager,
-        &QNetworkAccessManager::finished,
-        this,
-        [=](QNetworkReply *reply) {
-            if (reply->error()) {
-                qDebug() << reply->errorString();
-                return;
-            }
+    connect(networkManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(getScheduleResponse(QNetworkReply*)));
 
-            QString answer = reply->readAll();
-
-            emit scheduleReceived(answer);
-        }
-    );
-
+    networkManager->post(request, params.query(QUrl::FullyEncoded).toUtf8());
 }
 
 void AnilibriaApiService::getAllReleasesResponse(QNetworkReply *reply)
@@ -62,4 +47,15 @@ void AnilibriaApiService::getAllReleasesResponse(QNetworkReply *reply)
     QString data = reply->readAll();
 
     emit allReleasesReceived(data);
+}
+
+void AnilibriaApiService::getScheduleResponse(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::TimeoutError) return;
+    if (reply->error() == QNetworkReply::ProtocolFailure) return;
+    if (reply->error() == QNetworkReply::HostNotFoundError) return;
+
+    QString data = reply->readAll();
+
+    emit scheduleReceived(data);
 }

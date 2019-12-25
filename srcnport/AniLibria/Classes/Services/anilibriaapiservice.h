@@ -7,8 +7,6 @@
 class AnilibriaApiService : public QObject
 {
     Q_OBJECT
-private:
-    QNetworkAccessManager* m_NetworkManager;
 
 public:
     explicit AnilibriaApiService(QObject *parent = nullptr);
@@ -22,6 +20,7 @@ signals:
 
 public slots:
     void getAllReleasesResponse(QNetworkReply* reply);
+    void getScheduleResponse(QNetworkReply* reply);
 };
 
 #endif // ANILIBRIAAPISERVICE_H
