@@ -2,6 +2,8 @@
 #include <QtNetwork>
 #include <QtDebug>
 
+const QString AnilibriaApiService::apiAddress = "https://anilibriasmartservice.azurewebsites.net/";
+
 AnilibriaApiService::AnilibriaApiService(QObject *parent) : QObject(parent)
 {
 }
@@ -9,7 +11,7 @@ AnilibriaApiService::AnilibriaApiService(QObject *parent) : QObject(parent)
 void AnilibriaApiService::getAllReleases()
 {
     auto networkManager = new QNetworkAccessManager(this);
-    QNetworkRequest request(QUrl("https://anilibriasmartservice.azurewebsites.net/public/api/index.php"));
+    QNetworkRequest request(QUrl(AnilibriaApiService::apiAddress + "public/api/index.php"));
     request.setRawHeader("User-Agent", "Anilibria CP Client");
     request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/x-www-form-urlencoded"));
 
@@ -26,7 +28,7 @@ void AnilibriaApiService::getAllReleases()
 void AnilibriaApiService::getSchedule()
 {
     auto networkManager = new QNetworkAccessManager(this);
-    QNetworkRequest request(QUrl("https://anilibriasmartservice.azurewebsites.net/public/api/index.php"));
+    QNetworkRequest request(QUrl(AnilibriaApiService::apiAddress + "public/api/index.php"));
     request.setRawHeader("User-Agent", "Anilibria CP Client");
     request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/x-www-form-urlencoded"));
     QUrlQuery params;

@@ -11,6 +11,8 @@ class AnilibriaApiService : public QObject
 public:
     explicit AnilibriaApiService(QObject *parent = nullptr);
 
+    const static QString apiAddress;
+
     void getAllReleases();
     void getSchedule();
 
