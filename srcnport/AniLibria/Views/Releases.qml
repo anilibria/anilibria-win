@@ -16,6 +16,7 @@ Page {
     property bool isBusy: false
     property var openedRelease: null
     property bool synchronizeEnabled: false
+    property string filterByTitle: ""
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -118,7 +119,7 @@ Page {
                 RoundedTextBox {
                     width: filtersContainer.width
                     height: 30
-                    textContent: ""
+                    textContent: page.filterByTitle
                     fontSize: 12
                     placeholder: "Введите название релиза"
                 }
@@ -484,13 +485,13 @@ Page {
 
     function fillNextReleases() {
         page.pageIndex += 1;
-        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex));
+        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle));
         page.displayedReleases = page.displayedReleases.concat(newReleases);
     }
 
     function refreshAllReleases() {
         page.pageIndex = 1;
-        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex));
+        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle));
 
     }
 

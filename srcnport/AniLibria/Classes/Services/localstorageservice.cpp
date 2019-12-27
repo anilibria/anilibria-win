@@ -258,15 +258,16 @@ QString LocalStorageService::getRelease(int id)
     return saveDoc.toJson();
 }
 
-QString LocalStorageService::getReleasesByFilter(int page)
+QString LocalStorageService::getReleasesByFilter(int page, QString title)
 {
     QSqlQuery query;
 
     int startIndex = (page - 1) * 20;
 
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
-    request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` ";
-    request += "FROM `Releases` ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",20";
+    request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` FROM `Releases` ";
+    if (!title.isEmpty()) request += "WHERE `Title`= '" + title + "' ";
+    request += " ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",20";
     query.exec(request);
 
     QJsonArray releases;
@@ -299,11 +300,6 @@ void LocalStorageService::setSchedule(QString schedule)
     query.bindValue(0, schedule);
     query.bindValue(1, id);
     query.exec();
-
-    /*if (!jsonQuery.exec()) {
-        const QString errorLine = jsonQuery.lastError().text();
-        qDebug() << errorLine;
-    }*/
 }
 
 void LocalStorageService::allReleasesUpdated()
