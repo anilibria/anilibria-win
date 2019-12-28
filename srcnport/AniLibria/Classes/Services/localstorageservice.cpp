@@ -302,6 +302,15 @@ void LocalStorageService::setSchedule(QString schedule)
     query.exec();
 }
 
+QString LocalStorageService::getSchedule()
+{
+    QSqlQuery query(m_Database);
+    query.exec("SELECT * FROM `Schedule` LIMIT 1");
+    if (!query.next()) return "{}";
+
+    return query.value("Metadata").toString();
+}
+
 void LocalStorageService::allReleasesUpdated()
 {
     emit allReleasesFinished();

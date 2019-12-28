@@ -28,6 +28,7 @@ public:
     Q_INVOKABLE QString getRelease(int id);
     Q_INVOKABLE QString getReleasesByFilter(int page, QString title);
     Q_INVOKABLE void setSchedule(QString schedule);
+    Q_INVOKABLE QString getSchedule();
 
 signals:
     void allReleasesFinished();
