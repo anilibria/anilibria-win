@@ -15,14 +15,20 @@ public:
 
     void getAllReleases();
     void getSchedule();
+    void signin(QString email, QString password, QString fa2code);
+    void signout(QString token);
 
 signals:
     void allReleasesReceived(QString data);
     void scheduleReceived(QString data);
+    void signinReceived(QString data);
+    void signoutReceived();
 
 public slots:
     void getAllReleasesResponse(QNetworkReply* reply);
     void getScheduleResponse(QNetworkReply* reply);
+    void signinResponse(QNetworkReply* reply);
+    void signoutResponse(QNetworkReply* reply);
 };
 
 #endif // ANILIBRIAAPISERVICE_H

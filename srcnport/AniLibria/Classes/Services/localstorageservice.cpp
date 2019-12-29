@@ -266,7 +266,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title)
 
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` FROM `Releases` ";
-    if (!title.isEmpty()) request += "WHERE `Title`= '" + title + "' ";
+    if (!title.isEmpty()) request += "WHERE `Title`= '%" + title + "%' ";
     request += " ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",20";
     query.exec(request);
 

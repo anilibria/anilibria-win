@@ -3,7 +3,7 @@ import QtQuick.Controls 2.5
 
 Rectangle {
     id: _roundedTextBox
-    property string textContent: ""
+    property alias textContent: edit.text
     property string placeholder: ""
     property alias fontSize: edit.font.pixelSize
     height: 20

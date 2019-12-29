@@ -5,6 +5,11 @@ import QtQuick.Controls.Material 2.0
 import "../Controls"
 
 Page {
+    id: authorizePage
+    property alias email: emailTextBox.text
+    property string password: passwordTextBox.text
+    property string fa2code: fa2codeTextBox.text
+
     signal navigateFrom()
 
     background: Rectangle {
@@ -53,9 +58,9 @@ Page {
                         font.bold: true
                         text: qsTr("Email")
                     }
-                    RoundedTextBox {
+                    TextField {
+                        id: emailTextBox
                         Layout.fillWidth: true
-                        textContent: "Bluherka"
                     }
                     Label {
                         Layout.leftMargin: 6
@@ -63,9 +68,9 @@ Page {
                         font.bold: true
                         text: qsTr("Пароль")
                     }
-                    RoundedTextBox {
+                    TextField {
+                        id: passwordTextBox
                         Layout.fillWidth: true
-                        textContent: "password"
                     }
                     Label {
                         Layout.leftMargin: 6
@@ -75,15 +80,15 @@ Page {
                         wrapMode: Text.WordWrap
                         text: qsTr("2fa код (оставить поле пустым если Вы не настроили двухфакторную аутентификацию)")
                     }
-                    RoundedTextBox {
+                    TextField {
+                        id: fa2codeTextBox
                         Layout.fillWidth: true
-                        textContent: "2fa"
                     }
                     Button {
                         Layout.alignment: Qt.AlignRight
                         text: qsTr("Войти")
                         onClicked: {
-                            drawer.open();
+                            synchronizationService.authorize(encodeURIComponent(authorizePage.email), encodeURIComponent(authorizePage.password), encodeURIComponent(authorizePage.fa2code));
                         }
                     }
                 }
