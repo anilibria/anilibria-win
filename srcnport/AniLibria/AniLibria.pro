@@ -18,6 +18,7 @@ SOURCES += \
     Classes/Models/releasemodel.cpp \
     Classes/Models/releasetorrentmodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
+    Classes/Services/applicationsettings.cpp \
     Classes/Services/localstorageservice.cpp \
     Classes/Services/synchronizationservice.cpp \
     main.cpp
@@ -41,6 +42,7 @@ HEADERS += \
     Classes/Models/releasemodel.h \
     Classes/Models/releasetorrentmodel.h \
     Classes/Services/anilibriaapiservice.h \
+    Classes/Services/applicationsettings.h \
     Classes/Services/localstorageservice.h \
     Classes/Services/synchronizationservice.h \
     globalconstants.h

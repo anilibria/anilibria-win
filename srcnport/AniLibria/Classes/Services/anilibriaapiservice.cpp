@@ -61,6 +61,16 @@ void AnilibriaApiService::signout(QString token)
     networkManager->get(request);
 }
 
+void AnilibriaApiService::getUserData(QString token)
+{
+    auto networkManager = new QNetworkAccessManager(this);
+    QNetworkRequest request(QUrl(AnilibriaApiService::apiAddress + "api/auth/getuserdata?token=" + token ));
+
+    connect(networkManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(getUserDataResponse(QNetworkReply*)));
+
+    networkManager->get(request);
+}
+
 void AnilibriaApiService::getAllReleasesResponse(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::TimeoutError) return;
@@ -99,4 +109,13 @@ void AnilibriaApiService::signoutResponse(QNetworkReply *reply)
     if (reply->error() == QNetworkReply::HostNotFoundError) return;
 
     emit signoutReceived();
+}
+
+void AnilibriaApiService::getUserDataResponse(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::TimeoutError) return;
+    if (reply->error() == QNetworkReply::ProtocolFailure) return;
+    if (reply->error() == QNetworkReply::HostNotFoundError) return;
+
+    emit userDataReceived(reply->readAll());
 }

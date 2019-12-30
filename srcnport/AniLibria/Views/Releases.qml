@@ -16,7 +16,6 @@ Page {
     property bool isBusy: false
     property var openedRelease: null
     property bool synchronizeEnabled: false
-    property string filterByTitle: ""
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -119,7 +118,6 @@ Page {
                 RoundedTextBox {
                     width: filtersContainer.width
                     height: 30
-                    textContent: page.filterByTitle
                     fontSize: 12
                     placeholder: "Введите название релиза"
                 }

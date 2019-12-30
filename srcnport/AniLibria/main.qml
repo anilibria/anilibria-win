@@ -14,10 +14,11 @@ ApplicationWindow {
     minimumWidth: 800
     minimumHeight: 600
     height: 600
-    //flags: Qt.FramelessWindowHint | Qt.WindowMinimizeButtonHint | Qt.Window
     title: qsTr("AniLibria")
     property string currentPageId: "release"
     property bool synchronizationEnabled: false
+    property bool notVisibleSignin: false
+    property var userModel: ({})
 
     function showPage(pageId) {
         if (currentPageId === pageId){
@@ -43,6 +44,10 @@ ApplicationWindow {
         currentPageId = pageId;
 
         drawer.close();
+    }
+
+    ApplicationSettings {
+        id: applicationSettings
     }
 
     LocalStorage {
@@ -86,6 +91,27 @@ ApplicationWindow {
             const scheduleItems = jsonData.data.items;
             localStorage.setSchedule(JSON.stringify(scheduleItems));
         }
+
+        onUserCompleteAuthentificated: {
+            applicationSettings.userToken = token;
+            if (window.currentPageId === "authorization") {
+                showPage("release");
+                synchronizationService.getUserData(encodeURIComponent(applicationSettings.userToken));
+            }
+        }
+
+        onUserFailedAuthentificated: {
+            applicationSettings.userToken = "";
+            if (!(window.currentPageId === "authorization")) return;
+
+            authorization.authentificateFailed(errorMessage);
+        }
+
+        onUserDataReceived: {
+            window.userModel = JSON.parse(data);
+            window.notVisibleSignin = true;
+        }
+
     }
 
     Drawer {
@@ -107,6 +133,38 @@ ApplicationWindow {
 
         Column {
             anchors.fill: parent
+
+            Item {
+                visible: notVisibleSignin
+                width: drawer.width
+                height: 64
+
+                Image {
+                    anchors.leftMargin: 8
+                    anchors.topMargin: 2
+                    anchors.left: parent.left
+                    source: userModel.avatar ? userModel.avatar : '../Assets/Icons/donate.jpg'
+                    fillMode: Image.PreserveAspectCrop
+                    width: 60
+                    height: 60
+                    layer.enabled: true
+                    layer.effect: OpacityMask {
+                        maskSource: Rectangle {
+                            width: 60
+                            height: 60
+                            radius: 30
+                            visible: false
+                        }
+                    }
+                }
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: userModel.login ? userModel.login : ""
+                    color: "white"
+                }
+            }
 
             ItemDelegate {
                 contentItem: Item {
@@ -197,6 +255,7 @@ ApplicationWindow {
                 }
             }
             ItemDelegate {
+                visible: !notVisibleSignin
                 contentItem: Item {
                     Row {
                         spacing: 10

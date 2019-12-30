@@ -7,10 +7,21 @@ import "../Controls"
 Page {
     id: authorizePage
     property alias email: emailTextBox.text
-    property string password: passwordTextBox.text
-    property string fa2code: fa2codeTextBox.text
+    property alias password: passwordTextBox.text
+    property alias fa2code: fa2codeTextBox.text
 
     signal navigateFrom()
+    signal authentificateFailed(string message)
+
+    onNavigateFrom: {
+        emailTextBox.text = "";
+        passwordTextBox.text = "";
+        fa2codeTextBox.text = "";
+    }
+
+    onAuthentificateFailed: {
+        errorMessage.text = message;
+    }
 
     background: Rectangle {
         color: "#D3D3D3"
@@ -46,7 +57,7 @@ Page {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 350
-                height: 240
+                height: 300
 
                 ColumnLayout {
                     id: authForm
@@ -61,6 +72,12 @@ Page {
                     TextField {
                         id: emailTextBox
                         Layout.fillWidth: true
+                        placeholderText: "Email"
+                        /*background: Rectangle {
+                            color: "whitesmoke"
+                            border.width: 1
+                            border.color: "red"
+                        }*/
                     }
                     Label {
                         Layout.leftMargin: 6
@@ -71,6 +88,7 @@ Page {
                     TextField {
                         id: passwordTextBox
                         Layout.fillWidth: true
+                        placeholderText: "Пароль"
                     }
                     Label {
                         Layout.leftMargin: 6
@@ -83,14 +101,29 @@ Page {
                     TextField {
                         id: fa2codeTextBox
                         Layout.fillWidth: true
+                        placeholderText: "2fa код"
                     }
-                    Button {
-                        Layout.alignment: Qt.AlignRight
-                        text: qsTr("Войти")
-                        onClicked: {
-                            synchronizationService.authorize(encodeURIComponent(authorizePage.email), encodeURIComponent(authorizePage.password), encodeURIComponent(authorizePage.fa2code));
+                    Rectangle {
+                        Layout.fillWidth: true
+
+                        Text {
+                            id: errorMessage
+                            text: "Error message"
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
                         }
+
+                        Button {
+                            anchors.right: parent.right
+                            anchors.rightMargin: 10
+                            text: qsTr("Войти")
+                            onClicked: {
+                                synchronizationService.authorize(encodeURIComponent(authorizePage.email), encodeURIComponent(authorizePage.password), encodeURIComponent(authorizePage.fa2code));
+                            }
+                        }
+
                     }
+
                 }
             }
         }

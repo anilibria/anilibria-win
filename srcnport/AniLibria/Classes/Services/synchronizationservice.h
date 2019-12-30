@@ -18,20 +18,23 @@ public:
     Q_INVOKABLE void synchronizeReleases();
     Q_INVOKABLE void synchronizeSchedule();
     Q_INVOKABLE void authorize(QString email, QString password, QString fa2code);
+    Q_INVOKABLE void getUserData(QString token);
 signals:
     void synchronizedReleases(QString data);
     void synchronizationCompleted();
     void synchronizationFailed();
     void synchronizedSchedule(QString data);
-    void userCompleteAuthontificated(QString token);
-    void userFailedAuthontificated(QString errorMessage);
+    void userCompleteAuthentificated(QString token);
+    void userFailedAuthentificated(QString errorMessage);
     void userSignouted();
+    void userDataReceived(QString data);
 
 public slots:
     void saveReleasesToCache(QString data);
     void saveScheduleToCache(QString data);
     void handleSignin(QString data);
     void handleSignout();
+    void handleUserData(QString data);
 };
 
 #endif // SYNCHRONIZATIONSERVICE_H
