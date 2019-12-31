@@ -215,7 +215,7 @@ Page {
                                                 font.pointSize: 10
                                                 leftPadding: 8
                                                 topPadding: 4
-                                                text: qsTr("<b>Год:</b> ") + qsTr(modelData.year)
+                                                text: qsTr("<b>" + modelData.season + " " + modelData.year + "</b>")
                                             }
                                             Text {
                                                 textFormat: Text.RichText

@@ -29,6 +29,11 @@ void SynchronizationService::authorize(QString email, QString password, QString 
     m_AnilibriaApiService->signin(email, password, fa2code);
 }
 
+void SynchronizationService::signout(QString token)
+{
+    m_AnilibriaApiService->signout(token);
+}
+
 void SynchronizationService::getUserData(QString token)
 {
     m_AnilibriaApiService->getUserData(token);

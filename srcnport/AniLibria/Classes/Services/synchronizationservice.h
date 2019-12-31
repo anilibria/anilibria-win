@@ -18,6 +18,7 @@ public:
     Q_INVOKABLE void synchronizeReleases();
     Q_INVOKABLE void synchronizeSchedule();
     Q_INVOKABLE void authorize(QString email, QString password, QString fa2code);
+    Q_INVOKABLE void signout(QString token);
     Q_INVOKABLE void getUserData(QString token);
 signals:
     void synchronizedReleases(QString data);

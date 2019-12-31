@@ -48,6 +48,11 @@ ApplicationWindow {
 
     ApplicationSettings {
         id: applicationSettings
+        Component.onCompleted: {
+            if (!applicationSettings.userToken) return;
+
+            synchronizationService.getUserData(applicationSettings.userToken);
+        }
     }
 
     LocalStorage {
@@ -77,6 +82,7 @@ ApplicationWindow {
             window.synchronizationEnabled = true;
             synchronizationService.synchronizeReleases();
         }
+
         onSynchronizedReleases: {
             parseReleasesWorker.sendMessage({ releasesJson: data });
         }
@@ -112,6 +118,12 @@ ApplicationWindow {
             window.notVisibleSignin = true;
         }
 
+        onUserSignouted: {
+            applicationSettings.userToken = "";
+            window.userModel = {};
+            window.notVisibleSignin = false;
+        }
+
     }
 
     Drawer {
@@ -131,7 +143,7 @@ ApplicationWindow {
             }
         }
 
-        Column {
+        Column {            
             anchors.fill: parent
 
             Item {
@@ -140,9 +152,10 @@ ApplicationWindow {
                 height: 64
 
                 Image {
-                    anchors.leftMargin: 8
+                    anchors.leftMargin: 6
                     anchors.topMargin: 2
                     anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
                     source: userModel.avatar ? userModel.avatar : '../Assets/Icons/donate.jpg'
                     fillMode: Image.PreserveAspectCrop
                     width: 60
@@ -163,6 +176,21 @@ ApplicationWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: userModel.login ? userModel.login : ""
                     color: "white"
+                }
+
+                Image {
+                    anchors.rightMargin: 8
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    source: "Assets/Icons/logout.svg"
+                    width: 30
+                    height: 30
+                    MouseArea {
+                        anchors.fill: parent
+                        onPressed: {
+                            synchronizationService.signout(applicationSettings.userToken);
+                        }
+                    }
                 }
             }
 
@@ -277,6 +305,42 @@ ApplicationWindow {
                     showPage("authorization");
                 }
             }
+        }
+
+        Row {
+            anchors.bottom: parent.bottom
+            Item {
+                width: 60
+                height: 60
+                Image {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    source: "Assets/Icons/anilibrialogodefault.svg"
+                    mipmap: true
+                    width: 50
+                    height: 50
+                }
+            }
+            Item {
+                width: drawer.width - 60
+                height: 60
+                anchors.leftMargin: 10
+
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    Text {
+                        color: "white"
+                        font.pixelSize: 14
+                        text: qsTr("Клиент для сайта AniLibria")
+                    }
+                    Text {
+                        color: "white"
+                        font.pixelSize: 14
+                        text: qsTr("версия 0.0.0")
+                    }
+                }
+            }
+
         }
     }
 
