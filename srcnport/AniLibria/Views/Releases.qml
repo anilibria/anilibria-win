@@ -12,6 +12,7 @@ Page {
     property bool selectMode
     property var selectedReleases: []
     property var displayedReleases: []
+    property var favoriteReleases: []
     property int pageIndex: 1
     property bool isBusy: false
     property var openedRelease: null
@@ -494,6 +495,6 @@ Page {
     }
 
     Component.onCompleted: {
-        refreshAllReleases();
+        refreshAllReleases();        
     }
 }

@@ -12,6 +12,7 @@ SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent
     connect(m_AnilibriaApiService,&AnilibriaApiService::signinReceived,this,&SynchronizationService::handleSignin);
     connect(m_AnilibriaApiService,&AnilibriaApiService::signoutReceived,this,&SynchronizationService::handleSignout);
     connect(m_AnilibriaApiService,&AnilibriaApiService::userDataReceived,this,&SynchronizationService::handleUserData);
+    connect(m_AnilibriaApiService,&AnilibriaApiService::userFavoritesReceived,this,&SynchronizationService::handleUserFavorites);
 }
 
 void SynchronizationService::synchronizeReleases()
@@ -37,6 +38,11 @@ void SynchronizationService::signout(QString token)
 void SynchronizationService::getUserData(QString token)
 {
     m_AnilibriaApiService->getUserData(token);
+}
+
+void SynchronizationService::synchronizeUserFavorites(QString token)
+{
+    m_AnilibriaApiService->getFavorites(token);
 }
 
 void SynchronizationService::saveReleasesToCache(QString data)
@@ -82,4 +88,9 @@ void SynchronizationService::handleUserData(QString data)
         QJsonDocument resultJson(object);
         emit userDataReceived(resultJson.toJson(QJsonDocument::Compact));
     }
+}
+
+void SynchronizationService::handleUserFavorites(QString data)
+{
+    emit userFavoritesReceived(data);
 }

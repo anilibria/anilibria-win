@@ -18,6 +18,7 @@ public:
     void signin(QString email, QString password, QString fa2code);
     void signout(QString token);
     void getUserData(QString token);
+    void getFavorites(QString token);
 
 signals:
     void allReleasesReceived(QString data);
@@ -25,6 +26,7 @@ signals:
     void signinReceived(QString data);
     void signoutReceived();
     void userDataReceived(QString data);
+    void userFavoritesReceived(QString data);
 
 public slots:
     void getAllReleasesResponse(QNetworkReply* reply);
@@ -32,6 +34,7 @@ public slots:
     void signinResponse(QNetworkReply* reply);
     void signoutResponse(QNetworkReply* reply);
     void getUserDataResponse(QNetworkReply* reply);
+    void getUserFavoritesResponse(QNetworkReply* reply);
 };
 
 #endif // ANILIBRIAAPISERVICE_H

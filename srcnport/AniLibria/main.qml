@@ -62,6 +62,7 @@ ApplicationWindow {
             releases.refreshAllReleases();
 
             synchronizationService.synchronizeSchedule();
+            if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(encodeURIComponent(applicationSettings.userToken));
 
             window.synchronizationEnabled = false;
         }
@@ -122,6 +123,11 @@ ApplicationWindow {
             applicationSettings.userToken = "";
             window.userModel = {};
             window.notVisibleSignin = false;
+        }
+
+        onUserFavoritesReceived:  {
+            const favorites = JSON.parse(data);
+
         }
 
     }
