@@ -56,13 +56,6 @@
 				Padding="18"
 				converters:BackgroundThemeConverter.BackgroundMapper="ReleaseGridBackground"
 				CornerRadius="8">
-				<Image
-					Tapped="Image_Tapped"
-					Width="800"
-					Height="500"
-					Stretch="UniformToFill"
-					Source="/Assets/donate.jpg"
-				/>
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition />
@@ -138,7 +131,7 @@
 						Width="220"
 						HorizontalAlignment="Left"
 						BorderThickness="0"
-						Text="R211016581718, Z720752385996"
+						Text="Больше не поддерживается"
 						IsReadOnly="True"
 					/>
 					<TextBlock
