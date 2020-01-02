@@ -21,6 +21,7 @@ Page {
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
     signal refreshReleases()
+    signal refreshFavorites(var userFavorites)
 
     onWidthChanged: {
         const columnCount = parseInt(page.width / 520);
@@ -29,6 +30,10 @@ Page {
 
     onRefreshReleases: {
         refreshAllReleases();
+    }
+
+    onRefreshFavorites: {
+        favoriteReleases = userFavorites;
     }
 
     background: Rectangle {
@@ -268,12 +273,14 @@ Page {
                                                     text: modelData.rating
                                                 }
                                                 ColoredIcon {
+                                                    visible: page.favoriteReleases.filter(a => a === modelData.id).length
                                                     iconSource: '../Assets/Icons/star.svg'
                                                     iconWidth: 20
                                                     iconHeight: 20
                                                     iconColor: "#a32727"
                                                 }
                                                 Text {
+                                                    visible: page.favoriteReleases.filter(a => a === modelData.id).length
                                                     leftPadding: 4
                                                     color: "#a32727"
                                                     font.pixelSize: 18

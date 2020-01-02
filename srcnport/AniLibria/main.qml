@@ -126,8 +126,7 @@ ApplicationWindow {
         }
 
         onUserFavoritesReceived:  {
-            const favorites = JSON.parse(data);
-
+            releases.refreshFavorites(JSON.parse(data));
         }
 
     }
