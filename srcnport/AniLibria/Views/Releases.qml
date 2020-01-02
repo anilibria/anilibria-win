@@ -96,9 +96,6 @@ Page {
                         onCheckedChanged: {
                             page.selectMode = checked;
                             if (!checked) {
-                                for (const selectedRelease of page.selectedReleases) {
-                                    selectedRelease.selected = false;
-                                }
                                 page.selectedReleases = [];
                             } else {
                                 page.openedRelease = null;
@@ -163,8 +160,17 @@ Page {
                                 height: 260
                                 radius: 10
                                 border.color: "red"
-                                border.width: modelData.selected ? 3 : 0
+                                border.width: page.selectedReleases.filter(a => a === modelData.id).length ? 3 : 0
                                 color: "#f2f2f2"
+                                layer.enabled: true
+                                layer.effect: DropShadow {
+                                    transparentBorder: true
+                                    horizontalOffset: 2
+                                    verticalOffset: 2
+                                    radius: 1
+                                    samples: 3
+                                    color: "gray"
+                                }
                                 MouseArea {
                                     width: 480
                                     height: 260
@@ -482,8 +488,16 @@ Page {
     function selectItem(item) {
         if (page.selectMode) {
             if (page.openedRelease) page.openedRelease = null;
-            item.selected = !item.selected;
-            selectedReleases.push(item);
+            if (page.selectedReleases.find(a => a === item.id)) {
+                page.selectedReleases = page.selectedReleases.filter(a => a !== item.id);
+            } else {
+                page.selectedReleases.push(item.id);
+            }
+
+            //WORKAROUND: fix refresh list
+            const oldSelectedReleases = page.selectedReleases;
+            page.selectedReleases = [];
+            page.selectedReleases = oldSelectedReleases;
         } else {
             page.openedRelease = item;
         }
@@ -498,7 +512,6 @@ Page {
     function refreshAllReleases() {
         page.pageIndex = 1;
         page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle));
-
     }
 
     Component.onCompleted: {

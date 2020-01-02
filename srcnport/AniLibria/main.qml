@@ -127,8 +127,8 @@ ApplicationWindow {
 
         onUserFavoritesReceived:  {
             releases.refreshFavorites(JSON.parse(data));
+            localStorage.updateFavorites(data);
         }
-
     }
 
     Drawer {

@@ -262,12 +262,12 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title)
 {
     QSqlQuery query;
 
-    int startIndex = (page - 1) * 20;
+    int startIndex = (page - 1) * 12;
 
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` FROM `Releases` ";
     if (!title.isEmpty()) request += "WHERE `Title`= '%" + title + "%' ";
-    request += " ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",20";
+    request += " ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",12";
     query.exec(request);
 
     QJsonArray releases;
@@ -309,6 +309,14 @@ QString LocalStorageService::getSchedule()
     if (!query.next()) return "{}";
 
     return query.value("Metadata").toString();
+}
+
+void LocalStorageService::updateFavorites(QString data)
+{
+    QSqlQuery query(m_Database);
+    query.prepare("INSERT INTO `Favorites`(`Metadata`) VALUES (?)");
+    query.bindValue(0, data);
+    query.exec();
 }
 
 void LocalStorageService::allReleasesUpdated()
