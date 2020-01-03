@@ -1,33 +1,49 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
-import Anilibria.Services 1.0
+import "../Controls"
 
 Page {
-    id: page
-    property bool isBusy: false
-    signal navigateFrom()
+    id: youtubePage
+    anchors.fill: parent
 
-    /*onWidthChanged: {
-        const columnCount = parseInt(page.width / 500);
-        itemGrid.columns = columnCount < 1 ? 1 : columnCount;
-    }*/
+    signal navigateFrom()
 
     background: Rectangle {
         color: "#D3D3D3"
     }
 
-    anchors.fill: parent
-
-    Rectangle {
-        id: mask
-        width: 180
-        height: 260
-        radius: 10
-        visible: false
+    RowLayout {
+        id: youtubeContainer
+        anchors.fill: parent
+        spacing: 0
+        Rectangle {
+            color: "#9e2323"
+            width: 40
+            Layout.fillHeight: true
+            Column {
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/menu.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        drawer.open();
+                    }
+                }
+            }
+        }
+        Rectangle {
+            color: "#D3D3D3"
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Text {
+                text: qsTr("Здесь будет список youtube видео")
+            }
+        }
     }
-
 
 }
 
