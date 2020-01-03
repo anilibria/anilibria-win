@@ -1,8 +1,9 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.5
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import QtWebView 1.1
 import QtQuick.Controls.Styles 1.4
+import QtQuick.Dialogs 1.2
 import QtGraphicalEffects 1.0
 import Anilibria.Services 1.0
 import "../Controls"
@@ -122,17 +123,85 @@ Page {
 
             Rectangle {
                 id: filtersContainer
-                Layout.preferredWidth: 240
+                Layout.preferredWidth: 300
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredHeight: 36
                 color: "transparent"
 
-                RoundedTextBox {
+                Row {
                     width: filtersContainer.width
-                    height: 30
-                    fontSize: 12
-                    placeholder: "Введите название релиза"
-                }                
+                    spacing: 8
+                    RoundedTextBox {
+                        width: 200
+                        height: 30
+                        fontSize: 12
+                        placeholder: "Введите название релиза"
+                    }
+                    IconButton {
+                        height: 30
+                        width: 30
+                        iconColor: "black"
+                        hoverColor: "white"
+                        iconPath: "../Assets/Icons/allreleases.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            changeSection(0);
+                        }
+                    }
+                    IconButton {
+                        height: 30
+                        width: 30
+                        iconColor: "black"
+                        hoverColor: "white"
+                        iconPath: "../Assets/Icons/favorite.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            changeSection(1);
+                        }
+                    }
+                    IconButton {
+                        id: notificationMenuButton
+                        height: 30
+                        width: 30
+                        iconColor: "black"
+                        hoverColor: "white"
+                        iconPath: "../Assets/Icons/notification.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            notificationsMenuSections.open();
+                        }
+
+                        Menu {
+                            id: notificationsMenuSections
+                            y: notificationMenuButton.height
+
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[2]
+                                onPressed: {
+                                    notImplementedDialog.open();
+                                }
+                            }
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[3]
+                                onPressed: {
+                                    notImplementedDialog.open();
+                                }
+                            }
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[4]
+                                onPressed: {
+                                    notImplementedDialog.open();
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             Flickable {
@@ -494,6 +563,12 @@ Page {
 
     }
 
+    MessageDialog {
+        id: notImplementedDialog
+        title: "Не реализовано"
+        text: "Пока указанная функция не реализована"
+    }
+
     function selectItem(item) {
         if (page.selectMode) {
             if (page.openedRelease) page.openedRelease = null;
@@ -514,13 +589,19 @@ Page {
 
     function fillNextReleases() {
         page.pageIndex += 1;
-        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle));
+        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle, page.selectedSection));
         page.displayedReleases = page.displayedReleases.concat(newReleases);
     }
 
     function refreshAllReleases() {
         page.pageIndex = 1;
-        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle));
+        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle, page.selectedSection));
+    }
+
+    function changeSection(section) {
+        page.selectedSection = section;
+
+        refreshAllReleases();
     }
 
     Component.onCompleted: {

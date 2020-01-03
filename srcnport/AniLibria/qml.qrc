@@ -43,5 +43,7 @@
         <file>Assets/Icons/star.svg</file>
         <file>Assets/Icons/anilibrialogodefault.svg</file>
         <file>Assets/Icons/logout.svg</file>
+        <file>Assets/Icons/notification.svg</file>
+        <file>Assets/Icons/allreleases.svg</file>
     </qresource>
 </RCC>

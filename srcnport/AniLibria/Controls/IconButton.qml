@@ -8,6 +8,7 @@ Item {
     property alias iconPath: iconImage.source
     property alias iconWidth: iconImage.width
     property alias iconHeight: iconImage.height
+    property var hoverColor: "lightgray"
 
     signal buttonPressed()
 
@@ -16,7 +17,7 @@ Item {
         hoverEnabled: true
         anchors.fill: parent
         onEntered: {
-            imageRectangle.color = "lightgray";
+            imageRectangle.color = _button.hoverColor;//"lightgray";
         }
         onExited: {
             imageRectangle.color = "transparent";

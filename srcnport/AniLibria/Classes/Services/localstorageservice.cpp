@@ -239,6 +239,24 @@ void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
     }
 }
 
+QStringList LocalStorageService::getAllFavorites()
+{
+    QSqlQuery query(m_Database);
+
+    query.exec("SELECT * FROM `Favorites`");
+
+    if (!query.next()) return QStringList();
+
+    auto metadata = query.value("Metadata").toString();
+    QJsonParseError jsonError;
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(metadata.toUtf8(), &jsonError);
+    auto favorites = jsonDocument.array();
+    QStringList result;
+    foreach (auto favorite, favorites) result.append(QString::number(favorite.toInt()));
+
+    return result;
+}
+
 QString LocalStorageService::getRelease(int id)
 {
     QSqlQuery query;
@@ -258,7 +276,7 @@ QString LocalStorageService::getRelease(int id)
     return saveDoc.toJson();
 }
 
-QString LocalStorageService::getReleasesByFilter(int page, QString title)
+QString LocalStorageService::getReleasesByFilter(int page, QString title, int section)
 {
     QSqlQuery query;
 
@@ -266,7 +284,24 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title)
 
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` FROM `Releases` ";
-    if (!title.isEmpty()) request += "WHERE `Title`= '%" + title + "%' ";
+    if (!title.isEmpty() || section > 0) request += "WHERE ";
+
+    QStringList filters;
+
+    if (!title.isEmpty()) filters.append(" `Title`= '%" + title + "%' ");
+
+    switch(section) {
+        case 1: {
+            QStringList userFavorites = getAllFavorites();
+
+            filters.append(" `ReleaseId` IN (" + userFavorites.join(",") + ") ");
+        } break;
+        case 0:
+        default: break;
+    }
+
+    if (!filters.isEmpty()) request += filters.join(" AND ");
+
     request += " ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",12";
     query.exec(request);
 
