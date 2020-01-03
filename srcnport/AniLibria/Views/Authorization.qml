@@ -6,6 +6,11 @@ import "../Controls"
 
 Page {
     id: authorizePage
+    anchors.fill: parent
+    background: Rectangle {
+        color: "#D3D3D3"
+    }
+
     property alias email: emailTextBox.text
     property alias password: passwordTextBox.text
     property alias fa2code: fa2codeTextBox.text
@@ -23,12 +28,6 @@ Page {
         errorMessage.text = message;
     }
 
-    background: Rectangle {
-        color: "#D3D3D3"
-    }
-
-    anchors.fill: parent
-
     RowLayout {
         id: panelContainer
         anchors.fill: parent
@@ -38,10 +37,14 @@ Page {
             width: 40
             Layout.fillHeight: true
             Column {
-                AppPanelButton {
-                    iconSource: "../Assets/Icons/menu.svg"
-                    width: panelContainer.width
-                    onPressed: {
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/menu.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
                         drawer.open();
                     }
                 }
@@ -56,61 +59,40 @@ Page {
                 radius: 8
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: 350
-                height: 300
+                width: 400
+                height: 280
 
                 ColumnLayout {
                     id: authForm
                     anchors.fill: parent
                     anchors.margins: 8
-                    Label {
-                        Layout.leftMargin: 6
-                        font.pixelSize: 12
-                        font.bold: true
-                        text: qsTr("Email")
-                    }
                     TextField {
                         id: emailTextBox
                         Layout.fillWidth: true
                         placeholderText: "Email"
-                        /*background: Rectangle {
-                            color: "whitesmoke"
-                            border.width: 1
-                            border.color: "red"
-                        }*/
-                    }
-                    Label {
-                        Layout.leftMargin: 6
-                        font.pixelSize: 12
-                        font.bold: true
-                        text: qsTr("Пароль")
                     }
                     TextField {
                         id: passwordTextBox
                         Layout.fillWidth: true
                         placeholderText: "Пароль"
                     }
-                    Label {
-                        Layout.leftMargin: 6
-                        font.pixelSize: 12
-                        font.bold: true
-                        Layout.maximumWidth: authForm.width - 30
-                        wrapMode: Text.WordWrap
-                        text: qsTr("2fa код (оставить поле пустым если Вы не настроили двухфакторную аутентификацию)")
-                    }
                     TextField {
                         id: fa2codeTextBox
                         Layout.fillWidth: true
-                        placeholderText: "2fa код"
+                        placeholderText: "2fa код (оставить пустым если не настроено)"
                     }
-                    Rectangle {
+                    Item {
                         Layout.fillWidth: true
-
+                        height: 40
                         Text {
                             id: errorMessage
-                            text: "Error message"
+                            text: ""
+                            font.pixelSize: 14
                             anchors.left: parent.left
-                            anchors.leftMargin: 10
+                            anchors.leftMargin: 10                            
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "#a32727"
+                            wrapMode: Text.WordWrap
                         }
 
                         Button {

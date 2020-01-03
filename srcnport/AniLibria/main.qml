@@ -115,7 +115,8 @@ ApplicationWindow {
         }
 
         onUserDataReceived: {
-            window.userModel = JSON.parse(data);
+            const userData = JSON.parse(data);
+            window.userModel = userData;
             window.notVisibleSignin = true;
         }
 
@@ -181,6 +182,7 @@ ApplicationWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: userModel.login ? userModel.login : ""
                     color: "white"
+                    wrapMode: Text.WordWrap
                 }
 
                 Image {
