@@ -17,6 +17,8 @@ Page {
     property bool isBusy: false
     property var openedRelease: null
     property bool synchronizeEnabled: false
+    property int selectedSection: 0
+    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Новые серии", "Обновленные торренты"]
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -109,6 +111,13 @@ Page {
                         text: "Выполняется синхронизация..."
                     }
                 }
+                Text {
+                    text: page.sections[page.selectedSection]
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    font.pointSize: 12
+                }
             }
 
             Rectangle {
@@ -123,7 +132,7 @@ Page {
                     height: 30
                     fontSize: 12
                     placeholder: "Введите название релиза"
-                }
+                }                
             }
 
             Flickable {
