@@ -81,6 +81,71 @@ Page {
                         drawer.open();
                     }
                 }
+                IconButton {
+                    id: favoriteMenuButton
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/favorite.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        messagePopup.open();
+                        /*if (!window.userModel.login) {
+                            messagePopup.open();
+                        } else {
+                            favoriteMenu.open();
+                        }*/
+                    }
+
+                    Menu {
+                        id: favoriteMenu
+                        y: favoriteMenuButton.height
+
+                        MenuItem {
+                            font.pixelSize: 14
+                            text: "Добавить в избранное"
+                            onPressed: {
+
+                            }
+                        }
+                        MenuItem {
+                            font.pixelSize: 14
+                            text: "Удалить из избранного"
+                            onPressed: {
+                            }
+                        }
+                    }
+
+                    Popup {
+                        id: messagePopup
+                        x: window.width / 2 - 150
+                        y: window.height / 2 - 100
+                        width: 300
+                        height: 200
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        Column {
+                            width: parent.width
+                            Text {
+                                width: messagePopup.width
+                                font.pixelSize: 14
+                                font.bold: true
+                                wrapMode: Text.WordWrap
+                                text: "Избранное не доступно"
+                            }
+
+                            Text {
+                                width: messagePopup.width
+                                font.pixelSize: 12
+                                wrapMode: Text.WordWrap
+                                text: "Чтобы добавлять в избранное нужно вначале авторизоваться"
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -132,10 +197,14 @@ Page {
                     width: filtersContainer.width
                     spacing: 8
                     RoundedTextBox {
+                        id: filterByTitle
                         width: 200
                         height: 30
                         fontSize: 12
                         placeholder: "Введите название релиза"
+                        onCompleteEditing: {
+                            refreshAllReleases();
+                        }
                     }
                     IconButton {
                         height: 30
@@ -589,20 +658,20 @@ Page {
 
     function fillNextReleases() {
         page.pageIndex += 1;
-        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle, page.selectedSection));
+        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, filterByTitle.textContent, page.selectedSection));
         page.displayedReleases = page.displayedReleases.concat(newReleases);
     }
 
     function refreshAllReleases() {
         page.pageIndex = 1;
-        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, page.filterByTitle, page.selectedSection));
+        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, filterByTitle.textContent, page.selectedSection));
     }
 
     function changeSection(section) {
         page.selectedSection = section;
 
         refreshAllReleases();
-    }
+    }    
 
     Component.onCompleted: {
         refreshAllReleases();        

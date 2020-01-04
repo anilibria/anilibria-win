@@ -3,13 +3,16 @@ import QtQuick.Controls 2.5
 
 Rectangle {
     id: _roundedTextBox
-    property alias textContent: edit.text
-    property string placeholder: ""
-    property alias fontSize: edit.font.pixelSize
     height: 20
     radius: height / 2
     border.width: 1
     border.color: "#999"
+
+    property alias textContent: edit.text
+    property string placeholder: ""
+    property alias fontSize: edit.font.pixelSize
+
+    signal completeEditing()
 
     Flickable {
         id: flick
@@ -39,6 +42,14 @@ Rectangle {
             focus: true
             text: textContent
             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+            onTextChanged: {
+                if (completeTimer.running) {
+                    completeTimer.restart();
+                    return;
+                }
+
+                completeTimer.start();
+            }
 
             Text {
                 text: placeholder
@@ -46,6 +57,17 @@ Rectangle {
                 font.pixelSize: fontSize
                 visible: placeholder && !edit.text
             }
+        }
+    }
+
+    Timer {
+        id: completeTimer
+        repeat: false
+        running: false
+        interval: 2000
+        onTriggered: {
+            completeEditing();
+            completeTimer.stop();
         }
     }
 }

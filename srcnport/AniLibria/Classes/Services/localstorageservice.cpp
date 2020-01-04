@@ -279,36 +279,33 @@ QString LocalStorageService::getRelease(int id)
 QString LocalStorageService::getReleasesByFilter(int page, QString title, int section)
 {
     QSqlQuery query;
-
-    int startIndex = (page - 1) * 12;
+    int pageSize = 12;
+    int startIndex = (page - 1) * pageSize;
 
     QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
     request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` FROM `Releases` ";
-    if (!title.isEmpty() || section > 0) request += "WHERE ";
-
-    QStringList filters;
-
-    if (!title.isEmpty()) filters.append(" `Title`= '%" + title + "%' ");
-
-    switch(section) {
-        case 1: {
-            QStringList userFavorites = getAllFavorites();
-
-            filters.append(" `ReleaseId` IN (" + userFavorites.join(",") + ") ");
-        } break;
-        case 0:
-        default: break;
-    }
-
-    if (!filters.isEmpty()) request += filters.join(" AND ");
-
-    request += " ORDER BY `Timestamp` DESC LIMIT " + QString::number(startIndex) + ",12";
+    request += " ORDER BY `Timestamp` DESC";
     query.exec(request);
 
     QJsonArray releases;
 
+    QStringList userFavorites = getAllFavorites();
+
+    //WORKAROUND: because unicode `LIKE` and `ORDER` don't work correctly I did all in c++
+    int index = -1;
     while (query.next())
     {
+        if (!title.isEmpty() && !query.value("Title").toString().toLower().contains(title.toLower())) continue;
+
+        if (section == 1) {
+            auto releaseId = query.value("Releaseid").toInt();
+            if (!userFavorites.contains(QString::number(releaseId))) continue;
+        }
+
+        index++;
+        if (index < startIndex) continue;
+        if (releases.count() == pageSize) continue;
+
         FullReleaseModel release;
         release.fromDatabase(query);
         QJsonObject jsonValue;
