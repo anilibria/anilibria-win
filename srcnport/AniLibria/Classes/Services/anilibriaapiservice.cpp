@@ -2,8 +2,8 @@
 #include <QtNetwork>
 #include <QtDebug>
 
-//const QString AnilibriaApiService::apiAddress = "https://anilibriasmartservice.azurewebsites.net/";
-const QString AnilibriaApiService::apiAddress = "http://localhost:5001/";
+const QString AnilibriaApiService::apiAddress = "https://anilibriasmartservice.azurewebsites.net/";
+//const QString AnilibriaApiService::apiAddress = "http://localhost:5001/";
 
 AnilibriaApiService::AnilibriaApiService(QObject *parent) : QObject(parent)
 {
