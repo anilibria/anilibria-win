@@ -13,6 +13,7 @@ SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent
     connect(m_AnilibriaApiService,&AnilibriaApiService::signoutReceived,this,&SynchronizationService::handleSignout);
     connect(m_AnilibriaApiService,&AnilibriaApiService::userDataReceived,this,&SynchronizationService::handleUserData);
     connect(m_AnilibriaApiService,&AnilibriaApiService::userFavoritesReceived,this,&SynchronizationService::handleUserFavorites);
+    connect(m_AnilibriaApiService,&AnilibriaApiService::userFavoritesUpdated,this,&SynchronizationService::handleEditUserFavorites);
 }
 
 void SynchronizationService::synchronizeReleases()
@@ -43,6 +44,16 @@ void SynchronizationService::getUserData(QString token)
 void SynchronizationService::synchronizeUserFavorites(QString token)
 {
     m_AnilibriaApiService->getFavorites(token);
+}
+
+void SynchronizationService::addUserFavorites(QString token, QString ids)
+{
+    m_AnilibriaApiService->addMultiFavorites(token,ids);
+}
+
+void SynchronizationService::removeUserFavorites(QString token, QString ids)
+{
+    m_AnilibriaApiService->removeMultiFavorites(token,ids);
 }
 
 void SynchronizationService::saveReleasesToCache(QString data)
@@ -93,4 +104,9 @@ void SynchronizationService::handleUserData(QString data)
 void SynchronizationService::handleUserFavorites(QString data)
 {
     emit userFavoritesReceived(data);
+}
+
+void SynchronizationService::handleEditUserFavorites()
+{
+    emit userFavoritesEdited();
 }

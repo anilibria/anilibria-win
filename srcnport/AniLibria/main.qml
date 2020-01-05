@@ -130,6 +130,10 @@ ApplicationWindow {
             releases.refreshFavorites(JSON.parse(data));
             localStorage.updateFavorites(data);
         }
+
+        onUserFavoritesEdited: {
+            if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(encodeURIComponent(applicationSettings.userToken));
+        }
     }
 
     Drawer {

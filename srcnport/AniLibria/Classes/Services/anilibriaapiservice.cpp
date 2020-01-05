@@ -81,6 +81,27 @@ void AnilibriaApiService::getFavorites(QString token)
     networkManager->get(request);
 }
 
+void AnilibriaApiService::addMultiFavorites(QString token, QString ids)
+{
+    auto networkManager = new QNetworkAccessManager(this);
+    QNetworkRequest request(QUrl(AnilibriaApiService::apiAddress + "api/auth/addmultifavorites?token=" + token + "&ids=" + ids ));
+
+    connect(networkManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(editFavoritesResponse(QNetworkReply*)));
+
+    networkManager->get(request);
+
+}
+
+void AnilibriaApiService::removeMultiFavorites(QString token, QString ids)
+{
+    auto networkManager = new QNetworkAccessManager(this);
+    QNetworkRequest request(QUrl(AnilibriaApiService::apiAddress + "api/auth/removemultifavorites?token=" + token + "&ids=" + ids ));
+
+    connect(networkManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(editFavoritesResponse(QNetworkReply*)));
+
+    networkManager->get(request);
+}
+
 void AnilibriaApiService::getAllReleasesResponse(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::TimeoutError) return;
@@ -137,4 +158,13 @@ void AnilibriaApiService::getUserFavoritesResponse(QNetworkReply *reply)
     if (reply->error() == QNetworkReply::HostNotFoundError) return;
 
     emit userFavoritesReceived(reply->readAll());
+}
+
+void AnilibriaApiService::editFavoritesResponse(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::TimeoutError) return;
+    if (reply->error() == QNetworkReply::ProtocolFailure) return;
+    if (reply->error() == QNetworkReply::HostNotFoundError) return;
+
+    emit userFavoritesUpdated();
 }

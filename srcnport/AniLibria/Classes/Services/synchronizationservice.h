@@ -21,6 +21,8 @@ public:
     Q_INVOKABLE void signout(QString token);
     Q_INVOKABLE void getUserData(QString token);
     Q_INVOKABLE void synchronizeUserFavorites(QString token);
+    Q_INVOKABLE void addUserFavorites(QString token, QString ids);
+    Q_INVOKABLE void removeUserFavorites(QString token, QString ids);
 signals:
     void synchronizedReleases(QString data);
     void synchronizationCompleted();
@@ -31,6 +33,7 @@ signals:
     void userSignouted();
     void userDataReceived(QString data);
     void userFavoritesReceived(QString data);
+    void userFavoritesEdited();
 
 public slots:
     void saveReleasesToCache(QString data);
@@ -39,6 +42,7 @@ public slots:
     void handleSignout();
     void handleUserData(QString data);
     void handleUserFavorites(QString data);
+    void handleEditUserFavorites();
 };
 
 #endif // SYNCHRONIZATIONSERVICE_H

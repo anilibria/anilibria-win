@@ -17,6 +17,7 @@ Page {
     property int pageIndex: 1
     property bool isBusy: false
     property var openedRelease: null
+    property bool runRefreshFavorties: false
     property bool synchronizeEnabled: false
     property int selectedSection: 0
     property var sections: ["Все релизы", "Избранное", "Новые релизы", "Новые серии", "Обновленные торренты"]
@@ -37,6 +38,11 @@ Page {
 
     onRefreshFavorites: {
         favoriteReleases = userFavorites;
+
+        if (page.runRefreshFavorties && page.selectedReleases.length) {
+            page.runRefreshFavorties = false;
+            page.selectedReleases = [];
+        }
     }
 
     background: Rectangle {
@@ -90,12 +96,21 @@ Page {
                     iconWidth: 29
                     iconHeight: 29
                     onButtonPressed: {
-                        messagePopup.open();
-                        /*if (!window.userModel.login) {
+                        if (!page.selectedReleases.length) {
+                            favoritePopupHeader.text = "Избранное не доступно";
+                            favoritePopupMessage.text = "Выберите релизы в списке путем изменения переключателя выше списка на множественный режим и нажатием ЛКМ на интересующих релизах в списке. Выбранные релизы подсвечиваются красной рамкой.";
                             messagePopup.open();
-                        } else {
-                            favoriteMenu.open();
-                        }*/
+                            return;
+                        }
+
+                        if (!window.userModel.login) {
+                            favoritePopupHeader.text = "Избранное не доступно";
+                            favoritePopupMessage.text = "Чтобы добавлять в избранное нужно вначале авторизоваться. Для этого перейдите на страницу Войти в меню и войдите под данными своего аккаунта. Если вы не зарегистрированы то необходимо сделать это на сайте, ссылка на сайт будет на странице Войти.";
+                            messagePopup.open();
+                            return;
+                        }
+
+                        favoriteMenu.open();
                     }
 
                     Menu {
@@ -106,42 +121,51 @@ Page {
                             font.pixelSize: 14
                             text: "Добавить в избранное"
                             onPressed: {
-
+                                page.runRefreshFavorties = true;
+                                synchronizationService.addUserFavorites(applicationSettings.userToken, page.selectedReleases.join(','));
                             }
                         }
                         MenuItem {
                             font.pixelSize: 14
                             text: "Удалить из избранного"
                             onPressed: {
+                                page.runRefreshFavorties = true;
+                                synchronizationService.removeUserFavorites(applicationSettings.userToken, page.selectedReleases.join(','));
                             }
                         }
                     }
 
                     Popup {
                         id: messagePopup
-                        x: window.width / 2 - 150
+                        x: window.width / 2 - 225
                         y: window.height / 2 - 100
-                        width: 300
-                        height: 200
+                        width: 450
+                        height: 150
                         modal: true
                         focus: true
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
                         Column {
                             width: parent.width
+                            spacing: 10
                             Text {
-                                width: messagePopup.width
+                                id: favoritePopupHeader
+                                width: messagePopup.width - 20
                                 font.pixelSize: 14
                                 font.bold: true
-                                wrapMode: Text.WordWrap
-                                text: "Избранное не доступно"
+                                elide: Text.ElideRight
                             }
 
-                            Text {
-                                width: messagePopup.width
-                                font.pixelSize: 12
-                                wrapMode: Text.WordWrap
-                                text: "Чтобы добавлять в избранное нужно вначале авторизоваться"
+                            Rectangle {
+                                width: messagePopup.width - 20
+                                height: messagePopup.height - 50
+                                Text {
+                                    id: favoritePopupMessage
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: parent.width
+                                    font.pixelSize: 12
+                                    wrapMode: Text.WordWrap
+                                }
                             }
                         }
                     }
@@ -161,6 +185,7 @@ Page {
                 color: "#808080"
                 Row {
                     Switch {
+                        id: multupleMode
                         onCheckedChanged: {
                             page.selectMode = checked;
                             if (!checked) {
@@ -321,11 +346,17 @@ Page {
                                 MouseArea {
                                     width: 480
                                     height: 260
+                                    acceptedButtons: Qt.LeftButton | Qt.RightButton
                                     onClicked: {
+                                        if(mouse.button & Qt.RightButton) {
+                                            multupleMode.checked = !multupleMode.checked;
+                                            return;
+                                        }
+
                                         if (page.openedRelease) return;
 
                                         page.selectItem(modelData);
-                                    }
+                                    }                                    
                                 }
                                 Grid {
                                     columnSpacing: 3
