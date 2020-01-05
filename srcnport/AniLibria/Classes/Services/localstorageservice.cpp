@@ -259,7 +259,7 @@ QStringList LocalStorageService::getAllFavorites()
 
 QString LocalStorageService::getRelease(int id)
 {
-    QSqlQuery query;
+    QSqlQuery query(m_Database);
 
     query.prepare("SELECT * FROM `Releases` WHERE `ReleaseId` = ?");
 
@@ -278,7 +278,7 @@ QString LocalStorageService::getRelease(int id)
 
 QString LocalStorageService::getReleasesByFilter(int page, QString title, int section)
 {
-    QSqlQuery query;
+    QSqlQuery query(m_Database);
     int pageSize = 12;
     int startIndex = (page - 1) * pageSize;
 
