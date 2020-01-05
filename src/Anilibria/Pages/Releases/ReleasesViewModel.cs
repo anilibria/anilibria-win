@@ -413,7 +413,7 @@ namespace Anilibria.Pages.Releases {
 			RefreshReleasesCache ();
 			var needRefresh = RefreshNotification ( needSendToasts: true );
 
-			if ( !m_Collection.Any () ) needRefresh = true;
+			if ( m_Collection != null && !m_Collection.Any () ) needRefresh = true;
 
 			if ( needRefresh || m_IsDirectRefreshing ) {
 				m_IsDirectRefreshing = false;
@@ -422,6 +422,8 @@ namespace Anilibria.Pages.Releases {
 				RefreshSelectedReleases ();
 			}
 			else {
+				if ( m_Collection == null ) return;
+
 				foreach ( var releaseItem in m_Collection ) {
 					var originalRelease = m_AllReleases.FirstOrDefault ( a => a.Id == releaseItem.Id );
 					if ( originalRelease == null ) continue;
