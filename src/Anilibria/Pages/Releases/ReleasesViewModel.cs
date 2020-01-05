@@ -1247,10 +1247,14 @@ namespace Anilibria.Pages.Releases {
 			if ( localFavorites != null && localFavorites.Releases != null ) m_Favorites = favorites.Concat ( localFavorites.Releases );
 
 			if ( GroupedGridVisible ) {
-				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
+				if ( m_GroupingCollection != null ) {
+					foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
+				}
 			}
 			else {
-				foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
+				if ( m_Collection != null ) {
+					foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
+				}
 			}
 
 			IsAuthorized = m_AnilibriaApiService.IsAuthorized ();
