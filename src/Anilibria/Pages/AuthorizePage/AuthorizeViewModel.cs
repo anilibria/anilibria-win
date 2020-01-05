@@ -57,13 +57,15 @@ namespace Anilibria.Pages.AuthorizePage {
 					RefreshOptions?.Invoke ();
 					await ChangeUserSession ();
 
-					ObserverEvents.FireEvent (
-						"showMessage" ,
-						new MessageModel {
-							Header = "Авторизация" ,
-							Message = "Вы успешно вошли в аккаунт"
-						}
-					);
+					if ( m_AnilibriaApiService.IsAuthorized() ) {
+						ObserverEvents.FireEvent (
+							"showMessage" ,
+							new MessageModel {
+								Header = "Авторизация" ,
+								Message = "Вы успешно вошли в аккаунт"
+							}
+						);
+					}
 				}
 				else {
 					ErrorMessage = message;
