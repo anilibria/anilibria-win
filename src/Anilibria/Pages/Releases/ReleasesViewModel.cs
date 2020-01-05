@@ -1059,7 +1059,7 @@ namespace Anilibria.Pages.Releases {
 			var onlineSeriesReleases = Enumerable.Empty<ReleaseEntity> ();
 			if ( m_Changes.NewOnlineSeries.Any () ) {
 				var ids = m_Changes.NewOnlineSeries.Select ( a => a.Key ).ToArray ();
-				onlineSeriesReleases = m_AllReleases.Where ( a => ids.Contains ( a.Id ) );
+				if ( m_AllReleases != null ) onlineSeriesReleases = m_AllReleases.Where ( a => ids.Contains ( a.Id ) );
 			}
 
 			NewReleasesCount = m_Changes.NewReleases.Count ();

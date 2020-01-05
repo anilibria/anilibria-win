@@ -239,7 +239,7 @@ namespace Anilibria.Services.Implementations {
 
 			var userModel = JsonConvert.DeserializeObject<ApiResponse<UserModel>> ( content );
 
-			if ( userModel.Error != null ) {
+			if ( userModel == null || userModel.Error != null ) {
 				SetSession ( null );
 				return null;
 			}
