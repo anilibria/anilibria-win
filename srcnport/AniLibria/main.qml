@@ -62,7 +62,7 @@ ApplicationWindow {
             releases.refreshAllReleases();
 
             synchronizationService.synchronizeSchedule();
-            if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(encodeURIComponent(applicationSettings.userToken));
+            if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(applicationSettings.userToken);
 
             window.synchronizationEnabled = false;
         }
@@ -103,7 +103,7 @@ ApplicationWindow {
             applicationSettings.userToken = token;
             if (window.currentPageId === "authorization") {
                 showPage("release");
-                synchronizationService.getUserData(encodeURIComponent(applicationSettings.userToken));
+                synchronizationService.getUserData(applicationSettings.userToken);
             }
         }
 
@@ -132,7 +132,7 @@ ApplicationWindow {
         }
 
         onUserFavoritesEdited: {
-            if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(encodeURIComponent(applicationSettings.userToken));
+            if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(applicationSettings.userToken);
         }
     }
 
