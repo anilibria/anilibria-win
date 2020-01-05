@@ -551,8 +551,8 @@ namespace Anilibria.Pages.Releases {
 			AddDownloadNotWatchHdAndSdCommand = CreateCommand ( AddDownloadNotWatchHdAndSd , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			RefreshCurrentListCommand = CreateCommand ( RefreshCurrentList );
 			WatchVideoCommand = CreateCommand<ReleaseModel> ( WatchVideo );
-			AddReleaseToFavoritesCommand = CreateCommand<ReleaseModel> ( AddReleaseToFavorites );
-			RemoveReleaseFromFavoritesCommand = CreateCommand<ReleaseModel> ( RemoveReleaseFromFavorites );
+			AddReleaseToFavoritesCommand = CreateCommand<ReleaseModel> ( AddReleaseToFavorites , ( releaseModel ) => m_AnilibriaApiService.IsAuthorized () );
+			RemoveReleaseFromFavoritesCommand = CreateCommand<ReleaseModel> ( RemoveReleaseFromFavorites , ( releaseModel ) => m_AnilibriaApiService.IsAuthorized () );
 			AddSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( AddSeenMarkFromQuickActions );
 			RemoveSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( RemoveSeenMarkFromQuickActions );
 			AddReleasesToCinemaHallCommand = CreateCommand ( AddReleasesToCinemaHall , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
@@ -1244,7 +1244,7 @@ namespace Anilibria.Pages.Releases {
 			var collection = m_DataContext.GetCollection<LocalFavoriteEntity> ();
 			var localFavorites = GetLocalFavorites ( collection );
 
-			if ( localFavorites != null && localFavorites.Releases != null) m_Favorites = favorites.Concat ( localFavorites.Releases );
+			if ( localFavorites != null && localFavorites.Releases != null ) m_Favorites = favorites.Concat ( localFavorites.Releases );
 
 			if ( GroupedGridVisible ) {
 				foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
