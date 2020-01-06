@@ -291,3 +291,4 @@ __pycache__/
 /srcnport/Makefile.Debug
 /srcnport/Makefile
 /srcnport/.qmake.stash
+/srcnport/qml_qmlcache.qrc
