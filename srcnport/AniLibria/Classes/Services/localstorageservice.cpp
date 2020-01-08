@@ -50,14 +50,9 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
     releasesTable += "`MetaData` TEXT NOT NULL";
     releasesTable += ")";
 
-    query.prepare(releasesTable);
-    query.exec();
-
-    query.prepare("CREATE TABLE IF NOT EXISTS `Schedule` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
-    query.exec();
-
-    query.prepare("CREATE TABLE IF NOT EXISTS `Favorites` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
-    query.exec();
+    query.exec(releasesTable);
+    query.exec("CREATE TABLE IF NOT EXISTS `Schedule` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
+    query.exec("CREATE TABLE IF NOT EXISTS `Favorites` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
 
     connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
 }
@@ -346,9 +341,20 @@ QString LocalStorageService::getSchedule()
 void LocalStorageService::updateFavorites(QString data)
 {
     QSqlQuery query(m_Database);
-    query.prepare("INSERT INTO `Favorites`(`Metadata`) VALUES (?)");
-    query.bindValue(0, data);
-    query.exec();
+
+    query.exec("SELECT * FROM `Favorites`");
+
+    if (!query.next()) {
+        QSqlQuery query(m_Database);
+        query.prepare("INSERT INTO `Favorites`(`Metadata`) VALUES (?)");
+        query.bindValue(0, data);
+        query.exec();
+    } else {
+        QSqlQuery query(m_Database);
+        query.prepare("UPDATE `Favorites` SET `Metadata`= ?");
+        query.bindValue(0, data);
+        query.exec();
+    }
 }
 
 void LocalStorageService::allReleasesUpdated()

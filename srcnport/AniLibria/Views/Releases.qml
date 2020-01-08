@@ -198,7 +198,7 @@ Page {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: page.synchronizeEnabled
-                        font.pointSize: 12
+                        font.pointSize: /*Qt.platform.os === `osx` ? 18 :*/ 12
                         text: "Выполняется синхронизация..."
                     }
                 }
