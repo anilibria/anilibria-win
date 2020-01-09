@@ -94,7 +94,13 @@ Page {
     MediaPlayer {
         id: player
         source: _page.videoSource
-        autoPlay: false
+        autoPlay: true
+        onPlaying: {
+            console.log("playing changed");
+        }
+        onStopped: {
+            console.log("stopped changed");
+        }
         onPlaybackStateChanged: {
             playButton.visible = playbackState === MediaPlayer.PausedState || playbackState === MediaPlayer.StoppedState;
             pauseButton.visible = playbackState === MediaPlayer.PlayingState;
@@ -109,8 +115,21 @@ Page {
             volumeSlider.value = volume * 100;
         }
         onStatusChanged: {
-            if (status === MediaPlayer.Buffered && _page.restorePosition > 0) {
+            if (status === MediaPlayer.Loading) {
+                //show loading progress
+            }
+
+            if (status === MediaPlayer.EndOfMedia) {
+                //handle end of media
+            }
+
+            if (status === MediaPlayer.InvalidMedia) {
+                //handle error media
+            }
+
+            if (status === MediaPlayer.Buffered && _page.restorePosition > 0) {                
                 player.seek(_page.restorePosition);
+                //player.play();
             }
         }
 
@@ -257,9 +276,8 @@ Page {
 
                             const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
 
+                            player.stop();
                             _page.videoSource = video[_page.videoQuality];
-                            player.play();
-
                         }
                     }
                     ToggleButton {
@@ -273,8 +291,8 @@ Page {
 
                             const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
 
+                            player.stop();
                             _page.videoSource = video[_page.videoQuality];
-                            player.play();
                         }
                     }
                     ToggleButton {
@@ -288,8 +306,8 @@ Page {
 
                             const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
 
+                            player.stop();
                             _page.videoSource = video[_page.videoQuality];
-                            player.play();
                         }
                     }
                 }
