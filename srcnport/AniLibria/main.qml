@@ -117,6 +117,11 @@ ApplicationWindow {
         onUserDataReceived: {
             const userData = JSON.parse(data);
             window.userModel = userData;
+            if (window.userModel != null) {
+                var ids = localStorage.getFavorites().map(a => a);
+                releases.refreshFavorites(ids);
+            }
+
             window.notVisibleSignin = true;
         }
 

@@ -45,5 +45,7 @@
         <file>Assets/Icons/logout.svg</file>
         <file>Assets/Icons/notification.svg</file>
         <file>Assets/Icons/allreleases.svg</file>
+        <file>Assets/Icons/online.svg</file>
+        <file>Assets/Icons/utorrent.svg</file>
     </qresource>
 </RCC>

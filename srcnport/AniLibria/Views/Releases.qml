@@ -37,7 +37,7 @@ Page {
     }
 
     onRefreshFavorites: {
-        favoriteReleases = userFavorites;
+        page.favoriteReleases = userFavorites;
 
         if (page.runRefreshFavorties && page.selectedReleases.length) {
             page.runRefreshFavorties = false;
@@ -435,6 +435,34 @@ Page {
                                                 maximumLineCount: 2
                                                 text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voices)
                                             }
+                                            Row {
+                                                leftPadding: 8
+                                                topPadding: 4
+                                                Image {
+                                                    mipmap: true
+                                                    source: '../Assets/Icons/online.svg'
+                                                    width: 22
+                                                    height: 22
+                                                }
+                                                Text {
+                                                    leftPadding: 4
+                                                    rightPadding: 4
+                                                    font.pixelSize: 18
+                                                    text: '' + modelData.countVideos
+                                                }
+                                                Image {
+                                                    mipmap: true
+                                                    source: '../Assets/Icons/utorrent.svg'
+                                                    width: 22
+                                                    height: 22
+                                                }
+                                                Text {
+                                                    leftPadding: 4
+                                                    rightPadding: 4
+                                                    font.pixelSize: 18
+                                                    text: '' + modelData.countTorrents
+                                                }
+                                            }
                                         }
                                         Rectangle {
                                             color: "transparent"
@@ -702,9 +730,9 @@ Page {
         page.selectedSection = section;
 
         refreshAllReleases();
-    }    
+    }
 
     Component.onCompleted: {
-        refreshAllReleases();        
+        refreshAllReleases();
     }
 }

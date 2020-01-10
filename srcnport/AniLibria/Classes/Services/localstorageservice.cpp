@@ -357,6 +357,15 @@ void LocalStorageService::updateFavorites(QString data)
     }
 }
 
+QList<int> LocalStorageService::getFavorites()
+{
+    auto favorites = getAllFavorites();
+    QList<int> ids;
+    foreach(auto favorite, favorites) ids.append(favorite.toInt());
+
+    return ids;
+}
+
 void LocalStorageService::allReleasesUpdated()
 {
     emit allReleasesFinished();
