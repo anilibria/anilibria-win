@@ -95,8 +95,17 @@ ApplicationWindow {
                 //TODO: handle error situation
             }
 
-            const scheduleItems = jsonData.data.items;
-            localStorage.setSchedule(JSON.stringify(scheduleItems));
+            const scheduleItems = jsonData.data;
+            const scheduleResult = {};
+            for (const scheduleItem of scheduleItems) {
+                for (const dayitem of scheduleItem.items) {
+                    scheduleResult[dayitem.id] = scheduleItem.day;
+                }
+            }
+
+            localStorage.setSchedule(JSON.stringify(scheduleResult));
+
+            releases.refreshReleaseSchedules();
         }
 
         onUserCompleteAuthentificated: {
