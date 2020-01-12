@@ -14,6 +14,7 @@ Page {
     property var selectedReleases: []
     property var displayedReleases: []
     property var favoriteReleases: []
+    property var scheduledReleases: ({})
     property int pageIndex: 1
     property bool isBusy: false
     property var openedRelease: null
@@ -26,6 +27,7 @@ Page {
     signal watchRelease(int releaseId, string videos)
     signal refreshReleases()
     signal refreshFavorites(var userFavorites)
+    signal refreshReleaseSchedules()
 
     onWidthChanged: {
         const columnCount = parseInt(page.width / 520);
@@ -36,8 +38,12 @@ Page {
         refreshAllReleases();
     }
 
+    onRefreshReleaseSchedules: {
+        refreshSchedule();
+    }
+
     onRefreshFavorites: {
-        favoriteReleases = userFavorites;
+        page.favoriteReleases = userFavorites;
 
         if (page.runRefreshFavorties && page.selectedReleases.length) {
             page.runRefreshFavorties = false;
@@ -198,7 +204,7 @@ Page {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: page.synchronizeEnabled
-                        font.pointSize: 12
+                        font.pointSize: /*Qt.platform.os === `osx` ? 18 :*/ 12
                         text: "Выполняется синхронизация..."
                     }
                 }
@@ -435,6 +441,34 @@ Page {
                                                 maximumLineCount: 2
                                                 text: qsTr("<b>Озвучка:</b> ") + qsTr(modelData.voices)
                                             }
+                                            Row {
+                                                leftPadding: 8
+                                                topPadding: 4
+                                                Image {
+                                                    mipmap: true
+                                                    source: '../Assets/Icons/online.svg'
+                                                    width: 22
+                                                    height: 22
+                                                }
+                                                Text {
+                                                    leftPadding: 4
+                                                    rightPadding: 4
+                                                    font.pixelSize: 18
+                                                    text: '' + modelData.countVideos
+                                                }
+                                                Image {
+                                                    mipmap: true
+                                                    source: '../Assets/Icons/utorrent.svg'
+                                                    width: 22
+                                                    height: 22
+                                                }
+                                                Text {
+                                                    leftPadding: 4
+                                                    rightPadding: 4
+                                                    font.pixelSize: 18
+                                                    text: '' + modelData.countTorrents
+                                                }
+                                            }
                                         }
                                         Rectangle {
                                             color: "transparent"
@@ -538,6 +572,14 @@ Page {
                             topPadding: 4
                             text: qsTr("<b>Год:</b> ") + qsTr(page.openedRelease ? page.openedRelease.year : '')
                         }
+                        Text {
+                            visible: page.openedRelease && page.openedRelease.id && !!page.scheduledReleases[page.openedRelease.id]
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
+                            text: qsTr("<b>В расписании:</b> ") + (page.openedRelease && page.scheduledReleases[page.openedRelease.id] ? getScheduleDay(page.scheduledReleases[page.openedRelease.id]) : '')
+                        }
+
                         Text {
                             font.pointSize: 10
                             leftPadding: 8
@@ -702,9 +744,29 @@ Page {
         page.selectedSection = section;
 
         refreshAllReleases();
-    }    
+    }
+
+    function refreshSchedule() {
+        const schedule = localStorage.getSchedule();
+        if (schedule) page.scheduledReleases = JSON.parse(schedule);
+    }
+
+    function getScheduleDay(dayNumber) {
+        const day = parseInt(dayNumber);
+        switch (day){
+            case 1: return "понедельник";
+            case 2: return "вторник";
+            case 3: return "среда";
+            case 4: return "четверг";
+            case 5: return "пятница";
+            case 6: return "суббота";
+            case 7: return "воскресенье";
+        }
+        return "---";
+    }
 
     Component.onCompleted: {
-        refreshAllReleases();        
+        refreshAllReleases();
+        refreshSchedule();
     }
 }

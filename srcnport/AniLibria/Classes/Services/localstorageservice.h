@@ -31,6 +31,7 @@ public:
     Q_INVOKABLE void setSchedule(QString schedule);
     Q_INVOKABLE QString getSchedule();
     Q_INVOKABLE void updateFavorites(QString data);
+    Q_INVOKABLE QList<int> getFavorites();
 
 signals:
     void allReleasesFinished();
