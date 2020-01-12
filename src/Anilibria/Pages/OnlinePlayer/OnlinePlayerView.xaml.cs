@@ -66,7 +66,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ChangePosition = ChangePosition ,
 				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist ,
 				SetVisiblePlaybackButtons = SetVisiblePlaybackButtons ,
-				ChangeOpenPlaylistButton = ChangeOpenPlaylistButton
+				ChangeOpenPlaylistButton = ChangeOpenPlaylistButton,
+				ChangePlaybackRate = ChangePlaybackRate
 			};
 			DataContext = m_ViewModel;
 			OnlinePlayer.MediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
@@ -114,6 +115,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
 			Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+		}
+
+		private void ChangePlaybackRate ( double rate ) {
+			OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackRate = rate;
 		}
 
 		private void SetVisiblePlaybackButtons ( bool visible ) {

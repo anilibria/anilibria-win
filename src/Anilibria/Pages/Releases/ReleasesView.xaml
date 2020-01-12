@@ -1416,6 +1416,17 @@
 										Как пользоваться кинозалом?
 									</Hyperlink>
 								</TextBlock>
+								<TextBlock
+									Foreground="#a32727"
+									Margin="0 4 0 0"
+									converters:TextBlockHighlight.HyperLinkHightlight="True">
+									<Hyperlink
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+										NavigateUri="https://github.com/anilibria/anilibria-win/blob/master/doc/video-issues.md">
+										Видео тормозит/не работает?
+									</Hyperlink>
+								</TextBlock>
+								
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>

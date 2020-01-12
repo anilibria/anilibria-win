@@ -1124,6 +1124,11 @@
 												<StackPanel
 													Orientation="Horizontal"
 													HorizontalAlignment="Center">
+													<TextBlock
+														x:Name="QualityText"
+														Margin="0 0 4 0">
+														Качество
+													</TextBlock>
 													<ToggleButton
 														IsTabStop="False"
 														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsExistsFullHD}"
@@ -1151,6 +1156,49 @@
 														FontSize="{ThemeResource MTCMediaFontSize}"
 														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsSD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 														480p
+													</ToggleButton>
+													<TextBlock
+														x:Name="SpeedText"
+														Margin="10 0 0 0">
+														Скорость
+													</TextBlock>
+													<ToggleButton
+														Margin="4 0 0 0"
+														IsTabStop="False"
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsExistsFullHD}"
+														Style="{StaticResource QualityToggleButton}"
+														Foreground="Black"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsNormalSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														Обычная
+													</ToggleButton>
+													<ToggleButton
+														IsTabStop="False"
+														Style="{StaticResource QualityToggleButton}"
+														Foreground="Black"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is2xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x2
+													</ToggleButton>
+													<ToggleButton
+														IsTabStop="False"
+														Style="{StaticResource QualityToggleButton}"
+														Foreground="Black"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is3xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x3
+													</ToggleButton>
+													<ToggleButton
+														IsTabStop="False"
+														Style="{StaticResource QualityToggleButton}"
+														Foreground="Black"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is4xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x4
 													</ToggleButton>
 												</StackPanel>
 												<TextBlock x:Name='TimeRemainingElement'
@@ -1801,6 +1849,8 @@
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="14" />
+						<Setter Target="QualityText.Visibility" Value="Collapsed" />
+						<Setter Target="SpeedText.Visibility" Value="Collapsed" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="14" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="14" />
 						<Setter Target="CurrentVideoDuration.FontSize" Value="14" />
@@ -1812,6 +1862,8 @@
 						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
+						<Setter Target="QualityText.Visibility" Value="Collapsed" />
+						<Setter Target="SpeedText.Visibility" Value="Collapsed" />
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="12" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="12" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="12" />
