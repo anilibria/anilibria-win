@@ -1,6 +1,6 @@
 #include <windows.h>
 
-IDI_ICON1	ICON	DISCARDABLE	"D:\\romanus\\work\\AnilibriaClient\\anilibria-win\\srcnport\\AniLibria\\anilibriaicon.ico"
+IDI_ICON1	ICON	DISCARDABLE	"D:\\romanus\\work\\AnilibriaClient\\anilibria-win\\srcnport\\AniLibria\\fullsizesicon.ico"
 
 VS_VERSION_INFO VERSIONINFO
 	FILEVERSION 0,0,0,0
