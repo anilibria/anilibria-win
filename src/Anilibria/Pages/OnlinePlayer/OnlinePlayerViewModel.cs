@@ -711,6 +711,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							if ( release != null ) {
 								m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
 								SelectedRelease = MapToReleaseModel ( release );
+								Releases = new List<ReleaseModel> { SelectedRelease };
 								SetDownloadedPaths ( SelectedRelease.Id , SelectedRelease.OnlineVideos );
 								OnlineVideos = new ObservableCollection<OnlineVideoModel> ( SelectedRelease.OnlineVideos );
 								SelectedOnlineVideo = SelectedRelease.OnlineVideos?.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
