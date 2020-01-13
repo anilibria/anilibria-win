@@ -327,6 +327,9 @@ namespace Anilibria.Pages.Releases {
 			await Launcher.LaunchFileAsync ( file );
 		}
 
+		private void OpenInExternalPlayer_Tapped ( object sender , TappedRoutedEventArgs e ) {
+			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+		}
 	}
 
 }

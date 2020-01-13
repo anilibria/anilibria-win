@@ -587,6 +587,43 @@ namespace Anilibria.Converters {
 
 		public static string GetOpenEyeIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( OpenEyeIconProperty );
 
+		public static readonly DependencyProperty ExternalLinkIconProperty =
+			DependencyProperty.RegisterAttached (
+				"ExternalLinkIcon" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , ExternalLinkIconChanged )
+			);
+
+		private static void SetExternalLinkIconStyle ( DependencyObject element , string themeName ) {
+			var menuFlyout = (ExternalLinkIcon) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 0 , 0 , 0 ) );
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					menuFlyout.IconColor = new SolidColorBrush ( Color.FromArgb ( 255 , 255 , 255 , 255 ) );
+					break;
+			}
+		}
+
+		private static void ExternalLinkIconChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetExternalLinkIconStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				"ExternalLinkIcon" ,
+				element ,
+				( string name , DependencyObject target ) => SetExternalLinkIconStyle ( target , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetExternalLinkIcon ( DependencyObject closeIcon , string value ) => closeIcon.SetValue ( ExternalLinkIconProperty , value );
+
+		public static string GetExternalLinkIcon ( DependencyObject closeIcon ) => (string) closeIcon.GetValue ( ExternalLinkIconProperty );
+
+
 		public static readonly DependencyProperty AnilibriaComboBoxProperty =
 			DependencyProperty.RegisterAttached (
 				"AnilibriaComboBox" ,
