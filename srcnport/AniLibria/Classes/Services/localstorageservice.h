@@ -21,6 +21,8 @@ private:
     void insertRelease(ReleaseModel& releaseModel);
     void updateRelease(ReleaseModel& releaseModel);
     QStringList getAllFavorites();
+    QMap<int, int> getScheduleAsMap();
+
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
     ~LocalStorageService();

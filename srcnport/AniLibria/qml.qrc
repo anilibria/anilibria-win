@@ -47,5 +47,6 @@
         <file>Assets/Icons/allreleases.svg</file>
         <file>Assets/Icons/online.svg</file>
         <file>Assets/Icons/utorrent.svg</file>
+        <file>Assets/Icons/calendar.svg</file>
     </qresource>
 </RCC>
