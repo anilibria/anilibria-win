@@ -17,6 +17,7 @@ Page {
     property string videoQuality: "sd"
     property string displayVideoPosition: "00:00:00"
     property string displayEndVideoPosition: "00:00:00"
+    property bool isBuffering: false
 
     signal navigateFrom()
     signal setReleaseVideo(int releaseId, int seriaOrder, string videos)
@@ -116,6 +117,7 @@ Page {
         }
         onStatusChanged: {
             if (status === MediaPlayer.Loading) {
+                _page.isBuffering = true;
                 //show loading progress
             }
 
@@ -127,9 +129,13 @@ Page {
                 //handle error media
             }
 
-            if (status === MediaPlayer.Buffered && _page.restorePosition > 0) {                
-                player.seek(_page.restorePosition);
-                //player.play();
+            if (status === MediaPlayer.Buffering) {
+                _page.isBuffering = true;
+            }
+
+            if (status === MediaPlayer.Buffered) {
+                _page.isBuffering = false;
+                if (_page.restorePosition > 0) player.seek(_page.restorePosition);
             }
         }
 
@@ -374,13 +380,7 @@ Page {
                         iconWidth: 24
                         iconHeight: 24
                         onButtonPressed: {
-                            if (_page.selectedVideo === 1) return;
-
-                            _page.selectedVideo--;
-                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
-                            _page.isFullHdAllowed = "fullhd" in video;
-
-                            _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+                            _page.previousVideo();
                         }
                     }
                     IconButton {
@@ -415,13 +415,7 @@ Page {
                         iconWidth: 24
                         iconHeight: 24
                         onButtonPressed: {
-                            if (_page.selectedVideo === _page.releaseVideos.length) return;
-
-                            _page.selectedVideo++;
-                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
-                            _page.isFullHdAllowed = "fullhd" in video;
-
-                            _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+                            _page.nextVideo();
                         }
                     }
                 }
@@ -456,6 +450,43 @@ Page {
         Behavior on opacity {
             NumberAnimation { duration: 200 }
         }
+    }
+
+    Rectangle {
+        width: 80
+        height: 80
+        color: "white"
+        radius: 20
+        opacity: 0.8
+        visible: _page.isBuffering
+        anchors.centerIn: parent
+        AnimatedImage {
+            id: spinner
+            anchors.centerIn: parent
+            source: "../Assets/Icons/spinner.gif"
+        }
+    }
+
+    function previousVideo() {
+        if (_page.selectedVideo === 1) return;
+        _page.restorePosition = 0;
+
+        _page.selectedVideo--;
+        const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+        _page.isFullHdAllowed = "fullhd" in video;
+
+        _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+    }
+
+    function nextVideo() {
+        if (_page.selectedVideo === _page.releaseVideos.length) return;
+        _page.restorePosition = 0;
+
+        _page.selectedVideo++;
+        const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+        _page.isFullHdAllowed = "fullhd" in video;
+
+        _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
     }
 
     Component.onCompleted: {

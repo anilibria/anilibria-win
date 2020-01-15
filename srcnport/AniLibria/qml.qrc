@@ -48,5 +48,6 @@
         <file>Assets/Icons/online.svg</file>
         <file>Assets/Icons/utorrent.svg</file>
         <file>Assets/Icons/calendar.svg</file>
+        <file>Assets/Icons/spinner.gif</file>
     </qresource>
 </RCC>
