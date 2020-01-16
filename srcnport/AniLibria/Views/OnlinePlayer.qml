@@ -23,6 +23,17 @@ Page {
     signal setReleaseVideo(int releaseId, int seriaOrder, string videos)
     signal changeFullScreenMode(bool fullScreen)
 
+    Keys.onSpacePressed: {
+
+        if (player.playbackState === MediaPlayer.PlayingState) {
+            player.pause();
+            return;
+        }
+        if (player.playbackState === MediaPlayer.PausedState || player.playbackState === MediaPlayer.StoppedState) {
+            player.play();
+        }
+    }
+
     onNavigateFrom: {
         player.pause();
     }
@@ -41,10 +52,16 @@ Page {
                 return left.id > right.id ? 1 : -1;
             }
         );
+        let iterator = -1;
+        releaseVideos.forEach(
+            a => {
+                a.order = ++iterator;
+            }
+        );
 
         _page.releaseVideos = releaseVideos;
         const firstVideo = releaseVideos[0];
-        _page.selectedVideo = firstVideo.id;
+        _page.selectedVideo = firstVideo.order;
         _page.isFullHdAllowed = "fullhd" in firstVideo;
         if (!firstVideo[_page.videoQuality]) _page.videoQuality = "sd";
 
@@ -126,7 +143,7 @@ Page {
             }
 
             if (status === MediaPlayer.InvalidMedia) {
-                //handle error media
+                console.log("InvalidMedia")
             }
 
             if (status === MediaPlayer.Buffering) {
@@ -135,7 +152,10 @@ Page {
 
             if (status === MediaPlayer.Buffered) {
                 _page.isBuffering = false;
-                if (_page.restorePosition > 0) player.seek(_page.restorePosition);
+                if (_page.restorePosition > 0){
+                    player.seek(_page.restorePosition);
+                    _page.restorePosition = 0;
+                }
             }
         }
 
@@ -150,15 +170,6 @@ Page {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: {            
-            if (player.playbackState === MediaPlayer.PlayingState) {
-                player.pause();
-                return;
-            }
-            if (player.playbackState === MediaPlayer.PausedState || player.playbackState === MediaPlayer.StoppedState) {
-                player.play();
-            }
-        }
         onDoubleClicked: {
             isFullScreen = !isFullScreen;
             changeFullScreenMode(isFullScreen);
@@ -202,18 +213,18 @@ Page {
                         Rectangle {
                             height: 40
                             width: seriesPopup.width
-                            color: _page.selectedVideo === modelData.id ? "#64c25656" : "#C8ffffff"
+                            color: _page.selectedVideo === modelData.order ? "#64c25656" : "#C8ffffff"
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    _page.selectedVideo = modelData.id;
+                                    _page.selectedVideo = modelData.order;
                                     _page.isFullHdAllowed = "fullhd" in modelData;
                                     _page.videoSource = modelData[_page.videoQuality];
                                     player.play();
                                 }
                             }
                             Text {
-                                color: _page.selectedVideo === modelData.id ? "white" : "black"
+                                color: _page.selectedVideo === modelData.order ? "white" : "black"
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
                                 anchors.leftMargin: 10
@@ -280,7 +291,7 @@ Page {
                             _page.videoQuality = `fullhd`;
                             _page.restorePosition = player.position;
 
-                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+                            const video = _page.releaseVideos.find(a => a.order === _page.selectedVideo);
 
                             player.stop();
                             _page.videoSource = video[_page.videoQuality];
@@ -295,7 +306,7 @@ Page {
                             _page.videoQuality = `hd`;
                             _page.restorePosition = player.position;
 
-                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+                            const video = _page.releaseVideos.find(a => a.order === _page.selectedVideo);
 
                             player.stop();
                             _page.videoSource = video[_page.videoQuality];
@@ -310,7 +321,7 @@ Page {
                             _page.videoQuality = `sd`;
                             _page.restorePosition = player.position;
 
-                            const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+                            const video = _page.releaseVideos.find(a => a.order === _page.selectedVideo);
 
                             player.stop();
                             _page.videoSource = video[_page.videoQuality];
@@ -467,15 +478,37 @@ Page {
         }
     }
 
+    function checkExistingVideoQuality() {
+        const video = _page.releaseVideos[_page.selectedVideo];
+        if (video[_page.videoQuality]) {
+            return _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+        } else {
+            if (`sd` in _page.releaseVideos[_page.selectedVideo]) {
+                _page.videoQuality = `sd`;
+                return _page.releaseVideos[_page.selectedVideo]['sd'];
+            }
+            if (`hd` in _page.releaseVideos[_page.selectedVideo]) {
+                _page.videoQuality = `hd`;
+                return _page.releaseVideos[_page.selectedVideo]['hd'];
+            }
+            if (`fullhd` in _page.releaseVideos[_page.selectedVideo]) {
+                _page.videoQuality = `fullhd`;
+                return _page.releaseVideos[_page.selectedVideo]['fullhd'];
+            }
+
+            return null;
+        }
+    }
+
     function previousVideo() {
         if (_page.selectedVideo === 1) return;
         _page.restorePosition = 0;
 
         _page.selectedVideo--;
-        const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+        const video = _page.releaseVideos[_page.selectedVideo];
         _page.isFullHdAllowed = "fullhd" in video;
 
-        _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+        _page.videoSource = checkExistingVideoQuality();
     }
 
     function nextVideo() {
@@ -483,10 +516,10 @@ Page {
         _page.restorePosition = 0;
 
         _page.selectedVideo++;
-        const video = _page.releaseVideos.find(a => a.id === _page.selectedVideo);
+        const video = _page.releaseVideos[_page.selectedVideo];
         _page.isFullHdAllowed = "fullhd" in video;
 
-        _page.videoSource = _page.releaseVideos[_page.selectedVideo][_page.videoQuality];
+        _page.videoSource = checkExistingVideoQuality();
     }
 
     Component.onCompleted: {
