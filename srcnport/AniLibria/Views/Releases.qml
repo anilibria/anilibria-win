@@ -677,13 +677,14 @@ Page {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 100
+                        anchors.right: watchButton.left
+                        anchors.rightMargin: 10
                         font.pixelSize: 14
                         text: "Доступно "+ (page.openedRelease ? page.openedRelease.countVideos : "0" ) + " серий онлайн"
                     }
 
                     Button {
+                        id: watchButton
                         text: qsTr("Смотреть")
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
