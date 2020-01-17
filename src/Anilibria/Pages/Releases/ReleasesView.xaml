@@ -1426,7 +1426,16 @@
 										Видео тормозит/не работает?
 									</Hyperlink>
 								</TextBlock>
-								
+								<TextBlock
+									Foreground="#a32727"
+									Margin="0 4 0 0"
+									converters:TextBlockHighlight.HyperLinkHightlight="True">
+									<Hyperlink
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+										NavigateUri="https://t.me/desktopclientanilibria">
+										Канал о приложении
+									</Hyperlink>
+								</TextBlock>
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>

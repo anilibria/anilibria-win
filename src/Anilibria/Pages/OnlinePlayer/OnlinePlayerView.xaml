@@ -1124,11 +1124,6 @@
 												<StackPanel
 													Orientation="Horizontal"
 													HorizontalAlignment="Center">
-													<TextBlock
-														x:Name="QualityText"
-														Margin="0 0 4 0">
-														Качество
-													</TextBlock>
 													<ToggleButton
 														IsTabStop="False"
 														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsExistsFullHD}"
@@ -1159,13 +1154,14 @@
 													</ToggleButton>
 													<TextBlock
 														x:Name="SpeedText"
-														Margin="10 0 0 0">
-														Скорость
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
+														Margin="10 0 10 0">
+														|
 													</TextBlock>
 													<ToggleButton
-														Margin="4 0 0 0"
+														Margin="0 0 0 0"
 														IsTabStop="False"
-														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsExistsFullHD}"
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
 														Height="40"
@@ -1174,6 +1170,7 @@
 														Обычная
 													</ToggleButton>
 													<ToggleButton
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 														IsTabStop="False"
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
@@ -1183,6 +1180,7 @@
 														x2
 													</ToggleButton>
 													<ToggleButton
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 														IsTabStop="False"
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
@@ -1192,6 +1190,7 @@
 														x3
 													</ToggleButton>
 													<ToggleButton
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
 														IsTabStop="False"
 														Style="{StaticResource QualityToggleButton}"
 														Foreground="Black"
@@ -1849,8 +1848,6 @@
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="14" />
-						<Setter Target="QualityText.Visibility" Value="Collapsed" />
-						<Setter Target="SpeedText.Visibility" Value="Collapsed" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="14" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="14" />
 						<Setter Target="CurrentVideoDuration.FontSize" Value="14" />
@@ -1862,8 +1859,6 @@
 						<AdaptiveTrigger MinWindowWidth="0" MinWindowHeight="0"/>
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
-						<Setter Target="QualityText.Visibility" Value="Collapsed" />
-						<Setter Target="SpeedText.Visibility" Value="Collapsed" />
 						<Setter Target="CurrentReleaseTitle.FontSize" Value="12" />
 						<Setter Target="CurrentVideoTitle.FontSize" Value="12" />
 						<Setter Target="CurrentVideoPosition.FontSize" Value="12" />
