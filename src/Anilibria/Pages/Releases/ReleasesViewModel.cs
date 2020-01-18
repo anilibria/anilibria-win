@@ -573,6 +573,8 @@ namespace Anilibria.Pages.Releases {
 			await FileIO.WriteTextAsync ( playlistFile , GenerateM3UContent ( isHD ) );
 
 			await Launcher.LaunchFileAsync ( playlistFile );
+
+			m_AnalyticsService.TrackEvent ( "Releases" , "ExternalPlayer" , "Open quality" + ( isHD ? "HD" : "SD" ) );
 		}
 
 		private string GenerateM3UContent ( bool isHD ) {
