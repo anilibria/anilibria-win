@@ -1416,6 +1416,26 @@
 										Как пользоваться кинозалом?
 									</Hyperlink>
 								</TextBlock>
+								<TextBlock
+									Foreground="#a32727"
+									Margin="0 4 0 0"
+									converters:TextBlockHighlight.HyperLinkHightlight="True">
+									<Hyperlink
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+										NavigateUri="https://github.com/anilibria/anilibria-win/blob/master/doc/video-issues.md">
+										Видео тормозит/не работает?
+									</Hyperlink>
+								</TextBlock>
+								<TextBlock
+									Foreground="#a32727"
+									Margin="0 4 0 0"
+									converters:TextBlockHighlight.HyperLinkHightlight="True">
+									<Hyperlink
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+										NavigateUri="https://t.me/desktopclientanilibria">
+										Канал о приложении
+									</Hyperlink>
+								</TextBlock>
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>
@@ -1894,6 +1914,34 @@
 							IconWidth="20"
 							IconHeight="20"
 							converters:BackgroundThemeConverter.OpenEyeIcon="Origin"
+						/>
+					</controls:PointingGridControl>
+
+					<controls:PointingGridControl
+						Width="20"
+						Height="20"
+						Margin="4 2 1 8"
+						Tapped="OpenInExternalPlayer_Tapped"
+						ToolTipService.ToolTip="Открыть релиз во внешнем видеоплеере">
+						<FlyoutBase.AttachedFlyout>
+							<MenuFlyout
+								converters:BackgroundThemeConverter.MenuFlyout="Origin">
+								<MenuFlyoutItem
+									Text="Открыть во внешнем плеере в качестве HD"
+									Command="{Binding OpenInExternalPlayerHDCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+								/>
+								<MenuFlyoutItem
+									Text="Открыть во внешнем плеере в качестве SD"
+									Command="{Binding OpenInExternalPlayerSDCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+								/>
+							</MenuFlyout>
+						</FlyoutBase.AttachedFlyout>
+						<controls:ExternalLinkIcon
+							IconWidth="20"
+							IconHeight="20"
+							converters:BackgroundThemeConverter.ExternalLinkIcon="Origin"
 						/>
 					</controls:PointingGridControl>
 				</StackPanel>

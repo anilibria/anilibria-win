@@ -25,7 +25,7 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
-RC_ICONS = anilibriaicon.ico
+RC_ICONS = fullsizesicon.ico
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

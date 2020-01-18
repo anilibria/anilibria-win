@@ -14,6 +14,9 @@
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
 
+const int FavoriteSection = 1;
+const int ScheduleSection = 5;
+
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
 {
     m_Database = QSqlDatabase::addDatabase("QSQLITE");
@@ -252,6 +255,28 @@ QStringList LocalStorageService::getAllFavorites()
     return result;
 }
 
+QMap<int, int> LocalStorageService::getScheduleAsMap()
+{
+    QSqlQuery query(m_Database);
+
+    query.exec("SELECT * FROM `Schedule`");
+
+    if (!query.next()) return QMap<int, int>();
+
+    auto metadata = query.value("Metadata").toString();
+    QJsonParseError jsonError;
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(metadata.toUtf8(), &jsonError);
+    auto schedule = jsonDocument.object();
+    auto keys = schedule.keys();
+    QMap<int, int> result;
+    foreach (auto key, keys) {
+        auto scheduleDay = schedule.value(key).toString();
+        result[key.toInt()] = scheduleDay.toInt();
+    }
+
+    return result;
+}
+
 QString LocalStorageService::getRelease(int id)
 {
     QSqlQuery query(m_Database);
@@ -285,6 +310,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
     QJsonArray releases;
 
     QStringList userFavorites = getAllFavorites();
+    QMap<int, int> scheduled = getScheduleAsMap();
 
     //WORKAROUND: because unicode `LIKE` and `ORDER` don't work correctly I did all in c++
     int index = -1;
@@ -292,10 +318,13 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
     {
         if (!title.isEmpty() && !query.value("Title").toString().toLower().contains(title.toLower())) continue;
 
-        if (section == 1) {
+        //favorites section
+        if (section == FavoriteSection) {
             auto releaseId = query.value("Releaseid").toInt();
             if (!userFavorites.contains(QString::number(releaseId))) continue;
         }
+
+        if (section == ScheduleSection && !scheduled.contains(query.value("Releaseid").toInt())) continue;
 
         index++;
         if (index < startIndex) continue;

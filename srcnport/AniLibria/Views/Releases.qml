@@ -21,7 +21,7 @@ Page {
     property bool runRefreshFavorties: false
     property bool synchronizeEnabled: false
     property int selectedSection: 0
-    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Новые серии", "Обновленные торренты"]
+    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Новые серии", "Обновленные торренты", "Расписание"]
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -301,6 +301,19 @@ Page {
                             }
                         }
                     }
+                    IconButton {
+                        height: 30
+                        width: 30
+                        iconColor: "black"
+                        hoverColor: "white"
+                        iconPath: "../Assets/Icons/calendar.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            changeSection(5);
+                        }
+                    }
+
                 }
             }
 
@@ -664,13 +677,14 @@ Page {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 100
+                        anchors.right: watchButton.left
+                        anchors.rightMargin: 10
                         font.pixelSize: 14
                         text: "Доступно "+ (page.openedRelease ? page.openedRelease.countVideos : "0" ) + " серий онлайн"
                     }
 
                     Button {
+                        id: watchButton
                         text: qsTr("Смотреть")
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right

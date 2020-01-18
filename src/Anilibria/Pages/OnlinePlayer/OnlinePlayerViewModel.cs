@@ -205,6 +205,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private bool m_IsXbox;
 
 		private bool m_IsCinemaHall = false;
+		
+		private bool m_IsNormalSpeed = true;
+
+		private bool m_Is2xSpeed;
+
+		private bool m_Is3xSpeed;
+
+		private bool m_Is4xSpeed;
 
 		/// <summary>
 		/// Constructor injection.
@@ -998,6 +1006,90 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
+		public bool IsNormalSpeed
+		{
+			get => m_IsNormalSpeed;
+			set {
+				if ( !Set ( ref m_IsNormalSpeed , value ) ) return;
+
+				m_Is2xSpeed = !value;
+				m_Is3xSpeed = !value;
+				m_Is4xSpeed = !value;
+
+				RaisePropertyChanged ( () => Is2xSpeed );
+				RaisePropertyChanged ( () => Is3xSpeed );
+				RaisePropertyChanged ( () => Is4xSpeed );
+
+				ChangePlaybackRate ( 1 );
+			}
+		}
+
+		/// <summary>
+		/// Is 2x speed.
+		/// </summary>
+		public bool Is2xSpeed
+		{
+			get => m_Is2xSpeed;
+			set
+			{
+				if ( !Set ( ref m_Is2xSpeed , value ) ) return;
+
+				m_IsNormalSpeed = !value;
+				m_Is3xSpeed = !value;
+				m_Is4xSpeed = !value;
+
+				RaisePropertyChanged ( () => IsNormalSpeed );
+				RaisePropertyChanged ( () => Is3xSpeed );
+				RaisePropertyChanged ( () => Is4xSpeed );
+
+				ChangePlaybackRate ( 2 );
+			}
+		}
+
+		/// <summary>
+		/// Is 3x speed.
+		/// </summary>
+		public bool Is3xSpeed
+		{
+			get => m_Is3xSpeed;
+			set
+			{
+				if ( !Set ( ref m_Is3xSpeed , value ) ) return;
+
+				m_IsNormalSpeed = !value;
+				m_Is2xSpeed = !value;
+				m_Is4xSpeed = !value;
+
+				RaisePropertyChanged ( () => IsNormalSpeed );
+				RaisePropertyChanged ( () => Is2xSpeed );
+				RaisePropertyChanged ( () => Is4xSpeed );
+
+				ChangePlaybackRate ( 3 );
+			}
+		}
+
+		/// <summary>
+		/// Is 4x speed.
+		/// </summary>
+		public bool Is4xSpeed
+		{
+			get => m_Is4xSpeed;
+			set
+			{
+				if ( !Set ( ref m_Is4xSpeed , value ) ) return;
+
+				m_IsNormalSpeed = !value;
+				m_Is3xSpeed = !value;
+				m_Is2xSpeed = !value;
+
+				RaisePropertyChanged ( () => IsNormalSpeed );
+				RaisePropertyChanged ( () => Is3xSpeed );
+				RaisePropertyChanged ( () => Is2xSpeed );
+
+				ChangePlaybackRate ( 4 );
+			}
+		}
+
 		/// <summary>
 		/// is exists fullHD quality.
 		/// </summary>
@@ -1088,6 +1180,15 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// Change volume handler.
 		/// </summary>
 		public Action<double> ChangeVolumeHandler
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Change volume handler.
+		/// </summary>
+		public Action<double> ChangePlaybackRate
 		{
 			get;
 			set;

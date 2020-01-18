@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
@@ -559,7 +560,34 @@ namespace Anilibria.Pages.Releases {
 			RemoveSeenMarkFromQuickActionsCommand = CreateCommand<ReleaseModel> ( RemoveSeenMarkFromQuickActions );
 			AddReleasesToCinemaHallCommand = CreateCommand ( AddReleasesToCinemaHall , () => IsMultipleSelect && GetSelectedReleases ().Count > 0 );
 			WatchCinemaHallCommand = CreateCommand ( WatchCinemaHall );
+			OpenInExternalPlayerHDCommand = CreateCommand ( OpenInExternalPlayerHD );
+			OpenInExternalPlayerSDCommand = CreateCommand ( OpenInExternalPlayerSD );
 		}
+
+		private async void OpenInExternalPlayerSD () => await OpenPlaylistInExternalPlayer ( isHD: false );
+
+		private async Task OpenPlaylistInExternalPlayer ( bool isHD ) {
+			if ( OpenedRelease.OnlineVideos == null ) return;
+
+			var playlistFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( $"playlist{OpenedRelease.Id}.m3u" , CreationCollisionOption.ReplaceExisting );
+			await FileIO.WriteTextAsync ( playlistFile , GenerateM3UContent ( isHD ) );
+
+			await Launcher.LaunchFileAsync ( playlistFile );
+		}
+
+		private string GenerateM3UContent ( bool isHD ) {
+			var stringBuilder = new StringBuilder ();
+
+			stringBuilder.Append ( "# EXTM3U\n\n" );
+			var onlineVideos = OpenedRelease.OnlineVideos.OrderBy ( a => a.Order );
+			foreach ( var onlineVideo in onlineVideos ) {
+				stringBuilder.Append ( $"# EXTINF:-1, Серия {onlineVideo.Order}\n{( isHD ? onlineVideo.HDQuality : onlineVideo.SDQuality ) }\n\n" );
+			}
+
+			return stringBuilder.ToString ();
+		}
+
+		private async void OpenInExternalPlayerHD () => await OpenPlaylistInExternalPlayer ( isHD: true );
 
 		private async void WatchCinemaHall () {
 			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
@@ -2796,6 +2824,24 @@ namespace Anilibria.Pages.Releases {
 		/// Watch cinema hall command.
 		/// </summary>
 		public ICommand WatchCinemaHallCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open HD online video in external player.
+		/// </summary>
+		public ICommand OpenInExternalPlayerHDCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open SD online video in external player.
+		/// </summary>
+		public ICommand OpenInExternalPlayerSDCommand
 		{
 			get;
 			set;
