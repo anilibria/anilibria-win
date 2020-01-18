@@ -411,6 +411,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private void TimerTick ( object sender , object e ) {
 			if ( m_MediaOpened ) {
+				if ( Visibility == Visibility.Collapsed ) {
+					if ( Window.Current.CoreWindow.PointerCursor == null ) RestoreCursor ();
+					ChangePlaybackHandler ( PlaybackState.Pause );
+					return;
+				}
 				m_ViewModel.RefreshPosition ( OnlinePlayer.MediaPlayer.PlaybackSession.Position );
 
 				MouseHidingTracker ();
