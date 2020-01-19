@@ -13,8 +13,7 @@
 
 ### Шаг 2
 
-Необходимо скачать файл(в новых версиях он уже будет в архиве с приложением) [отсюда](https://anilibria.github.io/anilibria-win/installer/bootstrap.bat) (во время сохранения браузер может поднять тревогу но никаких вирусов в файле нет).  
-После чего необходимо скопировать его в папку куда Вы извлекли версию и запустить.
+Запустите файл bootstrap.bat.
 ![Расположение файла bootstrap](https://github.com/anilibria/anilibria-win/blob/master/doc/assets/folderbootstrap.jpg)
 
 ### Шаг 3
