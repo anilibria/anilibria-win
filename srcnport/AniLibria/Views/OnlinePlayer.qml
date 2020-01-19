@@ -24,7 +24,6 @@ Page {
     signal changeFullScreenMode(bool fullScreen)
 
     Keys.onSpacePressed: {
-
         if (player.playbackState === MediaPlayer.PlayingState) {
             player.pause();
             return;
@@ -37,6 +36,7 @@ Page {
     onNavigateFrom: {
         player.pause();
     }
+
     onSetReleaseVideo: {
         const jsonVideos = JSON.parse(videos);
 
@@ -525,5 +525,6 @@ Page {
     Component.onCompleted: {
         volumeSlider.value = player.volume * 100;
     }
+
 }
 

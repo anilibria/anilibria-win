@@ -38,9 +38,11 @@ ApplicationWindow {
         currentPage.navigateFrom();
 
         currentPage.visible = false;
+        currentPage.focus = false;
 
         const newPage = pages[pageId];
         newPage.visible = true;
+        newPage.focus = true;
         currentPageId = pageId;
 
         drawer.close();
@@ -384,6 +386,7 @@ ApplicationWindow {
     Releases {
         id: releases
         visible: true
+        focus: true
         synchronizeEnabled: window.synchronizationEnabled
         onWatchRelease: {
             videoplayer.setReleaseVideo(releaseId, -1, videos);
@@ -405,4 +408,5 @@ ApplicationWindow {
         id: youtube
         visible: false
     }
+
 }
