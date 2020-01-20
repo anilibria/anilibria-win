@@ -752,6 +752,7 @@ Page {
     function refreshAllReleases() {
         page.pageIndex = 1;
         page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, filterByTitle.textContent, page.selectedSection));
+        scrollview.contentY = 0;
     }
 
     function changeSection(section) {

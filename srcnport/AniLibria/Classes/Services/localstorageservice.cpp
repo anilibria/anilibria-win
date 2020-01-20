@@ -23,7 +23,8 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
     auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/cache.db";
     m_Database.setDatabaseName(path);
-    m_Database.open();
+    //WORKAROUND: double check for open
+    if (!m_Database.open()) m_Database.open();
 
     QSqlQuery query(m_Database);
 

@@ -46,22 +46,7 @@ Page {
                     width: cardContainer.width - 10
                     height: cardContainer.height - 20
                     anchors.horizontalCenter: cardContainer.horizontalCenter
-                    anchors.verticalCenter: cardContainer.verticalCenter
-                    Image {
-                        source: "../Assets/Icons/donate.jpg"
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.fillWidth: true
-                        Layout.minimumHeight: 100
-                        Layout.preferredHeight: 300
-                        fillMode: Image.PreserveAspectFit
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                Qt.openUrlExternally("https://www.youtube.com/watch?v=xGYsezJddlw")
-                            }
-                        }
-                    }
+                    anchors.verticalCenter: cardContainer.verticalCenter                    
                     Text {
                         Layout.alignment: Qt.AlignHCenter
                         textFormat: Text.RichText
