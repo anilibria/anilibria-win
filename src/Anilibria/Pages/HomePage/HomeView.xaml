@@ -172,6 +172,25 @@
 						</ListView.ItemTemplate>
 					</ListView>
 					<Grid
+						x:Name="PrivacyPolicySection"
+						RelativePanel.Above="ProgramVersionSection"
+						RelativePanel.AlignRightWithPanel="True"
+						RelativePanel.AlignLeftWithPanel="True"
+						Margin="0 0 0 20"
+						Tapped="OpenPrivacyPolicy"
+						PointerEntered="PrivacyPolicySection_PointerEntered"
+						PointerExited="PrivacyPolicySection_PointerExited">
+						<TextBlock
+							TextAlignment="Center"
+							FontSize="16"
+							converters:BackgroundThemeConverter.TextMapper="TextBlockMenuOption">
+							<Underline>
+								<Run>Политика конфиденциальности</Run>
+							</Underline>
+						</TextBlock>
+					</Grid>
+					<Grid
+						x:Name="ProgramVersionSection"
 						RelativePanel.AlignBottomWithPanel="True"
 						RelativePanel.AlignRightWithPanel="True"
 						RelativePanel.AlignLeftWithPanel="True"

@@ -1436,6 +1436,16 @@
 										Канал о приложении
 									</Hyperlink>
 								</TextBlock>
+								<TextBlock
+									Foreground="#a32727"
+									Margin="0 4 0 0"
+									converters:TextBlockHighlight.HyperLinkHightlight="True">
+									<Hyperlink
+										converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+										NavigateUri="https://github.com/anilibria/anilibria-win/blob/master/privacypolicy.md">
+										Политика конфиденциальности
+									</Hyperlink>
+								</TextBlock>
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>

@@ -17,6 +17,7 @@ using Windows.UI.Core;
 using Anilibria.Pages.DonatePage;
 using Anilibria.Pages.DownloadManagerPage;
 using Anilibria.Pages.CinemaHall;
+using Windows.System;
 
 namespace Anilibria {
 
@@ -207,12 +208,23 @@ namespace Anilibria {
 		/// <summary>
 		/// Set api url.
 		/// </summary>
-		/// <param name="url">Url.</param>
+		/// <param name="url">Url.</param>|
 		public void SetApiPath ( string url ) {
 			ChangeApi.SetApiAddress ( url );
 			ChangeApi.Visibility = Visibility.Visible;
 		}
 
+		private async void OpenPrivacyPolicy ( object sender , TappedRoutedEventArgs e ) {
+			await Launcher.LaunchUriAsync ( new Uri ( "https://github.com/anilibria/anilibria-win/blob/master/privacypolicy.md" ) );
+		}
+
+		private void PrivacyPolicySection_PointerEntered ( object sender , PointerRoutedEventArgs e ) {
+			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Hand , 1 );
+		}
+
+		private void PrivacyPolicySection_PointerExited ( object sender , PointerRoutedEventArgs e ) {
+			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 1 );
+		}
 	}
 
 }
