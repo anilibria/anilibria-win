@@ -28,6 +28,7 @@ Page {
     signal refreshReleases()
     signal refreshFavorites(var userFavorites)
     signal refreshReleaseSchedules()
+    signal requestSynchronizeReleases()
 
     onWidthChanged: {
         const columnCount = parseInt(page.width / 520);
@@ -91,6 +92,19 @@ Page {
                     iconHeight: 29
                     onButtonPressed: {
                         drawer.open();
+                    }
+                }
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/refresh.svg"
+                    iconWidth: 34
+                    iconHeight: 34
+                    onButtonPressed: {
+                        if (page.synchronizeEnabled) return;
+
+                        page.requestSynchronizeReleases();
                     }
                 }
                 IconButton {
@@ -174,6 +188,28 @@ Page {
                                 }
                             }
                         }
+                    }
+                }
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/search.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        drawer.open();
+                    }
+                }
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/sort.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        drawer.open();
                     }
                 }
             }

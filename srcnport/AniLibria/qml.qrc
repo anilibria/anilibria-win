@@ -49,5 +49,8 @@
         <file>Assets/Icons/utorrent.svg</file>
         <file>Assets/Icons/calendar.svg</file>
         <file>Assets/Icons/spinner.gif</file>
+        <file>Assets/Icons/refresh.svg</file>
+        <file>Assets/Icons/search.svg</file>
+        <file>Assets/Icons/sort.svg</file>
     </qresource>
 </RCC>

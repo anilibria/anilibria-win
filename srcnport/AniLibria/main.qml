@@ -392,6 +392,10 @@ ApplicationWindow {
             videoplayer.setReleaseVideo(releaseId, -1, videos);
             window.showPage("videoplayer");
         }
+        onRequestSynchronizeReleases: {
+            window.synchronizationEnabled = true;
+            synchronizationService.synchronizeReleases();
+        }
     }
 
     Authorization {

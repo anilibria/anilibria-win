@@ -100,6 +100,7 @@ Page {
                             anchors.rightMargin: 10
                             text: qsTr("Войти")
                             onClicked: {
+                                //TODO: VALIDATION!!!!!!!!!!!!
                                 synchronizationService.authorize(encodeURIComponent(authorizePage.email), encodeURIComponent(authorizePage.password), encodeURIComponent(authorizePage.fa2code));
                             }
                         }
