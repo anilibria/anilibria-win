@@ -69,7 +69,7 @@ Page {
                     TextField {
                         id: emailTextBox
                         Layout.fillWidth: true
-                        placeholderText: "Email"
+                        placeholderText: "Логин"
                     }
                     TextField {
                         id: passwordTextBox
@@ -100,7 +100,17 @@ Page {
                             anchors.rightMargin: 10
                             text: qsTr("Войти")
                             onClicked: {
-                                //TODO: VALIDATION!!!!!!!!!!!!
+                                errorMessage.text = "";
+
+                                if (emailTextBox.text === "") {
+                                    errorMessage.text = "Поле Логин обязательное";
+                                    return;
+                                }
+                                if (passwordTextBox.text === "") {
+                                    errorMessage.text = "Поле Пароль обязательное";
+                                    return;
+                                }
+
                                 synchronizationService.authorize(encodeURIComponent(authorizePage.email), encodeURIComponent(authorizePage.password), encodeURIComponent(authorizePage.fa2code));
                             }
                         }
