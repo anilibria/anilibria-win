@@ -191,6 +191,7 @@ Page {
                     }
                 }
                 IconButton {
+                    id: searchPopupButton
                     height: 45
                     width: 40
                     iconColor: "white"
@@ -198,7 +199,39 @@ Page {
                     iconWidth: 29
                     iconHeight: 29
                     onButtonPressed: {
-                        drawer.open();
+                        filtersPopup.open();
+                    }
+
+                    Popup {
+                        id: filtersPopup
+                        x: 40
+                        y: searchPopupButton.height - 45
+                        width: 450
+                        height: 150
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        Rectangle {
+                            width: parent.width
+                            Button {
+                                id: clearFiltersButton
+                                anchors.right: parent.right
+                                text: "Очистить фильтры"
+                            }
+                            TextField {
+                                id: descriptionSearchField
+                                width: parent.width / 2
+                                anchors.top: clearFiltersButton.bottom
+                                placeholderText: "Описание"
+                            }
+                            TextField {
+                                width: parent.width / 2
+                                anchors.top: clearFiltersButton.bottom
+                                anchors.left: descriptionSearchField.right
+                                placeholderText: "Тип"
+                            }
+                        }
                     }
                 }
                 IconButton {
