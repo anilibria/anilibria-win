@@ -29,7 +29,7 @@ public:
 
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE QString getRelease(int id);
-    Q_INVOKABLE QString getReleasesByFilter(int page, QString title, int section);
+    Q_INVOKABLE QString getReleasesByFilter(int page, QString title, int section, QString description, QString type);
     Q_INVOKABLE void setSchedule(QString schedule);
     Q_INVOKABLE QString getSchedule();
     Q_INVOKABLE void updateFavorites(QString data);

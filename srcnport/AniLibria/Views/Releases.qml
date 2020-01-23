@@ -215,20 +215,49 @@ Page {
                         Rectangle {
                             width: parent.width
                             Button {
+                                id: startFilterButton
+                                anchors.left: parent.left
+                                text: "Фильтровать"
+                                onClicked: {
+                                    page.refreshAllReleases();
+                                }
+                            }
+                            Button {
                                 id: clearFiltersButton
                                 anchors.right: parent.right
                                 text: "Очистить фильтры"
+                                onClicked: {
+                                    descriptionSearchField.text = "";
+                                    typeSearchField.text = "";
+
+                                    page.refreshAllReleases();
+                                }
+                            }
+                            Text {
+                                id: labelDescriptionSearchField
+                                anchors.top: clearFiltersButton.bottom
+                                font.pixelSize: 14
+                                text: qsTr("Описание")
+                            }
+                            Text {
+                                id: labelTypeSearchField
+                                anchors.top: clearFiltersButton.bottom
+                                anchors.left: typeSearchField.left
+                                font.pixelSize: 14
+                                text: qsTr("Тип")
                             }
                             TextField {
                                 id: descriptionSearchField
-                                width: parent.width / 2
-                                anchors.top: clearFiltersButton.bottom
+                                width: parent.width / 2 - 5
+                                anchors.top: labelDescriptionSearchField.bottom
+                                anchors.rightMargin: 10
                                 placeholderText: "Описание"
                             }
                             TextField {
-                                width: parent.width / 2
-                                anchors.top: clearFiltersButton.bottom
-                                anchors.left: descriptionSearchField.right
+                                id: typeSearchField
+                                width: parent.width / 2 - 5
+                                anchors.top: labelTypeSearchField.bottom
+                                anchors.right: parent.right
                                 placeholderText: "Тип"
                             }
                         }
@@ -812,15 +841,18 @@ Page {
         }
     }
 
+    function getReleasesByFilter() {
+        return JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, filterByTitle.textContent, page.selectedSection, descriptionSearchField.text, typeSearchField.text));
+    }
+
     function fillNextReleases() {
         page.pageIndex += 1;
-        const newReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, filterByTitle.textContent, page.selectedSection));
-        page.displayedReleases = page.displayedReleases.concat(newReleases);
+        page.displayedReleases = page.displayedReleases.concat(getReleasesByFilter());
     }
 
     function refreshAllReleases() {
         page.pageIndex = 1;
-        page.displayedReleases = JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, filterByTitle.textContent, page.selectedSection));
+        page.displayedReleases = getReleasesByFilter();
         scrollview.contentY = 0;
     }
 

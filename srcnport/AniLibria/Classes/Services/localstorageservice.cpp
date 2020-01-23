@@ -297,7 +297,7 @@ QString LocalStorageService::getRelease(int id)
     return saveDoc.toJson();
 }
 
-QString LocalStorageService::getReleasesByFilter(int page, QString title, int section)
+QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type)
 {
     QSqlQuery query(m_Database);
     int pageSize = 12;
@@ -318,6 +318,8 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
     while (query.next())
     {
         if (!title.isEmpty() && !query.value("Title").toString().toLower().contains(title.toLower())) continue;
+        if (!description.isEmpty() && !query.value("Description").toString().toLower().contains(description.toLower())) continue;
+        if (!type.isEmpty() && !query.value("Type").toString().toLower().contains(type.toLower())) continue;
 
         //favorites section
         if (section == FavoriteSection) {
