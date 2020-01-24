@@ -207,7 +207,7 @@ Page {
                         x: 40
                         y: searchPopupButton.height - 45
                         width: 450
-                        height: 150
+                        height: 250
                         modal: true
                         focus: true
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
@@ -259,6 +259,62 @@ Page {
                                 anchors.top: labelTypeSearchField.bottom
                                 anchors.right: parent.right
                                 placeholderText: "Тип"
+                            }
+
+                            Text {
+                                id: labelGenresSearchField
+                                anchors.top: descriptionSearchField.bottom
+                                anchors.rightMargin: 10
+                                font.pixelSize: 14
+                                text: qsTr("Жанры")
+                            }
+                            TextField {
+                                id: genresSearchField
+                                width: parent.width * 0.7
+                                anchors.top: labelGenresSearchField.bottom
+                                placeholderText: "Вводите жанры через запятую"
+                            }
+                            Text {
+                                id: labelOrAndGenresSearchField
+                                anchors.top: labelGenresSearchField.bottom
+                                anchors.left: genresSearchField.right
+                                topPadding: 16
+                                leftPadding: 4
+                                font.pixelSize: 14
+                                text: qsTr("ИЛИ/И")
+                            }
+                            Switch {
+                                id: orAndGenresSearchField
+                                anchors.top: labelGenresSearchField.bottom
+                                anchors.left: labelOrAndGenresSearchField.right
+                            }
+
+                            Text {
+                                id: labelVoicesSearchField
+                                anchors.top: genresSearchField.bottom
+                                anchors.rightMargin: 10
+                                font.pixelSize: 14
+                                text: qsTr("Озвучка")
+                            }
+                            TextField {
+                                id: voicesSearchField
+                                width: parent.width * 0.7
+                                anchors.top: labelVoicesSearchField.bottom
+                                placeholderText: "Вводите войсеров через запятую"
+                            }
+                            Text {
+                                id: labelOrAndVoicesSearchField
+                                anchors.top: labelVoicesSearchField.bottom
+                                anchors.left: voicesSearchField.right
+                                topPadding: 16
+                                leftPadding: 4
+                                font.pixelSize: 14
+                                text: qsTr("ИЛИ/И")
+                            }
+                            Switch {
+                                id: orAndVoicesSearchField
+                                anchors.top: labelVoicesSearchField.bottom
+                                anchors.left: labelOrAndVoicesSearchField.right
                             }
                         }
                     }
