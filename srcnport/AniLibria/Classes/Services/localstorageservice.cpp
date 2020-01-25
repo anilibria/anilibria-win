@@ -278,6 +278,33 @@ QMap<int, int> LocalStorageService::getScheduleAsMap()
     return result;
 }
 
+bool LocalStorageService::checkOrCondition(QStringList source, QStringList target)
+{
+    foreach(QString sourceItem, source) {
+        if (target.filter(sourceItem, Qt::CaseInsensitive).count() > 0) return true;
+    }
+
+    return false;
+}
+
+bool LocalStorageService::checkAllCondition(QStringList source, QStringList target)
+{
+    int counter = 0;
+    foreach(QString sourceItem, source) {
+        if (target.filter(sourceItem, Qt::CaseInsensitive).count() > 0) counter++;
+    }
+
+    return counter == source.count();
+}
+
+void LocalStorageService::removeTrimsInStringCollection(QStringList list) {
+    QMutableStringListIterator iterator(list);
+    while (iterator.hasNext()) {
+        QString value = iterator.next();
+        iterator.setValue(value.trimmed());
+    }
+}
+
 QString LocalStorageService::getRelease(int id)
 {
     QSqlQuery query(m_Database);
@@ -297,7 +324,7 @@ QString LocalStorageService::getRelease(int id)
     return saveDoc.toJson();
 }
 
-QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type)
+QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr)
 {
     QSqlQuery query(m_Database);
     int pageSize = 12;
@@ -320,6 +347,29 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (!title.isEmpty() && !query.value("Title").toString().toLower().contains(title.toLower())) continue;
         if (!description.isEmpty() && !query.value("Description").toString().toLower().contains(description.toLower())) continue;
         if (!type.isEmpty() && !query.value("Type").toString().toLower().contains(type.toLower())) continue;
+
+        //genres
+        if (!genres.isEmpty()) {
+            QStringList genresList = genres.split(",");
+            removeTrimsInStringCollection(genresList);
+            QStringList releaseGenresList = query.value("Genres").toString().split(",");
+            if (genresOr) {
+                if (!checkAllCondition(genresList, releaseGenresList)) continue;
+            } else {
+                if (!checkOrCondition(genresList, releaseGenresList)) continue;
+            }
+        }
+
+        //voices
+        if (!voices.isEmpty()) {
+            QStringList voicesList = voices.split(",");
+            QStringList releaseVoicesList = query.value("Voices").toString().split(",");
+            if (voicesOr) {
+                if (!checkAllCondition(voicesList, releaseVoicesList)) continue;
+            } else {
+                if (!checkOrCondition(voicesList, releaseVoicesList)) continue;
+            }
+        }
 
         //favorites section
         if (section == FavoriteSection) {

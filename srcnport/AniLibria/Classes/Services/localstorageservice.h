@@ -22,6 +22,9 @@ private:
     void updateRelease(ReleaseModel& releaseModel);
     QStringList getAllFavorites();
     QMap<int, int> getScheduleAsMap();
+    bool checkOrCondition(QStringList source, QStringList target);
+    bool checkAllCondition(QStringList source, QStringList target);
+    void removeTrimsInStringCollection(QStringList list);
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
@@ -29,7 +32,7 @@ public:
 
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE QString getRelease(int id);
-    Q_INVOKABLE QString getReleasesByFilter(int page, QString title, int section, QString description, QString type);
+    Q_INVOKABLE QString getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr);
     Q_INVOKABLE void setSchedule(QString schedule);
     Q_INVOKABLE QString getSchedule();
     Q_INVOKABLE void updateFavorites(QString data);

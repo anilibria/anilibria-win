@@ -898,7 +898,19 @@ Page {
     }
 
     function getReleasesByFilter() {
-        return JSON.parse(localStorage.getReleasesByFilter(page.pageIndex, filterByTitle.textContent, page.selectedSection, descriptionSearchField.text, typeSearchField.text));
+        return JSON.parse(
+            localStorage.getReleasesByFilter(
+                page.pageIndex,
+                filterByTitle.textContent,
+                page.selectedSection,
+                descriptionSearchField.text,
+                typeSearchField.text,
+                genresSearchField.text,
+                orAndGenresSearchField.checked,
+                voicesSearchField.text,
+                orAndVoicesSearchField.checked
+            )
+        );
     }
 
     function fillNextReleases() {
