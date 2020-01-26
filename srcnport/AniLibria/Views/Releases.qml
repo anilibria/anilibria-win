@@ -207,7 +207,7 @@ Page {
                         x: 40
                         y: searchPopupButton.height - 45
                         width: 450
-                        height: 250
+                        height: 300
                         modal: true
                         focus: true
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
@@ -316,6 +316,35 @@ Page {
                                 anchors.top: labelVoicesSearchField.bottom
                                 anchors.left: labelOrAndVoicesSearchField.right
                             }
+
+                            Text {
+                                id: labelYearsSearchField
+                                anchors.top: voicesSearchField.bottom
+                                font.pixelSize: 14
+                                text: qsTr("Года")
+                            }
+                            Text {
+                                id: labelSeasonsSearchField
+                                anchors.top: voicesSearchField.bottom
+                                anchors.left: typeSearchField.left
+                                font.pixelSize: 14
+                                text: qsTr("Сезоны")
+                            }
+                            TextField {
+                                id: yearsSearchField
+                                width: parent.width / 2 - 5
+                                anchors.top: labelYearsSearchField.bottom
+                                anchors.rightMargin: 10
+                                placeholderText: "Вводите через запятую"
+                            }
+                            TextField {
+                                id: seasonesSearchField
+                                width: parent.width / 2 - 5
+                                anchors.top: labelSeasonsSearchField.bottom
+                                anchors.right: parent.right
+                                placeholderText: "Вводите через запятую"
+                            }
+
                         }
                     }
                 }
@@ -908,7 +937,9 @@ Page {
                 genresSearchField.text,
                 orAndGenresSearchField.checked,
                 voicesSearchField.text,
-                orAndVoicesSearchField.checked
+                orAndVoicesSearchField.checked,
+                yearsSearchField.text,
+                seasonesSearchField.text
             )
         );
     }

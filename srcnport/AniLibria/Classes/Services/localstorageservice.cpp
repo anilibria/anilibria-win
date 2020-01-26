@@ -297,7 +297,7 @@ bool LocalStorageService::checkAllCondition(QStringList source, QStringList targ
     return counter == source.count();
 }
 
-void LocalStorageService::removeTrimsInStringCollection(QStringList list) {
+void LocalStorageService::removeTrimsInStringCollection(QStringList& list) {
     QMutableStringListIterator iterator(list);
     while (iterator.hasNext()) {
         QString value = iterator.next();
@@ -324,7 +324,7 @@ QString LocalStorageService::getRelease(int id)
     return saveDoc.toJson();
 }
 
-QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr)
+QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones)
 {
     QSqlQuery query(m_Database);
     int pageSize = 12;
@@ -347,6 +347,29 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (!title.isEmpty() && !query.value("Title").toString().toLower().contains(title.toLower())) continue;
         if (!description.isEmpty() && !query.value("Description").toString().toLower().contains(description.toLower())) continue;
         if (!type.isEmpty() && !query.value("Type").toString().toLower().contains(type.toLower())) continue;
+
+        //years
+        if (!years.isEmpty()) {
+            QStringList yearsList = years.split(",");
+            removeTrimsInStringCollection(yearsList);
+            auto secondValue = yearsList[1];
+            int year = query.value("Year").toInt();
+            QStringList singleYear;
+            singleYear.append(QString::number(year));
+
+            if (!checkOrCondition(yearsList, singleYear)) continue;
+        }
+
+        //seasons
+        if (!seasones.isEmpty()) {
+            QStringList seasonesList = seasones.split(",");
+            removeTrimsInStringCollection(seasonesList);
+            auto season = query.value("Season").toString();
+            QStringList singleSeason;
+            singleSeason.append(season);
+
+            if (!checkOrCondition(seasonesList, singleSeason)) continue;
+        }
 
         //genres
         if (!genres.isEmpty()) {
