@@ -33,6 +33,17 @@ Page {
         }
     }
 
+    Keys.onPressed: {
+        if (event.key === Qt.Key_PageUp) {
+            _page.nextVideo();
+            event.accepted = true;
+        }
+        if (event.key === Qt.Key_PageDown) {
+            _page.previousVideo();
+            event.accepted = true;
+        }
+    }
+
     onNavigateFrom: {
         player.pause();
     }
@@ -501,7 +512,7 @@ Page {
     }
 
     function previousVideo() {
-        if (_page.selectedVideo === 1) return;
+        if (_page.selectedVideo === 0) return;
         _page.restorePosition = 0;
 
         _page.selectedVideo--;

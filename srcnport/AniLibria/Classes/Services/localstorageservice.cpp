@@ -324,7 +324,7 @@ QString LocalStorageService::getRelease(int id)
     return saveDoc.toJson();
 }
 
-QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones)
+QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones, QString statuses)
 {
     QSqlQuery query(m_Database);
     int pageSize = 12;
@@ -352,12 +352,21 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (!years.isEmpty()) {
             QStringList yearsList = years.split(",");
             removeTrimsInStringCollection(yearsList);
-            auto secondValue = yearsList[1];
             int year = query.value("Year").toInt();
             QStringList singleYear;
             singleYear.append(QString::number(year));
 
             if (!checkOrCondition(yearsList, singleYear)) continue;
+        }
+
+        //statuses
+        if (!statuses.isEmpty()) {
+            QStringList statusesList = statuses.split(",");
+            removeTrimsInStringCollection(statusesList);
+            QStringList singleStatus;
+            singleStatus.append(query.value("Status").toString());
+
+            if (!checkOrCondition(statusesList, singleStatus)) continue;
         }
 
         //seasons

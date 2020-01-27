@@ -207,7 +207,7 @@ Page {
                         x: 40
                         y: searchPopupButton.height - 45
                         width: 450
-                        height: 300
+                        height: 380
                         modal: true
                         focus: true
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
@@ -343,6 +343,20 @@ Page {
                                 anchors.top: labelSeasonsSearchField.bottom
                                 anchors.right: parent.right
                                 placeholderText: "Вводите через запятую"
+                            }
+                            Text {
+                                id: labelStatusesSearchField
+                                anchors.top: yearsSearchField.bottom
+                                anchors.rightMargin: 10
+                                font.pixelSize: 14
+                                text: qsTr("Статусы")
+                            }
+                            TextField {
+                                id: statusesSearchField
+                                anchors.top: labelStatusesSearchField.bottom
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                placeholderText: "Вводите статусы через запятую"
                             }
 
                         }
@@ -939,7 +953,8 @@ Page {
                 voicesSearchField.text,
                 orAndVoicesSearchField.checked,
                 yearsSearchField.text,
-                seasonesSearchField.text
+                seasonesSearchField.text,
+                statusesSearchField.text
             )
         );
     }
