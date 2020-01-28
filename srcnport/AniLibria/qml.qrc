@@ -52,5 +52,6 @@
         <file>Assets/Icons/refresh.svg</file>
         <file>Assets/Icons/search.svg</file>
         <file>Assets/Icons/sort.svg</file>
+        <file>Assets/Icons/dice.svg</file>
     </qresource>
 </RCC>

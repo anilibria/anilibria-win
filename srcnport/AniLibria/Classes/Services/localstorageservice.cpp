@@ -11,6 +11,7 @@
 #include <QFuture>
 #include <QDebug>
 #include <QFutureWatcher>
+#include <QDateTime>
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
 
@@ -305,6 +306,12 @@ void LocalStorageService::removeTrimsInStringCollection(QStringList& list) {
     }
 }
 
+int LocalStorageService::randomBetween(int low, int high, uint seed)
+{
+    qsrand(seed);
+    return (qrand() % ((high + 1) - low) + low);
+}
+
 QString LocalStorageService::getRelease(int id)
 {
     QSqlQuery query(m_Database);
@@ -314,6 +321,28 @@ QString LocalStorageService::getRelease(int id)
     query.bindValue(0, id);
 
     if (!query.exec()) return "null";
+
+    FullReleaseModel release;
+    release.fromDatabase(query);
+    QJsonObject jsonValue;
+    release.writeToJson(jsonValue);
+
+    QJsonDocument saveDoc(jsonValue);
+    return saveDoc.toJson();
+}
+
+QString LocalStorageService::getRandomRelease()
+{
+    QSqlQuery query(m_Database);
+
+    query.exec("SELECT COUNT(*) FROM `Releases`");
+    query.next();
+    auto count = query.value(0).toInt();
+
+    auto position = randomBetween(1, count, static_cast<uint>(QDateTime::currentMSecsSinceEpoch()));
+
+    query.exec(QString("SELECT * FROM `Releases` ORDER BY `Code` ASC LIMIT %1,1").arg(position));
+    query.next();
 
     FullReleaseModel release;
     release.fromDatabase(query);

@@ -373,6 +373,18 @@ Page {
                         drawer.open();
                     }
                 }
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/dice.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        const randomRelease = JSON.parse(localStorage.getRandomRelease());
+                        page.openedRelease = randomRelease;
+                    }
+                }
             }
         }
 
