@@ -339,7 +339,7 @@ QString LocalStorageService::getRandomRelease()
     query.next();
     auto count = query.value(0).toInt();
 
-    auto position = randomBetween(1, count, static_cast<uint>(QDateTime::currentMSecsSinceEpoch()));
+    auto position = randomBetween(1, count - 10, static_cast<uint>(QDateTime::currentMSecsSinceEpoch()));
 
     query.exec(QString("SELECT * FROM `Releases` ORDER BY `Code` ASC LIMIT %1,1").arg(position));
     query.next();
