@@ -6,6 +6,7 @@
 #include "../Models/onlinevideomodel.h"
 #include "../Models/releasemodel.h"
 #include "../Models/releasetorrentmodel.h"
+#include "../Models/fullreleasemodel.h"
 
 class LocalStorageService : public QObject
 {
@@ -14,6 +15,7 @@ class LocalStorageService : public QObject
 private:
     QSqlDatabase m_Database;
     QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
+    QList<FullReleaseModel>* m_CachedReleases;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
@@ -39,6 +41,7 @@ public:
     Q_INVOKABLE QString getSchedule();
     Q_INVOKABLE void updateFavorites(QString data);
     Q_INVOKABLE QList<int> getFavorites();
+    Q_INVOKABLE void updateReleasesInnerCache();
 
 signals:
     void allReleasesFinished();

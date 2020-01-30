@@ -15,10 +15,12 @@
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
 
+using namespace std;
+
 const int FavoriteSection = 1;
 const int ScheduleSection = 5;
 
-LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
+LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent), m_CachedReleases(new QList<FullReleaseModel>())
 {
     m_Database = QSqlDatabase::addDatabase("QSQLITE");
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
@@ -59,6 +61,8 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent)
     query.exec("CREATE TABLE IF NOT EXISTS `Schedule` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
     query.exec("CREATE TABLE IF NOT EXISTS `Favorites` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
 
+    updateReleasesInnerCache();
+
     connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
 }
 
@@ -90,6 +94,8 @@ void LocalStorageService::updateAllReleases(const QString &releases)
             }
 
             if (!m_Database.commit()) m_Database.rollback();
+
+            updateReleasesInnerCache();
         }
     );
     m_AllReleaseUpdatedWatcher->setFuture(future);
@@ -314,38 +320,30 @@ int LocalStorageService::randomBetween(int low, int high, uint seed)
 
 QString LocalStorageService::getRelease(int id)
 {
-    QSqlQuery query(m_Database);
+    QListIterator<FullReleaseModel> i(*m_CachedReleases);
 
-    query.prepare("SELECT * FROM `Releases` WHERE `ReleaseId` = ?");
+    while(i.hasNext()) {
+        auto release = i.next();
+        if (release.id() == id) {
+            QJsonObject jsonValue;
+            release.writeToJson(jsonValue);
 
-    query.bindValue(0, id);
+            QJsonDocument saveDoc(jsonValue);
+            return saveDoc.toJson();
+        }
+    }
 
-    if (!query.exec()) return "null";
-
-    FullReleaseModel release;
-    release.fromDatabase(query);
-    QJsonObject jsonValue;
-    release.writeToJson(jsonValue);
-
-    QJsonDocument saveDoc(jsonValue);
-    return saveDoc.toJson();
+    return "{}";
 }
 
 QString LocalStorageService::getRandomRelease()
 {
-    QSqlQuery query(m_Database);
+    auto count = m_CachedReleases->count() - 1;
 
-    query.exec("SELECT COUNT(*) FROM `Releases`");
-    query.next();
-    auto count = query.value(0).toInt();
+    auto position = randomBetween(1, count, static_cast<uint>(QDateTime::currentMSecsSinceEpoch()));
 
-    auto position = randomBetween(1, count - 10, static_cast<uint>(QDateTime::currentMSecsSinceEpoch()));
+    auto release = m_CachedReleases->at(position);
 
-    query.exec(QString("SELECT * FROM `Releases` ORDER BY `Code` ASC LIMIT %1,1").arg(position));
-    query.next();
-
-    FullReleaseModel release;
-    release.fromDatabase(query);
     QJsonObject jsonValue;
     release.writeToJson(jsonValue);
 
@@ -353,35 +351,34 @@ QString LocalStorageService::getRandomRelease()
     return saveDoc.toJson();
 }
 
+static bool compareTimeStamp(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.timestamp() > second.timestamp();
+}
+
 QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones, QString statuses)
 {
-    QSqlQuery query(m_Database);
     int pageSize = 12;
     int startIndex = (page - 1) * pageSize;
-
-    QString request = "SELECT `Id`, `Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
-    request += "`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay` FROM `Releases` ";
-    request += " ORDER BY `Timestamp` DESC";
-    query.exec(request);
-
-    QJsonArray releases;
 
     QStringList userFavorites = getAllFavorites();
     QMap<int, int> scheduled = getScheduleAsMap();
 
-    //WORKAROUND: because unicode `LIKE` and `ORDER` don't work correctly I did all in c++
-    int index = -1;
-    while (query.next())
-    {
-        if (!title.isEmpty() && !query.value("Title").toString().toLower().contains(title.toLower())) continue;
-        if (!description.isEmpty() && !query.value("Description").toString().toLower().contains(description.toLower())) continue;
-        if (!type.isEmpty() && !query.value("Type").toString().toLower().contains(type.toLower())) continue;
+    QJsonArray releases;
+
+    std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), compareTimeStamp);
+
+    foreach (auto releaseItem, *m_CachedReleases) {
+
+        if (!title.isEmpty() && !releaseItem.title().toLower().contains(title.toLower())) continue;
+        if (!description.isEmpty() && !releaseItem.description().toLower().contains(description.toLower())) continue;
+        if (!type.isEmpty() && !releaseItem.type().toLower().contains(type.toLower())) continue;
 
         //years
         if (!years.isEmpty()) {
             QStringList yearsList = years.split(",");
             removeTrimsInStringCollection(yearsList);
-            int year = query.value("Year").toInt();
+            int year = releaseItem.year().toInt();
             QStringList singleYear;
             singleYear.append(QString::number(year));
 
@@ -393,7 +390,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
             QStringList statusesList = statuses.split(",");
             removeTrimsInStringCollection(statusesList);
             QStringList singleStatus;
-            singleStatus.append(query.value("Status").toString());
+            singleStatus.append(releaseItem.status());
 
             if (!checkOrCondition(statusesList, singleStatus)) continue;
         }
@@ -402,7 +399,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (!seasones.isEmpty()) {
             QStringList seasonesList = seasones.split(",");
             removeTrimsInStringCollection(seasonesList);
-            auto season = query.value("Season").toString();
+            auto season = releaseItem.season();
             QStringList singleSeason;
             singleSeason.append(season);
 
@@ -413,7 +410,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (!genres.isEmpty()) {
             QStringList genresList = genres.split(",");
             removeTrimsInStringCollection(genresList);
-            QStringList releaseGenresList = query.value("Genres").toString().split(",");
+            QStringList releaseGenresList = releaseItem.genres().split(",");
             if (genresOr) {
                 if (!checkAllCondition(genresList, releaseGenresList)) continue;
             } else {
@@ -424,7 +421,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         //voices
         if (!voices.isEmpty()) {
             QStringList voicesList = voices.split(",");
-            QStringList releaseVoicesList = query.value("Voices").toString().split(",");
+            QStringList releaseVoicesList = releaseItem.voicers().split(",");
             if (voicesOr) {
                 if (!checkAllCondition(voicesList, releaseVoicesList)) continue;
             } else {
@@ -434,21 +431,22 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
 
         //favorites section
         if (section == FavoriteSection) {
-            auto releaseId = query.value("Releaseid").toInt();
+            auto releaseId = releaseItem.id();
             if (!userFavorites.contains(QString::number(releaseId))) continue;
         }
 
-        if (section == ScheduleSection && !scheduled.contains(query.value("Releaseid").toInt())) continue;
+        if (section == ScheduleSection && !scheduled.contains(releaseItem.id())) continue;
 
-        index++;
-        if (index < startIndex) continue;
-        if (releases.count() == pageSize) continue;
+        if (startIndex > 0) {
+            startIndex--;
+            continue;
+        }
 
-        FullReleaseModel release;
-        release.fromDatabase(query);
         QJsonObject jsonValue;
-        release.writeToJson(jsonValue);
+        releaseItem.writeToJson(jsonValue);
         releases.append(jsonValue);
+
+        if (releases.count() >= pageSize) break;
     }
 
     QJsonDocument saveDoc(releases);
@@ -507,6 +505,21 @@ QList<int> LocalStorageService::getFavorites()
     foreach(auto favorite, favorites) ids.append(favorite.toInt());
 
     return ids;
+}
+
+void LocalStorageService::updateReleasesInnerCache()
+{
+    m_CachedReleases->clear();
+
+    QSqlQuery query(m_Database);
+    query.exec("SELECT * FROM `Releases` ");
+
+    while (query.next()) {
+        FullReleaseModel release;
+        release.fromDatabase(query);
+
+        m_CachedReleases->append(release);
+    }
 }
 
 void LocalStorageService::allReleasesUpdated()
