@@ -363,6 +363,7 @@ Page {
                     }
                 }
                 IconButton {
+                    id: sortingPopupButton
                     height: 45
                     width: 40
                     iconColor: "white"
@@ -370,7 +371,72 @@ Page {
                     iconWidth: 29
                     iconHeight: 29
                     onButtonPressed: {
-                        drawer.open();
+                        sortingPopup.open();
+                    }
+
+                    Popup {
+                        id: sortingPopup
+                        x: 40
+                        y: sortingPopupButton.height - 100
+                        width: 450
+                        height: 200
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        Rectangle {
+                            width: parent.width
+                            Button {
+                                id: startSortingButton
+                                anchors.left: parent.left
+                                text: "Сортировать"
+                                onClicked: {
+                                    page.refreshAllReleases();
+                                }
+                            }
+
+                            Text {
+                                id: labelSortingField
+                                anchors.top: startSortingButton.bottom
+                                font.pixelSize: 14
+                                text: qsTr("Сортировать по")
+                            }
+                            ComboBox {
+                                id: sortingComboBox
+                                anchors.top: labelSortingField.bottom
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                model: ListModel {
+                                    ListElement { text: "Дате последнего обновления" }
+                                    ListElement { text: "Дню в расписании" }
+                                    ListElement { text: "Имени" }
+                                    ListElement { text: "Году" }
+                                    ListElement { text: "Рейтингу" }
+                                    ListElement { text: "Статусу" }
+                                    ListElement { text: "Оригинальному имени" }
+                                    ListElement { text: "История" }
+                                    ListElement { text: "История просмотра" }
+                                    ListElement { text: "Сезону" }
+                                }
+                            }
+
+                            Text {
+                                id: labelSortingDirection
+                                anchors.top: sortingComboBox.bottom
+                                font.pixelSize: 14
+                                text: qsTr("В порядке")
+                            }
+                            ComboBox {
+                                id: sortingDirectionComboBox
+                                anchors.top: labelSortingDirection.bottom
+                                anchors.right: parent.right
+                                anchors.left: parent.left
+                                model: ListModel {
+                                    ListElement { text: "Восходящем" }
+                                    ListElement { text: "Нисходящем" }
+                                }
+                            }
+                        }
                     }
                 }
                 IconButton {

@@ -20,6 +20,8 @@ ApplicationWindow {
     property bool notVisibleSignin: false
     property var userModel: ({})
 
+    Material.accent: Material.Red
+
     function showPage(pageId) {
         if (currentPageId === pageId){
             drawer.close();
