@@ -388,7 +388,7 @@ Page {
                             width: parent.width
                             Button {
                                 id: startSortingButton
-                                anchors.left: parent.left
+                                anchors.right: parent.right
                                 text: "Сортировать"
                                 onClicked: {
                                     page.refreshAllReleases();
@@ -407,16 +407,36 @@ Page {
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 model: ListModel {
-                                    ListElement { text: "Дате последнего обновления" }
-                                    ListElement { text: "Дню в расписании" }
-                                    ListElement { text: "Имени" }
-                                    ListElement { text: "Году" }
-                                    ListElement { text: "Рейтингу" }
-                                    ListElement { text: "Статусу" }
-                                    ListElement { text: "Оригинальному имени" }
-                                    ListElement { text: "История" }
-                                    ListElement { text: "История просмотра" }
-                                    ListElement { text: "Сезону" }
+                                    ListElement {
+                                        text: "Дате последнего обновления"
+                                    }
+                                    ListElement {
+                                        text: "Дню в расписании"
+                                    }
+                                    ListElement {
+                                        text: "Имени"
+                                    }
+                                    ListElement {
+                                        text: "Году"
+                                    }
+                                    ListElement {
+                                        text: "Рейтингу"
+                                    }
+                                    ListElement {
+                                        text: "Статусу"
+                                    }
+                                    ListElement {
+                                        text: "Оригинальному имени"
+                                    }
+                                    ListElement {
+                                        text: "История"
+                                    }
+                                    ListElement {
+                                        text: "История просмотра"
+                                    }
+                                    ListElement {
+                                        text: "Сезону"
+                                    }
                                 }
                             }
 
@@ -431,6 +451,7 @@ Page {
                                 anchors.top: labelSortingDirection.bottom
                                 anchors.right: parent.right
                                 anchors.left: parent.left
+                                currentIndex: 1
                                 model: ListModel {
                                     ListElement { text: "Восходящем" }
                                     ListElement { text: "Нисходящем" }
@@ -1032,7 +1053,9 @@ Page {
                 orAndVoicesSearchField.checked,
                 yearsSearchField.text,
                 seasonesSearchField.text,
-                statusesSearchField.text
+                statusesSearchField.text,
+                sortingComboBox.currentIndex,
+                sortingDirectionComboBox.currentIndex == 1 ? true : false
             )
         );
     }

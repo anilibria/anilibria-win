@@ -36,7 +36,7 @@ public:
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE QString getRelease(int id);
     Q_INVOKABLE QString getRandomRelease();
-    Q_INVOKABLE QString getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones, QString statuses);
+    Q_INVOKABLE QString getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones, QString statuses, int sortingField, bool soringDescending);
     Q_INVOKABLE void setSchedule(QString schedule);
     Q_INVOKABLE QString getSchedule();
     Q_INVOKABLE void updateFavorites(QString data);

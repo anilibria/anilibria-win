@@ -353,10 +353,75 @@ QString LocalStorageService::getRandomRelease()
 
 static bool compareTimeStamp(const FullReleaseModel& first, const FullReleaseModel& second)
 {
+    return first.timestamp() < second.timestamp();
+}
+
+static bool compareTimeStampDescending(const FullReleaseModel& first, const FullReleaseModel& second)
+{
     return first.timestamp() > second.timestamp();
 }
 
-QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones, QString statuses)
+static bool compareName(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.title() < second.title();
+}
+
+static bool compareNameDescending(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.title() > second.title();
+}
+
+static bool compareYear(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.year() < second.year();
+}
+
+static bool compareYearDescending(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.year() > second.year();
+}
+
+static bool compareRating(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.rating() < second.rating();
+}
+
+static bool compareRatingDescending(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.rating() > second.rating();
+}
+
+static bool compareStatus(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.status() < second.status();
+}
+
+static bool compareStatusDescending(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.status() > second.status();
+}
+
+static bool compareOriginalName(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.originalName() < second.originalName();
+}
+
+static bool compareOriginalNameDescending(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.originalName() > second.originalName();
+}
+
+static bool compareSeason(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.season() < second.season();
+}
+
+static bool compareSeasonDescending(const FullReleaseModel& first, const FullReleaseModel& second)
+{
+    return first.season() > second.season();
+}
+
+QString LocalStorageService::getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones, QString statuses, int sortingField, bool sortingDescending)
 {
     int pageSize = 12;
     int startIndex = (page - 1) * pageSize;
@@ -366,7 +431,38 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
 
     QJsonArray releases;
 
-    std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), compareTimeStamp);
+    switch (sortingField) {
+        case 0:
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareTimeStampDescending : compareTimeStamp);
+            break;
+        case 1: //Дню в расписании
+            //std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareTimeStampDescending : compareTimeStamp);
+            break;
+        case 2: //Имени
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareNameDescending : compareName);
+            break;
+        case 3: //Году
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareYearDescending : compareYear);
+            break;
+        case 4: //Рейтингу
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareRatingDescending : compareRating);
+            break;
+        case 5: //Статусу
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareStatusDescending : compareStatus);
+            break;
+        case 6: //Оригинальному имени
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareOriginalNameDescending : compareOriginalName);
+            break;
+        case 7: //История
+            //std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareOriginalNameDescending : compareOriginalName);
+            break;
+        case 8: //История просмотра
+            //std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareOriginalNameDescending : compareOriginalName);
+            break;
+        case 9: //Сезону
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareSeasonDescending : compareSeason);
+            break;
+    }
 
     foreach (auto releaseItem, *m_CachedReleases) {
 
