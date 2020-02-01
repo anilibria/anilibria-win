@@ -429,6 +429,26 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
     QStringList userFavorites = getAllFavorites();
     QMap<int, int> scheduled = getScheduleAsMap();
 
+    std::function<bool (const FullReleaseModel&, const FullReleaseModel&)> scheduleComparer = [scheduled](const FullReleaseModel& first, const FullReleaseModel& second) {
+        auto firstId = first.id();
+        auto firstScheduled = scheduled.contains(firstId) ? scheduled[firstId] : 9;
+
+        auto secondId = second.id();
+        auto secondScheduled = scheduled.contains(secondId) ? scheduled[secondId] : 9;
+
+        return firstScheduled < secondScheduled;
+    };
+
+    std::function<bool (const FullReleaseModel&, const FullReleaseModel&)> scheduleDescendingComparer = [scheduled](const FullReleaseModel& first, const FullReleaseModel& second) {
+        auto firstId = first.id();
+        auto firstScheduled = scheduled.contains(firstId) ? scheduled[firstId] : 9;
+
+        auto secondId = second.id();
+        auto secondScheduled = scheduled.contains(secondId) ? scheduled[secondId] : 9;
+
+        return firstScheduled > secondScheduled;
+    };
+
     QJsonArray releases;
 
     switch (sortingField) {
@@ -436,7 +456,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
             std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareTimeStampDescending : compareTimeStamp);
             break;
         case 1: //Дню в расписании
-            //std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareTimeStampDescending : compareTimeStamp);
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? scheduleDescendingComparer : scheduleComparer);
             break;
         case 2: //Имени
             std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareNameDescending : compareName);

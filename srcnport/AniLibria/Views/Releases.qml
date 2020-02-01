@@ -22,6 +22,11 @@ Page {
     property bool synchronizeEnabled: false
     property int selectedSection: 0
     property var sections: ["Все релизы", "Избранное", "Новые релизы", "Новые серии", "Обновленные торренты", "Расписание"]
+    property var sectionSortings: {
+        0: { field: 0, direction: 1 },
+        1: { field: 0, direction: 1 },
+        5: { field: 1, direction: 0 },
+    }
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -1073,6 +1078,11 @@ Page {
 
     function changeSection(section) {
         page.selectedSection = section;
+        if (section in page.sectionSortings) {
+            const defaultSorting = page.sectionSortings[section];
+            sortingComboBox.currentIndex = defaultSorting.field;
+            sortingDirectionComboBox.currentIndex = defaultSorting.direction;
+        }
 
         refreshAllReleases();
     }
