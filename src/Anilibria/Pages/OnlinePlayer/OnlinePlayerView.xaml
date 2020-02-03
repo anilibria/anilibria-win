@@ -1122,6 +1122,7 @@
 													</TextBlock>
 												</StackPanel>
 												<StackPanel
+													Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsMediaOpened}"
 													Orientation="Horizontal"
 													HorizontalAlignment="Center">
 													<ToggleButton
