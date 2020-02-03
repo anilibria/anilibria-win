@@ -63,6 +63,10 @@ Page {
 
     anchors.fill: parent
 
+    ListModel {
+        id: releasesModel
+    }
+
     Rectangle {
         id: mask
         width: 180
@@ -646,7 +650,7 @@ Page {
                         columns: 2
                         spacing: 4
                         Repeater {
-                            model: page.displayedReleases
+                            model: releasesModel
                             Rectangle {
                                 width: 480
                                 height: 260
@@ -1067,12 +1071,15 @@ Page {
 
     function fillNextReleases() {
         page.pageIndex += 1;
-        page.displayedReleases = page.displayedReleases.concat(getReleasesByFilter());
+        const nextPageReleases = getReleasesByFilter();
+        for (const displayRelease of nextPageReleases) releasesModel.append({ model: displayRelease });
     }
 
     function refreshAllReleases() {
         page.pageIndex = 1;
-        page.displayedReleases = getReleasesByFilter();
+        releasesModel.clear();
+        const displayReleases = getReleasesByFilter();
+        for (const displayRelease of displayReleases) releasesModel.append({ model: displayRelease });
         scrollview.contentY = 0;
     }
 
