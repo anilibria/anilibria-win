@@ -3,11 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Anilibria.Services.Implementations;
 using Anilibria.Services.PresentationClasses;
+using Windows.ApplicationModel.Core;
 using Windows.Devices.Input;
 using Windows.Gaming.Input;
 using Windows.Media.Casting;
 using Windows.Media.Playback;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -66,7 +68,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ChangePosition = ChangePosition ,
 				ScrollToSelectedPlaylist = ScrollToSelectedItemInPlaylist ,
 				SetVisiblePlaybackButtons = SetVisiblePlaybackButtons ,
-				ChangeOpenPlaylistButton = ChangeOpenPlaylistButton,
+				ChangeOpenPlaylistButton = ChangeOpenPlaylistButton ,
 				ChangePlaybackRate = ChangePlaybackRate
 			};
 			DataContext = m_ViewModel;
@@ -115,6 +117,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
 			Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+
+			RestoreCursor ();
 		}
 
 		private void ChangePlaybackRate ( double rate ) {
@@ -378,6 +382,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private void Grid_PointerMoved ( object sender , PointerRoutedEventArgs e ) {
 		}
 
+		private void ExtendViewToTitleBar () {
+			ApplicationViewTitleBar formattableTitleBar = ApplicationView.GetForCurrentView ().TitleBar;
+			formattableTitleBar.ButtonBackgroundColor = Colors.Transparent;
+			formattableTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+			CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView ().TitleBar;
+			coreTitleBar.ExtendViewIntoTitleBar = true;
+		}
+
 		private void MouseHidingTracker () {
 			var windowHeight = ( (Frame) Window.Current.Content ).ActualHeight;
 			if ( OnlinePlayer.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing && windowHeight - m_MouseY > 110 && !m_TransportControlsCaptured ) {
@@ -392,6 +404,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( m_LastActivityTime == 100 ) {
 					m_LastActivityTime = 0;
 					Window.Current.CoreWindow.PointerCursor = null;
+					ExtendViewToTitleBar ();
 				}
 			}
 			else {
@@ -412,6 +425,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private void RestoreCursor () {
 			Window.Current.CoreWindow.PointerCursor = new CoreCursor ( CoreCursorType.Arrow , 0 );
+
+			ApplicationView.GetForCurrentView ().TitleBar.ButtonBackgroundColor = null;
+			CoreApplication.GetCurrentView ().TitleBar.ExtendViewIntoTitleBar = false;
 		}
 
 		private void TimerTick ( object sender , object e ) {
