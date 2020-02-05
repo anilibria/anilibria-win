@@ -27,7 +27,15 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent), m_C
     auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/cache.db";
     m_Database.setDatabaseName(path);
     //WORKAROUND: double check for open
-    if (!m_Database.open()) m_Database.open();
+    m_Database.open();
+
+    if (!QFile::exists(getReleasesCachePath())) {
+        QFile createReleasesCacheFile(getReleasesCachePath());
+        createReleasesCacheFile.open(QFile::WriteOnly | QFile::Text);
+        QString defaultArray = "[]";
+        createReleasesCacheFile.write(defaultArray.toUtf8());
+        createReleasesCacheFile.close();
+    }
 
     QSqlQuery query(m_Database);
 
@@ -77,24 +85,27 @@ void LocalStorageService::updateAllReleases(const QString &releases)
         [=] {
             QJsonParseError jsonError;
             QJsonDocument jsonDocument = QJsonDocument::fromJson(releases.toUtf8(), &jsonError);
+            if (jsonError.error != 0) return; //TODO: handle this situation and show message
 
-            if (!m_Database.transaction()) return;
+            auto jsonReleases = jsonDocument.array();
+            auto variantList = jsonReleases.toVariantList();
 
-            QJsonArray jsonReleases = jsonDocument.array();
-            foreach (QJsonValue jsonRelease,  jsonReleases) {
+            foreach (QJsonValue jsonRelease, jsonReleases) {
                 ReleaseModel releaseModel;
                 releaseModel.readFromApiModel(jsonRelease.toObject());
 
-                if (isReleaseExists(releaseModel.id())) {
-                    updateRelease(releaseModel);
-                    continue;
+                FullReleaseModel currentReleaseCacheModel = getReleaseFromCache(releaseModel.id());
+
+                FullReleaseModel newReleaseModel = mapToFullReleaseModel(releaseModel);
+
+                if (currentReleaseCacheModel.id() > -1) {
+                    m_CachedReleases->removeOne(currentReleaseCacheModel);
                 }
 
-                insertRelease(releaseModel);
+                m_CachedReleases->append(newReleaseModel);
             }
 
-            if (!m_Database.commit()) m_Database.rollback();
-
+            saveCachedReleasesToFile();
             updateReleasesInnerCache();
         }
     );
@@ -137,6 +148,15 @@ bool LocalStorageService::isReleaseExists(int id)
     query.exec();
 
     return query.next();
+}
+
+FullReleaseModel LocalStorageService::getReleaseFromCache(int id)
+{
+    foreach (auto cacheRelease, *m_CachedReleases) if (cacheRelease.id() == id) return cacheRelease;
+
+    FullReleaseModel nullObject;
+    nullObject.setId(-1);
+    return nullObject;
 }
 
 void LocalStorageService::insertRelease(ReleaseModel &releaseModel)
@@ -245,6 +265,62 @@ void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
     }
 }
 
+FullReleaseModel LocalStorageService::mapToFullReleaseModel(ReleaseModel &releaseModel)
+{
+    FullReleaseModel model;
+
+    auto torrents = releaseModel.torrents();
+    auto torrentJson = torrentsToJson(torrents);
+
+    auto videos = releaseModel.videos();
+    auto videosJson = videosToJson(videos);
+
+    auto voices = releaseModel.voices().join(", ");
+    if (voices.length() == 0) voices = "Не указано";
+
+    auto genres = releaseModel.genres().join(", ");
+    if (genres.length() == 0) genres = "Не указано";
+
+    model.setId(releaseModel.id());
+    model.setTitle(releaseModel.title());
+    model.setCode(releaseModel.code());
+    model.setOriginalName(releaseModel.names().last());
+    model.setRating(releaseModel.rating());
+    model.setSeries(releaseModel.series());
+    model.setStatus(releaseModel.status());
+    model.setType(releaseModel.type());
+    model.setTimestamp(releaseModel.timestamp().toInt());
+    model.setYear(releaseModel.year());
+    model.setSeason(releaseModel.season());
+    model.setCountTorrents(torrents.count());
+    model.setCountOnlineVideos(videos.count());
+    model.setDescription(releaseModel.description());
+    model.setAnnounce(releaseModel.announce());
+    model.setVoicers(voices);
+    model.setGenres(genres);
+    model.setVideos(videosJson);
+    model.setTorrents(torrentJson);
+    model.setPoster(releaseModel.poster());
+
+    return model;
+}
+
+void LocalStorageService::saveCachedReleasesToFile()
+{
+    QJsonArray releasesArray;
+    foreach (auto release, *m_CachedReleases) {
+        QJsonObject jsonObject;
+        release.writeToJson(jsonObject);
+        releasesArray.append(jsonObject);
+    }
+    QJsonDocument document(releasesArray);
+
+    QFile file(getReleasesCachePath());
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file.write(document.toJson());
+    file.close();
+}
+
 QStringList LocalStorageService::getAllFavorites()
 {
     QSqlQuery query(m_Database);
@@ -316,6 +392,11 @@ int LocalStorageService::randomBetween(int low, int high, uint seed)
 {
     qsrand(seed);
     return (qrand() % ((high + 1) - low) + low);
+}
+
+QString LocalStorageService::getReleasesCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/releases.cache";
 }
 
 QString LocalStorageService::getRelease(int id)
@@ -627,14 +708,18 @@ void LocalStorageService::updateReleasesInnerCache()
 {
     m_CachedReleases->clear();
 
-    QSqlQuery query(m_Database);
-    query.exec("SELECT * FROM `Releases` ");
+    QFile releasesCacheFile(getReleasesCachePath());
 
-    while (query.next()) {
-        FullReleaseModel release;
-        release.fromDatabase(query);
+    releasesCacheFile.open(QFile::ReadOnly | QFile::Text);
 
-        m_CachedReleases->append(release);
+    QString releasesJson = releasesCacheFile.readAll();
+    auto releasesArray = QJsonDocument::fromJson(releasesJson.toUtf8()).array();
+
+    foreach (auto release, releasesArray) {
+        FullReleaseModel jsonRelease;
+        jsonRelease.readFromJson(release);
+
+        m_CachedReleases->append(jsonRelease);
     }
 }
 

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSqlQuery>
+#include "releasemodel.h"
 
 class FullReleaseModel
 {
@@ -96,6 +97,10 @@ public:
     void fromDatabase(QSqlQuery query);
 
     void writeToJson(QJsonObject &json) const;
+
+    void readFromJson(QJsonValue &json);
+
+    bool operator== (const FullReleaseModel &comparedModel);
 
 };
 

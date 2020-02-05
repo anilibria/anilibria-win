@@ -1,6 +1,7 @@
 #include <QSqlQuery>
 #include <QVariant>
 #include <QJsonObject>
+#include <QJsonDocument>
 #include "fullreleasemodel.h"
 #include "globalconstants.h"
 
@@ -41,7 +42,11 @@ QString FullReleaseModel::poster() const
 
 void FullReleaseModel::setPoster(const QString &poster)
 {
-    m_Poster = AnilibriaApiPath + poster;
+    if (poster.contains("https://")) {
+        m_Poster = poster;
+    } else {
+        m_Poster = AnilibriaApiPath + poster;
+    }
 }
 
 QString FullReleaseModel::description() const
@@ -236,30 +241,57 @@ void FullReleaseModel::fromDatabase(QSqlQuery query)
    setVoicers(query.value("Voices").toString());
    setTorrents(query.value("Torrents").toString());
    setVideos(query.value("Videos").toString());
-   //set(query.value("ScheduleOnDay").toString());
-   //set(query.value("MetaData").toString());
 }
 
 void FullReleaseModel::writeToJson(QJsonObject &json) const
 {
     json["id"] = m_Id;
+    json["title"] = m_Title;
     json["code"] = m_Code;
-    json["poster"] = m_Poster;
+    json["originalName"] = m_OriginalName;
+    json["rating"] = m_Rating;
     json["series"] = m_Series;
     json["status"] = m_Status;
-    json["timestamp"] = m_Timestamp;
     json["type"] = m_Type;
+    json["timestamp"] = m_Timestamp;
     json["year"] = m_Year;
-    json["description"] = m_Description;
-    json["rating"] = m_Rating;
-    json["title"] = m_Title;
     json["season"] = m_Season;
+    json["countTorrents"] = m_CountTorrents;
+    json["countVideos"] = m_CountVideos;
+    json["description"] = m_Description;
     json["announce"] = m_Announce;
     json["genres"] = m_Genres;
-    json["videos"] = m_Videos;
+    json["poster"] = m_Poster;
     json["voices"] = m_Voices;
     json["torrents"] = m_Torrents;
-    json["originalName"] = m_OriginalName;
-    json["countVideos"] = m_CountVideos;
-    json["countTorrents"] = m_CountTorrents;
+    json["videos"] = m_Videos;
+}
+
+void FullReleaseModel::readFromJson(QJsonValue &json)
+{
+    setId(json["id"].toInt());
+    setTitle(json["title"].toString());
+    setCode(json["code"].toString());
+    setOriginalName(json["originalName"].toString());
+    setRating(json["rating"].toInt());
+    setSeries(json["series"].toString());
+    setStatus(json["status"].toString());
+    setType(json["type"].toString());
+    setTimestamp(json["timestamp"].toInt());
+    setYear(json["year"].toString());
+    setSeason(json["season"].toString());
+    setCountTorrents(json["countTorrents"].toInt());
+    setCountOnlineVideos(json["countVideos"].toInt());
+    setDescription(json["description"].toString());
+    setAnnounce(json["announce"].toString());
+    setGenres(json["genres"].toString());
+    setPoster(json["poster"].toString());
+    setVoicers(json["voices"].toString());
+    setTorrents(json["torrents"].toString());
+    setVideos(json["videos"].toString());
+}
+
+bool FullReleaseModel::operator==(const FullReleaseModel &comparedModel)
+{
+    return m_Id == comparedModel.id();
 }

@@ -20,14 +20,18 @@ private:
     QString videosToJson(QList<OnlineVideoModel>& videos);
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
     bool isReleaseExists(int id);
+    FullReleaseModel getReleaseFromCache(int id);
     void insertRelease(ReleaseModel& releaseModel);
     void updateRelease(ReleaseModel& releaseModel);
+    FullReleaseModel mapToFullReleaseModel(ReleaseModel& releaseModel);
+    void saveCachedReleasesToFile();
     QStringList getAllFavorites();
     QMap<int, int> getScheduleAsMap();
     bool checkOrCondition(QStringList source, QStringList target);
     bool checkAllCondition(QStringList source, QStringList target);
     void removeTrimsInStringCollection(QStringList& list);
     int randomBetween(int low, int high, uint seed);
+    QString getReleasesCachePath() const;
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
