@@ -22,61 +22,17 @@ const int ScheduleSection = 5;
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent), m_CachedReleases(new QList<FullReleaseModel>())
 {
-    m_Database = QSqlDatabase::addDatabase("QSQLITE");
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
-    auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/cache.db";
-    m_Database.setDatabaseName(path);
-    //WORKAROUND: double check for open
-    m_Database.open();
 
-    if (!QFile::exists(getReleasesCachePath())) {
-        QFile createReleasesCacheFile(getReleasesCachePath());
-        createReleasesCacheFile.open(QFile::WriteOnly | QFile::Text);
-        QString defaultArray = "[]";
-        createReleasesCacheFile.write(defaultArray.toUtf8());
-        createReleasesCacheFile.close();
-    }
-
-    QSqlQuery query(m_Database);
-
-    QString releasesTable = "CREATE TABLE IF NOT EXISTS `Releases` (";
-    releasesTable += "`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,";
-    releasesTable += "`Title` TEXT NOT NULL,";
-    releasesTable += "`Code` TEXT NOT NULL,";
-    releasesTable += "`OriginalTitle` TEXT NOT NULL,";
-    releasesTable += "`ReleaseId` INTEGER NOT NULL,";
-    releasesTable += "`Rating` BIGINT NOT NULL,";
-    releasesTable += "`Series` TEXT,";
-    releasesTable += "`Status` TEXT NOT NULL,";
-    releasesTable += "`Type` TEXT NOT NULL,";
-    releasesTable += "`Timestamp` INTEGER NOT NULL,";
-    releasesTable += "`Year` TEXT NOT NULL,";
-    releasesTable += "`Season` TEXT NOT NULL,";
-    releasesTable += "`CountOnlineVideos` INTEGER NOT NULL,";
-    releasesTable += "`TorrentsCount` INTEGER NOT NULL,";
-    releasesTable += "`Description` TEXT NOT NULL,";
-    releasesTable += "`Announce` TEXT,";
-    releasesTable += "`Genres` TEXT NOT NULL,";
-    releasesTable += "`Poster` TEXT NOT NULL,";
-    releasesTable += "`Voices` TEXT NOT NULL,";
-    releasesTable += "`Torrents` TEXT NOT NULL,";
-    releasesTable += "`Videos` TEXT NOT NULL,";
-    releasesTable += "`ScheduleOnDay` TEXT NOT NULL,";
-    releasesTable += "`MetaData` TEXT NOT NULL";
-    releasesTable += ")";
-
-    query.exec(releasesTable);
-    query.exec("CREATE TABLE IF NOT EXISTS `Schedule` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
-    query.exec("CREATE TABLE IF NOT EXISTS `Favorites` (`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Metadata` TEXT NOT NULL)");
+    createIfNotExistsFile(getReleasesCachePath(), "[]");
+    createIfNotExistsFile(getScheduleCachePath(), "{}");
+    createIfNotExistsFile(getFavoritesCachePath(), "[]");
+    createIfNotExistsFile(getSeensCachePath(), "[]");
+    QString favoritespath = getFavoritesCachePath();
 
     updateReleasesInnerCache();
 
     connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
-}
-
-LocalStorageService::~LocalStorageService()
-{
-    m_Database.close();
 }
 
 void LocalStorageService::updateAllReleases(const QString &releases)
@@ -159,112 +115,6 @@ FullReleaseModel LocalStorageService::getReleaseFromCache(int id)
     return nullObject;
 }
 
-void LocalStorageService::insertRelease(ReleaseModel &releaseModel)
-{
-    auto torrents = releaseModel.torrents();
-    auto torrentJson = torrentsToJson(torrents);
-
-    auto videos = releaseModel.videos();
-    auto videosJson = videosToJson(videos);
-
-    QSqlQuery query(m_Database);
-    QString request = "INSERT INTO `Releases` (`Title`,`Code`,`OriginalTitle`,`ReleaseId`,`Rating`,`Series`,`Status`,`Type`,`Timestamp`,";
-    request.append("`Year`,`Season`,`CountOnlineVideos`,`TorrentsCount`,`Description`,`Announce`,`Genres`,`Poster`,`Voices`,`Torrents`,`Videos`,`ScheduleOnDay`, `MetaData`) ");
-    auto values = QString(" VALUES (:title,:code,:originaltitle,:id,:rating,:series,:status,:type,:timestamp,:year,:season,:videoscount,:torrentscount,:description,:announce,:genres,:poster,:voices,:torrents,:videos,:scheduleonday,:metadata)");
-
-    query.prepare(request + values);
-
-    auto voices = releaseModel.voices().join(", ");
-    if (voices.length() == 0) voices = "Не указано";
-
-    auto genres = releaseModel.genres().join(", ");
-    if (genres.length() == 0) genres = "Не указано";
-
-    query.bindValue(":title", releaseModel.title());
-    query.bindValue(":code", releaseModel.code());
-    query.bindValue(":originaltitle", releaseModel.names().last());
-    query.bindValue(":id", releaseModel.id());
-    query.bindValue(":rating", releaseModel.rating());
-    query.bindValue(":series", releaseModel.series());
-    query.bindValue(":status", releaseModel.status());
-    query.bindValue(":type", releaseModel.type());
-    query.bindValue(":timestamp", releaseModel.timestamp());
-    query.bindValue(":year", releaseModel.year());
-    query.bindValue(":season", releaseModel.season());
-    query.bindValue(":videoscount", releaseModel.videos().length());
-    query.bindValue(":torrentscount", releaseModel.torrents().length());
-    query.bindValue(":description", releaseModel.description());
-    query.bindValue(":announce", releaseModel.announce());
-    query.bindValue(":genres", genres);
-    query.bindValue(":poster", releaseModel.poster());
-    query.bindValue(":voices", voices);
-    query.bindValue(":torrents", torrentJson);
-    query.bindValue(":videos", videosJson);
-    query.bindValue(":scheduleonday", "понедельник");
-    query.bindValue(":metadata", "{}");
-
-    query.exec();
-}
-
-void LocalStorageService::updateRelease(ReleaseModel& releaseModel)
-{
-    auto torrents = releaseModel.torrents();
-    auto torrentJson = torrentsToJson(torrents);
-
-    auto videos = releaseModel.videos();
-    auto videosJson = videosToJson(videos);
-
-    auto voices = releaseModel.voices().join(", ");
-    if (voices.length() == 0) voices = "Не указано";
-
-    auto genres = releaseModel.genres().join(", ");
-    if (genres.length() == 0) genres = "Не указано";
-
-    QSqlQuery query(m_Database);
-    QString request = "UPDATE `Releases` SET `Title` = ?,`Code` = ?,`OriginalTitle` = ?,`Rating` = ?,`Series` = ?,`Status` = ?,`Type` = ?,`Timestamp` = ?, ";
-    request.append("`Year` = ?, `Season` = ?, `CountOnlineVideos` = ?, `TorrentsCount` = ?, `Description` = ?, `Announce` = ?, `Genres` = ?, `Poster` = ?, `Voices` = ? ");
-    request.append(" WHERE `ReleaseId` = ?");
-
-    query.prepare(request);
-
-    query.bindValue(0, releaseModel.title());
-    query.bindValue(1, releaseModel.code());
-    query.bindValue(2, releaseModel.names().last());
-    query.bindValue(3, releaseModel.rating());
-    query.bindValue(4, releaseModel.series());
-    query.bindValue(5, releaseModel.status());
-    query.bindValue(6, releaseModel.type());
-    query.bindValue(7, releaseModel.timestamp());
-    query.bindValue(8, releaseModel.year());
-    query.bindValue(9, releaseModel.season());
-    query.bindValue(10, releaseModel.videos().length());
-    query.bindValue(11, releaseModel.torrents().length());
-    query.bindValue(12, releaseModel.description());
-    query.bindValue(13, releaseModel.announce());
-    query.bindValue(14, genres);
-    query.bindValue(15, releaseModel.poster());
-    query.bindValue(16, voices);
-    query.bindValue(17, releaseModel.id());
-
-    if (!query.exec()) {
-        const QString errorLine = query.lastError().text();
-        qDebug() << errorLine;
-    }
-
-    QSqlQuery jsonQuery(m_Database);
-    QString jsonQueryString = "UPDATE `Releases` SET `Torrents` = ?, `Videos` = ? WHERE `ReleaseId` = " + QString::number(releaseModel.id());
-
-    jsonQuery.prepare(jsonQueryString);
-
-    jsonQuery.bindValue(0, torrentJson);
-    jsonQuery.bindValue(1, videosJson);
-
-    if (!jsonQuery.exec()) {
-        const QString errorLine = jsonQuery.lastError().text();
-        qDebug() << errorLine;
-    }
-}
-
 FullReleaseModel LocalStorageService::mapToFullReleaseModel(ReleaseModel &releaseModel)
 {
     FullReleaseModel model;
@@ -323,15 +173,13 @@ void LocalStorageService::saveCachedReleasesToFile()
 
 QStringList LocalStorageService::getAllFavorites()
 {
-    QSqlQuery query(m_Database);
+    QFile favoritesCacheFile(getFavoritesCachePath());
+    favoritesCacheFile.open(QFile::ReadOnly | QFile::Text);
+    QString favoritesJson = favoritesCacheFile.readAll();
+    favoritesCacheFile.close();
 
-    query.exec("SELECT * FROM `Favorites`");
-
-    if (!query.next()) return QStringList();
-
-    auto metadata = query.value("Metadata").toString();
     QJsonParseError jsonError;
-    QJsonDocument jsonDocument = QJsonDocument::fromJson(metadata.toUtf8(), &jsonError);
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(favoritesJson.toUtf8(), &jsonError);
     auto favorites = jsonDocument.array();
     QStringList result;
     foreach (auto favorite, favorites) result.append(QString::number(favorite.toInt()));
@@ -341,15 +189,13 @@ QStringList LocalStorageService::getAllFavorites()
 
 QMap<int, int> LocalStorageService::getScheduleAsMap()
 {
-    QSqlQuery query(m_Database);
+    QFile scheduleCacheFile(getScheduleCachePath());
+    scheduleCacheFile.open(QFile::ReadOnly | QFile::Text);
+    QString scheduleJson = scheduleCacheFile.readAll();
+    scheduleCacheFile.close();
 
-    query.exec("SELECT * FROM `Schedule`");
-
-    if (!query.next()) return QMap<int, int>();
-
-    auto metadata = query.value("Metadata").toString();
     QJsonParseError jsonError;
-    QJsonDocument jsonDocument = QJsonDocument::fromJson(metadata.toUtf8(), &jsonError);
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(scheduleJson.toUtf8(), &jsonError);
     auto schedule = jsonDocument.object();
     auto keys = schedule.keys();
     QMap<int, int> result;
@@ -397,6 +243,31 @@ int LocalStorageService::randomBetween(int low, int high, uint seed)
 QString LocalStorageService::getReleasesCachePath() const
 {
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/releases.cache";
+}
+
+QString LocalStorageService::getFavoritesCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/favorites.cache";
+}
+
+QString LocalStorageService::getScheduleCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/schedule.cache";
+}
+
+QString LocalStorageService::getSeensCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/seen.cache";
+}
+
+void LocalStorageService::createIfNotExistsFile(QString path, QString defaultContent)
+{
+    if (!QFile::exists(path)) {
+        QFile createReleasesCacheFile(path);
+        createReleasesCacheFile.open(QFile::WriteOnly | QFile::Text);
+        createReleasesCacheFile.write(defaultContent.toUtf8());
+        createReleasesCacheFile.close();
+    }
 }
 
 QString LocalStorageService::getRelease(int id)
@@ -652,47 +523,27 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
 
 void LocalStorageService::setSchedule(QString schedule)
 {
-    QSqlQuery query(m_Database);
-    query.exec("SELECT * FROM `Schedule` LIMIT 1");
-    if (!query.next()) {
-        query.exec("INSERT INTO `Schedule`(`Metadata`) VALUES ('-')");
-        query.exec("SELECT * FROM `Schedule` LIMIT 1");
-        query.next();
-    }
-    auto id = query.value("Id").toInt();
-
-    query.prepare("UPDATE `Schedule` SET `Metadata` = ? WHERE `Id` = ?");
-    query.bindValue(0, schedule);
-    query.bindValue(1, id);
-    query.exec();
+    QFile scheduleCacheFile(getScheduleCachePath());
+    scheduleCacheFile.open(QFile::WriteOnly | QFile::Text);
+    scheduleCacheFile.write(schedule.toUtf8());
+    scheduleCacheFile.close();
 }
 
 QString LocalStorageService::getSchedule()
 {
-    QSqlQuery query(m_Database);
-    query.exec("SELECT * FROM `Schedule` LIMIT 1");
-    if (!query.next()) return "{}";
-
-    return query.value("Metadata").toString();
+    QFile scheduleCacheFile(getScheduleCachePath());
+    scheduleCacheFile.open(QFile::ReadOnly | QFile::Text);
+    QString scheduleJson = scheduleCacheFile.readAll();
+    scheduleCacheFile.close();
+    return scheduleJson;
 }
 
 void LocalStorageService::updateFavorites(QString data)
 {
-    QSqlQuery query(m_Database);
-
-    query.exec("SELECT * FROM `Favorites`");
-
-    if (!query.next()) {
-        QSqlQuery query(m_Database);
-        query.prepare("INSERT INTO `Favorites`(`Metadata`) VALUES (?)");
-        query.bindValue(0, data);
-        query.exec();
-    } else {
-        QSqlQuery query(m_Database);
-        query.prepare("UPDATE `Favorites` SET `Metadata`= ?");
-        query.bindValue(0, data);
-        query.exec();
-    }
+    QFile favoritesCacheFile(getFavoritesCachePath());
+    favoritesCacheFile.open(QFile::WriteOnly | QFile::Text);
+    favoritesCacheFile.write(data.toUtf8());
+    favoritesCacheFile.close();
 }
 
 QList<int> LocalStorageService::getFavorites()
@@ -713,6 +564,7 @@ void LocalStorageService::updateReleasesInnerCache()
     releasesCacheFile.open(QFile::ReadOnly | QFile::Text);
 
     QString releasesJson = releasesCacheFile.readAll();
+    releasesCacheFile.close();
     auto releasesArray = QJsonDocument::fromJson(releasesJson.toUtf8()).array();
 
     foreach (auto release, releasesArray) {

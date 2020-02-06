@@ -21,8 +21,6 @@ private:
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
     bool isReleaseExists(int id);
     FullReleaseModel getReleaseFromCache(int id);
-    void insertRelease(ReleaseModel& releaseModel);
-    void updateRelease(ReleaseModel& releaseModel);
     FullReleaseModel mapToFullReleaseModel(ReleaseModel& releaseModel);
     void saveCachedReleasesToFile();
     QStringList getAllFavorites();
@@ -32,10 +30,13 @@ private:
     void removeTrimsInStringCollection(QStringList& list);
     int randomBetween(int low, int high, uint seed);
     QString getReleasesCachePath() const;
+    QString getFavoritesCachePath() const;
+    QString getScheduleCachePath() const;
+    QString getSeensCachePath() const;
+    void createIfNotExistsFile(QString path, QString defaultContent);
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
-    ~LocalStorageService();
 
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE QString getRelease(int id);
