@@ -2,7 +2,6 @@
 #define LOCALSTORAGESERVICE_H
 
 #include <QObject>
-#include <QSqlDatabase>
 #include "../Models/onlinevideomodel.h"
 #include "../Models/releasemodel.h"
 #include "../Models/releasetorrentmodel.h"
@@ -13,13 +12,11 @@ class LocalStorageService : public QObject
     Q_OBJECT
 
 private:
-    QSqlDatabase m_Database;
     QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
     QList<FullReleaseModel>* m_CachedReleases;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
-    bool isReleaseExists(int id);
     FullReleaseModel getReleaseFromCache(int id);
     FullReleaseModel mapToFullReleaseModel(ReleaseModel& releaseModel);
     void saveCachedReleasesToFile();

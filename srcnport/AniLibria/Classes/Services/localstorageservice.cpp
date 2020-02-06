@@ -1,7 +1,4 @@
 #include "localstorageservice.h"
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
 #include <QStandardPaths>
 #include <QVariant>
 #include <QJsonDocument>
@@ -92,18 +89,6 @@ QString LocalStorageService::torrentsToJson(QList<ReleaseTorrentModel> &torrents
     QJsonDocument torrentDocument(torrentsArray);
     QString torrentJson(torrentDocument.toJson());
     return torrentJson;
-}
-
-bool LocalStorageService::isReleaseExists(int id)
-{
-    QSqlQuery query(m_Database);
-    query.prepare("SELECT `ReleaseId` FROM `Releases` WHERE `ReleaseId` = :id");
-
-    query.bindValue(":id", id);
-
-    query.exec();
-
-    return query.next();
 }
 
 FullReleaseModel LocalStorageService::getReleaseFromCache(int id)
