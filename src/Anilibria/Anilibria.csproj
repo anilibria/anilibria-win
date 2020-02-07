@@ -628,6 +628,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BencodeNET">
+      <Version>3.0.1</Version>
+    </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.8.14</Version>
     </PackageReference>

@@ -9,7 +9,7 @@
 
 		SaveAsFile = 2,
 
-		DownloadToDownloadManager = 3,
+		OpenMagnetLink = 3,
 
 	};
 

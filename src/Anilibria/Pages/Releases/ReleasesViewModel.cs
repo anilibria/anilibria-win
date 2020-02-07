@@ -10,6 +10,8 @@ using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Anilibria.ThemeChanger;
+using BencodeNET.Parsing;
+using BencodeNET.Torrents;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
@@ -95,10 +97,10 @@ namespace Anilibria.Pages.Releases {
 					Mode = TorrentDownloadMode.SaveAsFile,
 					Title = "Сохранить файл"
 				},
-				//new TorrentDownloadModeModel {
-				//	Mode = TorrentDownloadMode.DownloadToDownloadManager,
-				//	Name = "Использовать встроенный загрузчик"
-				//},
+				new TorrentDownloadModeModel {
+					Mode = TorrentDownloadMode.OpenMagnetLink,
+					Title = "Открыть magnet ссылку"
+				},
 			}
 		);
 
@@ -1207,6 +1209,11 @@ namespace Anilibria.Pages.Releases {
 				case TorrentDownloadMode.OpenInTorrentClient:
 					await Launcher.LaunchFileAsync ( file );
 					break;
+				case TorrentDownloadMode.OpenMagnetLink:
+					var parser = new BencodeParser ();
+					var torrentFile = parser.Parse<Torrent> ( file.Path );
+					await Launcher.LaunchUriAsync ( new Uri ( torrentFile.GetMagnetLink () ) );
+					break;
 				case TorrentDownloadMode.SaveAsFile:
 					var savePicker = new FileSavePicker {
 						SuggestedStartLocation = PickerLocationId.Downloads ,
@@ -1252,7 +1259,6 @@ namespace Anilibria.Pages.Releases {
 						}
 					}
 					break;
-				case TorrentDownloadMode.DownloadToDownloadManager:
 				default: throw new NotSupportedException ( $"Download Mode {SelectedTorrentDownloadMode.Mode} not supported." );
 			}
 
