@@ -130,7 +130,7 @@ ApplicationWindow {
         onUserDataReceived: {
             const userData = JSON.parse(data);
             window.userModel = userData;
-            if (window.userModel != null) {
+            if (window.userModel) {
                 var ids = localStorage.getFavorites().map(a => a);
                 releases.refreshFavorites(ids);
             }
