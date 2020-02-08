@@ -391,7 +391,12 @@ ApplicationWindow {
         focus: true
         synchronizeEnabled: window.synchronizationEnabled
         onWatchRelease: {
-            videoplayer.setReleaseVideo(releaseId, -1, videos);
+            videoplayer.setReleaseParameters = {
+                releaseId,
+                customPlaylistPosition: -1,
+                videos
+            };
+            videoplayer.setReleaseVideo();
             window.showPage("videoplayer");
         }
         onRequestSynchronizeReleases: {

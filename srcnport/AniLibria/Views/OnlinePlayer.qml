@@ -18,9 +18,10 @@ Page {
     property string displayVideoPosition: "00:00:00"
     property string displayEndVideoPosition: "00:00:00"
     property bool isBuffering: false
+    property var setReleaseParameters: ({})
 
     signal navigateFrom()
-    signal setReleaseVideo(int releaseId, int seriaOrder, string videos)
+    signal setReleaseVideo()
     signal changeFullScreenMode(bool fullScreen)
 
     Keys.onSpacePressed: {
@@ -49,7 +50,7 @@ Page {
     }
 
     onSetReleaseVideo: {
-        const jsonVideos = JSON.parse(videos);
+        const jsonVideos = JSON.parse(_page.setReleaseParameters.videos);
 
         const releaseVideos = [];
 
