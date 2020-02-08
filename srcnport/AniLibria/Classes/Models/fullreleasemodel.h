@@ -2,7 +2,6 @@
 #define FULLRELEASEMODEL_H
 
 #include <QObject>
-#include <QSqlQuery>
 #include "releasemodel.h"
 
 class FullReleaseModel
@@ -93,8 +92,6 @@ public:
 
     QString type() const;
     void setType(const QString& type);
-
-    void fromDatabase(QSqlQuery query);
 
     void writeToJson(QJsonObject &json) const;
 

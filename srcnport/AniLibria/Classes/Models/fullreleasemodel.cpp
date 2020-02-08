@@ -1,4 +1,3 @@
-#include <QSqlQuery>
 #include <QVariant>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -217,30 +216,6 @@ QString FullReleaseModel::type() const
 void FullReleaseModel::setType(const QString &type)
 {
     m_Type = type;
-}
-
-void FullReleaseModel::fromDatabase(QSqlQuery query)
-{
-   setId(query.value("ReleaseId").toInt());
-   setTitle(query.value("Title").toString());
-   setCode(query.value("Code").toString());
-   setOriginalName(query.value("OriginalTitle").toString());
-   setRating(query.value("Rating").toInt());
-   setSeries(query.value("Series").toString());
-   setStatus(query.value("Status").toString());
-   setType(query.value("Type").toString());
-   setTimestamp(query.value("Timestamp").toInt());
-   setYear(query.value("Year").toString());
-   setSeason(query.value("Season").toString());
-   setCountTorrents(query.value("TorrentsCount").toInt());
-   setCountOnlineVideos(query.value("CountOnlineVideos").toInt());
-   setDescription(query.value("Description").toString());
-   setAnnounce(query.value("Announce").toString());
-   setGenres(query.value("Genres").toString());
-   setPoster(query.value("Poster").toString());
-   setVoicers(query.value("Voices").toString());
-   setTorrents(query.value("Torrents").toString());
-   setVideos(query.value("Videos").toString());
 }
 
 void FullReleaseModel::writeToJson(QJsonObject &json) const
