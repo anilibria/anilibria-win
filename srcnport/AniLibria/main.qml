@@ -365,7 +365,7 @@ ApplicationWindow {
                     Text {
                         color: "white"
                         font.pixelSize: 14
-                        text: qsTr("версия 0.0.0")
+                        text: qsTr("версия 0.0.1")
                     }
                 }
             }
