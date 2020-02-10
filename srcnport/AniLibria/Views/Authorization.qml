@@ -74,6 +74,7 @@ Page {
                     TextField {
                         id: passwordTextBox
                         Layout.fillWidth: true
+                        echoMode: "PasswordEchoOnEdit"
                         placeholderText: "Пароль"
                     }
                     TextField {
