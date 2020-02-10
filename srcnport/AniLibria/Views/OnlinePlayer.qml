@@ -101,9 +101,11 @@ Page {
         if (visible) {
             seriesPopup.opacity = 1;
             controlPanel.opacity = 1;
+            mainPlayerMouseArea.cursorShape = "ArrowCursor";
         } else {
             seriesPopup.opacity = 0;
             controlPanel.opacity = 0;
+            mainPlayerMouseArea.cursorShape = "BlankCursor";
         }
     }
 
@@ -180,6 +182,7 @@ Page {
     }
 
     MouseArea {
+        id: mainPlayerMouseArea
         anchors.fill: parent
         hoverEnabled: true
         onDoubleClicked: {
