@@ -19,6 +19,7 @@ Page {
     property string displayEndVideoPosition: "00:00:00"
     property bool isBuffering: false
     property var setReleaseParameters: ({})
+    property double videoSpeed: 1
 
     signal navigateFrom()
     signal setReleaseVideo()
@@ -127,6 +128,7 @@ Page {
         id: player
         source: _page.videoSource
         autoPlay: true
+        playbackRate: _page.videoSpeed
         onPlaying: {
             console.log("playing changed");
         }
@@ -340,6 +342,51 @@ Page {
 
                             player.stop();
                             _page.videoSource = video[_page.videoQuality];
+                        }
+                    }
+                    Rectangle {
+                        width: 20
+                        height: 20
+                        color: "transparent"
+                        Text {
+                            anchors.centerIn: parent
+                            text: "|"
+                        }
+                    }
+                    ToggleButton {
+                        height: 20
+                        width: 80
+                        text: "Нормальная"
+                        isChecked: _page.videoSpeed === 1
+                        onButtonClicked: {
+                            _page.videoSpeed = 1;
+                        }
+                    }
+                    ToggleButton {
+                        height: 20
+                        width: 40
+                        text: "x2"
+                        isChecked: _page.videoSpeed === 1.5
+                        onButtonClicked: {
+                            _page.videoSpeed = 1.5;
+                        }
+                    }
+                    ToggleButton {
+                        height: 20
+                        width: 40
+                        text: "x3"
+                        isChecked: _page.videoSpeed === 2
+                        onButtonClicked: {
+                            _page.videoSpeed = 2;
+                        }
+                    }
+                    ToggleButton {
+                        height: 20
+                        width: 40
+                        text: "x4"
+                        isChecked: _page.videoSpeed === 3
+                        onButtonClicked: {
+                            _page.videoSpeed = 3;
                         }
                     }
                 }
