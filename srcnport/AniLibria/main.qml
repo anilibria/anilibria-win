@@ -152,6 +152,10 @@ ApplicationWindow {
         onUserFavoritesEdited: {
             if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(applicationSettings.userToken);
         }
+
+        onTorrentDownloaded: {
+            Qt.openUrlExternally("file:///" + torrentPath);
+        }
     }
 
     Drawer {

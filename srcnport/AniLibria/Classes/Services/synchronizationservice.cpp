@@ -14,6 +14,7 @@ SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent
     connect(m_AnilibriaApiService,&AnilibriaApiService::userDataReceived,this,&SynchronizationService::handleUserData);
     connect(m_AnilibriaApiService,&AnilibriaApiService::userFavoritesReceived,this,&SynchronizationService::handleUserFavorites);
     connect(m_AnilibriaApiService,&AnilibriaApiService::userFavoritesUpdated,this,&SynchronizationService::handleEditUserFavorites);
+    connect(m_AnilibriaApiService,&AnilibriaApiService::torrentDownloaded,this,&SynchronizationService::handleTorrentDownloaded);
 }
 
 void SynchronizationService::synchronizeReleases()
@@ -59,6 +60,11 @@ void SynchronizationService::removeUserFavorites(QString token, QString ids)
 QString SynchronizationService::combineWithWebSiteUrl(QString path)
 {
     return m_AnilibriaApiService->apiAddress + (path.startsWith("/") ? path.right(path.length() - 1) : path);
+}
+
+void SynchronizationService::downloadTorrent(QString torrentPath)
+{
+    m_AnilibriaApiService->downloadTorrent(torrentPath);
 }
 
 void SynchronizationService::saveReleasesToCache(QString data)
@@ -114,4 +120,9 @@ void SynchronizationService::handleUserFavorites(QString data)
 void SynchronizationService::handleEditUserFavorites()
 {
     emit userFavoritesEdited();
+}
+
+void SynchronizationService::handleTorrentDownloaded(QString torrentPath)
+{
+    emit torrentDownloaded(torrentPath);
 }

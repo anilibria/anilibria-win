@@ -989,7 +989,7 @@ Page {
                                     text: "Скачать " + modelData.quality + " [" + modelData.series + "]"
                                     onPressed: {
                                         const torrentUri = synchronizationService.combineWithWebSiteUrl(modelData.url);
-                                        Qt.openUrlExternally(torrentUri);
+                                        synchronizationService.downloadTorrent(torrentUri);
                                     }
                                 }
                             }

@@ -1,6 +1,8 @@
 #include "anilibriaapiservice.h"
 #include <QtNetwork>
 #include <QtDebug>
+#include <QFile>
+#include <QUuid>
 
 const QString AnilibriaApiService::apiAddress = "https://anilibriasmartservice.azurewebsites.net/";
 //const QString AnilibriaApiService::apiAddress = "http://localhost:5001/";
@@ -187,6 +189,14 @@ void AnilibriaApiService::downloadTorrentResponse(QNetworkReply *reply)
     if (reply->error() == QNetworkReply::ProtocolFailure) return;
     if (reply->error() == QNetworkReply::HostNotFoundError) return;
 
-    // reply->readAll()
+    auto byteArray = reply->readAll();
 
+    auto uuid = QUuid::createUuid();
+    auto randomTorrentPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/" + uuid.toString() + ".torrent";
+    QFile torrentFile(randomTorrentPath);
+    torrentFile.open(QFile::WriteOnly);
+    torrentFile.write(byteArray);
+    torrentFile.close();
+
+    emit torrentDownloaded(randomTorrentPath);
 }

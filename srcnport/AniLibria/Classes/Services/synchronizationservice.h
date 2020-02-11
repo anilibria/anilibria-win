@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE void addUserFavorites(QString token, QString ids);
     Q_INVOKABLE void removeUserFavorites(QString token, QString ids);
     Q_INVOKABLE QString combineWithWebSiteUrl(QString path);
+    Q_INVOKABLE void downloadTorrent(QString torrentPath);
 signals:
     void synchronizedReleases(QString data);
     void synchronizationCompleted();
@@ -35,6 +36,7 @@ signals:
     void userDataReceived(QString data);
     void userFavoritesReceived(QString data);
     void userFavoritesEdited();
+    void torrentDownloaded(QString torrentPath);
 
 public slots:
     void saveReleasesToCache(QString data);
@@ -44,6 +46,7 @@ public slots:
     void handleUserData(QString data);
     void handleUserFavorites(QString data);
     void handleEditUserFavorites();
+    void handleTorrentDownloaded(QString torrentPath);
 };
 
 #endif // SYNCHRONIZATIONSERVICE_H
