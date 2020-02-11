@@ -56,6 +56,11 @@ void SynchronizationService::removeUserFavorites(QString token, QString ids)
     m_AnilibriaApiService->removeMultiFavorites(token,ids);
 }
 
+QString SynchronizationService::combineWithWebSiteUrl(QString path)
+{
+    return m_AnilibriaApiService->apiAddress + (path.startsWith("/") ? path.right(path.length() - 1) : path);
+}
+
 void SynchronizationService::saveReleasesToCache(QString data)
 {
     emit synchronizedReleases(data);

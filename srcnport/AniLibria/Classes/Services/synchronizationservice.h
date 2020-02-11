@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE void synchronizeUserFavorites(QString token);
     Q_INVOKABLE void addUserFavorites(QString token, QString ids);
     Q_INVOKABLE void removeUserFavorites(QString token, QString ids);
+    Q_INVOKABLE QString combineWithWebSiteUrl(QString path);
 signals:
     void synchronizedReleases(QString data);
     void synchronizationCompleted();

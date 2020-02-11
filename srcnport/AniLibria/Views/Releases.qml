@@ -67,6 +67,10 @@ Page {
         id: releasesModel
     }
 
+    ListModel {
+        id: torrentsModel
+    }
+
     Rectangle {
         id: mask
         width: 180
@@ -478,7 +482,7 @@ Page {
                     iconHeight: 29
                     onButtonPressed: {
                         const randomRelease = JSON.parse(localStorage.getRandomRelease());
-                        page.openedRelease = randomRelease;
+                        showReleaseCard(randomRelease);
                     }
                 }
             }
@@ -969,6 +973,26 @@ Page {
                         anchors.left: parent.left
                         text: qsTr("Скачать")
                         onClicked: {
+                            dowloadTorrent.open();
+                        }
+
+                        Menu {
+                            id: dowloadTorrent
+                            y: favoriteMenuButton.height
+                            width: 300
+
+                            Repeater {
+                                model: torrentsModel
+                                MenuItem {
+                                    width: parent.width
+                                    font.pixelSize: 14
+                                    text: "Скачать " + modelData.quality + " [" + modelData.series + "]"
+                                    onPressed: {
+                                        const torrentUri = synchronizationService.combineWithWebSiteUrl(modelData.url);
+                                        Qt.openUrlExternally(torrentUri);
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -1044,7 +1068,7 @@ Page {
             page.selectedReleases = [];
             page.selectedReleases = oldSelectedReleases;
         } else {
-            page.openedRelease = item;
+            showReleaseCard(item);
         }
     }
 
@@ -1111,6 +1135,18 @@ Page {
             case 7: return "воскресенье";
         }
         return "---";
+    }
+
+    function showReleaseCard(release) {
+        torrentsModel.clear();
+
+        const torrents = JSON.parse(release.torrents);
+
+        for (const torrent of torrents) {
+            torrentsModel.append({ model: torrent });
+        }
+
+        page.openedRelease = release;
     }
 
     Component.onCompleted: {

@@ -102,6 +102,18 @@ void AnilibriaApiService::removeMultiFavorites(QString token, QString ids)
     networkManager->get(request);
 }
 
+void AnilibriaApiService::downloadTorrent(QString path)
+{
+    auto networkManager = new QNetworkAccessManager(this);
+    auto url = QUrl(path);
+    QNetworkRequest request(url);
+
+    connect(networkManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(downloadTorrentResponse(QNetworkReply*)));
+
+    networkManager->get(request);
+
+}
+
 void AnilibriaApiService::getAllReleasesResponse(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::TimeoutError) return;
@@ -167,4 +179,14 @@ void AnilibriaApiService::editFavoritesResponse(QNetworkReply *reply)
     if (reply->error() == QNetworkReply::HostNotFoundError) return;
 
     emit userFavoritesUpdated();
+}
+
+void AnilibriaApiService::downloadTorrentResponse(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::TimeoutError) return;
+    if (reply->error() == QNetworkReply::ProtocolFailure) return;
+    if (reply->error() == QNetworkReply::HostNotFoundError) return;
+
+    // reply->readAll()
+
 }
