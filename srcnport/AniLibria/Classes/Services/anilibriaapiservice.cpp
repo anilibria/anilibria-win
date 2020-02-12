@@ -46,11 +46,18 @@ void AnilibriaApiService::getSchedule()
 void AnilibriaApiService::signin(QString email, QString password, QString fa2code)
 {
     auto networkManager = new QNetworkAccessManager(this);
-    QNetworkRequest request(QUrl(AnilibriaApiService::apiAddress + "api/auth/signin?mail=" + email + "&password=" + password + "&fa2code=" + fa2code ));
+    QNetworkRequest request(QUrl(AnilibriaApiService::apiAddress + "api/auth/signin" ));
 
     connect(networkManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(signinResponse(QNetworkReply*)));
 
-    networkManager->get(request);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
+    QUrlQuery params;
+    params.addQueryItem("mail", email);
+    params.addQueryItem("password", password);
+    params.addQueryItem("fa2code", fa2code);
+
+    networkManager->post(request, params.query().toUtf8());
 }
 
 void AnilibriaApiService::signout(QString token)
