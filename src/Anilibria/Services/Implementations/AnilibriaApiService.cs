@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Anilibria.Services.Exceptions;
 using Anilibria.Services.PresentationClasses;
@@ -69,7 +70,10 @@ namespace Anilibria.Services.Implementations {
 		/// <returns>Release's collection.</returns>
 		public async Task<IEnumerable<Release>> GetPage ( int page , int pageSize , string name = default ( string ) ) {
 			var cookieContainer = new CookieContainer ();
-			var handler = new HttpClientHandler { CookieContainer = cookieContainer };
+			var handler = new HttpClientHandler {
+				CookieContainer = cookieContainer ,
+				AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+			};
 
 			var parameters = new List<KeyValuePair<string , string>> {
 				new KeyValuePair<string , string> ( "query" , string.IsNullOrEmpty ( name ) ? "list" : "search" ),
@@ -80,10 +84,11 @@ namespace Anilibria.Services.Implementations {
 
 			var formContent = new FormUrlEncodedContent ( parameters );
 			var httpClient = new HttpClient ( handler );
+			httpClient.DefaultRequestHeaders.AcceptEncoding.Add ( new StringWithQualityHeaderValue ( "gzip" ) );
 			var result = await httpClient.PostAsync ( m_ApiIndexUrl , formContent );
 			var content = await result.Content.ReadAsStringAsync ();
 
-			IEnumerable<Release> releases = null;
+			IEnumerable<Release> releases;
 			if ( string.IsNullOrEmpty ( name ) ) {
 				var responseModel = JsonConvert.DeserializeObject<ApiResponse<PagingList<Release>>> ( content );
 				if ( !responseModel.Status ) {
