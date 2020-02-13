@@ -20,7 +20,7 @@ namespace Anilibria.Services.Implementations {
 
 		public const string ApiPathSettingName = "ApiPathSettingName";
 
-		private string m_WebSiteUrl = "https://anilibriasmartservice.azurewebsites.net"; //use smart service instead main domain //"https://www.anilibria.tv";
+		private string m_WebSiteUrl = "https://www.anilibria.tv";
 
 		private string m_ImageUploadUrl;
 
