@@ -44,7 +44,7 @@ void FullReleaseModel::setPoster(const QString &poster)
     if (poster.contains("https://")) {
         m_Poster = poster;
     } else {
-        m_Poster = AnilibriaApiPath + poster;
+        m_Poster = AnilibriaImagesPath + poster;
     }
 }
 

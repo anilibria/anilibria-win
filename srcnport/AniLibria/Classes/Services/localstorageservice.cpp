@@ -25,6 +25,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent), m_C
     createIfNotExistsFile(getScheduleCachePath(), "{}");
     createIfNotExistsFile(getFavoritesCachePath(), "[]");
     createIfNotExistsFile(getSeensCachePath(), "[]");
+    createIfNotExistsFile(getNotificationCachePath(), "{ \"newReleases\": [], \"newOnlineSeries\": [], \"newTorrents\": [] }");
     QString favoritespath = getFavoritesCachePath();
 
     updateReleasesInnerCache();
@@ -245,6 +246,11 @@ QString LocalStorageService::getSeensCachePath() const
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/seen.cache";
 }
 
+QString LocalStorageService::getNotificationCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/notification.cache";
+}
+
 void LocalStorageService::createIfNotExistsFile(QString path, QString defaultContent)
 {
     if (!QFile::exists(path)) {
@@ -253,6 +259,26 @@ void LocalStorageService::createIfNotExistsFile(QString path, QString defaultCon
         createReleasesCacheFile.write(defaultContent.toUtf8());
         createReleasesCacheFile.close();
     }
+}
+
+void LocalStorageService::addNewReleases(QStringList releases)
+{
+    auto changes = getChanges();
+    auto document = QJsonDocument::fromJson(changes.toUtf8());
+    auto jsonChanges = document.object();
+    auto newReleases = jsonChanges.value("newReleases").toArray();
+    auto newOnlineSeries = jsonChanges.value("newOnlineSeries").toArray();
+    auto newTorrents = jsonChanges.value("newTorrents").toArray();
+}
+
+void LocalStorageService::addNewOnlineSeries(int releaseId, QList<int> series)
+{
+
+}
+
+void LocalStorageService::addNewTorrents(int releaseId, QList<int> series)
+{
+
 }
 
 QString LocalStorageService::getRelease(int id)
@@ -286,6 +312,11 @@ QString LocalStorageService::getRandomRelease()
 
     QJsonDocument saveDoc(jsonValue);
     return saveDoc.toJson();
+}
+
+QString LocalStorageService::getChanges()
+{
+    return "";
 }
 
 static bool compareTimeStamp(const FullReleaseModel& first, const FullReleaseModel& second)
