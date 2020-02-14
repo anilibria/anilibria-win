@@ -154,7 +154,9 @@ ApplicationWindow {
         }
 
         onTorrentDownloaded: {
-            Qt.openUrlExternally("file:///" + torrentPath);
+            if (Qt.platform.os === "linux" || Qt.platform.os === "unix") Qt.openUrlExternally("file://" + torrentPath);
+            if (Qt.platform.os === "osx") Qt.openUrlExternally("file://" + torrentPath);
+            if (Qt.platform.os === "windows") Qt.openUrlExternally("file:///" + torrentPath);
         }
     }
 
