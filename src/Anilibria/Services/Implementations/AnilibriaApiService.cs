@@ -21,9 +21,9 @@ namespace Anilibria.Services.Implementations {
 
 		public const string ApiPathSettingName = "ApiPathSettingName";
 
-		private string m_WebSiteUrl = "https://www.anilibria.tv";
+		private string m_WebSiteUrl = "https://wwnd.space";
 
-		private string m_ImageUploadUrl;
+		private readonly string m_ImageUploadUrl;
 
 		private string m_ApiIndexUrl;
 
@@ -49,7 +49,7 @@ namespace Anilibria.Services.Implementations {
 			var overrideApiPath = settings.Values[ApiPathSettingName] as string;
 			if ( !string.IsNullOrEmpty ( overrideApiPath ) ) m_WebSiteUrl = overrideApiPath;
 
-			m_ImageUploadUrl = m_WebSiteUrl + "/upload/release/";
+			m_ImageUploadUrl = "https://static.wwnd.space";
 			m_ApiIndexUrl = m_WebSiteUrl + "/public/api/index.php";
 			m_ApiLoginUrl = m_WebSiteUrl + "/public/login.php";
 			m_ApiLogoutUrl = m_WebSiteUrl + "/public/logout.php";
@@ -265,7 +265,7 @@ namespace Anilibria.Services.Implementations {
 		/// </summary>
 		/// <param name="relativeUrl">Relative url.</param>
 		/// <returns>Full url.</returns>
-		public Uri GetUrl ( string relativeUrl ) => new Uri ( m_WebSiteUrl + relativeUrl );
+		public Uri GetUrl ( string relativeUrl ) => new Uri ( m_ImageUploadUrl + relativeUrl );
 
 		private void CheckSession () {
 			var cookies = m_HttpHandler.CookieContainer.GetCookies ( new Uri ( m_WebSiteUrl ) ).Cast<Cookie> ();
