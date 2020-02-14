@@ -5,7 +5,7 @@ ApplicationSettings::ApplicationSettings(QObject *parent) : QObject(parent)
 {
     QCoreApplication::setOrganizationDomain("anilibria.tv");
     QCoreApplication::setOrganizationName("EmptyFlow");
-    QCoreApplication::setApplicationName("Anilibria desktop client");
+    QCoreApplication::setApplicationName("AnilibriaDesktopClient");
 
     m_Settings = new QSettings;
 }

@@ -263,6 +263,9 @@ void LocalStorageService::createIfNotExistsFile(QString path, QString defaultCon
 
 void LocalStorageService::addNewReleases(QStringList releases)
 {
+    if (releases.length() > 0) {
+
+    }
     auto changes = getChanges();
     auto document = QJsonDocument::fromJson(changes.toUtf8());
     auto jsonChanges = document.object();
@@ -273,12 +276,16 @@ void LocalStorageService::addNewReleases(QStringList releases)
 
 void LocalStorageService::addNewOnlineSeries(int releaseId, QList<int> series)
 {
+    if (releaseId > 0 && series.length() > 0) {
 
+    }
 }
 
 void LocalStorageService::addNewTorrents(int releaseId, QList<int> series)
 {
+    if (releaseId > 0 && series.length() > 0) {
 
+    }
 }
 
 QString LocalStorageService::getRelease(int id)
