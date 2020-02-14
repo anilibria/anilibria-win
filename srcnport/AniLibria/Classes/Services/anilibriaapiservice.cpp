@@ -199,6 +199,7 @@ void AnilibriaApiService::downloadTorrentResponse(QNetworkReply *reply)
     auto byteArray = reply->readAll();
 
     auto uuid = QUuid::createUuid();
+    auto randomName = uuid.toString().replace("-", "").replace("{", "").replace("}", "").replace("[", "").replace("]", "");
     auto randomTorrentPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/" + uuid.toString() + ".torrent";
     QFile torrentFile(randomTorrentPath);
     torrentFile.open(QFile::WriteOnly);
