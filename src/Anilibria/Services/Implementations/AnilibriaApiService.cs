@@ -378,7 +378,7 @@ namespace Anilibria.Services.Implementations {
 		/// <returns>Torrent path.</returns>
 		public async Task<StorageFile> DownloadTorrent ( string torrentUri ) {
 			var storageFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( "release.torrent" , CreationCollisionOption.GenerateUniqueName );
-			var byteArray = await m_HttpClient.GetByteArrayAsync ( m_WebSiteUrl + torrentUri );
+			var byteArray = await m_HttpClient.GetByteArrayAsync ( m_ImageUploadUrl + torrentUri );
 
 			using ( Stream stream = await storageFile.OpenStreamForWriteAsync () ) {
 				stream.Write ( byteArray , 0 , byteArray.Length );
