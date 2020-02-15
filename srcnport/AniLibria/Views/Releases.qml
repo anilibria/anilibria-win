@@ -978,7 +978,7 @@ Page {
 
                         Menu {
                             id: dowloadTorrent
-                            y: favoriteMenuButton.height
+                            y: parent.height - parent.height - (torrentsModel.count * 40)
                             width: 300
 
                             Repeater {

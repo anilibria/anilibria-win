@@ -7,6 +7,7 @@
 #include <QtConcurrent>
 #include <QFuture>
 #include <QDebug>
+#include <QDir>
 #include <QFutureWatcher>
 #include <QDateTime>
 #include "../Models/releasemodel.h"
@@ -20,6 +21,9 @@ const int ScheduleSection = 5;
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent), m_CachedReleases(new QList<FullReleaseModel>())
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
+
+    QDir cacheDicrectory(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    if (!cacheDicrectory.exists()) QDir().mkdir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
 
     createIfNotExistsFile(getReleasesCachePath(), "[]");
     createIfNotExistsFile(getScheduleCachePath(), "{}");
