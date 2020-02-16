@@ -12,6 +12,7 @@ public:
     explicit AnilibriaApiService(QObject *parent = nullptr);
 
     const static QString apiAddress;
+    const static QString newApiAddress;
 
     void getAllReleases();
     void getSchedule();

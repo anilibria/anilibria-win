@@ -6,6 +6,7 @@
 #include "../Models/releasemodel.h"
 #include "../Models/releasetorrentmodel.h"
 #include "../Models/fullreleasemodel.h"
+#include "../Models/changesmodel.h"
 
 class LocalStorageService : public QObject
 {
@@ -14,6 +15,7 @@ class LocalStorageService : public QObject
 private:
     QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
     QList<FullReleaseModel>* m_CachedReleases;
+    ChangesModel* m_ChangesModel;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
@@ -33,8 +35,9 @@ private:
     QString getNotificationCachePath() const;
     void createIfNotExistsFile(QString path, QString defaultContent);
     void addNewReleases(QStringList releases);
-    void addNewOnlineSeries(int releaseId, QList<int> series);
-    void addNewTorrents(int releaseId, QList<int> series);
+    void setReleaseOnlineSeries(int releaseId, int count);
+    void setNewTorrents(int releaseId, int count);
+    void saveChanges();
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
@@ -42,12 +45,13 @@ public:
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE QString getRelease(int id);
     Q_INVOKABLE QString getRandomRelease();
-    Q_INVOKABLE QString getChanges();
+    Q_INVOKABLE QString getChanges();    
     Q_INVOKABLE QString getReleasesByFilter(int page, QString title, int section, QString description, QString type, QString genres, bool genresOr, QString voices, bool voicesOr, QString years, QString seasones, QString statuses, int sortingField, bool soringDescending);
     Q_INVOKABLE void setSchedule(QString schedule);
     Q_INVOKABLE QString getSchedule();
     Q_INVOKABLE void updateFavorites(QString data);
     Q_INVOKABLE QList<int> getFavorites();
+    Q_INVOKABLE void clearFavorites();
     Q_INVOKABLE void updateReleasesInnerCache();
 
 signals:

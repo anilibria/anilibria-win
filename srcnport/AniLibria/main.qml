@@ -130,11 +130,7 @@ ApplicationWindow {
         onUserDataReceived: {
             const userData = JSON.parse(data);
             window.userModel = userData;
-            if (window.userModel) {
-                var ids = localStorage.getFavorites().map(a => a);
-                releases.refreshFavorites(ids);
-            }
-
+            if (window.userModel) synchronizationService.synchronizeUserFavorites(applicationSettings.userToken); // releases.refreshFavorites();
             window.notVisibleSignin = true;
         }
 
@@ -142,11 +138,14 @@ ApplicationWindow {
             applicationSettings.userToken = "";
             window.userModel = {};
             window.notVisibleSignin = false;
+
+            localStorage.clearFavorites();
+            releases.refreshFavorites();
         }
 
         onUserFavoritesReceived:  {
-            releases.refreshFavorites(JSON.parse(data));
             localStorage.updateFavorites(data);
+            releases.refreshFavorites();
         }
 
         onUserFavoritesEdited: {

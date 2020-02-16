@@ -12,13 +12,16 @@
 #include <QDateTime>
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
+#include "../Models/changesmodel.h"
 
 using namespace std;
 
 const int FavoriteSection = 1;
 const int ScheduleSection = 5;
 
-LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent), m_CachedReleases(new QList<FullReleaseModel>())
+LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
+    m_CachedReleases(new QList<FullReleaseModel>()),
+    m_ChangesModel(new ChangesModel())
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
 
@@ -29,10 +32,13 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent), m_C
     createIfNotExistsFile(getScheduleCachePath(), "{}");
     createIfNotExistsFile(getFavoritesCachePath(), "[]");
     createIfNotExistsFile(getSeensCachePath(), "[]");
-    createIfNotExistsFile(getNotificationCachePath(), "{ \"newReleases\": [], \"newOnlineSeries\": [], \"newTorrents\": [] }");
+    createIfNotExistsFile(getNotificationCachePath(), "{ \"newReleases\": [], \"newOnlineSeries\": [], \"newTorrents\": [], \"newTorrentSeries\": {} }");
     QString favoritespath = getFavoritesCachePath();
 
     updateReleasesInnerCache();
+
+    auto changesJson = getChanges();
+    m_ChangesModel->fromJson(changesJson);
 
     connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
 }
@@ -47,6 +53,7 @@ void LocalStorageService::updateAllReleases(const QString &releases)
 
             auto jsonReleases = jsonDocument.array();
             auto variantList = jsonReleases.toVariantList();
+            QStringList newReleasesIds;
 
             foreach (QJsonValue jsonRelease, jsonReleases) {
                 ReleaseModel releaseModel;
@@ -57,7 +64,16 @@ void LocalStorageService::updateAllReleases(const QString &releases)
                 FullReleaseModel newReleaseModel = mapToFullReleaseModel(releaseModel);
 
                 if (currentReleaseCacheModel.id() > -1) {
+                    if (currentReleaseCacheModel.countOnlineVideos() != newReleaseModel.countOnlineVideos()) {
+                        setReleaseOnlineSeries(newReleaseModel.id(), currentReleaseCacheModel.countOnlineVideos());
+                    }
+                    if (currentReleaseCacheModel.countTorrents() != newReleaseModel.countTorrents()) {
+                        setNewTorrents(newReleaseModel.id(), currentReleaseCacheModel.countTorrents());
+                    }
                     m_CachedReleases->removeOne(currentReleaseCacheModel);
+
+                } else {
+                    newReleasesIds.append(QString::number(newReleaseModel.id()));
                 }
 
                 m_CachedReleases->append(newReleaseModel);
@@ -65,6 +81,7 @@ void LocalStorageService::updateAllReleases(const QString &releases)
 
             saveCachedReleasesToFile();
             updateReleasesInnerCache();
+            saveChanges();
         }
     );
     m_AllReleaseUpdatedWatcher->setFuture(future);
@@ -267,29 +284,42 @@ void LocalStorageService::createIfNotExistsFile(QString path, QString defaultCon
 
 void LocalStorageService::addNewReleases(QStringList releases)
 {
-    if (releases.length() > 0) {
+    auto newReleases = m_ChangesModel->newReleases();
+    foreach(auto release,  releases) {
+        auto releaseId = release.toInt();
 
-    }
-    auto changes = getChanges();
-    auto document = QJsonDocument::fromJson(changes.toUtf8());
-    auto jsonChanges = document.object();
-    auto newReleases = jsonChanges.value("newReleases").toArray();
-    auto newOnlineSeries = jsonChanges.value("newOnlineSeries").toArray();
-    auto newTorrents = jsonChanges.value("newTorrents").toArray();
-}
-
-void LocalStorageService::addNewOnlineSeries(int releaseId, QList<int> series)
-{
-    if (releaseId > 0 && series.length() > 0) {
-
+        if (!newReleases.contains(releaseId)) newReleases.append(releaseId);
     }
 }
 
-void LocalStorageService::addNewTorrents(int releaseId, QList<int> series)
+void LocalStorageService::setReleaseOnlineSeries(int releaseId, int count)
 {
-    if (releaseId > 0 && series.length() > 0) {
-
+    auto onlineSeries = m_ChangesModel->newOnlineSeries();
+    if (!onlineSeries.contains(releaseId)) {
+        onlineSeries.insert(releaseId, count);
+    } else {
+        onlineSeries[releaseId] = count;
     }
+}
+
+void LocalStorageService::setNewTorrents(int releaseId, int count)
+{
+    auto torrents = m_ChangesModel->newTorrents();
+    if (!torrents.contains(releaseId)) {
+        torrents.insert(releaseId, count);
+    } else {
+        torrents[releaseId] = count;
+    }
+}
+
+void LocalStorageService::saveChanges()
+{
+    QFile notificationFile(getNotificationCachePath());
+    if (!notificationFile.open(QFile::WriteOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    notificationFile.write(m_ChangesModel->toJson().toUtf8());
+    notificationFile.close();
 }
 
 QString LocalStorageService::getRelease(int id)
@@ -327,7 +357,14 @@ QString LocalStorageService::getRandomRelease()
 
 QString LocalStorageService::getChanges()
 {
-    return "";
+    QFile notificationFile(getNotificationCachePath());
+    if (!notificationFile.open(QFile::ReadOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    auto changes = notificationFile.readAll();
+    notificationFile.close();
+
+    return changes;
 }
 
 static bool compareTimeStamp(const FullReleaseModel& first, const FullReleaseModel& second)
@@ -580,6 +617,11 @@ QList<int> LocalStorageService::getFavorites()
     foreach(auto favorite, favorites) ids.append(favorite.toInt());
 
     return ids;
+}
+
+void LocalStorageService::clearFavorites()
+{
+    updateFavorites("[]");
 }
 
 void LocalStorageService::updateReleasesInnerCache()

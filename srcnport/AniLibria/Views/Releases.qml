@@ -31,7 +31,7 @@ Page {
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
     signal refreshReleases()
-    signal refreshFavorites(var userFavorites)
+    signal refreshFavorites()
     signal refreshReleaseSchedules()
     signal requestSynchronizeReleases()
 
@@ -49,7 +49,7 @@ Page {
     }
 
     onRefreshFavorites: {
-        page.favoriteReleases = userFavorites;
+        page.favoriteReleases = localStorage.getFavorites().map(a => a);
 
         if (page.runRefreshFavorties && page.selectedReleases.length) {
             page.runRefreshFavorties = false;

@@ -2,7 +2,7 @@
 #define CHANGESMODEL_H
 
 #include <QObject>
-#include <QMap>
+#include <QHash>
 
 class ChangesModel
 {
@@ -12,18 +12,18 @@ public:
 
 private:
     QList<int> m_NewReleases;
-    QMap<int, int> m_NewOnlineSeries;
-    QMap<int, int> m_NewTorrents;
+    QHash<int, int> m_NewOnlineSeries;
+    QHash<int, int> m_NewTorrents;
 
 public:
     QList<int> newReleases();
     void setNewReleases(QList<int> newReleases);
 
-    QMap<int, int> newOnlineSeries();
-    void setNewOnlineSeries(QMap<int, int> newOnlineSeries);
+    QHash<int, int> newOnlineSeries();
+    void setNewOnlineSeries(QHash<int, int> newOnlineSeries);
 
-    QMap<int, int> newTorrents();
-    void setNewTorrents(QMap<int, int> newTorrents);
+    QHash<int, int> newTorrents();
+    void setNewTorrents(QHash<int, int> newTorrents);
 
     void fromJson(QString json);
 
