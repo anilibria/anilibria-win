@@ -53,5 +53,6 @@
         <file>Assets/Icons/search.svg</file>
         <file>Assets/Icons/sort.svg</file>
         <file>Assets/Icons/dice.svg</file>
+        <file>Assets/Icons/fullscreen.svg</file>
     </qresource>
 </RCC>

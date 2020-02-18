@@ -188,8 +188,7 @@ Page {
         anchors.fill: parent
         hoverEnabled: true
         onDoubleClicked: {
-            isFullScreen = !isFullScreen;
-            changeFullScreenMode(isFullScreen);
+            toggleFullScreen();
         }
         onPositionChanged: {
             if (player.playbackState === MediaPlayer.PlayingState) {
@@ -355,8 +354,8 @@ Page {
                     }
                     ToggleButton {
                         height: 20
-                        width: 80
-                        text: "Нормальная"
+                        width: 40
+                        text: "x1"
                         isChecked: _page.videoSpeed === 1
                         onButtonClicked: {
                             _page.videoSpeed = 1;
@@ -516,6 +515,17 @@ Page {
                             }
                         }
                     }
+                    IconButton {
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/fullscreen.svg"
+                        iconWidth: 29
+                        iconHeight: 29
+                        onButtonPressed: {
+                            toggleFullScreen();
+                        }
+                    }
                 }
             }
         }
@@ -582,6 +592,11 @@ Page {
         _page.isFullHdAllowed = "fullhd" in video;
 
         _page.videoSource = checkExistingVideoQuality();
+    }
+
+    function toggleFullScreen() {
+        isFullScreen = !isFullScreen;
+        changeFullScreenMode(isFullScreen);
     }
 
     Component.onCompleted: {
