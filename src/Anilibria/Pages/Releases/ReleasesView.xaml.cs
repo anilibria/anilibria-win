@@ -330,6 +330,9 @@ namespace Anilibria.Pages.Releases {
 		private void OpenInExternalPlayer_Tapped ( object sender , TappedRoutedEventArgs e ) {
 			FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
 		}
+
+		private void ReleaseName_Tapped ( object sender , TappedRoutedEventArgs e ) => FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+
 	}
 
 }

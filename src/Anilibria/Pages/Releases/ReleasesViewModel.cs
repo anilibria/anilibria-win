@@ -21,7 +21,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
@@ -564,6 +566,45 @@ namespace Anilibria.Pages.Releases {
 			WatchCinemaHallCommand = CreateCommand ( WatchCinemaHall );
 			OpenInExternalPlayerHDCommand = CreateCommand ( OpenInExternalPlayerHD );
 			OpenInExternalPlayerSDCommand = CreateCommand ( OpenInExternalPlayerSD );
+			CopyNameToClipboardCommand = CreateCommand ( CopyNameToClipboard );
+			CopyOriginalNameToClipboardCommand = CreateCommand ( CopyOriginalNameToClipboard );
+			CopyAllNameToClipboardCommand = CreateCommand ( CopyAllNameToClipboard );
+			SearchReleaseNameInGoogleCommand = CreateCommand ( SearchReleaseNameInGoogle );
+			SearchReleaseOriginalNameInGoogleCommand = CreateCommand ( SearchReleaseOriginalNameInGoogle );
+		}
+
+		private async void SearchReleaseOriginalNameInGoogle () {
+			var url = "https://www.google.com/search?q=" + HttpUtility.UrlEncode(OpenedRelease.Names.Last ());
+			await Launcher.LaunchUriAsync ( new Uri ( url ) );
+		}
+
+		private async void SearchReleaseNameInGoogle () {
+			var url = "https://www.google.com/search?q=" + HttpUtility.UrlEncode ( OpenedRelease.Names.First () );
+			await Launcher.LaunchUriAsync ( new Uri ( url ) );
+		}
+
+		private void CopyAllNameToClipboard () {
+			if ( OpenedRelease == null ) return;
+
+			CopyTextToClipboard ( string.Join(", ", OpenedRelease.Names) );
+		}
+
+		private void CopyOriginalNameToClipboard () {
+			if ( OpenedRelease == null ) return;
+
+			CopyTextToClipboard ( OpenedRelease.Names.Last () );
+		}
+
+		private void CopyNameToClipboard () {
+			if ( OpenedRelease == null ) return;
+			
+			CopyTextToClipboard ( OpenedRelease.Names.First () );
+		}
+
+		private void CopyTextToClipboard (string text) {
+			var dataPackage = new DataPackage ();
+			dataPackage.SetText ( text );
+			Clipboard.SetContent ( dataPackage );
 		}
 
 		private async void OpenInExternalPlayerSD () => await OpenPlaylistInExternalPlayer ( isHD: false );
@@ -2850,6 +2891,51 @@ namespace Anilibria.Pages.Releases {
 		/// Open SD online video in external player.
 		/// </summary>
 		public ICommand OpenInExternalPlayerSDCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Copy open release name to clipboard.
+		/// </summary>
+		public ICommand CopyNameToClipboardCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Copy open release original name to clipboard.
+		/// </summary>
+		public ICommand CopyOriginalNameToClipboardCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Copy open release all name to clipboard.
+		/// </summary>
+		public ICommand CopyAllNameToClipboardCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Search opened release name in google.
+		/// </summary>
+		public ICommand SearchReleaseNameInGoogleCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Search opened release original name in google.
+		/// </summary>
+		public ICommand SearchReleaseOriginalNameInGoogleCommand
 		{
 			get;
 			set;

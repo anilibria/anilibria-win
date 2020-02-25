@@ -1663,13 +1663,46 @@
 					Grid.Row="0"
 					Grid.Column="1"
 					Margin="2 16 6 0">
-					<TextBlock
-						converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
-						Text="{Binding OpenedRelease.Title}"
-						TextWrapping="Wrap"
-						FontWeight="SemiBold"
-						FontSize="16"
-					/>
+					<Grid
+						Tapped="ReleaseName_Tapped">
+						<TextBlock
+							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+							Text="{Binding OpenedRelease.Title}"
+							TextWrapping="Wrap"
+							FontWeight="SemiBold"
+							FontSize="16"
+						/>
+						<FlyoutBase.AttachedFlyout>
+							<MenuFlyout
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
+								<MenuFlyoutItem
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+									Text="Скопировать название"
+									Command="{Binding CopyNameToClipboardCommand}"
+								/>
+								<MenuFlyoutItem
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+									Text="Скопировать оригинальное название"
+									Command="{Binding CopyOriginalNameToClipboardCommand}"
+								/>
+								<MenuFlyoutItem
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+									Text="Скопировать оба названия"
+									Command="{Binding CopyAllNameToClipboardCommand}"
+								/>
+								<MenuFlyoutItem
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+									Text="Искать в гугле по названию"
+									Command="{Binding SearchReleaseNameInGoogleCommand}"
+								/>
+								<MenuFlyoutItem
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+									Text="Искать в гугле по оригинальному названию"
+									Command="{Binding SearchReleaseOriginalNameInGoogleCommand}"
+								/>
+							</MenuFlyout>
+						</FlyoutBase.AttachedFlyout>
+					</Grid>
 					<StackPanel Orientation="Horizontal">
 						<TextBlock
 							FontWeight="ExtraBold"
