@@ -574,7 +574,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private async void SearchReleaseOriginalNameInGoogle () {
-			var url = "https://www.google.com/search?q=" + HttpUtility.UrlEncode(OpenedRelease.Names.Last ());
+			var url = "https://www.google.com/search?q=" + HttpUtility.UrlEncode ( OpenedRelease.Names.Last () );
 			await Launcher.LaunchUriAsync ( new Uri ( url ) );
 		}
 
@@ -586,7 +586,7 @@ namespace Anilibria.Pages.Releases {
 		private void CopyAllNameToClipboard () {
 			if ( OpenedRelease == null ) return;
 
-			CopyTextToClipboard ( string.Join(", ", OpenedRelease.Names) );
+			CopyTextToClipboard ( string.Join ( ", " , OpenedRelease.Names ) );
 		}
 
 		private void CopyOriginalNameToClipboard () {
@@ -597,11 +597,11 @@ namespace Anilibria.Pages.Releases {
 
 		private void CopyNameToClipboard () {
 			if ( OpenedRelease == null ) return;
-			
+
 			CopyTextToClipboard ( OpenedRelease.Names.First () );
 		}
 
-		private void CopyTextToClipboard (string text) {
+		private void CopyTextToClipboard ( string text ) {
 			var dataPackage = new DataPackage ();
 			dataPackage.SetText ( text );
 			Clipboard.SetContent ( dataPackage );
@@ -1542,8 +1542,7 @@ namespace Anilibria.Pages.Releases {
 			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
 			var processedOriginalValues = originalValues.Where ( a => a != null ).Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
 
-			var intersectedValues = processedOriginalValues.Intersect ( processedFilterValues );
-			return processedFilterValues.SequenceEqual ( intersectedValues );
+			return processedFilterValues.All ( a => processedOriginalValues.Any ( b => b.Contains ( a ) ) );
 		}
 
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
