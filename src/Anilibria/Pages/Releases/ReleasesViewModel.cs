@@ -530,6 +530,9 @@ namespace Anilibria.Pages.Releases {
 			CloseCommentsCommand = CreateCommand ( CloseComments );
 			RefreshCommand = CreateCommand ( Refresh , () => !IsRefreshing );
 			ResetNotificationCommand = CreateCommand ( ResetNotification );
+			ResetNewReleasesNotificationCommand = CreateCommand ( ResetNewReleasesNotification );
+			ResetNewOnlineSeriesNotificationCommand = CreateCommand ( ResetNewOnlineSeriesNotification );
+			ResetNewTorrentNotificationCommand = CreateCommand ( ResetNewTorrentNotification );
 			OpenCrossReleaseCommand = CreateCommand<string> ( OpenCrossRelease );
 			ShowRandomReleaseCommand = CreateCommand ( ShowRandomRelease );
 			ClearFiltersCommands = CreateCommand ( ClearFilters );
@@ -571,6 +574,40 @@ namespace Anilibria.Pages.Releases {
 			CopyAllNameToClipboardCommand = CreateCommand ( CopyAllNameToClipboard );
 			SearchReleaseNameInGoogleCommand = CreateCommand ( SearchReleaseNameInGoogle );
 			SearchReleaseOriginalNameInGoogleCommand = CreateCommand ( SearchReleaseOriginalNameInGoogle );
+		}
+
+		private void ResetNewTorrentNotification () {
+			if ( m_Changes == null ) return;
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+
+			m_Changes.NewTorrents?.Clear ();
+			m_Changes.NewTorrentSeries?.Clear ();
+
+			collection.Update ( m_Changes );
+			RefreshNotification ();
+		}
+
+		private void ResetNewOnlineSeriesNotification () {
+			if ( m_Changes == null ) return;
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+
+			m_Changes.NewOnlineSeries?.Clear ();
+
+			collection.Update ( m_Changes );
+			RefreshNotification ();
+		}
+
+		private void ResetNewReleasesNotification () {
+			if ( m_Changes == null ) return;
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+
+			m_Changes.NewReleases = Enumerable.Empty<long> ();
+
+			collection.Update ( m_Changes );
+			RefreshNotification ();
 		}
 
 		private async void SearchReleaseOriginalNameInGoogle () {
@@ -2566,6 +2603,24 @@ namespace Anilibria.Pages.Releases {
 		/// Reset notification command.
 		/// </summary>
 		public ICommand ResetNotificationCommand
+		{
+			get;
+			set;
+		}
+
+		public ICommand ResetNewReleasesNotificationCommand
+		{
+			get;
+			set;
+		}
+
+		public ICommand ResetNewOnlineSeriesNotificationCommand
+		{
+			get;
+			set;
+		}
+
+		public ICommand ResetNewTorrentNotificationCommand
 		{
 			get;
 			set;

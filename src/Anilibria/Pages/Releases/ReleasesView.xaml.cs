@@ -333,6 +333,12 @@ namespace Anilibria.Pages.Releases {
 
 		private void ReleaseName_Tapped ( object sender , TappedRoutedEventArgs e ) => FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
 
+		private void ResetNewReleaseNotification_Tapped ( object sender , TappedRoutedEventArgs e ) => m_ViewModel.ResetNewReleasesNotificationCommand.Execute ( null );
+
+		private void ResetOnlineSeriesNotification_Tapped ( object sender , TappedRoutedEventArgs e ) => m_ViewModel.ResetNewOnlineSeriesNotificationCommand.Execute ( null );
+
+		private void ResetNewTorrentsNotification_Tapped ( object sender , TappedRoutedEventArgs e ) => m_ViewModel.ResetNewTorrentNotificationCommand.Execute ( null );
+
 	}
 
 }
