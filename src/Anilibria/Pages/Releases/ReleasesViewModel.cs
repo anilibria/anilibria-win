@@ -569,12 +569,18 @@ namespace Anilibria.Pages.Releases {
 			WatchCinemaHallCommand = CreateCommand ( WatchCinemaHall );
 			OpenInExternalPlayerHDCommand = CreateCommand ( OpenInExternalPlayerHD );
 			OpenInExternalPlayerSDCommand = CreateCommand ( OpenInExternalPlayerSD );
+			OpenInMpcPlayerHDCommand = CreateCommand ( OpenInMpcPlayerHD );
+			OpenInMpcPlayerSDCommand = CreateCommand ( OpenInMpcPlayerSD );
 			CopyNameToClipboardCommand = CreateCommand ( CopyNameToClipboard );
 			CopyOriginalNameToClipboardCommand = CreateCommand ( CopyOriginalNameToClipboard );
 			CopyAllNameToClipboardCommand = CreateCommand ( CopyAllNameToClipboard );
 			SearchReleaseNameInGoogleCommand = CreateCommand ( SearchReleaseNameInGoogle );
 			SearchReleaseOriginalNameInGoogleCommand = CreateCommand ( SearchReleaseOriginalNameInGoogle );
 		}
+
+		private async void OpenInMpcPlayerSD () => await OpenPlaylistInMpcPlayer ( isHD: false );
+
+		private async void OpenInMpcPlayerHD () => await OpenPlaylistInMpcPlayer ( isHD: true );
 
 		private void ResetNewTorrentNotification () {
 			if ( m_Changes == null ) return;
@@ -642,6 +648,32 @@ namespace Anilibria.Pages.Releases {
 			var dataPackage = new DataPackage ();
 			dataPackage.SetText ( text );
 			Clipboard.SetContent ( dataPackage );
+		}
+
+		private async Task OpenPlaylistInMpcPlayer ( bool isHD ) {
+			if ( OpenedRelease.OnlineVideos == null ) return;
+
+			var playlistFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( $"playlist{OpenedRelease.Id}.mpcpl" , CreationCollisionOption.ReplaceExisting );
+			await FileIO.WriteTextAsync ( playlistFile , GenerateMPCPLContent ( isHD ) );
+
+			await Launcher.LaunchFileAsync ( playlistFile );
+
+			m_AnalyticsService.TrackEvent ( "Releases" , "ExternalPlayer" , "Open quality" + ( isHD ? "HD" : "SD" ) );
+		}
+
+		private string GenerateMPCPLContent ( bool isHD ) {
+			var stringBuilder = new StringBuilder ();
+
+			stringBuilder.AppendLine ( "MPCPLAYLIST" );
+
+			var onlineVideos = OpenedRelease.OnlineVideos.OrderBy ( a => a.Order );
+			var iterator = 1;
+			foreach ( var onlineVideo in onlineVideos ) {
+				stringBuilder.AppendLine ( $"{iterator},type,0\n{iterator},label,Серия {onlineVideo.Order}\n{iterator},filename,{( isHD ? onlineVideo.HDQuality : onlineVideo.SDQuality ) }" );
+				iterator++;
+			}
+
+			return stringBuilder.ToString ();
 		}
 
 		private async void OpenInExternalPlayerSD () => await OpenPlaylistInExternalPlayer ( isHD: false );
@@ -2990,6 +3022,24 @@ namespace Anilibria.Pages.Releases {
 		/// Search opened release original name in google.
 		/// </summary>
 		public ICommand SearchReleaseOriginalNameInGoogleCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open hd playlist in mpc player.
+		/// </summary>
+		public ICommand OpenInMpcPlayerHDCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open sd playlist in mpc player.
+		/// </summary>
+		public ICommand OpenInMpcPlayerSDCommand
 		{
 			get;
 			set;

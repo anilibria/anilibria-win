@@ -2031,6 +2031,16 @@
 									Command="{Binding OpenInExternalPlayerSDCommand}"
 									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								/>
+								<MenuFlyoutItem
+									Text="Открыть в плеере MPC в качестве HD"
+									Command="{Binding OpenInMpcPlayerHDCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+								/>
+								<MenuFlyoutItem
+									Text="Открыть во плеере MPC в качестве SD"
+									Command="{Binding OpenInMpcPlayerSDCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+								/>
 							</MenuFlyout>
 						</FlyoutBase.AttachedFlyout>
 						<controls:ExternalLinkIcon
