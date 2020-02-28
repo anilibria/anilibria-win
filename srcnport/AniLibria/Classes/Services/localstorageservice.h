@@ -34,9 +34,6 @@ private:
     QString getSeensCachePath() const;
     QString getNotificationCachePath() const;
     void createIfNotExistsFile(QString path, QString defaultContent);
-    void addNewReleases(QStringList releases);
-    void setReleaseOnlineSeries(int releaseId, int count);
-    void setNewTorrents(int releaseId, int count);
     void saveChanges();
 
 public:

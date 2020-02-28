@@ -370,7 +370,7 @@ ApplicationWindow {
                     Text {
                         color: "white"
                         font.pixelSize: 14
-                        text: qsTr("версия 0.0.2")
+                        text: qsTr("версия 0.0.3")
                     }
                 }
             }
