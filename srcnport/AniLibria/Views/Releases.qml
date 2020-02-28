@@ -591,21 +591,21 @@ Page {
                                 font.pixelSize: 14
                                 text: page.sections[2]
                                 onPressed: {
-                                    notImplementedDialog.open();
+                                    page.changeSection(2);
                                 }
                             }
                             MenuItem {
                                 font.pixelSize: 14
                                 text: page.sections[3]
                                 onPressed: {
-                                    notImplementedDialog.open();
+                                    page.changeSection(3);
                                 }
                             }
                             MenuItem {
                                 font.pixelSize: 14
                                 text: page.sections[4]
                                 onPressed: {
-                                    notImplementedDialog.open();
+                                    page.changeSection(4);
                                 }
                             }
                         }

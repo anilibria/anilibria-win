@@ -17,6 +17,9 @@
 using namespace std;
 
 const int FavoriteSection = 1;
+const int NewReleasesSection = 2;
+const int NewOnlineSeriesSection = 3;
+const int NewTorrentsSection = 4;
 const int ScheduleSection = 5;
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
@@ -547,6 +550,12 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         }
 
         if (section == ScheduleSection && !scheduled.contains(releaseItem.id())) continue;
+
+        if (section == NewReleasesSection && !m_ChangesModel->newReleases()->contains(releaseItem.id())) continue;
+
+        if (section == NewOnlineSeriesSection && !m_ChangesModel->newOnlineSeries()->contains(releaseItem.id())) continue;
+
+        if (section == NewTorrentsSection && !m_ChangesModel->newTorrents()->contains(releaseItem.id())) continue;
 
         if (startIndex > 0) {
             startIndex--;
