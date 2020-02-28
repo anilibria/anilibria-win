@@ -1907,7 +1907,8 @@
 						Text="{Binding OpenedRelease.Announce}"
 					/>
 					<Grid
-						Margin="0 2 0 0">
+						Margin="0 2 0 0"
+						Tapped="ReleaseName_Tapped">
 						<ScrollViewer
 							x:Name="CardDescription"
 							MaxHeight="190">
@@ -1920,6 +1921,16 @@
 								converters:TextBlockHighlight.HyperLinkHightlight="True">
 							</TextBlock>
 						</ScrollViewer>
+						<FlyoutBase.AttachedFlyout>
+							<MenuFlyout
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
+								<MenuFlyoutItem
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+									Text="Скопировать описание"
+									Command="{Binding CopyDescriptionToClipboardCommand}"
+								/>
+							</MenuFlyout>
+						</FlyoutBase.AttachedFlyout>
 					</Grid>
 				</StackPanel>
 				<StackPanel

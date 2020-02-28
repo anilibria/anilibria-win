@@ -574,8 +574,15 @@ namespace Anilibria.Pages.Releases {
 			CopyNameToClipboardCommand = CreateCommand ( CopyNameToClipboard );
 			CopyOriginalNameToClipboardCommand = CreateCommand ( CopyOriginalNameToClipboard );
 			CopyAllNameToClipboardCommand = CreateCommand ( CopyAllNameToClipboard );
+			CopyDescriptionToClipboardCommand = CreateCommand ( CopyDescriptionToClipboard );
 			SearchReleaseNameInGoogleCommand = CreateCommand ( SearchReleaseNameInGoogle );
 			SearchReleaseOriginalNameInGoogleCommand = CreateCommand ( SearchReleaseOriginalNameInGoogle );
+		}
+
+		private void CopyDescriptionToClipboard () {
+			if ( OpenedRelease == null ) return;
+
+			CopyTextToClipboard ( OpenedRelease.Description );
 		}
 
 		private async void OpenInMpcPlayerSD () => await OpenPlaylistInMpcPlayer ( isHD: false );
@@ -3040,6 +3047,15 @@ namespace Anilibria.Pages.Releases {
 		/// Open sd playlist in mpc player.
 		/// </summary>
 		public ICommand OpenInMpcPlayerSDCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Copy description to clipboard.
+		/// </summary>
+		public ICommand CopyDescriptionToClipboardCommand
 		{
 			get;
 			set;
