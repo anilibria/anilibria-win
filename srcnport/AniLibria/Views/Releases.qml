@@ -21,11 +21,15 @@ Page {
     property bool runRefreshFavorties: false
     property bool synchronizeEnabled: false
     property int selectedSection: 0
-    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Новые серии", "Обновленные торренты", "Расписание"]
+    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Релизы с новыми сериями", "Релизы с новыми торрентами", "Расписание", "Релизы с обновленными торрентами"]
     property var sectionSortings: {
         0: { field: 0, direction: 1 },
         1: { field: 0, direction: 1 },
+        2: { field: 0, direction: 1 },
+        3: { field: 0, direction: 1 },
+        4: { field: 0, direction: 1 },
         5: { field: 1, direction: 0 },
+        6: { field: 0, direction: 1 },
     }
     property var changesCounts: []
 
@@ -510,6 +514,18 @@ Page {
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
                         Rectangle {
+                            visible: !localStorage.isChangesExists
+                            width: parent.width
+                            height: parent.height
+                            Text {
+                                anchors.centerIn: parent
+                                text: "У Вас нет новых уведомлений"
+                                font.pixelSize: 20
+                            }
+                        }
+
+                        Rectangle {
+                            visible: localStorage.isChangesExists
                             width: parent.width
                             Button {
                                 id: resetNotificationButton
@@ -687,6 +703,7 @@ Page {
 
                         Menu {
                             id: notificationsMenuSections
+                            width: 300
                             y: notificationMenuButton.height
 
                             MenuItem {
@@ -708,6 +725,13 @@ Page {
                                 text: page.sections[4]
                                 onPressed: {
                                     page.changeSection(4);
+                                }
+                            }
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[6]
+                                onPressed: {
+                                    page.changeSection(6);
                                 }
                             }
                         }

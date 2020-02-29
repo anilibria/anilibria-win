@@ -21,6 +21,7 @@ const int NewReleasesSection = 2;
 const int NewOnlineSeriesSection = 3;
 const int NewTorrentsSection = 4;
 const int ScheduleSection = 5;
+const int NewTorrentSeriesSection = 6;
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_CachedReleases(new QList<FullReleaseModel>()),
@@ -585,6 +586,8 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (section == NewOnlineSeriesSection && !m_ChangesModel->newOnlineSeries()->contains(releaseItem.id())) continue;
 
         if (section == NewTorrentsSection && !m_ChangesModel->newTorrents()->contains(releaseItem.id())) continue;
+
+        if (section == NewTorrentSeriesSection && !m_ChangesModel->newTorrentSeries()->contains(releaseItem.id())) continue;
 
         if (startIndex > 0) {
             startIndex--;
