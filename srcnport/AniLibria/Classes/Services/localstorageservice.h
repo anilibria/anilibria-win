@@ -50,6 +50,8 @@ public:
     Q_INVOKABLE QList<int> getFavorites();
     Q_INVOKABLE void clearFavorites();
     Q_INVOKABLE void updateReleasesInnerCache();
+    Q_INVOKABLE QList<int> getChangesCounts();
+    Q_INVOKABLE bool isChangesExists();
 
 signals:
     void allReleasesFinished();

@@ -80,8 +80,8 @@ QString ChangesModel::toJson()
 
     QJsonArray newTorrents;
     foreach (auto newTorrent, *m_NewTorrents) {
-        QJsonValue newOnlineSerieValue(newTorrent);
-        newOnlineSeries.append(newOnlineSerieValue);
+        QJsonValue newTorrentItem(newTorrent);
+        newTorrents.append(newTorrentItem);
     }
     object["newTorrents"] = newTorrents;
 

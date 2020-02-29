@@ -632,6 +632,28 @@ void LocalStorageService::updateReleasesInnerCache()
     }
 }
 
+QList<int> LocalStorageService::getChangesCounts()
+{
+    QList<int> result;
+
+    result.append(m_ChangesModel->newReleases()->count());
+    result.append(m_ChangesModel->newOnlineSeries()->count());
+    result.append(m_ChangesModel->newTorrents()->count());
+    result.append(m_ChangesModel->newTorrentSeries()->count());
+
+    return result;
+}
+
+bool LocalStorageService::isChangesExists()
+{
+    if (m_ChangesModel->newReleases()->count() > 0) return true;
+    if (m_ChangesModel->newOnlineSeries()->count() > 0) return true;
+    if (m_ChangesModel->newTorrents()->count() > 0) return true;
+    if (m_ChangesModel->newTorrentSeries()->count() > 0) return true;
+
+    return false;
+}
+
 void LocalStorageService::allReleasesUpdated()
 {
     emit allReleasesFinished();

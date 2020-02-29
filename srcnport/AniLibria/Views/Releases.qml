@@ -27,6 +27,7 @@ Page {
         1: { field: 0, direction: 1 },
         5: { field: 1, direction: 0 },
     }
+    property var changesCounts: []
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -474,6 +475,106 @@ Page {
                     }
                 }
                 IconButton {
+                    id: notificationPopupButton
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/notification.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        page.changesCounts = localStorage.getChangesCounts();
+                        notificationPopup.open();
+                    }
+
+                    Rectangle {
+                        visible: localStorage.isChangesExists()
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        anchors.rightMargin: 6
+                        anchors.topMargin: 10
+                        color: "#4ca2c2"
+                        width: 16
+                        height: 16
+                        radius: 12
+                    }
+
+                    Popup {
+                        id: notificationPopup
+                        x: 40
+                        y: sortingPopupButton.height - 100
+                        width: 370
+                        height: 250
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        Rectangle {
+                            width: parent.width
+                            Button {
+                                id: resetNotificationButton
+                                anchors.right: parent.right
+                                text: "Отметить все как прочитанное"
+                                onClicked: {
+                                    page.refreshAllReleases();
+                                }
+                            }
+                            Column {
+                                spacing: 4
+                                anchors.top: resetNotificationButton.bottom
+                                Rectangle {
+                                    visible: page.changesCounts[0] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Новых релизов: " + page.changesCounts[0]
+                                    }
+                                }
+                                Rectangle {
+                                    visible: page.changesCounts[1] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Релизов с новыми сериями: " + page.changesCounts[1]
+                                    }
+                                }
+                                Rectangle {
+                                    visible: page.changesCounts[2] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Новые торренты: " + page.changesCounts[2]
+                                    }
+                                }
+                                Rectangle {
+                                    visible: page.changesCounts[3] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Релизы с обновленными торрентами: " + page.changesCounts[3]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                IconButton {
                     height: 45
                     width: 40
                     iconColor: "white"
@@ -484,7 +585,7 @@ Page {
                         const randomRelease = JSON.parse(localStorage.getRandomRelease());
                         showReleaseCard(randomRelease);
                     }
-                }
+                }                
             }
         }
 
