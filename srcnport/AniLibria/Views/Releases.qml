@@ -516,7 +516,8 @@ Page {
                                 anchors.right: parent.right
                                 text: "Отметить все как прочитанное"
                                 onClicked: {
-                                    page.refreshAllReleases();
+                                    localStorage.resetAllChanges();
+                                    page.changesCounts = [0, 0, 0, 0];
                                 }
                             }
                             Column {

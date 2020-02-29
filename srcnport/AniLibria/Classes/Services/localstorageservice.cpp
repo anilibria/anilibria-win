@@ -24,7 +24,8 @@ const int ScheduleSection = 5;
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_CachedReleases(new QList<FullReleaseModel>()),
-    m_ChangesModel(new ChangesModel())
+    m_ChangesModel(new ChangesModel()),
+    m_IsChangesExists(false)
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
 
@@ -55,7 +56,7 @@ bool LocalStorageService::isChangesExists()
 
 void LocalStorageService::setIsChangesExists(bool isChangesExists)
 {
-    if (m_IsChangesExists != isChangesExists) return;
+    if (m_IsChangesExists == isChangesExists) return;
 
     m_IsChangesExists = isChangesExists;
     emit isChangesExistsChanged();
@@ -670,6 +671,16 @@ QList<int> LocalStorageService::getChangesCounts()
     result.append(m_ChangesModel->newTorrentSeries()->count());
 
     return result;
+}
+
+void LocalStorageService::resetAllChanges()
+{
+    m_ChangesModel->newReleases()->clear();
+    m_ChangesModel->newOnlineSeries()->clear();
+    m_ChangesModel->newTorrents()->clear();
+    m_ChangesModel->newTorrentSeries()->clear();
+
+    saveChanges();
 }
 
 void LocalStorageService::allReleasesUpdated()

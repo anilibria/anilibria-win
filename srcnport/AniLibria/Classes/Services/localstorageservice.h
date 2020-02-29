@@ -13,7 +13,6 @@ class LocalStorageService : public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool isChangesExists READ isChangesExists WRITE setIsChangesExists NOTIFY isChangesExistsChanged)
-
 private:
     QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
     QList<FullReleaseModel>* m_CachedReleases;
@@ -58,6 +57,7 @@ public:
     Q_INVOKABLE void clearFavorites();
     Q_INVOKABLE void updateReleasesInnerCache();
     Q_INVOKABLE QList<int> getChangesCounts();
+    Q_INVOKABLE void resetAllChanges();
 
 signals:
     void allReleasesFinished();
