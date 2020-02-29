@@ -43,7 +43,22 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     auto changesJson = getChanges();
     m_ChangesModel->fromJson(changesJson);
 
+    resetChanges();
+
     connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
+}
+
+bool LocalStorageService::isChangesExists()
+{
+    return m_IsChangesExists;
+}
+
+void LocalStorageService::setIsChangesExists(bool isChangesExists)
+{
+    if (m_IsChangesExists != isChangesExists) return;
+
+    m_IsChangesExists = isChangesExists;
+    emit isChangesExistsChanged();
 }
 
 void LocalStorageService::updateAllReleases(const QString &releases)
@@ -302,6 +317,19 @@ void LocalStorageService::saveChanges()
     }
     notificationFile.write(m_ChangesModel->toJson().toUtf8());
     notificationFile.close();
+
+    resetChanges();
+}
+
+void LocalStorageService::resetChanges()
+{
+    bool isChanges = false;
+    if (m_ChangesModel->newReleases()->count() > 0) isChanges = true;
+    if (m_ChangesModel->newOnlineSeries()->count() > 0) isChanges = true;
+    if (m_ChangesModel->newTorrents()->count() > 0) isChanges = true;
+    if (m_ChangesModel->newTorrentSeries()->count() > 0) isChanges = true;
+
+    setIsChangesExists(isChanges);
 }
 
 QString LocalStorageService::getRelease(int id)
@@ -642,16 +670,6 @@ QList<int> LocalStorageService::getChangesCounts()
     result.append(m_ChangesModel->newTorrentSeries()->count());
 
     return result;
-}
-
-bool LocalStorageService::isChangesExists()
-{
-    if (m_ChangesModel->newReleases()->count() > 0) return true;
-    if (m_ChangesModel->newOnlineSeries()->count() > 0) return true;
-    if (m_ChangesModel->newTorrents()->count() > 0) return true;
-    if (m_ChangesModel->newTorrentSeries()->count() > 0) return true;
-
-    return false;
 }
 
 void LocalStorageService::allReleasesUpdated()

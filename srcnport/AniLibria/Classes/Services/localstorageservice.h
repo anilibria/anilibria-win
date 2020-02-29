@@ -12,10 +12,13 @@ class LocalStorageService : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool isChangesExists READ isChangesExists WRITE setIsChangesExists NOTIFY isChangesExistsChanged)
+
 private:
     QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
     QList<FullReleaseModel>* m_CachedReleases;
     ChangesModel* m_ChangesModel;
+    bool m_IsChangesExists;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
     QString torrentsToJson(QList<ReleaseTorrentModel>& torrents);
@@ -35,9 +38,13 @@ private:
     QString getNotificationCachePath() const;
     void createIfNotExistsFile(QString path, QString defaultContent);
     void saveChanges();
+    void resetChanges();
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
+
+    bool isChangesExists();
+    void setIsChangesExists(bool isChangesExists);
 
     Q_INVOKABLE void updateAllReleases(const QString& releases);
     Q_INVOKABLE QString getRelease(int id);
@@ -51,13 +58,13 @@ public:
     Q_INVOKABLE void clearFavorites();
     Q_INVOKABLE void updateReleasesInnerCache();
     Q_INVOKABLE QList<int> getChangesCounts();
-    Q_INVOKABLE bool isChangesExists();
 
 signals:
     void allReleasesFinished();
+    void isChangesExistsChanged();
 
 public slots:
-    void allReleasesUpdated();
+    void allReleasesUpdated();    
 
 };
 

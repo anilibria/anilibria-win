@@ -488,7 +488,7 @@ Page {
                     }
 
                     Rectangle {
-                        visible: localStorage.isChangesExists()
+                        visible: localStorage.isChangesExists
                         anchors.top: parent.top
                         anchors.right: parent.right
                         anchors.rightMargin: 6
