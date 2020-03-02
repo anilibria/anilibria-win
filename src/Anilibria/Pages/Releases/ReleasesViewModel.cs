@@ -530,6 +530,9 @@ namespace Anilibria.Pages.Releases {
 			CloseCommentsCommand = CreateCommand ( CloseComments );
 			RefreshCommand = CreateCommand ( Refresh , () => !IsRefreshing );
 			ResetNotificationCommand = CreateCommand ( ResetNotification );
+			ResetNewReleasesNotificationCommand = CreateCommand ( ResetNewReleasesNotification );
+			ResetNewOnlineSeriesNotificationCommand = CreateCommand ( ResetNewOnlineSeriesNotification );
+			ResetNewTorrentNotificationCommand = CreateCommand ( ResetNewTorrentNotification );
 			OpenCrossReleaseCommand = CreateCommand<string> ( OpenCrossRelease );
 			ShowRandomReleaseCommand = CreateCommand ( ShowRandomRelease );
 			ClearFiltersCommands = CreateCommand ( ClearFilters );
@@ -566,15 +569,62 @@ namespace Anilibria.Pages.Releases {
 			WatchCinemaHallCommand = CreateCommand ( WatchCinemaHall );
 			OpenInExternalPlayerHDCommand = CreateCommand ( OpenInExternalPlayerHD );
 			OpenInExternalPlayerSDCommand = CreateCommand ( OpenInExternalPlayerSD );
+			OpenInMpcPlayerHDCommand = CreateCommand ( OpenInMpcPlayerHD );
+			OpenInMpcPlayerSDCommand = CreateCommand ( OpenInMpcPlayerSD );
 			CopyNameToClipboardCommand = CreateCommand ( CopyNameToClipboard );
 			CopyOriginalNameToClipboardCommand = CreateCommand ( CopyOriginalNameToClipboard );
 			CopyAllNameToClipboardCommand = CreateCommand ( CopyAllNameToClipboard );
+			CopyDescriptionToClipboardCommand = CreateCommand ( CopyDescriptionToClipboard );
 			SearchReleaseNameInGoogleCommand = CreateCommand ( SearchReleaseNameInGoogle );
 			SearchReleaseOriginalNameInGoogleCommand = CreateCommand ( SearchReleaseOriginalNameInGoogle );
 		}
 
+		private void CopyDescriptionToClipboard () {
+			if ( OpenedRelease == null ) return;
+
+			CopyTextToClipboard ( OpenedRelease.Description );
+		}
+
+		private async void OpenInMpcPlayerSD () => await OpenPlaylistInMpcPlayer ( isHD: false );
+
+		private async void OpenInMpcPlayerHD () => await OpenPlaylistInMpcPlayer ( isHD: true );
+
+		private void ResetNewTorrentNotification () {
+			if ( m_Changes == null ) return;
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+
+			m_Changes.NewTorrents?.Clear ();
+			m_Changes.NewTorrentSeries?.Clear ();
+
+			collection.Update ( m_Changes );
+			RefreshNotification ();
+		}
+
+		private void ResetNewOnlineSeriesNotification () {
+			if ( m_Changes == null ) return;
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+
+			m_Changes.NewOnlineSeries?.Clear ();
+
+			collection.Update ( m_Changes );
+			RefreshNotification ();
+		}
+
+		private void ResetNewReleasesNotification () {
+			if ( m_Changes == null ) return;
+
+			var collection = m_DataContext.GetCollection<ChangesEntity> ();
+
+			m_Changes.NewReleases = Enumerable.Empty<long> ();
+
+			collection.Update ( m_Changes );
+			RefreshNotification ();
+		}
+
 		private async void SearchReleaseOriginalNameInGoogle () {
-			var url = "https://www.google.com/search?q=" + HttpUtility.UrlEncode(OpenedRelease.Names.Last ());
+			var url = "https://www.google.com/search?q=" + HttpUtility.UrlEncode ( OpenedRelease.Names.Last () );
 			await Launcher.LaunchUriAsync ( new Uri ( url ) );
 		}
 
@@ -586,7 +636,7 @@ namespace Anilibria.Pages.Releases {
 		private void CopyAllNameToClipboard () {
 			if ( OpenedRelease == null ) return;
 
-			CopyTextToClipboard ( string.Join(", ", OpenedRelease.Names) );
+			CopyTextToClipboard ( string.Join ( ", " , OpenedRelease.Names ) );
 		}
 
 		private void CopyOriginalNameToClipboard () {
@@ -597,14 +647,40 @@ namespace Anilibria.Pages.Releases {
 
 		private void CopyNameToClipboard () {
 			if ( OpenedRelease == null ) return;
-			
+
 			CopyTextToClipboard ( OpenedRelease.Names.First () );
 		}
 
-		private void CopyTextToClipboard (string text) {
+		private void CopyTextToClipboard ( string text ) {
 			var dataPackage = new DataPackage ();
 			dataPackage.SetText ( text );
 			Clipboard.SetContent ( dataPackage );
+		}
+
+		private async Task OpenPlaylistInMpcPlayer ( bool isHD ) {
+			if ( OpenedRelease.OnlineVideos == null ) return;
+
+			var playlistFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync ( $"playlist{OpenedRelease.Id}.mpcpl" , CreationCollisionOption.ReplaceExisting );
+			await FileIO.WriteTextAsync ( playlistFile , GenerateMPCPLContent ( isHD ) );
+
+			await Launcher.LaunchFileAsync ( playlistFile );
+
+			m_AnalyticsService.TrackEvent ( "Releases" , "ExternalPlayer" , "Open quality" + ( isHD ? "HD" : "SD" ) );
+		}
+
+		private string GenerateMPCPLContent ( bool isHD ) {
+			var stringBuilder = new StringBuilder ();
+
+			stringBuilder.AppendLine ( "MPCPLAYLIST" );
+
+			var onlineVideos = OpenedRelease.OnlineVideos.OrderBy ( a => a.Order );
+			var iterator = 1;
+			foreach ( var onlineVideo in onlineVideos ) {
+				stringBuilder.AppendLine ( $"{iterator},type,0\n{iterator},label,Серия {onlineVideo.Order}\n{iterator},filename,{( isHD ? onlineVideo.HDQuality : onlineVideo.SDQuality ) }" );
+				iterator++;
+			}
+
+			return stringBuilder.ToString ();
 		}
 
 		private async void OpenInExternalPlayerSD () => await OpenPlaylistInExternalPlayer ( isHD: false );
@@ -1542,8 +1618,7 @@ namespace Anilibria.Pages.Releases {
 			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
 			var processedOriginalValues = originalValues.Where ( a => a != null ).Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
 
-			var intersectedValues = processedOriginalValues.Intersect ( processedFilterValues );
-			return processedFilterValues.SequenceEqual ( intersectedValues );
+			return processedFilterValues.All ( a => processedOriginalValues.Any ( b => b.Contains ( a ) ) );
 		}
 
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
@@ -2572,6 +2647,24 @@ namespace Anilibria.Pages.Releases {
 			set;
 		}
 
+		public ICommand ResetNewReleasesNotificationCommand
+		{
+			get;
+			set;
+		}
+
+		public ICommand ResetNewOnlineSeriesNotificationCommand
+		{
+			get;
+			set;
+		}
+
+		public ICommand ResetNewTorrentNotificationCommand
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Open cross release by hyperlink in text command.
 		/// </summary>
@@ -2936,6 +3029,33 @@ namespace Anilibria.Pages.Releases {
 		/// Search opened release original name in google.
 		/// </summary>
 		public ICommand SearchReleaseOriginalNameInGoogleCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open hd playlist in mpc player.
+		/// </summary>
+		public ICommand OpenInMpcPlayerHDCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open sd playlist in mpc player.
+		/// </summary>
+		public ICommand OpenInMpcPlayerSDCommand
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Copy description to clipboard.
+		/// </summary>
+		public ICommand CopyDescriptionToClipboardCommand
 		{
 			get;
 			set;

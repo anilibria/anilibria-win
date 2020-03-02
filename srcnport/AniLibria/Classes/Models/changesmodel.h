@@ -11,19 +11,19 @@ public:
     ChangesModel();
 
 private:
-    QList<int> m_NewReleases;
-    QHash<int, int> m_NewOnlineSeries;
-    QHash<int, int> m_NewTorrents;
+    QList<int>* m_NewReleases;
+    QList<int>* m_NewOnlineSeries;
+    QList<int>* m_NewTorrents;
+    QList<int>* m_NewTorrentSeries;
 
 public:
-    QList<int> newReleases();
-    void setNewReleases(QList<int> newReleases);
+    QList<int>* newReleases();
 
-    QHash<int, int> newOnlineSeries();
-    void setNewOnlineSeries(QHash<int, int> newOnlineSeries);
+    QList<int>* newOnlineSeries();
 
-    QHash<int, int> newTorrents();
-    void setNewTorrents(QHash<int, int> newTorrents);
+    QList<int>* newTorrents();
+
+    QList<int>* newTorrentSeries();
 
     void fromJson(QString json);
 

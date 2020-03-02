@@ -21,12 +21,17 @@ Page {
     property bool runRefreshFavorties: false
     property bool synchronizeEnabled: false
     property int selectedSection: 0
-    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Новые серии", "Обновленные торренты", "Расписание"]
+    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Релизы с новыми сериями", "Релизы с новыми торрентами", "Расписание", "Релизы с обновленными торрентами"]
     property var sectionSortings: {
         0: { field: 0, direction: 1 },
         1: { field: 0, direction: 1 },
+        2: { field: 0, direction: 1 },
+        3: { field: 0, direction: 1 },
+        4: { field: 0, direction: 1 },
         5: { field: 1, direction: 0 },
+        6: { field: 0, direction: 1 },
     }
+    property var changesCounts: []
 
     signal navigateFrom()
     signal watchRelease(int releaseId, string videos)
@@ -474,6 +479,119 @@ Page {
                     }
                 }
                 IconButton {
+                    id: notificationPopupButton
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/notification.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        page.changesCounts = localStorage.getChangesCounts();
+                        notificationPopup.open();
+                    }
+
+                    Rectangle {
+                        visible: localStorage.isChangesExists
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        anchors.rightMargin: 6
+                        anchors.topMargin: 10
+                        color: "#4ca2c2"
+                        width: 16
+                        height: 16
+                        radius: 12
+                    }
+
+                    Popup {
+                        id: notificationPopup
+                        x: 40
+                        y: sortingPopupButton.height - 100
+                        width: 370
+                        height: 250
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        Rectangle {
+                            visible: !localStorage.isChangesExists
+                            width: parent.width
+                            height: parent.height
+                            Text {
+                                anchors.centerIn: parent
+                                text: "У Вас нет новых уведомлений"
+                                font.pixelSize: 20
+                            }
+                        }
+
+                        Rectangle {
+                            visible: localStorage.isChangesExists
+                            width: parent.width
+                            Button {
+                                id: resetNotificationButton
+                                anchors.right: parent.right
+                                text: "Отметить все как прочитанное"
+                                onClicked: {
+                                    localStorage.resetAllChanges();
+                                    page.changesCounts = [0, 0, 0, 0];
+                                }
+                            }
+                            Column {
+                                spacing: 4
+                                anchors.top: resetNotificationButton.bottom
+                                Rectangle {
+                                    visible: page.changesCounts[0] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Новых релизов: " + page.changesCounts[0]
+                                    }
+                                }
+                                Rectangle {
+                                    visible: page.changesCounts[1] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Релизов с новыми сериями: " + page.changesCounts[1]
+                                    }
+                                }
+                                Rectangle {
+                                    visible: page.changesCounts[2] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Новые торренты: " + page.changesCounts[2]
+                                    }
+                                }
+                                Rectangle {
+                                    visible: page.changesCounts[3] > 0
+                                    border.width: 3
+                                    border.color: "red"
+                                    width: 340
+                                    height: 40
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: "Релизы с обновленными торрентами: " + page.changesCounts[3]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                IconButton {
                     height: 45
                     width: 40
                     iconColor: "white"
@@ -484,7 +602,7 @@ Page {
                         const randomRelease = JSON.parse(localStorage.getRandomRelease());
                         showReleaseCard(randomRelease);
                     }
-                }
+                }                
             }
         }
 
@@ -585,27 +703,35 @@ Page {
 
                         Menu {
                             id: notificationsMenuSections
+                            width: 300
                             y: notificationMenuButton.height
 
                             MenuItem {
                                 font.pixelSize: 14
                                 text: page.sections[2]
                                 onPressed: {
-                                    notImplementedDialog.open();
+                                    page.changeSection(2);
                                 }
                             }
                             MenuItem {
                                 font.pixelSize: 14
                                 text: page.sections[3]
                                 onPressed: {
-                                    notImplementedDialog.open();
+                                    page.changeSection(3);
                                 }
                             }
                             MenuItem {
                                 font.pixelSize: 14
                                 text: page.sections[4]
                                 onPressed: {
-                                    notImplementedDialog.open();
+                                    page.changeSection(4);
+                                }
+                            }
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[6]
+                                onPressed: {
+                                    page.changeSection(6);
                                 }
                             }
                         }

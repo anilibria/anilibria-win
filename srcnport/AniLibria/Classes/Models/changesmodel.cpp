@@ -2,45 +2,35 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
-#include <QHash>
 #include "changesmodel.h"
 
 ChangesModel::ChangesModel() :
-    m_NewReleases(QList<int>()),
-    m_NewOnlineSeries(QHash<int, int>()),
-    m_NewTorrents(QHash<int,int>())
+    m_NewReleases(new QList<int>()),
+    m_NewOnlineSeries(new QList<int>()),
+    m_NewTorrents(new QList<int>()),
+    m_NewTorrentSeries(new QList<int>())
 {
 
 }
 
-QList<int> ChangesModel::newReleases()
+QList<int>* ChangesModel::newReleases()
 {
     return m_NewReleases;
 }
 
-void ChangesModel::setNewReleases(QList<int> newReleases)
+QList<int>* ChangesModel::newTorrentSeries()
 {
-    m_NewReleases = newReleases;
+    return m_NewTorrentSeries;
 }
 
-QHash<int, int> ChangesModel::newOnlineSeries()
+QList<int>* ChangesModel::newOnlineSeries()
 {
     return m_NewOnlineSeries;
 }
 
-void ChangesModel::setNewOnlineSeries(QHash<int, int> newOnlineSeries)
-{
-    m_NewOnlineSeries = newOnlineSeries;
-}
-
-QHash<int, int> ChangesModel::newTorrents()
+QList<int>* ChangesModel::newTorrents()
 {
     return m_NewTorrents;
-}
-
-void ChangesModel::setNewTorrents(QHash<int, int> newTorrents)
-{
-    m_NewTorrents = newTorrents;
 }
 
 void ChangesModel::fromJson(QString json)
@@ -49,25 +39,18 @@ void ChangesModel::fromJson(QString json)
 
     auto document = QJsonDocument::fromJson(json.toUtf8());
     auto jsonChanges = document.object();
+
     auto newReleases = jsonChanges.value("newReleases").toArray();
+    foreach (auto newRelease, newReleases) m_NewReleases->append(newRelease.toInt());
 
-    foreach (auto newRelease, newReleases) m_NewReleases.append(newRelease.toInt());
+    auto newTorrents = jsonChanges.value("newTorrents").toArray();
+    foreach (auto newTorrent, newTorrents) m_NewTorrents->append(newTorrent.toInt());
 
-    QJsonArray newOnlineSeries = jsonChanges.value("newOnlineSeries").toArray();
+    auto newOnlineSeries = jsonChanges.value("newOnlineSeries").toArray();
+    foreach (auto newOnlineSeria, newOnlineSeries) m_NewOnlineSeries->append(newOnlineSeria.toInt());
 
-    foreach (QJsonValue newOnlineSerie, newOnlineSeries) {
-        auto item = newOnlineSerie.toObject();
-
-        m_NewOnlineSeries.insert(item.value("id").toInt(), item.value("count").toInt());
-    }
-
-    QJsonArray newTorrents = jsonChanges.value("newTorrents").toArray();
-
-    foreach (QJsonValue newTorrent, newTorrents) {
-        auto item = newTorrent.toObject();
-
-        m_NewOnlineSeries.insert(item.value("id").toInt(), item.value("count").toInt());
-    }
+    auto newTorrentSeries = jsonChanges.value("newTorrentSeries").toArray();
+    foreach (auto newTorrentSeria, newTorrentSeries) m_NewTorrentSeries->append(newTorrentSeria.toInt());
 }
 
 QString ChangesModel::toJson()
@@ -75,33 +58,30 @@ QString ChangesModel::toJson()
     QJsonObject object;
 
     QJsonArray newReleases;
-    foreach (auto newRelease, m_NewReleases) {
+    foreach (auto newRelease, *m_NewReleases) {
         QJsonValue newReleaseValue(newRelease);
         newReleases.append(newReleaseValue);
     }
     object["newReleases"] = newReleases;
 
-    QJsonArray newOnlineSeries;
-    QHashIterator<int, int> newOnlineSeriesIterator(m_NewOnlineSeries);
-    while (newOnlineSeriesIterator.hasNext()) {
-        newOnlineSeriesIterator.next();
+    QJsonArray newTorrentSeries;
+    foreach (auto newTorrentSerie, *m_NewTorrentSeries) {
+        QJsonValue newTorrentSerieValue(newTorrentSerie);
+        newTorrentSeries.append(newTorrentSerieValue);
+    }
+    object["newTorrentSeries"] = newTorrentSeries;
 
-        QJsonObject newOnlineSerie;
-        newOnlineSerie["id"] = QJsonValue(newOnlineSeriesIterator.key());
-        newOnlineSerie["count"] = QJsonValue(newOnlineSeriesIterator.value());
-        newOnlineSeries.append(newOnlineSerie);
+    QJsonArray newOnlineSeries;
+    foreach (auto newOnlineSerie, *m_NewOnlineSeries) {
+        QJsonValue newOnlineSerieValue(newOnlineSerie);
+        newOnlineSeries.append(newOnlineSerieValue);
     }
     object["newOnlineSeries"] = newOnlineSeries;
 
     QJsonArray newTorrents;
-    QHashIterator<int, int> newTorrentsIterator(m_NewTorrents);
-    while (newTorrentsIterator.hasNext()) {
-        newTorrentsIterator.next();
-
-        QJsonObject newTorrent;
-        newTorrent["id"] = QJsonValue(newTorrentsIterator.key());
-        newTorrent["count"] = QJsonValue(newTorrentsIterator.value());
-        newTorrents.append(newTorrent);
+    foreach (auto newTorrent, *m_NewTorrents) {
+        QJsonValue newTorrentItem(newTorrent);
+        newTorrents.append(newTorrentItem);
     }
     object["newTorrents"] = newTorrents;
 

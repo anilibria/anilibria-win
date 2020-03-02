@@ -1152,88 +1152,140 @@
 									<Button
 										converters:BackgroundThemeConverter.ActionButton="Origin"
 										Visibility="{Binding IsShowNotification}"
+										HorizontalAlignment="Center"
 										Command="{Binding ResetNotificationCommand}"
 										Margin="0 2 0 2">
 										Отметить все как просмотренное
 									</Button>
-									<controls:PointingGridControl
-										Tapped="NewReleasesNotificationTapped">
-										<Border
+									<StackPanel Orientation="Horizontal">
+										<controls:PointingGridControl
+											Tapped="NewReleasesNotificationTapped">
+											<Border
+												Visibility="{Binding IsNewReleases}"
+												Margin="0 2 0 2"
+												MinWidth="210"
+												converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
+												BorderThickness="2"
+												converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
+												Padding="8">
+												<StackPanel Orientation="Horizontal">
+													<TextBlock
+														Grid.Column="0"
+														Width="35"
+														TextAlignment="Center"
+														Text="{Binding NewReleasesCount}"
+														converters:BackgroundThemeConverter.TextMapper="TextBlock"
+													/>
+													<TextBlock
+														Grid.Column="1"
+														converters:BackgroundThemeConverter.TextMapper="TextBlock">
+														Новых релизов
+													</TextBlock>
+												</StackPanel>
+											</Border>
+										</controls:PointingGridControl>
+										<controls:PointingGridControl
+											x:Name="ResetNewReleaseNotification"
 											Visibility="{Binding IsNewReleases}"
-											Margin="0 2 0 2"
-											MinWidth="200"
-											converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
-											BorderThickness="2"
-											converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
-											Padding="8">
-											<StackPanel Orientation="Horizontal">
-												<TextBlock
-													Grid.Column="0"
-													Width="35"
-													TextAlignment="Center"
-													Text="{Binding NewReleasesCount}"
-													converters:BackgroundThemeConverter.TextMapper="TextBlock"
-												/>
-												<TextBlock
-													Grid.Column="1"
-													converters:BackgroundThemeConverter.TextMapper="TextBlock">
-													Новых релизов
-												</TextBlock>
-											</StackPanel>
-										</Border>
-									</controls:PointingGridControl>
-									<controls:PointingGridControl
-										Tapped="NewOnlineSeriesNotificationTapped">
-										<Border
+											Width="20"
+											Height="20"
+											Margin="6 0 0 0"
+											VerticalAlignment="Center"
+											Tapped="ResetNewReleaseNotification_Tapped"
+											ToolTipService.ToolTip="Сбросить уведомления по новым релизам">
+											<controls:CloseIcon
+												IconWidth="20"
+												IconHeight="20"
+												converters:BackgroundThemeConverter.CloseIcon="Origin"
+											/>
+										</controls:PointingGridControl>
+									</StackPanel>
+									<StackPanel Orientation="Horizontal">
+										<controls:PointingGridControl
+											Tapped="NewOnlineSeriesNotificationTapped">
+											<Border
+												Visibility="{Binding IsNewOnlineSeries}"
+												Margin="0 2 0 2"
+												MinWidth="210"
+												converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
+												BorderThickness="2"
+												converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
+												Padding="8">
+												<StackPanel Orientation="Horizontal">
+													<TextBlock
+														Grid.Column="0"
+														Width="35"
+														TextAlignment="Center"
+														Text="{Binding NewOnlineSeriesCount}"
+														converters:BackgroundThemeConverter.TextMapper="TextBlock"
+													/>
+													<TextBlock
+														Grid.Column="1"
+														converters:BackgroundThemeConverter.TextMapper="TextBlock">
+														Новых онлайн серий
+													</TextBlock>
+												</StackPanel>
+											</Border>
+										</controls:PointingGridControl>
+										<controls:PointingGridControl
+											x:Name="ResetOnlineSeriesNotification"
 											Visibility="{Binding IsNewOnlineSeries}"
-											Margin="0 2 0 2"
-											MinWidth="200"
-											converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
-											BorderThickness="2"
-											converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
-											Padding="8">
-											<StackPanel Orientation="Horizontal">
-												<TextBlock
-													Grid.Column="0"
-													Width="35"
-													TextAlignment="Center"
-													Text="{Binding NewOnlineSeriesCount}"
-													converters:BackgroundThemeConverter.TextMapper="TextBlock"
-												/>
-												<TextBlock
-													Grid.Column="1"
-													converters:BackgroundThemeConverter.TextMapper="TextBlock">
-													Новых онлайн серий
-												</TextBlock>
-											</StackPanel>
-										</Border>
-									</controls:PointingGridControl>
-									<controls:PointingGridControl
-										Tapped="NewTorrentsNotificationTapped">
-										<Border
+											Width="20"
+											Height="20"
+											Margin="6 0 0 0"
+											VerticalAlignment="Center"
+											Tapped="ResetOnlineSeriesNotification_Tapped"
+											ToolTipService.ToolTip="Сбросить уведомления по новым онлайн сериям">
+											<controls:CloseIcon
+												IconWidth="20"
+												IconHeight="20"
+												converters:BackgroundThemeConverter.CloseIcon="Origin"
+											/>
+										</controls:PointingGridControl>
+									</StackPanel>
+									<StackPanel Orientation="Horizontal">
+										<controls:PointingGridControl
+											Tapped="NewTorrentsNotificationTapped">
+											<Border
+												Visibility="{Binding IsNewTorrentSeries}"
+												Margin="0 2 0 2"
+												MinWidth="210"
+												converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
+												BorderThickness="2"
+												converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
+												Padding="8">
+												<StackPanel Orientation="Horizontal">
+													<TextBlock
+														Grid.Column="0"
+														Width="35"
+														TextAlignment="Center"
+														Text="{Binding NewTorrentSeriesCount}"
+														converters:BackgroundThemeConverter.TextMapper="TextBlock"
+													/>
+													<TextBlock
+														Grid.Column="1"
+														converters:BackgroundThemeConverter.TextMapper="TextBlock">
+														Новые торренты
+													</TextBlock>
+												</StackPanel>
+											</Border>
+										</controls:PointingGridControl>
+										<controls:PointingGridControl
+											x:Name="ResetNewTorrentsNotification"
 											Visibility="{Binding IsNewTorrentSeries}"
-											Margin="0 2 0 2"
-											MinWidth="200"
-											converters:BackgroundThemeConverter.BorderMapper="AccentBorderColor"
-											BorderThickness="2"
-											converters:BackgroundThemeConverter.BackgroundMapper="ReleaseCardBackground"
-											Padding="8">
-											<StackPanel Orientation="Horizontal">
-												<TextBlock
-													Grid.Column="0"
-													Width="35"
-													TextAlignment="Center"
-													Text="{Binding NewTorrentSeriesCount}"
-													converters:BackgroundThemeConverter.TextMapper="TextBlock"
-												/>
-												<TextBlock
-													Grid.Column="1"
-													converters:BackgroundThemeConverter.TextMapper="TextBlock">
-													Новые торренты
-												</TextBlock>
-											</StackPanel>
-										</Border>
-									</controls:PointingGridControl>
+											Width="20"
+											Height="20"
+											Margin="6 0 0 0"
+											VerticalAlignment="Center"
+											Tapped="ResetNewTorrentsNotification_Tapped"
+											ToolTipService.ToolTip="Сбросить уведомления по новым торрентам">
+											<controls:CloseIcon
+												IconWidth="20"
+												IconHeight="20"
+												converters:BackgroundThemeConverter.CloseIcon="Origin"
+											/>
+										</controls:PointingGridControl>
+									</StackPanel>
 								</StackPanel>
 							</Flyout>
 						</Button.Flyout>
@@ -1855,7 +1907,8 @@
 						Text="{Binding OpenedRelease.Announce}"
 					/>
 					<Grid
-						Margin="0 2 0 0">
+						Margin="0 2 0 0"
+						Tapped="ReleaseName_Tapped">
 						<ScrollViewer
 							x:Name="CardDescription"
 							MaxHeight="190">
@@ -1868,6 +1921,16 @@
 								converters:TextBlockHighlight.HyperLinkHightlight="True">
 							</TextBlock>
 						</ScrollViewer>
+						<FlyoutBase.AttachedFlyout>
+							<MenuFlyout
+									converters:BackgroundThemeConverter.MenuFlyout="Origin">
+								<MenuFlyoutItem
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+									Text="Скопировать описание"
+									Command="{Binding CopyDescriptionToClipboardCommand}"
+								/>
+							</MenuFlyout>
+						</FlyoutBase.AttachedFlyout>
 					</Grid>
 				</StackPanel>
 				<StackPanel
@@ -1977,6 +2040,16 @@
 								<MenuFlyoutItem
 									Text="Открыть во внешнем плеере в качестве SD"
 									Command="{Binding OpenInExternalPlayerSDCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+								/>
+								<MenuFlyoutItem
+									Text="Открыть в плеере MPC в качестве HD"
+									Command="{Binding OpenInMpcPlayerHDCommand}"
+									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
+								/>
+								<MenuFlyoutItem
+									Text="Открыть во плеере MPC в качестве SD"
+									Command="{Binding OpenInMpcPlayerSDCommand}"
 									converters:BackgroundThemeConverter.MenuFlyoutItem="Origin"
 								/>
 							</MenuFlyout>
