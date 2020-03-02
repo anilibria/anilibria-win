@@ -32,6 +32,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
 
     QDir cacheDicrectory(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     QDir().mkpath(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    qDebug() << "Cache location: " << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 
     createIfNotExistsFile(getReleasesCachePath(), "[]");
     createIfNotExistsFile(getScheduleCachePath(), "{}");
