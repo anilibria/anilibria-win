@@ -26,7 +26,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
 
     QDir cacheDicrectory(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
-    if (!cacheDicrectory.exists()) QDir().mkdir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    QDir().mkpath(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
 
     createIfNotExistsFile(getReleasesCachePath(), "[]");
     createIfNotExistsFile(getScheduleCachePath(), "{}");

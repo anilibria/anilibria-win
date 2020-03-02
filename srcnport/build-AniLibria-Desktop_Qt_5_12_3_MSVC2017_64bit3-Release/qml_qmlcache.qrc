@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<RCC>
+    <qresource prefix="/">
+        <file alias="qtquickcontrols2.conf">../AniLibria/qtquickcontrols2.conf</file>
+        <file alias="Assets/Icons/menu.svg">../AniLibria/Assets/Icons/menu.svg</file>
+        <file alias="Assets/Icons/donate.jpg">../AniLibria/Assets/Icons/donate.jpg</file>
+        <file alias="Assets/Icons/videoplayer.svg">../AniLibria/Assets/Icons/videoplayer.svg</file>
+        <file alias="Assets/Icons/youtube.svg">../AniLibria/Assets/Icons/youtube.svg</file>
+        <file alias="Assets/Icons/donate.svg">../AniLibria/Assets/Icons/donate.svg</file>
+        <file alias="Assets/Icons/user.svg">../AniLibria/Assets/Icons/user.svg</file>
+        <file alias="Assets/Icons/back.svg">../AniLibria/Assets/Icons/back.svg</file>
+        <file alias="Assets/Icons/fast-forward.svg">../AniLibria/Assets/Icons/fast-forward.svg</file>
+        <file alias="Assets/Icons/next.svg">../AniLibria/Assets/Icons/next.svg</file>
+        <file alias="Assets/Icons/pause.svg">../AniLibria/Assets/Icons/pause.svg</file>
+        <file alias="Assets/Icons/play-button.svg">../AniLibria/Assets/Icons/play-button.svg</file>
+        <file alias="Assets/Icons/previous.svg">../AniLibria/Assets/Icons/previous.svg</file>
+        <file alias="Assets/Icons/rewind.svg">../AniLibria/Assets/Icons/rewind.svg</file>
+        <file alias="Assets/Icons/skip.svg">../AniLibria/Assets/Icons/skip.svg</file>
+        <file alias="Assets/Icons/speaker.svg">../AniLibria/Assets/Icons/speaker.svg</file>
+        <file alias="QuickPromise/qmldir">../AniLibria/QuickPromise/qmldir</file>
+        <file alias="Assets/Icons/close.svg">../AniLibria/Assets/Icons/close.svg</file>
+        <file alias="Assets/Icons/step-backward.svg">../AniLibria/Assets/Icons/step-backward.svg</file>
+        <file alias="Assets/Icons/step-forward.svg">../AniLibria/Assets/Icons/step-forward.svg</file>
+        <file alias="Assets/Icons/resize.svg">../AniLibria/Assets/Icons/resize.svg</file>
+        <file alias="Assets/Icons/rating.svg">../AniLibria/Assets/Icons/rating.svg</file>
+        <file alias="Assets/Icons/favorite.svg">../AniLibria/Assets/Icons/favorite.svg</file>
+        <file alias="Assets/Icons/emptyfavorite.svg">../AniLibria/Assets/Icons/emptyfavorite.svg</file>
+        <file alias="Assets/Icons/star.svg">../AniLibria/Assets/Icons/star.svg</file>
+        <file alias="Assets/Icons/anilibrialogodefault.svg">../AniLibria/Assets/Icons/anilibrialogodefault.svg</file>
+        <file alias="Assets/Icons/logout.svg">../AniLibria/Assets/Icons/logout.svg</file>
+        <file alias="Assets/Icons/notification.svg">../AniLibria/Assets/Icons/notification.svg</file>
+        <file alias="Assets/Icons/allreleases.svg">../AniLibria/Assets/Icons/allreleases.svg</file>
+        <file alias="Assets/Icons/online.svg">../AniLibria/Assets/Icons/online.svg</file>
+        <file alias="Assets/Icons/utorrent.svg">../AniLibria/Assets/Icons/utorrent.svg</file>
+        <file alias="Assets/Icons/calendar.svg">../AniLibria/Assets/Icons/calendar.svg</file>
+        <file alias="Assets/Icons/spinner.gif">../AniLibria/Assets/Icons/spinner.gif</file>
+        <file alias="Assets/Icons/refresh.svg">../AniLibria/Assets/Icons/refresh.svg</file>
+        <file alias="Assets/Icons/search.svg">../AniLibria/Assets/Icons/search.svg</file>
+        <file alias="Assets/Icons/sort.svg">../AniLibria/Assets/Icons/sort.svg</file>
+        <file alias="Assets/Icons/dice.svg">../AniLibria/Assets/Icons/dice.svg</file>
+    </qresource>
+</RCC>
