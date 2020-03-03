@@ -103,10 +103,12 @@ void LocalStorageService::updateAllReleases(const QString &releases)
                     m_CachedReleases->removeOne(currentReleaseCacheModel);
 
                 } else {
-                    int newReleaseId = newReleaseModel.id();
-                    if (!newReleases->contains(newReleaseId)) newReleases->append(newReleaseId);
+                    if (!isEmptyReleases) {
+                        int newReleaseId = newReleaseModel.id();
+                        if (!newReleases->contains(newReleaseId)) newReleases->append(newReleaseId);
+                    }
                 }
-                if (!isEmptyReleases) m_CachedReleases->append(newReleaseModel);
+                m_CachedReleases->append(newReleaseModel);
             }
 
             saveCachedReleasesToFile();
