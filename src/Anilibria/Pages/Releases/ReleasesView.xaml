@@ -1716,7 +1716,8 @@
 					Grid.Column="1"
 					Margin="2 16 6 0">
 					<Grid
-						Tapped="ReleaseName_Tapped">
+						Tapped="ReleaseName_Tapped"
+						RightTapped="Grid_RightTapped">
 						<TextBlock
 							converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
 							Text="{Binding OpenedRelease.Title}"
@@ -1908,7 +1909,7 @@
 					/>
 					<Grid
 						Margin="0 2 0 0"
-						Tapped="ReleaseName_Tapped">
+						RightTapped="Grid_RightTapped">
 						<ScrollViewer
 							x:Name="CardDescription"
 							MaxHeight="190">

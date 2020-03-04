@@ -1615,8 +1615,8 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private bool AllInArrayCaseSensitive ( IEnumerable<string> filterValues , IEnumerable<string> originalValues ) {
-			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
-			var processedOriginalValues = originalValues.Where ( a => a != null ).Select ( a => a.Replace ( "ё" , "е" ) ).ToList ();
+			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ).ToLowerInvariant() ).ToList ();
+			var processedOriginalValues = originalValues.Where ( a => a != null ).Select ( a => a.Replace ( "ё" , "е" ).ToLowerInvariant () ).ToList ();
 
 			return processedFilterValues.All ( a => processedOriginalValues.Any ( b => b.Contains ( a ) ) );
 		}

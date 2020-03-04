@@ -339,6 +339,8 @@ namespace Anilibria.Pages.Releases {
 
 		private void ResetNewTorrentsNotification_Tapped ( object sender , TappedRoutedEventArgs e ) => m_ViewModel.ResetNewTorrentNotificationCommand.Execute ( null );
 
+		private void Grid_RightTapped ( object sender , RightTappedRoutedEventArgs e ) => FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
+
 	}
 
 }
