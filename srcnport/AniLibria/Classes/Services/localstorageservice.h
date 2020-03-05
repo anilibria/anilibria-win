@@ -7,6 +7,7 @@
 #include "../Models/releasetorrentmodel.h"
 #include "../Models/fullreleasemodel.h"
 #include "../Models/changesmodel.h"
+#include "../Models/seenmodel.h"
 
 class LocalStorageService : public QObject
 {
@@ -17,6 +18,7 @@ private:
     QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
     QList<FullReleaseModel>* m_CachedReleases;
     ChangesModel* m_ChangesModel;
+    QHash<int, SeenModel>* m_SeenModels;
     bool m_IsChangesExists;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
@@ -38,6 +40,7 @@ private:
     void createIfNotExistsFile(QString path, QString defaultContent);
     void saveChanges();
     void resetChanges();
+    void loadSeens();
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
@@ -58,6 +61,9 @@ public:
     Q_INVOKABLE void updateReleasesInnerCache();
     Q_INVOKABLE QList<int> getChangesCounts();
     Q_INVOKABLE void resetAllChanges();
+    Q_INVOKABLE QString getVideoSeens();
+    Q_INVOKABLE void setVideoSeens(int id, int videoId, double videoPosition);
+    Q_INVOKABLE void saveVideoSeens();
 
 signals:
     void allReleasesFinished();

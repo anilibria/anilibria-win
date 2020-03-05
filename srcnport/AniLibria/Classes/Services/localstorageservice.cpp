@@ -10,9 +10,11 @@
 #include <QDir>
 #include <QFutureWatcher>
 #include <QDateTime>
+#include <QHashIterator>
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
 #include "../Models/changesmodel.h"
+#include "../Models/seenmodel.h"
 
 using namespace std;
 
@@ -26,6 +28,7 @@ const int NewTorrentSeriesSection = 6;
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_CachedReleases(new QList<FullReleaseModel>()),
     m_ChangesModel(new ChangesModel()),
+    m_SeenModels(new QHash<int, SeenModel>()),
     m_IsChangesExists(false)
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
@@ -46,7 +49,9 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     auto changesJson = getChanges();
     m_ChangesModel->fromJson(changesJson);
 
-    resetChanges();
+    loadSeens();
+
+    resetChanges();    
 
     connect(m_AllReleaseUpdatedWatcher, SIGNAL(finished()), this, SLOT(allReleasesUpdated()));
 }
@@ -335,6 +340,27 @@ void LocalStorageService::resetChanges()
     if (m_ChangesModel->newTorrentSeries()->count() > 0) isChanges = true;
 
     setIsChangesExists(isChanges);
+}
+
+void LocalStorageService::loadSeens()
+{
+    QFile seenFile(getSeensCachePath());
+    if (!seenFile.open(QFile::ReadOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    auto seenJson = seenFile.readAll();
+    seenFile.close();
+
+    auto document = QJsonDocument::fromJson(seenJson);
+    auto jsonSeens = document.array();
+
+    foreach (auto item, jsonSeens) {
+        SeenModel seenModel;
+        seenModel.readFromJson(item);
+        if (!m_SeenModels->contains(seenModel.id())) {
+            m_SeenModels->insert(seenModel.id(), seenModel);
+        }
+    }
 }
 
 QString LocalStorageService::getRelease(int id)
@@ -687,6 +713,65 @@ void LocalStorageService::resetAllChanges()
     m_ChangesModel->newTorrentSeries()->clear();
 
     saveChanges();
+}
+
+QString LocalStorageService::getVideoSeens()
+{
+    QJsonArray array;
+
+    QHashIterator<int, SeenModel> iterator(*m_SeenModels);
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        QJsonObject object;
+        iterator.value().writeToJson(object);
+        array.append(object);
+    }
+
+    QJsonDocument seenDocument(array);
+    QString seenJson(seenDocument.toJson());
+    return seenJson;
+}
+
+void LocalStorageService::setVideoSeens(int id, int videoId, double videoPosition)
+{
+    if (!m_SeenModels->contains(id)) {
+        SeenModel seenModel;
+        seenModel.setId(id);
+        seenModel.setVideoId(videoId);
+        seenModel.setVideoPosition(videoPosition);
+        m_SeenModels->insert(id, seenModel);
+    } else {
+        auto existingSeenModel = m_SeenModels->value(id);
+        existingSeenModel.setVideoId(videoId);
+        existingSeenModel.setVideoPosition(videoPosition);
+    }
+
+    saveVideoSeens();
+}
+
+void LocalStorageService::saveVideoSeens()
+{
+    QJsonArray array;
+
+    QHashIterator<int, SeenModel> iterator(*m_SeenModels);
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        QJsonObject object;
+        iterator.value().writeToJson(object);
+        array.append(object);
+    }
+
+    QJsonDocument seenDocument(array);
+    QString seenJson(seenDocument.toJson());
+
+    QFile seenFile(getSeensCachePath());
+    if (!seenFile.open(QFile::WriteOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    seenFile.write(seenJson.toUtf8());
+    seenFile.close();
 }
 
 void LocalStorageService::allReleasesUpdated()

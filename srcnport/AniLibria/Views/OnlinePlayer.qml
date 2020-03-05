@@ -20,6 +20,7 @@ Page {
     property bool isBuffering: false
     property var setReleaseParameters: ({})
     property double videoSpeed: 1
+    property int positionIterator: 0
 
     signal navigateFrom()
     signal setReleaseVideo()
@@ -155,7 +156,8 @@ Page {
             }
 
             if (status === MediaPlayer.EndOfMedia) {
-                //handle end of media
+                console.log("End of media")
+                _page.nextVideo();
             }
 
             if (status === MediaPlayer.InvalidMedia) {
@@ -180,6 +182,15 @@ Page {
 
             _page.displayVideoPosition = `${_page.getDisplayTimeFromSeconds(position / 1000)} из ${_page.getDisplayTimeFromSeconds(duration / 1000)}`;
             _page.displayEndVideoPosition = _page.getDisplayTimeFromSeconds((duration - position) / 1000);
+
+            if (_page.positionIterator < 20) _page.positionIterator++;
+            console.log(_page.positionIterator);
+
+            if (_page.positionIterator >= 20) {
+                console.log("position saved");
+                _page.positionIterator = 0;
+                localStorage.setVideoSeens(_page.setReleaseParameters.releaseId, _page.selectedVideo, position);
+            }
         }
     }
 
