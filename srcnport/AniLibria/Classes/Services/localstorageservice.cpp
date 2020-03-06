@@ -28,7 +28,7 @@ const int NewTorrentSeriesSection = 6;
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_CachedReleases(new QList<FullReleaseModel>()),
     m_ChangesModel(new ChangesModel()),
-    m_SeenModels(new QHash<int, SeenModel>()),
+    m_SeenModels(new QHash<int, SeenModel*>()),
     m_IsChangesExists(false)
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
@@ -355,10 +355,10 @@ void LocalStorageService::loadSeens()
     auto jsonSeens = document.array();
 
     foreach (auto item, jsonSeens) {
-        SeenModel seenModel;
-        seenModel.readFromJson(item);
-        if (!m_SeenModels->contains(seenModel.id())) {
-            m_SeenModels->insert(seenModel.id(), seenModel);
+        SeenModel* seenModel = new SeenModel();
+        seenModel->readFromJson(item);
+        if (!m_SeenModels->contains(seenModel->id())) {
+            m_SeenModels->insert(seenModel->id(), seenModel);
         }
     }
 }
@@ -719,12 +719,12 @@ QString LocalStorageService::getVideoSeens()
 {
     QJsonArray array;
 
-    QHashIterator<int, SeenModel> iterator(*m_SeenModels);
+    QHashIterator<int, SeenModel*> iterator(*m_SeenModels);
     while (iterator.hasNext()) {
         iterator.next();
 
         QJsonObject object;
-        iterator.value().writeToJson(object);
+        iterator.value()->writeToJson(object);
         array.append(object);
     }
 
@@ -733,18 +733,33 @@ QString LocalStorageService::getVideoSeens()
     return seenJson;
 }
 
+QString LocalStorageService::getVideoSeen(int id)
+{
+    if (m_SeenModels->contains(id)) {
+        auto seenModel = m_SeenModels->value(id);
+        QJsonObject object;
+        seenModel->writeToJson(object);
+
+        QJsonDocument seenDocument(object);
+        QString seenJson(seenDocument.toJson());
+        return seenJson;
+    } else {
+        return "{}";
+    }
+}
+
 void LocalStorageService::setVideoSeens(int id, int videoId, double videoPosition)
 {
     if (!m_SeenModels->contains(id)) {
-        SeenModel seenModel;
-        seenModel.setId(id);
-        seenModel.setVideoId(videoId);
-        seenModel.setVideoPosition(videoPosition);
+        SeenModel* seenModel = new SeenModel();
+        seenModel->setId(id);
+        seenModel->setVideoId(videoId);
+        seenModel->setVideoPosition(videoPosition);
         m_SeenModels->insert(id, seenModel);
     } else {
         auto existingSeenModel = m_SeenModels->value(id);
-        existingSeenModel.setVideoId(videoId);
-        existingSeenModel.setVideoPosition(videoPosition);
+        existingSeenModel->setVideoId(videoId);
+        existingSeenModel->setVideoPosition(videoPosition);
     }
 
     saveVideoSeens();
@@ -754,12 +769,12 @@ void LocalStorageService::saveVideoSeens()
 {
     QJsonArray array;
 
-    QHashIterator<int, SeenModel> iterator(*m_SeenModels);
+    QHashIterator<int, SeenModel*> iterator(*m_SeenModels);
     while (iterator.hasNext()) {
         iterator.next();
 
         QJsonObject object;
-        iterator.value().writeToJson(object);
+        iterator.value()->writeToJson(object);
         array.append(object);
     }
 

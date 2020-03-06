@@ -18,7 +18,7 @@ private:
     QFutureWatcher<void>* m_AllReleaseUpdatedWatcher;
     QList<FullReleaseModel>* m_CachedReleases;
     ChangesModel* m_ChangesModel;
-    QHash<int, SeenModel>* m_SeenModels;
+    QHash<int, SeenModel*>* m_SeenModels;
     bool m_IsChangesExists;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
@@ -62,6 +62,7 @@ public:
     Q_INVOKABLE QList<int> getChangesCounts();
     Q_INVOKABLE void resetAllChanges();
     Q_INVOKABLE QString getVideoSeens();
+    Q_INVOKABLE QString getVideoSeen(int id);
     Q_INVOKABLE void setVideoSeens(int id, int videoId, double videoPosition);
     Q_INVOKABLE void saveVideoSeens();
 

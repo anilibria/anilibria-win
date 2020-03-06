@@ -21,6 +21,7 @@ Page {
     property var setReleaseParameters: ({})
     property double videoSpeed: 1
     property int positionIterator: 0
+    property var seenVideo: ({})
 
     signal navigateFrom()
     signal setReleaseVideo()
@@ -53,6 +54,9 @@ Page {
 
     onSetReleaseVideo: {
         const jsonVideos = JSON.parse(_page.setReleaseParameters.videos);
+        const seenJson = localStorage.getVideoSeen(_page.setReleaseParameters.releaseId);
+        _page.seenVideo = {};
+        if (seenJson) _page.seenVideo = JSON.parse(seenJson);
 
         const releaseVideos = [];
 
@@ -74,7 +78,11 @@ Page {
         );
 
         _page.releaseVideos = releaseVideos;
-        const firstVideo = releaseVideos[0];
+        let firstVideo = releaseVideos[0];
+        if (_page.seenVideo.id) {
+            firstVideo = releaseVideos[_page.seenVideo.videoId];
+        }
+
         _page.selectedVideo = firstVideo.order;
         _page.isFullHdAllowed = "fullhd" in firstVideo;
         if (!firstVideo[_page.videoQuality]) _page.videoQuality = "sd";
@@ -173,6 +181,9 @@ Page {
                 if (_page.restorePosition > 0){
                     player.seek(_page.restorePosition);
                     _page.restorePosition = 0;
+                } else if (_page.seenVideo.id && _page.seenVideo.videoPosition) {
+                    player.seek(_page.seenVideo.videoPosition);
+                    _page.seenVideo.videoPosition = 0;
                 }
             }
         }
@@ -187,7 +198,7 @@ Page {
             console.log(_page.positionIterator);
 
             if (_page.positionIterator >= 20) {
-                console.log("position saved");
+                console.log("position saved ", _page.selectedVideo);
                 _page.positionIterator = 0;
                 localStorage.setVideoSeens(_page.setReleaseParameters.releaseId, _page.selectedVideo, position);
             }
