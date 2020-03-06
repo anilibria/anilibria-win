@@ -19,6 +19,11 @@ double SeenModel::videoPosition()
     return m_VideoPosition;
 }
 
+int SeenModel::timestamp()
+{
+    return m_Timestamp;
+}
+
 void SeenModel::setId(int id)
 {
     m_Id = id;
@@ -34,11 +39,17 @@ void SeenModel::setVideoPosition(double videoPosition)
     m_VideoPosition = videoPosition;
 }
 
+void SeenModel::setTimestamp(int timestamp)
+{
+    m_Timestamp = timestamp;
+}
+
 void SeenModel::writeToJson(QJsonObject &json) const
 {
     json["id"] = m_Id;
     json["videoId"] = m_VideoId;
     json["videoPosition"] = m_VideoPosition;
+    json["timestamp"] = m_Timestamp;
 }
 
 void SeenModel::readFromJson(QJsonValue &json)
@@ -46,4 +57,5 @@ void SeenModel::readFromJson(QJsonValue &json)
     setId(json["id"].toInt());
     setVideoId(json["videoId"].toInt());
     setVideoPosition(json["videoPosition"].toDouble());
+    setTimestamp(json["timestamp"].toInt());
 }

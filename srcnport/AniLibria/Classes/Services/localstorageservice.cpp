@@ -11,6 +11,7 @@
 #include <QFutureWatcher>
 #include <QDateTime>
 #include <QHashIterator>
+#include <QDateTime>
 #include "../Models/releasemodel.h"
 #include "../Models/fullreleasemodel.h"
 #include "../Models/changesmodel.h"
@@ -750,16 +751,21 @@ QString LocalStorageService::getVideoSeen(int id)
 
 void LocalStorageService::setVideoSeens(int id, int videoId, double videoPosition)
 {
+    QDateTime now = QDateTime::currentDateTime();
+    auto timestamp = now.toTime_t();
     if (!m_SeenModels->contains(id)) {
         SeenModel* seenModel = new SeenModel();
         seenModel->setId(id);
         seenModel->setVideoId(videoId);
         seenModel->setVideoPosition(videoPosition);
+        seenModel->setTimestamp(static_cast<int>(timestamp));
+
         m_SeenModels->insert(id, seenModel);
     } else {
         auto existingSeenModel = m_SeenModels->value(id);
         existingSeenModel->setVideoId(videoId);
         existingSeenModel->setVideoPosition(videoPosition);
+        existingSeenModel->setTimestamp(static_cast<int>(timestamp));
     }
 
     saveVideoSeens();
