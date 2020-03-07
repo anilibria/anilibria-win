@@ -63,6 +63,7 @@ public:
     Q_INVOKABLE void resetAllChanges();
     Q_INVOKABLE QString getVideoSeens();
     Q_INVOKABLE QString getVideoSeen(int id);
+    Q_INVOKABLE QString getLastVideoSeen();
     Q_INVOKABLE void setVideoSeens(int id, int videoId, double videoPosition);
     Q_INVOKABLE void saveVideoSeens();
 

@@ -45,6 +45,7 @@ ApplicationWindow {
         const newPage = pages[pageId];
         newPage.visible = true;
         newPage.focus = true;
+        newPage.navigateTo();
         currentPageId = pageId;
 
         drawer.close();
@@ -370,7 +371,7 @@ ApplicationWindow {
                     Text {
                         color: "white"
                         font.pixelSize: 14
-                        text: qsTr("версия 0.0.3")
+                        text: qsTr("версия 0.0.4")
                     }
                 }
             }

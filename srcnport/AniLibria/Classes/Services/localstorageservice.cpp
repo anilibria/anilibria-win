@@ -749,6 +749,27 @@ QString LocalStorageService::getVideoSeen(int id)
     }
 }
 
+static bool compareSeenTimeStampDescending(const SeenModel* first, const SeenModel* second)
+{
+    return first->timestamp() > second->timestamp();
+}
+
+QString LocalStorageService::getLastVideoSeen()
+{
+    if (m_SeenModels->count() == 0) return "";
+
+
+    auto models = m_SeenModels->values();
+
+    std::sort(models.begin(), models.end(), compareSeenTimeStampDescending);
+    auto first = models.first();
+
+    QJsonObject jsonObject;
+    first->writeToJson(jsonObject);
+    QJsonDocument document(jsonObject);
+    return document.toJson();
+}
+
 void LocalStorageService::setVideoSeens(int id, int videoId, double videoPosition)
 {
     QDateTime now = QDateTime::currentDateTime();

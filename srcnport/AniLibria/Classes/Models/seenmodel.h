@@ -14,9 +14,9 @@ private:
 
 public:
     int id();
-    int videoId();
-    double videoPosition();
-    int timestamp();
+    int videoId() const;
+    double videoPosition() const;
+    int timestamp() const;
 
     void setId(int id);
     void setVideoId(int videoId);

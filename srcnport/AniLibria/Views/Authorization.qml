@@ -16,6 +16,7 @@ Page {
     property alias fa2code: fa2codeTextBox.text
 
     signal navigateFrom()
+    signal navigateTo()
     signal authentificateFailed(string message)
 
     onNavigateFrom: {

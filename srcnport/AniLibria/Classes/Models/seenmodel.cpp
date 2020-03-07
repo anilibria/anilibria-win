@@ -9,17 +9,17 @@ int SeenModel::id()
     return m_Id;
 }
 
-int SeenModel::videoId()
+int SeenModel::videoId() const
 {
     return m_VideoId;
 }
 
-double SeenModel::videoPosition()
+double SeenModel::videoPosition() const
 {
     return m_VideoPosition;
 }
 
-int SeenModel::timestamp()
+int SeenModel::timestamp() const
 {
     return m_Timestamp;
 }

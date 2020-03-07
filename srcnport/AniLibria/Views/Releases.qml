@@ -39,6 +39,7 @@ Page {
     signal refreshFavorites()
     signal refreshReleaseSchedules()
     signal requestSynchronizeReleases()
+    signal navigateTo()
 
     onWidthChanged: {
         const columnCount = parseInt(page.width / 520);

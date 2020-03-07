@@ -26,6 +26,7 @@ Page {
     signal navigateFrom()
     signal setReleaseVideo()
     signal changeFullScreenMode(bool fullScreen)
+    signal navigateTo()
 
     Keys.onSpacePressed: {
         if (player.playbackState === MediaPlayer.PlayingState) {
@@ -50,6 +51,24 @@ Page {
 
     onNavigateFrom: {
         player.pause();
+    }
+
+    onNavigateTo: {
+        if (!_page.setReleaseParameters.releaseId) {
+            const lastSeenObject = localStorage.getLastVideoSeen();
+            if (lastSeenObject === ``) return;
+
+            const seenObject = JSON.parse(lastSeenObject);
+            const release = JSON.parse(localStorage.getRelease(seenObject.id));
+            console.log(release);
+            _page.setReleaseParameters = {
+                releaseId: seenObject.id,
+                videos: release.videos,
+                customPlaylistPosition: -1
+            };
+
+            _page.setReleaseVideo();
+        }
     }
 
     onSetReleaseVideo: {

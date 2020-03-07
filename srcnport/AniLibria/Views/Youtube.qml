@@ -9,6 +9,8 @@ Page {
 
     signal navigateFrom()
 
+    signal navigateTo()
+
     background: Rectangle {
         color: "#D3D3D3"
     }
