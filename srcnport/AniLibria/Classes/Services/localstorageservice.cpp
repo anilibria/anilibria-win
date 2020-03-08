@@ -16,6 +16,7 @@
 #include "../Models/fullreleasemodel.h"
 #include "../Models/changesmodel.h"
 #include "../Models/seenmodel.h"
+#include "../Models/seenmarkmodel.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_CachedReleases(new QList<FullReleaseModel>()),
     m_ChangesModel(new ChangesModel()),
     m_SeenModels(new QHash<int, SeenModel*>()),
+    m_SeenMarkModels(new QHash<QString, bool>()),
     m_IsChangesExists(false)
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
@@ -42,6 +44,9 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     createIfNotExistsFile(getScheduleCachePath(), "{}");
     createIfNotExistsFile(getFavoritesCachePath(), "[]");
     createIfNotExistsFile(getSeensCachePath(), "[]");
+    createIfNotExistsFile(getSeenMarksCachePath(), "[]");
+    createIfNotExistsFile(getHistoryCachePath(), "[]");
+    createIfNotExistsFile(getUserSettingsCachePath(), "{}");
     createIfNotExistsFile(getNotificationCachePath(), "{ \"newReleases\": [], \"newOnlineSeries\": [], \"newTorrents\": [], \"newTorrentSeries\": [] }");
     QString favoritespath = getFavoritesCachePath();
 
@@ -50,7 +55,8 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     auto changesJson = getChanges();
     m_ChangesModel->fromJson(changesJson);
 
-    loadSeens();
+    loadSeens();   
+    loadSeenMarks();
 
     resetChanges();    
 
@@ -305,6 +311,21 @@ QString LocalStorageService::getSeensCachePath() const
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/seen.cache";
 }
 
+QString LocalStorageService::getSeenMarksCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/seenmark.cache";
+}
+
+QString LocalStorageService::getHistoryCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/history.cache";
+}
+
+QString LocalStorageService::getUserSettingsCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/usersettings.cache";
+}
+
 QString LocalStorageService::getNotificationCachePath() const
 {
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/notification.cache";
@@ -362,6 +383,46 @@ void LocalStorageService::loadSeens()
             m_SeenModels->insert(seenModel->id(), seenModel);
         }
     }
+}
+
+void LocalStorageService::loadSeenMarks()
+{
+    QFile seenMarkFile(getSeenMarksCachePath());
+    if (!seenMarkFile.open(QFile::ReadOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    auto seenMarkJson = seenMarkFile.readAll();
+    seenMarkFile.close();
+
+    auto document = QJsonDocument::fromJson(seenMarkJson);
+    auto jsonSeenMarks = document.array();
+
+    foreach (auto item, jsonSeenMarks) {
+        m_SeenMarkModels->insert(item.toString(), true);
+    }
+}
+
+void LocalStorageService::saveSeenMarks()
+{
+    QJsonArray array;
+
+    QHashIterator<QString,bool> iterator(*m_SeenMarkModels);
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        QJsonValue value(iterator.key());
+        array.append(value);
+    }
+
+    QJsonDocument seenDocument(array);
+    QString seenMarkJson(seenDocument.toJson());
+
+    QFile seenMarkFile(getSeenMarksCachePath());
+    if (!seenMarkFile.open(QFile::WriteOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    seenMarkFile.write(seenMarkJson.toUtf8());
+    seenMarkFile.close();
 }
 
 QString LocalStorageService::getRelease(int id)
@@ -814,6 +875,29 @@ void LocalStorageService::saveVideoSeens()
     }
     seenFile.write(seenJson.toUtf8());
     seenFile.close();
+}
+
+void LocalStorageService::setSeenMark(int id, int seriaId, bool marked)
+{
+    auto key = QString::number(id) + "." + QString::number(seriaId);
+    if (marked) {
+        if (!m_SeenMarkModels->contains(key)) m_SeenMarkModels->insert(key, true);
+    } else {
+        if (m_SeenMarkModels->contains(key)) m_SeenMarkModels->remove(key);
+    }
+    saveSeenMarks();
+}
+
+QList<int> LocalStorageService::getReleseSeenMarks(int id, int count)
+{
+    QList<int> result;
+    for (int i=0; i < count; i++) {
+        auto key = QString::number(id) + "." + QString::number(i);
+        if (m_SeenMarkModels->contains(key)) {
+            result.append(i);
+        }
+    }
+    return result;
 }
 
 void LocalStorageService::allReleasesUpdated()

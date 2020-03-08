@@ -18,6 +18,7 @@ SOURCES += \
     Classes/Models/onlinevideomodel.cpp \
     Classes/Models/releasemodel.cpp \
     Classes/Models/releasetorrentmodel.cpp \
+    Classes/Models/seenmarkmodel.cpp \
     Classes/Models/seenmodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
     Classes/Services/applicationsettings.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     Classes/Models/onlinevideomodel.h \
     Classes/Models/releasemodel.h \
     Classes/Models/releasetorrentmodel.h \
+    Classes/Models/seenmarkmodel.h \
     Classes/Models/seenmodel.h \
     Classes/Services/anilibriaapiservice.h \
     Classes/Services/applicationsettings.h \

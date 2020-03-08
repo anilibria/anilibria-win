@@ -54,5 +54,7 @@
         <file>Assets/Icons/sort.svg</file>
         <file>Assets/Icons/dice.svg</file>
         <file>Assets/Icons/fullscreen.svg</file>
+        <file>Assets/Icons/seenmark.svg</file>
+        <file>Assets/Icons/seenmarkselected.svg</file>
     </qresource>
 </RCC>

@@ -22,6 +22,7 @@ Page {
     property double videoSpeed: 1
     property int positionIterator: 0
     property var seenVideo: ({})
+    property var seenMarks: ({})
 
     signal navigateFrom()
     signal setReleaseVideo()
@@ -102,6 +103,8 @@ Page {
             firstVideo = releaseVideos[_page.seenVideo.videoId];
         }
 
+        refreshSeenMarks();
+
         _page.selectedVideo = firstVideo.order;
         _page.isFullHdAllowed = "fullhd" in firstVideo;
         if (!firstVideo[_page.videoQuality]) _page.videoQuality = "sd";
@@ -177,23 +180,15 @@ Page {
             volumeSlider.value = volume * 100;
         }
         onStatusChanged: {
-            if (status === MediaPlayer.Loading) {
-                _page.isBuffering = true;
-                //show loading progress
-            }
+            if (status === MediaPlayer.Loading) _page.isBuffering = true;
 
-            if (status === MediaPlayer.EndOfMedia) {
-                console.log("End of media")
-                _page.nextVideo();
-            }
+            if (status === MediaPlayer.EndOfMedia) _page.nextVideo();
 
             if (status === MediaPlayer.InvalidMedia) {
                 console.log("InvalidMedia")
             }
 
-            if (status === MediaPlayer.Buffering) {
-                _page.isBuffering = true;
-            }
+            if (status === MediaPlayer.Buffering) _page.isBuffering = true;
 
             if (status === MediaPlayer.Buffered) {
                 _page.isBuffering = false;
@@ -214,10 +209,8 @@ Page {
             _page.displayEndVideoPosition = _page.getDisplayTimeFromSeconds((duration - position) / 1000);
 
             if (_page.positionIterator < 20) _page.positionIterator++;
-            console.log(_page.positionIterator);
 
             if (_page.positionIterator >= 20) {
-                console.log("position saved ", _page.selectedVideo);
                 _page.positionIterator = 0;
                 localStorage.setVideoSeens(_page.setReleaseParameters.releaseId, _page.selectedVideo, position);
             }
@@ -286,6 +279,33 @@ Page {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 10
                                 text: modelData.title
+                            }
+
+                            IconButton {
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+                                height: 36
+                                width: 36
+                                iconColor: "black"
+                                iconPath: modelData.order in _page.seenMarks ? "../Assets/Icons/seenmarkselected.svg" : "../Assets/Icons/seenmark.svg"
+                                iconWidth: 22
+                                iconHeight: 22
+                                onButtonPressed: {
+                                    let newState = false;
+                                    if (_page.seenMarks[modelData.order]) {
+                                        const obj = _page.seenMarks;
+                                        delete obj[modelData.order];
+                                        _page.seenMarks = obj;
+                                        newState = false;
+                                    } else {
+                                        const obj = _page.seenMarks;
+                                        obj[modelData.order] = true;
+                                        _page.seenMarks  = obj;
+                                        newState = true;
+
+                                    }
+                                    localStorage.setSeenMark(_page.setReleaseParameters.releaseId, modelData.order, newState);
+                                }
                             }
                         }
                     }
@@ -638,6 +658,16 @@ Page {
     function toggleFullScreen() {
         isFullScreen = !isFullScreen;
         changeFullScreenMode(isFullScreen);
+    }
+
+    function refreshSeenMarks() {
+        const releaseSeenMarks = {};
+        const seenMarks = localStorage.getReleseSeenMarks(_page.setReleaseParameters.releaseId, _page.releaseVideos.length)
+        for (const seenMark of seenMarks) {
+            const key = seenMark.toString();
+            releaseSeenMarks[key] = true;
+        }
+        _page.seenMarks = releaseSeenMarks;
     }
 
     Component.onCompleted: {

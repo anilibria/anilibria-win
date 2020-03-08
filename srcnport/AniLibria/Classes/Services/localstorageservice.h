@@ -8,6 +8,7 @@
 #include "../Models/fullreleasemodel.h"
 #include "../Models/changesmodel.h"
 #include "../Models/seenmodel.h"
+#include "../Models/seenmarkmodel.h"
 
 class LocalStorageService : public QObject
 {
@@ -19,6 +20,7 @@ private:
     QList<FullReleaseModel>* m_CachedReleases;
     ChangesModel* m_ChangesModel;
     QHash<int, SeenModel*>* m_SeenModels;
+    QHash<QString,bool>* m_SeenMarkModels;
     bool m_IsChangesExists;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
@@ -36,11 +38,16 @@ private:
     QString getFavoritesCachePath() const;
     QString getScheduleCachePath() const;
     QString getSeensCachePath() const;
+    QString getSeenMarksCachePath() const;
+    QString getHistoryCachePath() const;
+    QString getUserSettingsCachePath() const;
     QString getNotificationCachePath() const;
     void createIfNotExistsFile(QString path, QString defaultContent);
     void saveChanges();
     void resetChanges();
     void loadSeens();
+    void loadSeenMarks();
+    void saveSeenMarks();
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
@@ -66,6 +73,8 @@ public:
     Q_INVOKABLE QString getLastVideoSeen();
     Q_INVOKABLE void setVideoSeens(int id, int videoId, double videoPosition);
     Q_INVOKABLE void saveVideoSeens();
+    Q_INVOKABLE void setSeenMark(int id, int seriaId, bool marked);
+    Q_INVOKABLE QList<int> getReleseSeenMarks(int id, int count);
 
 signals:
     void allReleasesFinished();

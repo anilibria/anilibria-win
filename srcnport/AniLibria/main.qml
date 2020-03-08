@@ -220,6 +220,7 @@ ApplicationWindow {
                     source: "Assets/Icons/logout.svg"
                     width: 30
                     height: 30
+                    mipmap: true
                     MouseArea {
                         anchors.fill: parent
                         onPressed: {
@@ -259,6 +260,7 @@ ApplicationWindow {
                             source: "Assets/Icons/videoplayer.svg"
                             sourceSize.width: 30
                             sourceSize.height: 30
+                            mipmap: true
                         }
                         Label {
                             anchors.leftMargin: 10
@@ -281,6 +283,7 @@ ApplicationWindow {
                             source: "Assets/Icons/youtube.svg"
                             sourceSize.width: 30
                             sourceSize.height: 30
+                            mipmap: true
                         }
                         Label {
                             anchors.leftMargin: 10
@@ -303,6 +306,7 @@ ApplicationWindow {
                             source: "Assets/Icons/donate.svg"
                             sourceSize.width: 30
                             sourceSize.height: 30
+                            mipmap: true
                         }
                         Label {
                             anchors.leftMargin: 10
@@ -326,6 +330,7 @@ ApplicationWindow {
                             source: "Assets/Icons/user.svg"
                             sourceSize.width: 30
                             sourceSize.height: 30
+                            mipmap: true
                         }
                         Label {
                             anchors.leftMargin: 10
