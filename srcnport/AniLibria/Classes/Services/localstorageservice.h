@@ -9,6 +9,8 @@
 #include "../Models/changesmodel.h"
 #include "../Models/seenmodel.h"
 #include "../Models/seenmarkmodel.h"
+#include "../Models/historymodel.h"
+#include "../../globalconstants.h"
 
 class LocalStorageService : public QObject
 {
@@ -21,6 +23,7 @@ private:
     ChangesModel* m_ChangesModel;
     QHash<int, SeenModel*>* m_SeenModels;
     QHash<QString,bool>* m_SeenMarkModels;
+    QHash<int, HistoryModel*>* m_HistoryModels;
     bool m_IsChangesExists;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
@@ -48,6 +51,8 @@ private:
     void loadSeens();
     void loadSeenMarks();
     void saveSeenMarks();
+    void loadHistory();
+    void saveHistory();
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
@@ -75,6 +80,7 @@ public:
     Q_INVOKABLE void saveVideoSeens();
     Q_INVOKABLE void setSeenMark(int id, int seriaId, bool marked);
     Q_INVOKABLE QList<int> getReleseSeenMarks(int id, int count);
+    Q_INVOKABLE void setToReleaseHistory(int id, int type);
 
 signals:
     void allReleasesFinished();

@@ -24,7 +24,6 @@ void SeenMarkModel::writeToJson(QJsonObject &json) const
 {
     json["id"] = m_Id;
     json["seriaId"] = m_SeriaId;
-
 }
 
 void SeenMarkModel::readFromJson(QJsonValue &json)

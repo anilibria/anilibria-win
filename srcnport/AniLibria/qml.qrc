@@ -56,5 +56,6 @@
         <file>Assets/Icons/fullscreen.svg</file>
         <file>Assets/Icons/seenmark.svg</file>
         <file>Assets/Icons/seenmarkselected.svg</file>
+        <file>Assets/Icons/history.svg</file>
     </qresource>
 </RCC>

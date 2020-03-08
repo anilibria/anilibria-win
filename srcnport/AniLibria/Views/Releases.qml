@@ -21,7 +21,17 @@ Page {
     property bool runRefreshFavorties: false
     property bool synchronizeEnabled: false
     property int selectedSection: 0
-    property var sections: ["Все релизы", "Избранное", "Новые релизы", "Релизы с новыми сериями", "Релизы с новыми торрентами", "Расписание", "Релизы с обновленными торрентами"]
+    property var sections: [
+        "Все релизы",
+        "Избранное",
+        "Новые релизы",
+        "Релизы с новыми сериями",
+        "Релизы с новыми торрентами",
+        "Расписание",
+        "Релизы с обновленными торрентами",
+        "История",
+        "История просмотра"
+    ]
     property var sectionSortings: {
         0: { field: 0, direction: 1 },
         1: { field: 0, direction: 1 },
@@ -30,6 +40,8 @@ Page {
         4: { field: 0, direction: 1 },
         5: { field: 1, direction: 0 },
         6: { field: 0, direction: 1 },
+        7: { field: 7, direction: 1 },
+        8: { field: 8, direction: 1 },
     }
     property var changesCounts: []
 
@@ -750,6 +762,43 @@ Page {
                         }
                     }
 
+                    IconButton {
+                        id: historyMenuButton
+                        height: 30
+                        width: 30
+                        iconColor: "black"
+                        hoverColor: "white"
+                        iconPath: "../Assets/Icons/history.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            historyMenuSections.open();
+                        }
+
+                        Menu {
+                            id: historyMenuSections
+                            width: 300
+                            y: historyMenuButton.height
+
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[7]
+                                onPressed: {
+                                    page.changeSection(7);
+                                }
+                            }
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[8]
+                                onPressed: {
+                                    page.changeSection(8);
+                                }
+                            }
+                        }
+                    }
+                    /*7;
+                    const int WatchHistorySection = 8;*/
+
                 }
             }
 
@@ -1274,6 +1323,7 @@ Page {
         }
 
         page.openedRelease = release;
+        localStorage.setToReleaseHistory(release.id, 0);
     }
 
     Component.onCompleted: {

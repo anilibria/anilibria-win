@@ -111,6 +111,8 @@ Page {
 
         _page.videoSource = firstVideo[_page.videoQuality];
         player.play();
+
+        localStorage.setToReleaseHistory(_page.setReleaseParameters.releaseId, 1);
     }
 
     function getZeroBasedDigit(digit) {
@@ -287,6 +289,7 @@ Page {
                                 height: 36
                                 width: 36
                                 iconColor: "black"
+                                hoverColor: "white"
                                 iconPath: modelData.order in _page.seenMarks ? "../Assets/Icons/seenmarkselected.svg" : "../Assets/Icons/seenmark.svg"
                                 iconWidth: 22
                                 iconHeight: 22

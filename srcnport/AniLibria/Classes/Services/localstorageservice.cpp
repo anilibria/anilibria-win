@@ -26,12 +26,15 @@ const int NewOnlineSeriesSection = 3;
 const int NewTorrentsSection = 4;
 const int ScheduleSection = 5;
 const int NewTorrentSeriesSection = 6;
+const int HistorySection = 7;
+const int WatchHistorySection = 8;
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_CachedReleases(new QList<FullReleaseModel>()),
     m_ChangesModel(new ChangesModel()),
     m_SeenModels(new QHash<int, SeenModel*>()),
     m_SeenMarkModels(new QHash<QString, bool>()),
+    m_HistoryModels(new QHash<int, HistoryModel*>()),
     m_IsChangesExists(false)
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
@@ -57,6 +60,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
 
     loadSeens();   
     loadSeenMarks();
+    loadHistory();
 
     resetChanges();    
 
@@ -425,6 +429,51 @@ void LocalStorageService::saveSeenMarks()
     seenMarkFile.close();
 }
 
+void LocalStorageService::loadHistory()
+{
+    QFile historyCacheFile(getHistoryCachePath());
+    if (!historyCacheFile.open(QFile::ReadOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    auto historyJson = historyCacheFile.readAll();
+    historyCacheFile.close();
+
+    auto document = QJsonDocument::fromJson(historyJson);
+    auto historyItems = document.array();
+
+    foreach (auto item, historyItems) {
+        HistoryModel* historyModel = new HistoryModel();
+        historyModel->readFromJson(item);
+
+        m_HistoryModels->insert(historyModel->id(), historyModel);
+    }
+}
+
+void LocalStorageService::saveHistory()
+{
+    QJsonArray historyItems;
+
+    QHashIterator<int, HistoryModel*> iterator(*m_HistoryModels);
+    while(iterator.hasNext()) {
+        iterator.next();
+
+        QJsonObject jsonObject;
+        HistoryModel* historyModel = iterator.value();
+        historyModel->writeToJson(jsonObject);
+        historyItems.append(jsonObject);
+    }
+
+    QFile historyFile(getHistoryCachePath());
+    if (!historyFile.open(QFile::WriteOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+
+    auto document = QJsonDocument(historyItems);
+    historyFile.write(document.toJson());
+
+    historyFile.close();
+}
+
 QString LocalStorageService::getRelease(int id)
 {
     QListIterator<FullReleaseModel> i(*m_CachedReleases);
@@ -568,6 +617,78 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         return firstScheduled > secondScheduled;
     };
 
+    std::function<bool (const FullReleaseModel&, const FullReleaseModel&)> historyComparer = [this](const FullReleaseModel& first, const FullReleaseModel& second) {
+        int leftTimestamp = 0;
+        int firstId = first.id();
+        if (m_HistoryModels->contains(first.id())) {
+            auto historyItem = m_HistoryModels->value(firstId);
+            leftTimestamp = historyItem->timestamp();
+        }
+
+        int rightTimestamp = 0;
+        int secondId = second.id();
+        if (m_HistoryModels->contains(second.id())) {
+            auto historyItem = m_HistoryModels->value(secondId);
+            rightTimestamp = historyItem->timestamp();
+        }
+
+        return leftTimestamp < rightTimestamp;
+    };
+
+    std::function<bool (const FullReleaseModel&, const FullReleaseModel&)> historyDescendingComparer = [this](const FullReleaseModel& first, const FullReleaseModel& second) {
+        int leftTimestamp = 0;
+        int firstId = first.id();
+        if (m_HistoryModels->contains(firstId)) {
+           auto historyItem = m_HistoryModels->value(firstId);
+           leftTimestamp = historyItem->timestamp();
+        }
+
+        int rightTimestamp = 0;
+        int secondId = second.id();
+        if (m_HistoryModels->contains(secondId)) {
+            auto historyItem = m_HistoryModels->value(secondId);
+            rightTimestamp = historyItem->timestamp();
+        }
+
+        return leftTimestamp > rightTimestamp;
+    };
+
+    std::function<bool (const FullReleaseModel&, const FullReleaseModel&)> watchHistoryComparer = [this](const FullReleaseModel& first, const FullReleaseModel& second) {
+        int leftTimestamp = 0;
+        int firstId = first.id();
+        if (m_HistoryModels->contains(first.id())) {
+           auto historyItem = m_HistoryModels->value(firstId);
+           leftTimestamp = historyItem->watchTimestamp();
+        }
+
+        int rightTimestamp = 0;
+        int secondId = second.id();
+        if (m_HistoryModels->contains(second.id())) {
+           auto historyItem = m_HistoryModels->value(secondId);
+           rightTimestamp = historyItem->watchTimestamp();
+        }
+
+        return leftTimestamp < rightTimestamp;
+    };
+
+    std::function<bool (const FullReleaseModel&, const FullReleaseModel&)> watchHistoryDescendingComparer = [this](const FullReleaseModel& first, const FullReleaseModel& second) {
+        int leftTimestamp = 0;
+        int firstId = first.id();
+        if (m_HistoryModels->contains(first.id())) {
+            auto historyItem = m_HistoryModels->value(firstId);
+           leftTimestamp = historyItem->watchTimestamp();
+        }
+
+        int rightTimestamp = 0;
+        int secondId = second.id();
+        if (m_HistoryModels->contains(second.id())) {
+            auto historyItem = m_HistoryModels->value(secondId);
+           rightTimestamp = historyItem->watchTimestamp();
+        }
+
+        return leftTimestamp > rightTimestamp;
+    };
+
     QJsonArray releases;
 
     switch (sortingField) {
@@ -593,10 +714,10 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
             std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareOriginalNameDescending : compareOriginalName);
             break;
         case 7: //История
-            //std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareOriginalNameDescending : compareOriginalName);
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? historyDescendingComparer : historyComparer);
             break;
         case 8: //История просмотра
-            //std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareOriginalNameDescending : compareOriginalName);
+            std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? watchHistoryDescendingComparer : watchHistoryComparer);
             break;
         case 9: //Сезону
             std::sort(m_CachedReleases->begin(), m_CachedReleases->end(), sortingDescending ? compareSeasonDescending : compareSeason);
@@ -679,6 +800,10 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (section == NewTorrentsSection && !m_ChangesModel->newTorrents()->contains(releaseItem.id())) continue;
 
         if (section == NewTorrentSeriesSection && !m_ChangesModel->newTorrentSeries()->contains(releaseItem.id())) continue;
+
+        if (section == HistorySection && !(m_HistoryModels->contains(releaseItem.id()) && m_HistoryModels->value(releaseItem.id())->timestamp() > 0)) continue;
+
+        if (section == WatchHistorySection && !(m_HistoryModels->contains(releaseItem.id()) && m_HistoryModels->value(releaseItem.id())->watchTimestamp() > 0)) continue;
 
         if (startIndex > 0) {
             startIndex--;
@@ -898,6 +1023,32 @@ QList<int> LocalStorageService::getReleseSeenMarks(int id, int count)
         }
     }
     return result;
+}
+
+void LocalStorageService::setToReleaseHistory(int id, int type)
+{
+    HistoryModel* item;
+    if (m_HistoryModels->contains(id)) {
+        item = m_HistoryModels->value(id);
+    } else {
+        item = new HistoryModel();
+        item->setId(id);
+        m_HistoryModels->insert(id, item);
+    }
+
+    QDateTime now = QDateTime::currentDateTime();
+    int timestamp = static_cast<int>(now.toTime_t());
+
+    switch (type) {
+        case HistoryReleaseCardMode:
+            item->setTimestamp(timestamp);
+            break;
+        case HistoryWatchReleaseCardMode:
+            item->setWatchTimestamp(timestamp);
+            break;
+    }
+
+    saveHistory();
 }
 
 void LocalStorageService::allReleasesUpdated()
