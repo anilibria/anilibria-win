@@ -216,6 +216,19 @@ Page {
                 _page.positionIterator = 0;
                 localStorage.setVideoSeens(_page.setReleaseParameters.releaseId, _page.selectedVideo, position);
             }
+
+            if (!(_page.selectedVideo in _page.seenMarks)) {
+                if (duration > 0 && position > 0) {
+                    const positionPercent = position / duration * 100;
+                    console.log("percent", positionPercent);
+                    if (positionPercent >= 90) {
+                        const obj = _page.seenMarks;
+                        obj[_page.selectedVideo] = true;
+                        _page.seenMarks = obj;
+                        localStorage.setSeenMark(_page.setReleaseParameters.releaseId, _page.selectedVideo, true);
+                    }
+                }
+            }
         }
     }
 
@@ -303,7 +316,7 @@ Page {
                                     } else {
                                         const obj = _page.seenMarks;
                                         obj[modelData.order] = true;
-                                        _page.seenMarks  = obj;
+                                        _page.seenMarks = obj;
                                         newState = true;
 
                                     }
