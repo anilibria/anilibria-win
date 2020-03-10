@@ -30,7 +30,10 @@ Page {
         "Расписание",
         "Релизы с обновленными торрентами",
         "История",
-        "История просмотра"
+        "История просмотра",
+        "Просмотренные",
+        "Просматриваемые",
+        "Не просмотренные"
     ]
     property var sectionSortings: {
         0: { field: 0, direction: 1 },
@@ -42,6 +45,9 @@ Page {
         6: { field: 0, direction: 1 },
         7: { field: 7, direction: 1 },
         8: { field: 8, direction: 1 },
+        9: { field: 0, direction: 1 },
+        10: { field: 0, direction: 1 },
+        11: { field: 0, direction: 1 }
     }
     property var changesCounts: []
 
@@ -659,7 +665,7 @@ Page {
 
             Rectangle {
                 id: filtersContainer
-                Layout.preferredWidth: 300
+                Layout.preferredWidth: 380
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredHeight: 36
                 color: "transparent"
@@ -796,9 +802,47 @@ Page {
                             }
                         }
                     }
-                    /*7;
-                    const int WatchHistorySection = 8;*/
+                    IconButton {
+                        id: seenMenuButton
+                        height: 30
+                        width: 30
+                        iconColor: "black"
+                        hoverColor: "white"
+                        iconPath: "../Assets/Icons/seenmark.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            seenMenuSections.open();
+                        }
 
+                        Menu {
+                            id: seenMenuSections
+                            width: 300
+                            y: seenMenuButton.height
+
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[9]
+                                onPressed: {
+                                    page.changeSection(9);
+                                }
+                            }
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[10]
+                                onPressed: {
+                                    page.changeSection(10);
+                                }
+                            }
+                            MenuItem {
+                                font.pixelSize: 14
+                                text: page.sections[11]
+                                onPressed: {
+                                    page.changeSection(11);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

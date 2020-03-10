@@ -53,6 +53,7 @@ private:
     void saveSeenMarks();
     void loadHistory();
     void saveHistory();
+    QHash<int, int> getAllSeenMarkCount();
 
 public:
     explicit LocalStorageService(QObject *parent = nullptr);
@@ -78,7 +79,7 @@ public:
     Q_INVOKABLE QString getLastVideoSeen();
     Q_INVOKABLE void setVideoSeens(int id, int videoId, double videoPosition);
     Q_INVOKABLE void saveVideoSeens();
-    Q_INVOKABLE void setSeenMark(int id, int seriaId, bool marked);
+    Q_INVOKABLE void setSeenMark(int id, int seriaId, bool marked);    
     Q_INVOKABLE QList<int> getReleseSeenMarks(int id, int count);
     Q_INVOKABLE void setToReleaseHistory(int id, int type);
 

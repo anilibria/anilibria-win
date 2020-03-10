@@ -28,6 +28,9 @@ const int ScheduleSection = 5;
 const int NewTorrentSeriesSection = 6;
 const int HistorySection = 7;
 const int WatchHistorySection = 8;
+const int SeenHistorySection = 9;
+const int SeeningHistorySection = 10;
+const int NotSeeningHistorySection = 11;
 
 LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_CachedReleases(new QList<FullReleaseModel>()),
@@ -474,6 +477,25 @@ void LocalStorageService::saveHistory()
     historyFile.close();
 }
 
+QHash<int, int> LocalStorageService::getAllSeenMarkCount()
+{
+    QHash<int, int> result;
+    QHashIterator<QString, bool> iterator(*m_SeenMarkModels);
+    while(iterator.hasNext()) {
+        iterator.next();
+
+        QString key = iterator.key();
+        auto keyParts = key.split(".");
+        auto releaseId = keyParts.first().toInt();
+        if (!result.contains(releaseId)) {
+            result[releaseId] = 1;
+        } else {
+            result[releaseId] += 1;
+        }
+    }
+    return result;
+}
+
 QString LocalStorageService::getRelease(int id)
 {
     QListIterator<FullReleaseModel> i(*m_CachedReleases);
@@ -596,6 +618,7 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
 
     QStringList userFavorites = getAllFavorites();
     QMap<int, int> scheduled = getScheduleAsMap();
+    auto seenMarks = getAllSeenMarkCount();
 
     std::function<bool (const FullReleaseModel&, const FullReleaseModel&)> scheduleComparer = [scheduled](const FullReleaseModel& first, const FullReleaseModel& second) {
         auto firstId = first.id();
@@ -804,6 +827,14 @@ QString LocalStorageService::getReleasesByFilter(int page, QString title, int se
         if (section == HistorySection && !(m_HistoryModels->contains(releaseItem.id()) && m_HistoryModels->value(releaseItem.id())->timestamp() > 0)) continue;
 
         if (section == WatchHistorySection && !(m_HistoryModels->contains(releaseItem.id()) && m_HistoryModels->value(releaseItem.id())->watchTimestamp() > 0)) continue;
+
+        auto countReleaseSeenVideos = seenMarks.contains(releaseItem.id()) ? seenMarks.value(releaseItem.id()) : 0;
+        auto isAllSeens = countReleaseSeenVideos == releaseItem.countOnlineVideos() && releaseItem.countOnlineVideos() > 0;
+        if (section == SeenHistorySection && !isAllSeens) continue;
+
+        if (section == SeeningHistorySection && !(countReleaseSeenVideos > 0 && !isAllSeens)) continue;
+
+        if (section == NotSeeningHistorySection && !(countReleaseSeenVideos == 0)) continue;
 
         if (startIndex > 0) {
             startIndex--;
