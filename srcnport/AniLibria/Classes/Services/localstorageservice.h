@@ -10,6 +10,7 @@
 #include "../Models/seenmodel.h"
 #include "../Models/seenmarkmodel.h"
 #include "../Models/historymodel.h"
+#include "../Models/usersettingsmodel.h"
 #include "../../globalconstants.h"
 
 class LocalStorageService : public QObject
@@ -24,6 +25,7 @@ private:
     QHash<int, SeenModel*>* m_SeenModels;
     QHash<QString,bool>* m_SeenMarkModels;
     QHash<int, HistoryModel*>* m_HistoryModels;
+    UserSettingsModel* m_UserSettingsModel;
     bool m_IsChangesExists;
 
     QString videosToJson(QList<OnlineVideoModel>& videos);
@@ -53,6 +55,8 @@ private:
     void saveSeenMarks();
     void loadHistory();
     void saveHistory();
+    void loadSettings();
+    void saveSettings();
     QHash<int, int> getAllSeenMarkCount();
 
 public:
@@ -82,6 +86,11 @@ public:
     Q_INVOKABLE void setSeenMark(int id, int seriaId, bool marked);    
     Q_INVOKABLE QList<int> getReleseSeenMarks(int id, int count);
     Q_INVOKABLE void setToReleaseHistory(int id, int type);
+    Q_INVOKABLE void setVolume(double volume);
+    Q_INVOKABLE void setVideoQuality(int quality);
+    Q_INVOKABLE void setAutoNextVideo(bool autoNextVideo);
+    Q_INVOKABLE void setAutoTopMost(bool autoTopMost);
+    Q_INVOKABLE QString getUserSettings();
 
 signals:
     void allReleasesFinished();

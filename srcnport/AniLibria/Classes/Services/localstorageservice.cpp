@@ -38,6 +38,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     m_SeenModels(new QHash<int, SeenModel*>()),
     m_SeenMarkModels(new QHash<QString, bool>()),
     m_HistoryModels(new QHash<int, HistoryModel*>()),
+    m_UserSettingsModel(new UserSettingsModel()),
     m_IsChangesExists(false)
 {
     m_AllReleaseUpdatedWatcher = new QFutureWatcher<void>(this);
@@ -64,6 +65,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     loadSeens();   
     loadSeenMarks();
     loadHistory();
+    loadSettings();
 
     resetChanges();    
 
@@ -475,6 +477,30 @@ void LocalStorageService::saveHistory()
     historyFile.write(document.toJson());
 
     historyFile.close();
+}
+
+void LocalStorageService::loadSettings()
+{
+    QFile userSettingsFile(getUserSettingsCachePath());
+    if (!userSettingsFile.open(QFile::ReadOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+    auto json = userSettingsFile.readAll();
+    userSettingsFile.close();
+
+    m_UserSettingsModel->fromJson(json);
+}
+
+void LocalStorageService::saveSettings()
+{
+    QFile settingsFile(getUserSettingsCachePath());
+    if (!settingsFile.open(QFile::WriteOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+
+    settingsFile.write(m_UserSettingsModel->toJson().toUtf8());
+
+    settingsFile.close();
 }
 
 QHash<int, int> LocalStorageService::getAllSeenMarkCount()
@@ -1080,6 +1106,39 @@ void LocalStorageService::setToReleaseHistory(int id, int type)
     }
 
     saveHistory();
+}
+
+void LocalStorageService::setVolume(double volume)
+{
+    m_UserSettingsModel->setVolume(volume);
+
+    saveSettings();
+}
+
+void LocalStorageService::setVideoQuality(int quality)
+{
+    m_UserSettingsModel->setQuality(quality);
+
+    saveSettings();
+}
+
+void LocalStorageService::setAutoNextVideo(bool autoNextVideo)
+{
+    m_UserSettingsModel->setAutoNextVideos(autoNextVideo);
+
+    saveSettings();
+}
+
+void LocalStorageService::setAutoTopMost(bool autoTopMost)
+{
+    m_UserSettingsModel->setAutoTopMost(autoTopMost);
+
+    saveSettings();
+}
+
+QString LocalStorageService::getUserSettings()
+{
+    return m_UserSettingsModel->toJson();
 }
 
 void LocalStorageService::allReleasesUpdated()

@@ -21,6 +21,7 @@ SOURCES += \
     Classes/Models/releasetorrentmodel.cpp \
     Classes/Models/seenmarkmodel.cpp \
     Classes/Models/seenmodel.cpp \
+    Classes/Models/usersettingsmodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
     Classes/Services/applicationsettings.cpp \
     Classes/Services/localstorageservice.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     Classes/Models/releasetorrentmodel.h \
     Classes/Models/seenmarkmodel.h \
     Classes/Models/seenmodel.h \
+    Classes/Models/usersettingsmodel.h \
     Classes/Services/anilibriaapiservice.h \
     Classes/Services/applicationsettings.h \
     Classes/Services/localstorageservice.h \

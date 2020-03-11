@@ -57,5 +57,6 @@
         <file>Assets/Icons/seenmark.svg</file>
         <file>Assets/Icons/seenmarkselected.svg</file>
         <file>Assets/Icons/history.svg</file>
+        <file>Assets/Icons/options.svg</file>
     </qresource>
 </RCC>

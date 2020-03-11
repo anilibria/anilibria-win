@@ -70,6 +70,11 @@ Page {
 
             _page.setReleaseVideo();
         }
+        const userSettings = JSON.parse(localStorage.getUserSettings());
+        console.log(userSettings.autoNextVideo);
+        player.volume = userSettings.volume;
+        autoNextVideo.checked = userSettings.autoNextVideo;
+        autoTopMost.checked = userSettings.autoTopMost;
     }
 
     onSetReleaseVideo: {
@@ -512,6 +517,11 @@ Page {
                         from: 0
                         value: 10
                         to: 100
+                        onPressedChanged: {
+                            if (!pressed) {
+                                localStorage.setVolume(player.volume);
+                            }
+                        }
                         onMoved: {
                             player.volume = value / 100;
                         }
@@ -574,6 +584,61 @@ Page {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
+                    IconButton {
+                        id: optionsButton
+                        width: 40
+                        height: 40
+                        iconColor: "black"
+                        iconPath: "../Assets/Icons/options.svg"
+                        iconWidth: 24
+                        iconHeight: 24
+                        onButtonPressed: {
+                            optionsPopup.open();
+                        }
+
+                        Popup {
+                            id: optionsPopup
+                            x: optionsButton.width - 300
+                            y: optionsButton.height - 200
+                            width: 300
+                            height: 180
+
+                            modal: true
+                            focus: true
+                            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                            Column {
+                                width: parent.width
+                                spacing: 10
+                                Text {
+                                    width: optionsPopup.width - 20
+                                    font.pixelSize: 12
+                                    text: "Автопереход между сериями"
+                                }
+
+                                Switch {
+                                    id: autoNextVideo
+                                    onCheckedChanged: {
+                                        localStorage.setAutoNextVideo(checked);
+                                    }
+                                }
+
+                                Text {
+                                    width: optionsPopup.width - 20
+                                    font.pixelSize: 12
+                                    text: "Автопереход в режим поверх всех окон"
+                                }
+
+                                Switch {
+                                    id: autoTopMost
+                                    onCheckedChanged: {
+                                        localStorage.setAutoTopMost(checked);
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                     IconButton {
                         width: 40
                         height: 40
