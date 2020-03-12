@@ -23,6 +23,7 @@ Page {
     property int positionIterator: 0
     property var seenVideo: ({})
     property var seenMarks: ({})
+    property int prefferedQuality: 0 // 0 - 480, 1 - 720p, 2 - 1080p
 
     signal navigateFrom()
     signal setReleaseVideo()
@@ -75,6 +76,18 @@ Page {
         player.volume = userSettings.volume;
         autoNextVideo.checked = userSettings.autoNextVideo;
         autoTopMost.checked = userSettings.autoTopMost;
+        _page.prefferedQuality = userSettings.quality;
+        switch (userSettings.quality) {
+            case 0:
+                _page.videoQuality = "sd";
+                break;
+            case 1:
+                _page.videoQuality = "hd";
+                break;
+            case 2:
+                _page.videoQuality = "fullhd";
+                break;
+        }
     }
 
     onSetReleaseVideo: {
@@ -393,6 +406,8 @@ Page {
 
                             player.stop();
                             _page.videoSource = video[_page.videoQuality];
+
+                            localStorage.setVideoQuality(2);
                         }
                     }
                     ToggleButton {
@@ -408,6 +423,8 @@ Page {
 
                             player.stop();
                             _page.videoSource = video[_page.videoQuality];
+
+                            localStorage.setVideoQuality(1);
                         }
                     }
                     ToggleButton {
@@ -423,6 +440,8 @@ Page {
 
                             player.stop();
                             _page.videoSource = video[_page.videoQuality];
+
+                            localStorage.setVideoQuality(0);
                         }
                     }
                     Rectangle {
