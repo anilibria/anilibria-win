@@ -15,6 +15,7 @@ public:
     const static QString newApiAddress;
 
     void getAllReleases();
+    void getYoutubeVideos();
     void getSchedule();
     void signin(QString email, QString password, QString fa2code);
     void signout(QString token);
@@ -26,6 +27,7 @@ public:
 
 signals:
     void allReleasesReceived(QString data);
+    void allYoutubeItemReceived(QString data);
     void scheduleReceived(QString data);
     void signinReceived(QString data);
     void signoutReceived();
@@ -36,6 +38,7 @@ signals:
 
 public slots:
     void getAllReleasesResponse(QNetworkReply* reply);
+    void getAllYoutubeItemsResponse(QNetworkReply* reply);
     void getScheduleResponse(QNetworkReply* reply);
     void signinResponse(QNetworkReply* reply);
     void signoutResponse(QNetworkReply* reply);

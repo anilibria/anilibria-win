@@ -1106,6 +1106,16 @@ Page {
                             font.pointSize: 10
                             leftPadding: 8
                             topPadding: 4
+                            wrapMode: Text.WordWrap
+                            width: parent.width
+                            maximumLineCount: 2
+                            text: qsTr(page.openedRelease ? page.openedRelease.originalName : '')
+                        }
+                        Text {
+                            textFormat: Text.RichText
+                            font.pointSize: 10
+                            leftPadding: 8
+                            topPadding: 4
                             text: qsTr("<b>Статус:</b> ") + qsTr(page.openedRelease ? page.openedRelease.status : '')
                         }
                         Text {
@@ -1178,6 +1188,92 @@ Page {
                             iconHeight: 28
                             onButtonPressed: {
                                 page.openedRelease = null;
+                            }
+                        }
+                        IconButton {
+                            height: 40
+                            width: 40
+                            iconColor: "black"
+                            iconPath: "../Assets/Icons/copy.svg"
+                            iconWidth: 26
+                            iconHeight: 26
+                            onButtonPressed: {
+                                cardCopyMenu.open();
+                            }
+
+                            TextEdit {
+                                id: hiddenTextField
+                                visible: false
+                            }
+
+                            Menu {
+                                id: cardCopyMenu
+                                width: 300
+
+                                MenuItem {
+                                    width: parent.width
+                                    font.pixelSize: 14
+                                    text: "Копировать название"
+                                    onPressed: {
+                                        copyToClipboard(page.openedRelease.title);
+                                    }
+                                }
+                                MenuItem {
+                                    width: parent.width
+                                    font.pixelSize: 14
+                                    text: "Копировать оригинальное название"
+                                    onPressed: {
+                                        copyToClipboard(page.openedRelease.originalName);
+                                    }
+                                }
+                                MenuItem {
+                                    width: parent.width
+                                    font.pixelSize: 14
+                                    text: "Копировать оба названия"
+                                    onPressed: {
+                                        copyToClipboard(page.openedRelease.title + ", " + page.openedRelease.originalName);
+                                    }
+                                }
+                                MenuItem {
+                                    width: parent.width
+                                    font.pixelSize: 14
+                                    text: "Копировать описание"
+                                    onPressed: {
+                                        copyToClipboard(page.openedRelease.description);
+                                    }
+                                }
+                            }
+                        }
+                        IconButton {
+                            height: 40
+                            width: 40
+                            iconColor: "black"
+                            iconPath: "../Assets/Icons/vk.svg"
+                            iconWidth: 26
+                            iconHeight: 26
+                            onButtonPressed: {
+                                vkontakteMenu.open();
+                            }
+                            Menu {
+                                id: vkontakteMenu
+                                width: 300
+
+                                MenuItem {
+                                    width: parent.width
+                                    font.pixelSize: 14
+                                    text: "Авторизоваться для комментариев"
+                                    onPressed: {
+                                        webView.url = "https://oauth.vk.com/authorize?client_id=-1&display=widget&widget=4&redirect_uri=https://vk.com/";
+                                    }
+                                }
+                                MenuItem {
+                                    width: parent.width
+                                    font.pixelSize: 14
+                                    text: "Переоткрыть комментарии"
+                                    onPressed: {
+                                        webView.url = getVkontakteCommentPage();
+                                    }
+                                }
                             }
                         }
                     }
@@ -1255,7 +1351,7 @@ Page {
                     visible: page.openedRelease ? true : false
                     width: cardContainer.width
                     height: cardContainer.height - releaseInfo.height - 60
-                    url: page.openedRelease ? "https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/" + page.openedRelease.code + ".html" : "https://vk.com/";
+                    url: page.openedRelease ? getVkontakteCommentPage() : "https://vk.com/";
                     onLoadingChanged: {
                         if (loadRequest.errorString) console.error(loadRequest.errorString);
                     }
@@ -1272,6 +1368,10 @@ Page {
         id: notImplementedDialog
         title: "Не реализовано"
         text: "Пока указанная функция не реализована"
+    }
+
+    function getVkontakteCommentPage() {
+        return "https://vk.com/widget_comments.php?app=5315207&width=100%&_ver=1&limit=8&norealtime=0&url=https://www.anilibria.tv/release/" + page.openedRelease.code + ".html";
     }
 
     function selectItem(item) {
@@ -1368,6 +1468,12 @@ Page {
 
         page.openedRelease = release;
         localStorage.setToReleaseHistory(release.id, 0);
+    }
+
+    function copyToClipboard(text) {
+        hiddenTextField.text = text;
+        hiddenTextField.selectAll();
+        hiddenTextField.copy();
     }
 
     Component.onCompleted: {

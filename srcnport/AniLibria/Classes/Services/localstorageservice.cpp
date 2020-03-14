@@ -55,6 +55,7 @@ LocalStorageService::LocalStorageService(QObject *parent) : QObject(parent),
     createIfNotExistsFile(getHistoryCachePath(), "[]");
     createIfNotExistsFile(getUserSettingsCachePath(), "{}");
     createIfNotExistsFile(getNotificationCachePath(), "{ \"newReleases\": [], \"newOnlineSeries\": [], \"newTorrents\": [], \"newTorrentSeries\": [] }");
+    createIfNotExistsFile(getYoutubeCachePath(), "[]");
     QString favoritespath = getFavoritesCachePath();
 
     updateReleasesInnerCache();
@@ -138,6 +139,18 @@ void LocalStorageService::updateAllReleases(const QString &releases)
         }
     );
     m_AllReleaseUpdatedWatcher->setFuture(future);
+}
+
+void LocalStorageService::updateYoutubeItems(const QString &youtubeItems)
+{
+    QFile youtubeFile(getYoutubeCachePath());
+    if (!youtubeFile.open(QFile::WriteOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+
+    youtubeFile.write(youtubeItems.toUtf8());
+
+    youtubeFile.close();
 }
 
 QString LocalStorageService::videosToJson(QList<OnlineVideoModel> &videos)
@@ -328,6 +341,11 @@ QString LocalStorageService::getSeenMarksCachePath() const
 QString LocalStorageService::getHistoryCachePath() const
 {
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/history.cache";
+}
+
+QString LocalStorageService::getYoutubeCachePath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/youtube.cache";
 }
 
 QString LocalStorageService::getUserSettingsCachePath() const
@@ -1139,6 +1157,19 @@ void LocalStorageService::setAutoTopMost(bool autoTopMost)
 QString LocalStorageService::getUserSettings()
 {
     return m_UserSettingsModel->toJson();
+}
+
+QString LocalStorageService::getYoutubeItems()
+{
+    QFile youtubeFile(getYoutubeCachePath());
+    if (!youtubeFile.open(QFile::ReadOnly | QFile::Text)) {
+        //TODO: handle this situation
+    }
+
+    auto data = youtubeFile.readAll();
+    youtubeFile.close();
+
+    return data;
 }
 
 void LocalStorageService::allReleasesUpdated()

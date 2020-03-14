@@ -22,6 +22,7 @@ SOURCES += \
     Classes/Models/seenmarkmodel.cpp \
     Classes/Models/seenmodel.cpp \
     Classes/Models/usersettingsmodel.cpp \
+    Classes/Models/youtubevideomodel.cpp \
     Classes/Services/anilibriaapiservice.cpp \
     Classes/Services/applicationsettings.cpp \
     Classes/Services/localstorageservice.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     Classes/Models/seenmarkmodel.h \
     Classes/Models/seenmodel.h \
     Classes/Models/usersettingsmodel.h \
+    Classes/Models/youtubevideomodel.h \
     Classes/Services/anilibriaapiservice.h \
     Classes/Services/applicationsettings.h \
     Classes/Services/localstorageservice.h \

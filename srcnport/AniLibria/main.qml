@@ -66,7 +66,7 @@ ApplicationWindow {
         onAllReleasesFinished: {
             releases.refreshAllReleases();
 
-            synchronizationService.synchronizeSchedule();
+            synchronizationService.synchronizeSchedule();            
             if (applicationSettings.userToken) synchronizationService.synchronizeUserFavorites(applicationSettings.userToken);
 
             window.synchronizationEnabled = false;
@@ -111,6 +111,8 @@ ApplicationWindow {
             localStorage.setSchedule(JSON.stringify(scheduleResult));
 
             releases.refreshReleaseSchedules();
+
+            synchronizationService.synchronizeYoutube();
         }
 
         onUserCompleteAuthentificated: {
@@ -157,6 +159,12 @@ ApplicationWindow {
             if (Qt.platform.os === "linux" || Qt.platform.os === "unix") Qt.openUrlExternally("file://" + torrentPath);
             if (Qt.platform.os === "osx") Qt.openUrlExternally("file://" + torrentPath);
             if (Qt.platform.os === "windows") Qt.openUrlExternally("file:///" + torrentPath);
+        }
+
+        onSynchronizedYoutube: {
+            const json = JSON.parse(data);
+
+            localStorage.updateYoutubeItems(JSON.stringify(json.data.items));
         }
     }
 
@@ -318,7 +326,8 @@ ApplicationWindow {
                 }
                 width: parent.width
                 onClicked: {
-                    showPage("donate");
+                    Qt.openUrlExternally("https://www.anilibria.tv/pages/donate.php");
+                    drawer.close();
                 }
             }
             ItemDelegate {

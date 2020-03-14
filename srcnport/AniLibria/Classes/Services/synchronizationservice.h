@@ -25,11 +25,13 @@ public:
     Q_INVOKABLE void removeUserFavorites(QString token, QString ids);
     Q_INVOKABLE QString combineWithWebSiteUrl(QString path);
     Q_INVOKABLE void downloadTorrent(QString torrentPath);
+    Q_INVOKABLE void synchronizeYoutube();
 signals:
     void synchronizedReleases(QString data);
     void synchronizationCompleted();
     void synchronizationFailed();
     void synchronizedSchedule(QString data);
+    void synchronizedYoutube(QString data);
     void userCompleteAuthentificated(QString token);
     void userFailedAuthentificated(QString errorMessage);
     void userSignouted();
@@ -41,6 +43,7 @@ signals:
 public slots:
     void saveReleasesToCache(QString data);
     void saveScheduleToCache(QString data);
+    void saveYoutubeToCache(QString data);
     void handleSignin(QString data);
     void handleSignout();
     void handleUserData(QString data);

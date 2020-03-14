@@ -3,6 +3,7 @@
 #include "synchronizationservice.h"
 #include "anilibriaapiservice.h"
 #include "../Models/releasemodel.h"
+#include "../../globalconstants.h"
 
 SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent)
 {
@@ -15,6 +16,7 @@ SynchronizationService::SynchronizationService(QObject *parent) : QObject(parent
     connect(m_AnilibriaApiService,&AnilibriaApiService::userFavoritesReceived,this,&SynchronizationService::handleUserFavorites);
     connect(m_AnilibriaApiService,&AnilibriaApiService::userFavoritesUpdated,this,&SynchronizationService::handleEditUserFavorites);
     connect(m_AnilibriaApiService,&AnilibriaApiService::torrentDownloaded,this,&SynchronizationService::handleTorrentDownloaded);
+    connect(m_AnilibriaApiService,&AnilibriaApiService::allYoutubeItemReceived,this,&SynchronizationService::saveYoutubeToCache);
 }
 
 void SynchronizationService::synchronizeReleases()
@@ -59,12 +61,17 @@ void SynchronizationService::removeUserFavorites(QString token, QString ids)
 
 QString SynchronizationService::combineWithWebSiteUrl(QString path)
 {
-    return m_AnilibriaApiService->apiAddress + (path.startsWith("/") ? path.right(path.length() - 1) : path);
+    return AnilibriaImagesPath + path;
 }
 
 void SynchronizationService::downloadTorrent(QString torrentPath)
 {
     m_AnilibriaApiService->downloadTorrent(torrentPath);
+}
+
+void SynchronizationService::synchronizeYoutube()
+{
+    m_AnilibriaApiService->getYoutubeVideos();
 }
 
 void SynchronizationService::saveReleasesToCache(QString data)
@@ -75,6 +82,11 @@ void SynchronizationService::saveReleasesToCache(QString data)
 void SynchronizationService::saveScheduleToCache(QString data)
 {
     emit synchronizedSchedule(data);
+}
+
+void SynchronizationService::saveYoutubeToCache(QString data)
+{
+    emit synchronizedYoutube(data);
 }
 
 void SynchronizationService::handleSignin(QString data)

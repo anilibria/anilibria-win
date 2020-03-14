@@ -45,6 +45,7 @@ private:
     QString getSeensCachePath() const;
     QString getSeenMarksCachePath() const;
     QString getHistoryCachePath() const;
+    QString getYoutubeCachePath() const;
     QString getUserSettingsCachePath() const;
     QString getNotificationCachePath() const;
     void createIfNotExistsFile(QString path, QString defaultContent);
@@ -66,6 +67,7 @@ public:
     void setIsChangesExists(bool isChangesExists);
 
     Q_INVOKABLE void updateAllReleases(const QString& releases);
+    Q_INVOKABLE void updateYoutubeItems(const QString& youtubeItems);
     Q_INVOKABLE QString getRelease(int id);
     Q_INVOKABLE QString getRandomRelease();
     Q_INVOKABLE QString getChanges();    
@@ -91,6 +93,7 @@ public:
     Q_INVOKABLE void setAutoNextVideo(bool autoNextVideo);
     Q_INVOKABLE void setAutoTopMost(bool autoTopMost);
     Q_INVOKABLE QString getUserSettings();
+    Q_INVOKABLE QString getYoutubeItems();
 
 signals:
     void allReleasesFinished();
