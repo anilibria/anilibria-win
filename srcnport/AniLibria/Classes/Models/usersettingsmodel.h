@@ -13,6 +13,8 @@ private:
     double m_Volume;
     bool m_AutoNextVideo;
     bool m_AutoTopMost;
+    int m_TorrentDownloadMode;
+    bool m_NotificationForFavorites;
 
 public:
     UserSettingsModel();
@@ -21,11 +23,15 @@ public:
     double volume();
     bool autoNextVideo();
     bool autoTopMost();
+    int torrentDownloadMode();
+    bool notificationForFavorites();
 
     void setQuality(int quality);
     void setVolume(double volume);
     void setAutoNextVideos(bool autoNextVideo);
     void setAutoTopMost(bool autoTopMost);
+    void setTorrentDownloadMode(int torrentDownloadMode);
+    void setNotificationForFavorites(bool notificationForFavorites);
 
     void fromJson(QString json);
     QString toJson();

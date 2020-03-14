@@ -92,8 +92,11 @@ public:
     Q_INVOKABLE void setVideoQuality(int quality);
     Q_INVOKABLE void setAutoNextVideo(bool autoNextVideo);
     Q_INVOKABLE void setAutoTopMost(bool autoTopMost);
+    Q_INVOKABLE void setTorrentDownloadMode(int torrentDownloadMode);
+    Q_INVOKABLE void setNotificationForFavorites(bool notificationForFavorites);
     Q_INVOKABLE QString getUserSettings();
     Q_INVOKABLE QString getYoutubeItems();
+    Q_INVOKABLE void copyTorrentToFile(QString source, QString target);
 
 signals:
     void allReleasesFinished();

@@ -3,7 +3,9 @@
 UserSettingsModel::UserSettingsModel(): m_Quality(1),
     m_Volume(0.8),
     m_AutoNextVideo(true),
-    m_AutoTopMost(false)
+    m_AutoTopMost(false),
+    m_TorrentDownloadMode(0),
+    m_NotificationForFavorites(false)
 {
 
 }
@@ -28,6 +30,16 @@ bool UserSettingsModel::autoTopMost()
     return m_AutoTopMost;
 }
 
+int UserSettingsModel::torrentDownloadMode()
+{
+    return m_TorrentDownloadMode;
+}
+
+bool UserSettingsModel::notificationForFavorites()
+{
+    return m_NotificationForFavorites;
+}
+
 void UserSettingsModel::setQuality(int quality)
 {
     m_Quality = quality;
@@ -48,6 +60,16 @@ void UserSettingsModel::setAutoTopMost(bool autoTopMost)
     m_AutoTopMost = autoTopMost;
 }
 
+void UserSettingsModel::setTorrentDownloadMode(int torrentDownloadMode)
+{
+    m_TorrentDownloadMode = torrentDownloadMode;
+}
+
+void UserSettingsModel::setNotificationForFavorites(bool notificationForFavorites)
+{
+    m_NotificationForFavorites = notificationForFavorites;
+}
+
 void UserSettingsModel::fromJson(QString json)
 {
     if (json.isEmpty()) return;
@@ -59,6 +81,8 @@ void UserSettingsModel::fromJson(QString json)
     if (jsonSettings.contains("volume")) setVolume(jsonSettings.value("volume").toDouble());
     if (jsonSettings.contains("autoNextVideo")) setAutoNextVideos(jsonSettings.value("autoNextVideo").toBool());
     if (jsonSettings.contains("autoTopMost")) setAutoTopMost(jsonSettings.value("autoTopMost").toBool());
+    if (jsonSettings.contains("torrentDownloadMode")) setTorrentDownloadMode(jsonSettings.value("torrentDownloadMode").toInt());
+    if (jsonSettings.contains("notificationForFavorites")) setNotificationForFavorites(jsonSettings.value("notificationForFavorites").toBool());
 }
 
 QString UserSettingsModel::toJson()
@@ -69,6 +93,8 @@ QString UserSettingsModel::toJson()
     object["volume"] = volume();
     object["autoNextVideo"] = autoNextVideo();
     object["autoTopMost"] = autoTopMost();
+    object["torrentDownloadMode"] = torrentDownloadMode();
+    object["notificationForFavorites"] = notificationForFavorites();
 
     QJsonDocument saveDoc(object);
     return saveDoc.toJson();

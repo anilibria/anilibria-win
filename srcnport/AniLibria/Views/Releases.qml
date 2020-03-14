@@ -621,7 +621,62 @@ Page {
                         const randomRelease = JSON.parse(localStorage.getRandomRelease());
                         showReleaseCard(randomRelease);
                     }
-                }                
+                }
+                IconButton {
+                    height: 45
+                    width: 40
+                    iconColor: "white"
+                    iconPath: "../Assets/Icons/options.svg"
+                    iconWidth: 29
+                    iconHeight: 29
+                    onButtonPressed: {
+                        releaseSettingsPopup.open();
+                    }
+
+                    Popup {
+                        id: releaseSettingsPopup
+                        x: 40
+                        y: sortingPopupButton.height - 100
+                        width: 370
+                        height: 160
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        Text {
+                            id: downloadTorrentModeLabel
+                            font.pixelSize: 14
+                            text: "Торрент"
+                        }
+                        ComboBox {
+                            id: downloadTorrentMode
+                            currentIndex: 0
+                            anchors.top: downloadTorrentModeLabel.bottom
+                            width: 350
+                            model: ["Открыть в торрент клиенте", "Сохранить файл"]
+                            onCurrentIndexChanged: {
+                                localStorage.setTorrentDownloadMode(downloadTorrentMode.currentIndex);
+                            }
+                        }
+
+                        Text {
+                            id: notificationForFavoritesLabel
+                            anchors.top: downloadTorrentMode.bottom
+                            anchors.topMargin: 4
+                            font.pixelSize: 14
+                            text: "Уведомления по избранным (пока не работает)"
+                        }
+
+                        Switch {
+                            id: notificationForFavorites
+                            anchors.top: notificationForFavoritesLabel.bottom
+                            onCheckedChanged: {
+                                localStorage.setNotificationForFavorites(checked);
+                            }
+                        }
+
+                    }
+                }
             }
         }
 
@@ -1479,5 +1534,9 @@ Page {
     Component.onCompleted: {
         refreshAllReleases();
         refreshSchedule();
+
+        const userSettings = JSON.parse(localStorage.getUserSettings());
+        downloadTorrentMode.currentIndex = userSettings.torrentDownloadMode;
+        notificationForFavorites.checked = userSettings.notificationForFavorites;
     }
 }

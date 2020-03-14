@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.0
 import QtGraphicalEffects 1.12
 import Anilibria.Services 1.0
+import Qt.labs.platform 1.0
 import "Views"
 import "./anilibriaService.js" as AnilibriaService
 
@@ -19,6 +20,7 @@ ApplicationWindow {
     property bool synchronizationEnabled: false
     property bool notVisibleSignin: false
     property var userModel: ({})
+    property string tempTorrentPath: ""
 
     Material.accent: Material.Red
 
@@ -80,6 +82,16 @@ ApplicationWindow {
        onMessage: {
            localStorage.updateAllReleases(messageObject.releases);
        }
+    }
+
+    FileDialog {
+        id: saveTorrentFileDialog
+        title: "Выберите куда сохранить файл"
+        fileMode: FileDialog.SaveFile
+
+        onAccepted: {
+            localStorage.copyTorrentToFile(window.tempTorrentPath, saveTorrentFileDialog.currentFile);
+        }
     }
 
     SynchronizationService {
@@ -156,9 +168,17 @@ ApplicationWindow {
         }
 
         onTorrentDownloaded: {
-            if (Qt.platform.os === "linux" || Qt.platform.os === "unix") Qt.openUrlExternally("file://" + torrentPath);
-            if (Qt.platform.os === "osx") Qt.openUrlExternally("file://" + torrentPath);
-            if (Qt.platform.os === "windows") Qt.openUrlExternally("file:///" + torrentPath);
+            const userSettings = JSON.parse(localStorage.getUserSettings());
+            if (userSettings.torrentDownloadMode === 0) {
+                if (Qt.platform.os === "linux" || Qt.platform.os === "unix") Qt.openUrlExternally("file://" + torrentPath);
+                if (Qt.platform.os === "osx") Qt.openUrlExternally("file://" + torrentPath);
+                if (Qt.platform.os === "windows") Qt.openUrlExternally("file:///" + torrentPath);
+            }
+
+            if (userSettings.torrentDownloadMode === 1) {
+                window.tempTorrentPath = torrentPath;
+                saveTorrentFileDialog.open();
+            }
         }
 
         onSynchronizedYoutube: {

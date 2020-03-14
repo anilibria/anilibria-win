@@ -1154,6 +1154,20 @@ void LocalStorageService::setAutoTopMost(bool autoTopMost)
     saveSettings();
 }
 
+void LocalStorageService::setTorrentDownloadMode(int torrentDownloadMode)
+{
+    m_UserSettingsModel->setTorrentDownloadMode(torrentDownloadMode);
+
+    saveSettings();
+}
+
+void LocalStorageService::setNotificationForFavorites(bool notificationForFavorites)
+{
+    m_UserSettingsModel->setNotificationForFavorites(notificationForFavorites);
+
+    saveSettings();
+}
+
 QString LocalStorageService::getUserSettings()
 {
     return m_UserSettingsModel->toJson();
@@ -1170,6 +1184,11 @@ QString LocalStorageService::getYoutubeItems()
     youtubeFile.close();
 
     return data;
+}
+
+void LocalStorageService::copyTorrentToFile(QString source, QString target)
+{
+    QFile::copy(source, target.replace("file:///", "").replace("file://", ""));
 }
 
 void LocalStorageService::allReleasesUpdated()
