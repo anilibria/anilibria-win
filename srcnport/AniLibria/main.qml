@@ -3,8 +3,8 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.0
 import QtGraphicalEffects 1.12
+import QtQuick.Dialogs 1.2
 import Anilibria.Services 1.0
-import Qt.labs.platform 1.0
 import "Views"
 import "./anilibriaService.js" as AnilibriaService
 
@@ -86,11 +86,12 @@ ApplicationWindow {
 
     FileDialog {
         id: saveTorrentFileDialog
-        title: "Выберите куда сохранить файл"
-        fileMode: FileDialog.SaveFile
+        title: "Выберите куда и как сохранить торрент файл"
+        selectExisting: false
+        nameFilters: [ "Torrents (*.torrent)" ]
 
         onAccepted: {
-            localStorage.copyTorrentToFile(window.tempTorrentPath, saveTorrentFileDialog.currentFile);
+            localStorage.copyTorrentToFile(window.tempTorrentPath, saveTorrentFileDialog.fileUrl);
         }
     }
 
