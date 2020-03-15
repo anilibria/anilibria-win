@@ -1188,7 +1188,11 @@ QString LocalStorageService::getYoutubeItems()
 
 void LocalStorageService::copyTorrentToFile(QString source, QString target)
 {
-    QFile::copy(source, target.replace("file:///", "").replace("file://", ""));
+#ifdef Q_OS_WIN
+    QFile::copy(source, target.replace("file:///", ""));
+#else
+    QFile::copy(source, target.replace("file://", ""));
+#endif
 }
 
 void LocalStorageService::allReleasesUpdated()
