@@ -10,6 +10,7 @@
 	d:DataContext="{d:DesignInstance viewmodel:AuthorizeViewModel}">
 
 	<Grid
+		Loaded="GridBackground_Loaded"
 		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -19,6 +20,13 @@
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
+
+		<Grid
+			x:Name="GridBackground"
+			Opacity=".8"
+			Grid.RowSpan="2"
+			Grid.ColumnSpan="2"
+		/>
 
 		<Border
 			Grid.Row="0"
