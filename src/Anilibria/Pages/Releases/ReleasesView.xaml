@@ -707,7 +707,8 @@
 	</UserControl.Triggers>
 
 	<Grid
-		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground"
+		Loaded="Grid_Loaded">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -717,6 +718,15 @@
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
+
+		<Grid
+			x:Name="GridImageBackground"
+			Opacity=".8"
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.ColumnSpan="2"
+		/>
+		
 		<Border
 			Grid.Row="0"
 			Grid.Column="0"
@@ -1411,6 +1421,26 @@
 									FontSize="12"
 									IsOn="{Binding IsDarkTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								/>
+								<TextBlock
+									Margin="0 4 0 0"
+									converters:BackgroundThemeConverter.TextMapper="TextBlock"
+									Text="Фон"
+								/>
+								<StackPanel
+									Orientation="Horizontal">
+									<Button
+										converters:BackgroundThemeConverter.ActionButton="Origin"
+										Margin="4 8 0 0"
+										Command="{Binding SetBackgroundImageCommand}">
+										Поставить
+									</Button>
+									<Button
+										converters:BackgroundThemeConverter.ActionButton="Origin"
+										Margin="4 8 0 0"
+										Command="{Binding ResetBackgroundImageCommand}">
+										Сбросить
+									</Button>
+								</StackPanel>
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>

@@ -254,23 +254,20 @@ namespace Anilibria.Pages.Releases {
 			if ( values.ContainsKey ( TorrentModeSettings ) ) {
 				var torrentMode = (TorrentDownloadMode) ( (int) values[TorrentModeSettings] );
 				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.FirstOrDefault ( a => a.Mode == torrentMode ) ?? m_TorrentDownloadModes.First ();
-			}
-			else {
+			} else {
 				m_SelectedTorrentDownloadMode = m_TorrentDownloadModes.First ();
 			}
 
 			if ( values.ContainsKey ( OpenVideoSettings ) ) {
 				var openVideoMode = (OpenVideoMode) ( (int) values[OpenVideoSettings] );
 				m_SelectedOpenVideoMode = m_OpenVideoModes.FirstOrDefault ( a => a.Mode == openVideoMode ) ?? m_OpenVideoModes.First ();
-			}
-			else {
+			} else {
 				m_SelectedOpenVideoMode = m_OpenVideoModes.First ();
 			}
 
 			if ( values.ContainsKey ( IsDarkThemeSettings ) ) {
 				IsDarkTheme = (bool) values[IsDarkThemeSettings];
-			}
-			else {
+			} else {
 				IsDarkTheme = false;
 			}
 		}
@@ -425,8 +422,7 @@ namespace Anilibria.Pages.Releases {
 				IsShowReleaseCard = false;
 				RefreshReleases ();
 				RefreshSelectedReleases ();
-			}
-			else {
+			} else {
 				if ( m_Collection == null ) return;
 
 				foreach ( var releaseItem in m_Collection ) {
@@ -476,8 +472,7 @@ namespace Anilibria.Pages.Releases {
 						GenerateToastContent ( isNewReleases , isNewSeries , isNewTorrents ).GetXml ()
 					)
 				);
-			}
-			catch {
+			} catch {
 				//WORKAROUND: Sometimes app crashes on this line, I sure that issue not in my code.
 			}
 		}
@@ -577,6 +572,34 @@ namespace Anilibria.Pages.Releases {
 			CopyDescriptionToClipboardCommand = CreateCommand ( CopyDescriptionToClipboard );
 			SearchReleaseNameInGoogleCommand = CreateCommand ( SearchReleaseNameInGoogle );
 			SearchReleaseOriginalNameInGoogleCommand = CreateCommand ( SearchReleaseOriginalNameInGoogle );
+			SetBackgroundImageCommand = CreateCommand ( SetBackgroundImage );
+			ResetBackgroundImageCommand = CreateCommand ( ResetBackgroundImage );
+		}
+
+		private async void ResetBackgroundImage () {
+			var folder = ApplicationData.Current.LocalFolder;
+			var releaseImage = await folder.TryGetItemAsync ( "releasebackground.image" );
+			if ( releaseImage == null ) return;
+
+			await ( await folder.GetFileAsync ( "releasebackground.image" ) ).DeleteAsync ();
+
+			await RefreshBackground ();
+		}
+
+		private async void SetBackgroundImage () {
+			FileOpenPicker openPicker = new FileOpenPicker ();
+			openPicker.ViewMode = PickerViewMode.Thumbnail;
+			openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+			openPicker.FileTypeFilter.Add ( ".jpg" );
+			openPicker.FileTypeFilter.Add ( ".jpeg" );
+			openPicker.FileTypeFilter.Add ( ".png" );
+
+			var file = await openPicker.PickSingleFileAsync ();
+			if ( file == null ) return;
+
+			await file.CopyAsync ( ApplicationData.Current.LocalFolder , "releasebackground.image" , NameCollisionOption.ReplaceExisting );
+
+			await RefreshBackground ();
 		}
 
 		private void CopyDescriptionToClipboard () {
@@ -1309,8 +1332,7 @@ namespace Anilibria.Pages.Releases {
 			StorageFile file = null;
 			try {
 				file = await m_AnilibriaApiService.DownloadTorrent ( torrent );
-			}
-			catch {
+			} catch {
 				ObserverEvents.FireEvent (
 					"showMessage" ,
 					new MessageModel {
@@ -1354,8 +1376,7 @@ namespace Anilibria.Pages.Releases {
 										Message = "Сохранение успешно выполнено"
 									}
 								);
-							}
-							else {
+							} else {
 								ObserverEvents.FireEvent (
 									"showMessage" ,
 									new MessageModel {
@@ -1364,8 +1385,7 @@ namespace Anilibria.Pages.Releases {
 									}
 								);
 							}
-						}
-						catch {
+						} catch {
 							ObserverEvents.FireEvent (
 								"showMessage" ,
 								new MessageModel {
@@ -1405,8 +1425,7 @@ namespace Anilibria.Pages.Releases {
 				if ( m_GroupingCollection != null ) {
 					foreach ( var release in m_GroupingCollection.SelectMany ( a => a ) ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
 				}
-			}
-			else {
+			} else {
 				if ( m_Collection != null ) {
 					foreach ( var release in m_Collection ) release.AddToFavorite = m_Favorites?.Contains ( release.Id ) ?? false;
 				}
@@ -1553,8 +1572,7 @@ namespace Anilibria.Pages.Releases {
 			if ( GroupedGridVisible ) {
 				GroupingCollection = GetGroupedReleases ();
 				HideReleaseCard (); //WORKAROUND: other hand selcted items will be first item, I don't know why.
-			}
-			else {
+			} else {
 				m_Collection = new IncrementalLoadingCollection<ReleaseModel> {
 					PageSize = 20 ,
 					GetPageFunction = GetItemsPageAsync
@@ -1615,7 +1633,7 @@ namespace Anilibria.Pages.Releases {
 		}
 
 		private bool AllInArrayCaseSensitive ( IEnumerable<string> filterValues , IEnumerable<string> originalValues ) {
-			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ).ToLowerInvariant() ).ToList ();
+			var processedFilterValues = filterValues.Select ( a => a.Replace ( "ё" , "е" ).ToLowerInvariant () ).ToList ();
 			var processedOriginalValues = originalValues.Where ( a => a != null ).Select ( a => a.Replace ( "ё" , "е" ).ToLowerInvariant () ).ToList ();
 
 			return processedFilterValues.All ( a => processedOriginalValues.Any ( b => b.Contains ( a ) ) );
@@ -1635,8 +1653,7 @@ namespace Anilibria.Pages.Releases {
 				var genres = FilterByGenres.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
 				if ( m_GenresAll ) {
 					releases = releases.Where ( a => a.Genres != null ? AllInArrayCaseSensitive ( genres , a.Genres ) : false );
-				}
-				else {
+				} else {
 					releases = releases.Where ( a => a.Genres?.Any ( genre => genres?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { genre } ) ) ?? false ) ?? false );
 				}
 			}
@@ -1652,8 +1669,7 @@ namespace Anilibria.Pages.Releases {
 				var voicers = FilterByVoicers.Split ( ',' ).Select ( a => a.Trim () ).Where ( a => !string.IsNullOrEmpty ( a ) ).ToList ();
 				if ( m_VoicesAll ) {
 					releases = releases.Where ( a => a.Voices != null ? AllInArrayCaseSensitive ( voicers , a.Voices ) : false );
-				}
-				else {
+				} else {
 					releases = releases.Where ( a => a.Voices?.Any ( voice => voicers?.Any ( b => ContainsInArrayCaseSensitive ( b , new string[] { voice } ) ) ?? false ) ?? false );
 				}
 			}
@@ -1885,8 +1901,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is refreshing.
 		/// </summary>
-		public bool IsRefreshing
-		{
+		public bool IsRefreshing {
 			get => m_IsRefreshing;
 			set => Set ( ref m_IsRefreshing , value );
 		}
@@ -1894,8 +1909,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Sorting items.
 		/// </summary>
-		public ObservableCollection<SortingItemModel> SortingItems
-		{
+		public ObservableCollection<SortingItemModel> SortingItems {
 			get => m_SortingItems;
 			set => Set ( ref m_SortingItems , value );
 		}
@@ -1903,11 +1917,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected sorting item.
 		/// </summary>
-		public SortingItemModel SelectedSortingItem
-		{
+		public SortingItemModel SelectedSortingItem {
 			get => m_SelectedSortingItem;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedSortingItem , value ) ) return;
 
 				RefreshSelectedReleases ();
@@ -1918,8 +1930,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Sorting directions
 		/// </summary>
-		public ObservableCollection<SortingDirectionModel> SortingDirections
-		{
+		public ObservableCollection<SortingDirectionModel> SortingDirections {
 			get => m_SortingDirections;
 			set => Set ( ref m_SortingDirections , value );
 		}
@@ -1927,11 +1938,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected sorting direction.
 		/// </summary>
-		public SortingDirectionModel SelectedSortingDirection
-		{
+		public SortingDirectionModel SelectedSortingDirection {
 			get => m_SelectedSortingDirection;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedSortingDirection , value ) ) return;
 
 				RefreshSelectedReleases ();
@@ -1942,8 +1951,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Collection.
 		/// </summary>
-		public IncrementalLoadingCollection<ReleaseModel> Collection
-		{
+		public IncrementalLoadingCollection<ReleaseModel> Collection {
 			get => m_Collection;
 			set => Set ( ref m_Collection , value );
 		}
@@ -1951,8 +1959,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Grouping collection.
 		/// </summary>
-		public ObservableCollection<IGrouping<string , ReleaseModel>> GroupingCollection
-		{
+		public ObservableCollection<IGrouping<string , ReleaseModel>> GroupingCollection {
 			get => m_GroupingCollection;
 			set => Set ( ref m_GroupingCollection , value );
 		}
@@ -1960,11 +1967,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is multiple select.
 		/// </summary>
-		public bool IsMultipleSelect
-		{
+		public bool IsMultipleSelect {
 			get => m_IsMultipleSelect;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsMultipleSelect , value ) ) return;
 
 				IsShowReleaseCard = false;
@@ -1974,8 +1979,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Show announce.
 		/// </summary>
-		public bool ShowAnnounce
-		{
+		public bool ShowAnnounce {
 			get => m_ShowAnnounce;
 			set => Set ( ref m_ShowAnnounce , value );
 		}
@@ -1983,11 +1987,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Release for show in Release Card.
 		/// </summary>
-		public ReleaseModel OpenedRelease
-		{
+		public ReleaseModel OpenedRelease {
 			get => m_OpenedRelease;
-			set
-			{
+			set {
 				if ( !Set ( ref m_OpenedRelease , value ) ) return;
 
 				RefreshCardFavorite ();
@@ -1998,8 +2000,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Comment uri.
 		/// </summary>
-		public Uri CommentsUri
-		{
+		public Uri CommentsUri {
 			get => m_CommentsUri;
 			set => Set ( ref m_CommentsUri , value );
 		}
@@ -2007,8 +2008,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is show comments.
 		/// </summary>
-		public bool IsShowComments
-		{
+		public bool IsShowComments {
 			get => m_IsShowComments;
 			set => Set ( ref m_IsShowComments , value );
 		}
@@ -2016,8 +2016,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is authorized.
 		/// </summary>
-		public bool IsAuthorized
-		{
+		public bool IsAuthorized {
 			get => m_IsAuthorized;
 			set => Set ( ref m_IsAuthorized , value );
 		}
@@ -2025,8 +2024,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Opened release in favorite.
 		/// </summary>
-		public bool OpenedReleaseInFavorite
-		{
+		public bool OpenedReleaseInFavorite {
 			get => m_OpenedReleaseInFavorite;
 			set => Set ( ref m_OpenedReleaseInFavorite , value );
 		}
@@ -2034,11 +2032,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Release for show in Release Card.
 		/// </summary>
-		public bool IsShowReleaseCard
-		{
+		public bool IsShowReleaseCard {
 			get => m_IsShowReleaseCard;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsShowReleaseCard , value ) ) return;
 
 				if ( !value ) IsShowComments = false;
@@ -2048,8 +2044,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by name.
 		/// </summary>
-		public string FilterByName
-		{
+		public string FilterByName {
 			get => m_FilterByName;
 			set => Set ( ref m_FilterByName , value );
 		}
@@ -2057,11 +2052,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by genres.
 		/// </summary>
-		public string FilterByGenres
-		{
+		public string FilterByGenres {
 			get => m_FilterByGenres;
-			set
-			{
+			set {
 				if ( !Set ( ref m_FilterByGenres , value ) ) return;
 
 				RefreshFilterState ();
@@ -2071,11 +2064,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by years.
 		/// </summary>
-		public string FilterByYears
-		{
+		public string FilterByYears {
 			get => m_FilterByYears;
-			set
-			{
+			set {
 				if ( !Set ( ref m_FilterByYears , value ) ) return;
 
 				RefreshFilterState ();
@@ -2085,11 +2076,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by seasons.
 		/// </summary>
-		public string FilterBySeasons
-		{
+		public string FilterBySeasons {
 			get => m_FilterBySeasons;
-			set
-			{
+			set {
 				if ( !Set ( ref m_FilterBySeasons , value ) ) return;
 
 				RefreshFilterState ();
@@ -2099,11 +2088,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by voices.
 		/// </summary>
-		public string FilterByVoicers
-		{
+		public string FilterByVoicers {
 			get => m_FilterByVoicers;
-			set
-			{
+			set {
 				if ( !Set ( ref m_FilterByVoicers , value ) ) return;
 
 				RefreshFilterState ();
@@ -2113,11 +2100,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by type.
 		/// </summary>
-		public string FilterByType
-		{
+		public string FilterByType {
 			get => m_FilterByType;
-			set
-			{
+			set {
 				if ( !Set ( ref m_FilterByType , value ) ) return;
 
 				RefreshFilterState ();
@@ -2127,11 +2112,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by status.
 		/// </summary>
-		public string FilterByStatus
-		{
+		public string FilterByStatus {
 			get => m_FilterByStatus;
-			set
-			{
+			set {
 				if ( !Set ( ref m_FilterByStatus , value ) ) return;
 
 				RefreshFilterState ();
@@ -2141,11 +2124,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter by description.
 		/// </summary>
-		public string FilterByDescription
-		{
+		public string FilterByDescription {
 			get => m_FilterByDescription;
-			set
-			{
+			set {
 				if ( !Set ( ref m_FilterByDescription , value ) ) return;
 
 				RefreshFilterState ();
@@ -2155,8 +2136,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is show notification.
 		/// </summary>
-		public bool IsShowNotification
-		{
+		public bool IsShowNotification {
 			get => m_IsShowNotification;
 			set => Set ( ref m_IsShowNotification , value );
 		}
@@ -2164,8 +2144,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Sections.
 		/// </summary>
-		public ObservableCollection<SectionModel> Sections
-		{
+		public ObservableCollection<SectionModel> Sections {
 			get => m_Sections;
 			set => Set ( ref m_Sections , value );
 		}
@@ -2173,11 +2152,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected section.
 		/// </summary>
-		public SectionModel SelectedSection
-		{
+		public SectionModel SelectedSection {
 			get => m_SelectedSection;
-			set
-			{
+			set {
 				var oldSection = m_SelectedSection;
 				if ( !Set ( ref m_SelectedSection , value ) ) return;
 
@@ -2207,8 +2184,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// New releases exists.
 		/// </summary>
-		public bool IsNewReleases
-		{
+		public bool IsNewReleases {
 			get => m_IsNewReleases;
 			set => Set ( ref m_IsNewReleases , value );
 		}
@@ -2216,8 +2192,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// New online series exists.
 		/// </summary>
-		public bool IsNewOnlineSeries
-		{
+		public bool IsNewOnlineSeries {
 			get => m_IsNewOnlineSeries;
 			set => Set ( ref m_IsNewOnlineSeries , value );
 		}
@@ -2225,8 +2200,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// New torrent series exists.
 		/// </summary>
-		public bool IsNewTorrentSeries
-		{
+		public bool IsNewTorrentSeries {
 			get => m_IsNewTorrentSeries;
 			set => Set ( ref m_IsNewTorrentSeries , value );
 		}
@@ -2234,8 +2208,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// New releases exists.
 		/// </summary>
-		public int NewReleasesCount
-		{
+		public int NewReleasesCount {
 			get => m_NewReleasesCount;
 			set => Set ( ref m_NewReleasesCount , value );
 		}
@@ -2243,8 +2216,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// New online series exists.
 		/// </summary>
-		public int NewOnlineSeriesCount
-		{
+		public int NewOnlineSeriesCount {
 			get => m_NewOnlineSeriesCount;
 			set => Set ( ref m_NewOnlineSeriesCount , value );
 		}
@@ -2252,8 +2224,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// New torrent series exists.
 		/// </summary>
-		public int NewTorrentSeriesCount
-		{
+		public int NewTorrentSeriesCount {
 			get => m_NewTorrentSeriesCount;
 			set => Set ( ref m_NewTorrentSeriesCount , value );
 		}
@@ -2262,8 +2233,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected releases.
 		/// </summary>
-		public ObservableCollection<ReleaseModel> SelectedReleases
-		{
+		public ObservableCollection<ReleaseModel> SelectedReleases {
 			get => m_SelectedReleases;
 			set => Set ( ref m_SelectedReleases , value );
 		}
@@ -2271,8 +2241,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected grouped releases.
 		/// </summary>
-		public ObservableCollection<ReleaseModel> SelectedGroupedReleases
-		{
+		public ObservableCollection<ReleaseModel> SelectedGroupedReleases {
 			get => m_SelectedGroupedReleases;
 			set => Set ( ref m_SelectedGroupedReleases , value );
 		}
@@ -2280,8 +2249,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Empty releases.
 		/// </summary>
-		public bool EmptyReleases
-		{
+		public bool EmptyReleases {
 			get => m_EmptyReleases;
 			set => Set ( ref m_EmptyReleases , value );
 		}
@@ -2289,8 +2257,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// User model.
 		/// </summary>
-		public UserModel UserModel
-		{
+		public UserModel UserModel {
 			get => m_UserModel;
 			set => Set ( ref m_UserModel , value );
 		}
@@ -2298,11 +2265,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is favorite notifications.
 		/// </summary>
-		public bool IsFavoriteNotifications
-		{
+		public bool IsFavoriteNotifications {
 			get => m_isFavoriteNotifications;
-			set
-			{
+			set {
 				if ( !Set ( ref m_isFavoriteNotifications , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[IsFavoriteNotificationsSettings] = value;
@@ -2314,11 +2279,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is favorite notifications.
 		/// </summary>
-		public TorrentDownloadModeModel SelectedTorrentDownloadMode
-		{
+		public TorrentDownloadModeModel SelectedTorrentDownloadMode {
 			get => m_SelectedTorrentDownloadMode;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedTorrentDownloadMode , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[TorrentModeSettings] = (int) value.Mode;
@@ -2328,8 +2291,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is favorite notifications.
 		/// </summary>
-		public ObservableCollection<TorrentDownloadModeModel> TorrentDownloadModes
-		{
+		public ObservableCollection<TorrentDownloadModeModel> TorrentDownloadModes {
 			get => m_TorrentDownloadModes;
 			set => Set ( ref m_TorrentDownloadModes , value );
 		}
@@ -2337,8 +2299,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Grouped grid visible.
 		/// </summary>
-		public bool GroupedGridVisible
-		{
+		public bool GroupedGridVisible {
 			get => m_GroupedGridVisible;
 			set => Set ( ref m_GroupedGridVisible , value );
 		}
@@ -2346,8 +2307,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter is filled.
 		/// </summary>
-		public bool FilterIsFilled
-		{
+		public bool FilterIsFilled {
 			get => m_FilterIsFilled;
 			set => Set ( ref m_FilterIsFilled , value );
 		}
@@ -2355,8 +2315,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open video modes.
 		/// </summary>
-		public ObservableCollection<OpenVideoModeModel> OpenVideoModes
-		{
+		public ObservableCollection<OpenVideoModeModel> OpenVideoModes {
 			get => m_OpenVideoModes;
 			set => Set ( ref m_OpenVideoModes , value );
 		}
@@ -2364,11 +2323,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected open video mode.
 		/// </summary>
-		public OpenVideoModeModel SelectedOpenVideoMode
-		{
+		public OpenVideoModeModel SelectedOpenVideoMode {
 			get => m_SelectedOpenVideoMode;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedOpenVideoMode , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[OpenVideoSettings] = (int) value.Mode;
@@ -2378,8 +2335,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Seen mark types.
 		/// </summary>
-		public ObservableCollection<SeenMarkItem> SeenMarkTypes
-		{
+		public ObservableCollection<SeenMarkItem> SeenMarkTypes {
 			get => m_SeenMarkTypes;
 			set => Set ( ref m_SeenMarkTypes , value );
 		}
@@ -2387,11 +2343,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected seen mark type.
 		/// </summary>
-		public SeenMarkItem SelectedSeenMarkType
-		{
+		public SeenMarkItem SelectedSeenMarkType {
 			get => m_SelectedSeenMarkType;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedSeenMarkType , value ) ) return;
 
 				Filter ();
@@ -2402,8 +2356,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Favorite mark types.
 		/// </summary>
-		public ObservableCollection<FavoriteMarkItem> FavoriteMarkTypes
-		{
+		public ObservableCollection<FavoriteMarkItem> FavoriteMarkTypes {
 			get => m_FavoriteMarkTypes;
 			set => Set ( ref m_FavoriteMarkTypes , value );
 		}
@@ -2411,8 +2364,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is show poster preview.
 		/// </summary>
-		public bool IsShowPosterPreview
-		{
+		public bool IsShowPosterPreview {
 			get => m_IsShowPosterPreview;
 			set => Set ( ref m_IsShowPosterPreview , value );
 		}
@@ -2420,11 +2372,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Selected favorite mark type.
 		/// </summary>
-		public FavoriteMarkItem SelectedFavoriteMarkType
-		{
+		public FavoriteMarkItem SelectedFavoriteMarkType {
 			get => m_SelectedFavoriteMarkType;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedFavoriteMarkType , value ) ) return;
 
 				Filter ();
@@ -2435,11 +2385,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Is dark theme.
 		/// </summary>
-		public bool IsDarkTheme
-		{
+		public bool IsDarkTheme {
 			get => m_IsDarkTheme;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsDarkTheme , value ) ) return;
 
 				ControlsThemeChanger.ChangeTheme ( value ? ControlsThemeChanger.DarkTheme : ControlsThemeChanger.DefaultTheme );
@@ -2451,8 +2399,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Set comments url in web view.
 		/// </summary>
-		public Action<Uri> SetCommentsUrl
-		{
+		public Action<Uri> SetCommentsUrl {
 			get;
 			set;
 		}
@@ -2460,8 +2407,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Change page handler.
 		/// </summary>
-		public Action<string , object> ChangePage
-		{
+		public Action<string , object> ChangePage {
 			get;
 			set;
 		}
@@ -2469,8 +2415,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Show sidebar.
 		/// </summary>
-		public Action ShowSidebar
-		{
+		public Action ShowSidebar {
 			get;
 			set;
 		}
@@ -2478,8 +2423,12 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Signout.
 		/// </summary>
-		public Action Signout
-		{
+		public Action Signout {
+			get;
+			set;
+		}
+
+		public Func<Task> RefreshBackground {
 			get;
 			set;
 		}
@@ -2487,11 +2436,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Genres OR.
 		/// </summary>
-		public bool GenresAll
-		{
+		public bool GenresAll {
 			get => m_GenresAll;
-			set
-			{
+			set {
 				if ( !Set ( ref m_GenresAll , value ) ) return;
 
 				Filter ();
@@ -2501,11 +2448,9 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Voices OR.
 		/// </summary>
-		public bool VoicesAll
-		{
+		public bool VoicesAll {
 			get => m_VoicesAll;
-			set
-			{
+			set {
 				if ( !Set ( ref m_VoicesAll , value ) ) return;
 
 				Filter ();
@@ -2515,8 +2460,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Show sidebar command.
 		/// </summary>
-		public ICommand ShowSidebarCommand
-		{
+		public ICommand ShowSidebarCommand {
 			get;
 			set;
 		}
@@ -2524,8 +2468,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Hide release card command.
 		/// </summary>
-		public ICommand HideReleaseCardCommand
-		{
+		public ICommand HideReleaseCardCommand {
 			get;
 			set;
 		}
@@ -2533,8 +2476,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add favorite from release card.
 		/// </summary>
-		public ICommand RemoveCardFavoriteCommand
-		{
+		public ICommand RemoveCardFavoriteCommand {
 			get;
 			set;
 		}
@@ -2542,8 +2484,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove favorite from release card.
 		/// </summary>
-		public ICommand AddCardFavoriteCommand
-		{
+		public ICommand AddCardFavoriteCommand {
 			get;
 			set;
 		}
@@ -2551,8 +2492,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Filter releases list.
 		/// </summary>
-		public ICommand FilterCommand
-		{
+		public ICommand FilterCommand {
 			get;
 			set;
 		}
@@ -2560,8 +2500,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open online video command.
 		/// </summary>
-		public ICommand OpenOnlineVideoCommand
-		{
+		public ICommand OpenOnlineVideoCommand {
 			get;
 			set;
 		}
@@ -2569,8 +2508,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add to favorites command.
 		/// </summary>
-		public ICommand AddToFavoritesCommand
-		{
+		public ICommand AddToFavoritesCommand {
 			get;
 			set;
 		}
@@ -2578,8 +2516,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove from favorites command.
 		/// </summary>
-		public ICommand RemoveFromFavoritesCommand
-		{
+		public ICommand RemoveFromFavoritesCommand {
 			get;
 			set;
 		}
@@ -2587,8 +2524,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add to favorites command.
 		/// </summary>
-		public ICommand AddToLocalFavoritesCommand
-		{
+		public ICommand AddToLocalFavoritesCommand {
 			get;
 			set;
 		}
@@ -2596,8 +2532,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove from favorites command.
 		/// </summary>
-		public ICommand RemoveFromLocalFavoritesCommand
-		{
+		public ICommand RemoveFromLocalFavoritesCommand {
 			get;
 			set;
 		}
@@ -2605,8 +2540,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open torrent.
 		/// </summary>
-		public ICommand OpenTorrentCommand
-		{
+		public ICommand OpenTorrentCommand {
 			get;
 			set;
 		}
@@ -2614,8 +2548,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Show comments.
 		/// </summary>
-		public ICommand ShowCommentsCommand
-		{
+		public ICommand ShowCommentsCommand {
 			get;
 			set;
 		}
@@ -2623,8 +2556,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Close comments commands.
 		/// </summary>
-		public ICommand CloseCommentsCommand
-		{
+		public ICommand CloseCommentsCommand {
 			get;
 			set;
 		}
@@ -2632,8 +2564,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Refresh command.
 		/// </summary>
-		public ICommand RefreshCommand
-		{
+		public ICommand RefreshCommand {
 			get;
 			set;
 		}
@@ -2641,26 +2572,22 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Reset notification command.
 		/// </summary>
-		public ICommand ResetNotificationCommand
-		{
+		public ICommand ResetNotificationCommand {
 			get;
 			set;
 		}
 
-		public ICommand ResetNewReleasesNotificationCommand
-		{
+		public ICommand ResetNewReleasesNotificationCommand {
 			get;
 			set;
 		}
 
-		public ICommand ResetNewOnlineSeriesNotificationCommand
-		{
+		public ICommand ResetNewOnlineSeriesNotificationCommand {
 			get;
 			set;
 		}
 
-		public ICommand ResetNewTorrentNotificationCommand
-		{
+		public ICommand ResetNewTorrentNotificationCommand {
 			get;
 			set;
 		}
@@ -2668,8 +2595,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open cross release by hyperlink in text command.
 		/// </summary>
-		public ICommand OpenCrossReleaseCommand
-		{
+		public ICommand OpenCrossReleaseCommand {
 			get;
 			set;
 		}
@@ -2677,8 +2603,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Show random release command.
 		/// </summary>
-		public ICommand ShowRandomReleaseCommand
-		{
+		public ICommand ShowRandomReleaseCommand {
 			get;
 			set;
 		}
@@ -2686,8 +2611,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Clear filters command.
 		/// </summary>
-		public ICommand ClearFiltersCommands
-		{
+		public ICommand ClearFiltersCommands {
 			get;
 			set;
 		}
@@ -2695,8 +2619,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add status to filters.
 		/// </summary>
-		public ICommand AddStatusToFilterCommand
-		{
+		public ICommand AddStatusToFilterCommand {
 			get;
 			set;
 		}
@@ -2704,8 +2627,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add year to filters.
 		/// </summary>
-		public ICommand AddYearToFilterCommand
-		{
+		public ICommand AddYearToFilterCommand {
 			get;
 			set;
 		}
@@ -2713,8 +2635,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add genre to filters.
 		/// </summary>
-		public ICommand AddGenreToFilterCommand
-		{
+		public ICommand AddGenreToFilterCommand {
 			get;
 			set;
 		}
@@ -2722,8 +2643,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add voices to filter.
 		/// </summary>
-		public ICommand AddVoicesToFilterCommand
-		{
+		public ICommand AddVoicesToFilterCommand {
 			get;
 			set;
 		}
@@ -2731,8 +2651,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove seen favorites command.
 		/// </summary>
-		public ICommand RemoveSeensFavoritesCommand
-		{
+		public ICommand RemoveSeensFavoritesCommand {
 			get;
 			set;
 		}
@@ -2740,8 +2659,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add seen mark command.
 		/// </summary>
-		public ICommand AddSeenMarkCommand
-		{
+		public ICommand AddSeenMarkCommand {
 			get;
 			set;
 		}
@@ -2749,8 +2667,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove seen mark command.
 		/// </summary>
-		public ICommand RemoveSeenMarkCommand
-		{
+		public ICommand RemoveSeenMarkCommand {
 			get;
 			set;
 		}
@@ -2758,8 +2675,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove seen mark command.
 		/// </summary>
-		public ICommand RemoveAllSeensMarksCommand
-		{
+		public ICommand RemoveAllSeensMarksCommand {
 			get;
 			set;
 		}
@@ -2767,8 +2683,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Enable favorite mark filter command.
 		/// </summary>
-		public ICommand EnableFavoriteMarkFilterCommand
-		{
+		public ICommand EnableFavoriteMarkFilterCommand {
 			get;
 			set;
 		}
@@ -2776,8 +2691,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Enable not favorite mark filter command.
 		/// </summary>
-		public ICommand EnableNotFavoriteMarkFilterCommand
-		{
+		public ICommand EnableNotFavoriteMarkFilterCommand {
 			get;
 			set;
 		}
@@ -2785,8 +2699,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Disable favorite mark filter command.
 		/// </summary>
-		public ICommand DisableFavoriteMarkFilterCommand
-		{
+		public ICommand DisableFavoriteMarkFilterCommand {
 			get;
 			set;
 		}
@@ -2794,8 +2707,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Enable seen mark filter command.
 		/// </summary>
-		public ICommand EnableSeenMarkFilterCommand
-		{
+		public ICommand EnableSeenMarkFilterCommand {
 			get;
 			set;
 		}
@@ -2803,8 +2715,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Enable not seen mark filter command.
 		/// </summary>
-		public ICommand EnableNotSeenMarkFilterCommand
-		{
+		public ICommand EnableNotSeenMarkFilterCommand {
 			get;
 			set;
 		}
@@ -2812,8 +2723,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Enable seen now mark filter command.
 		/// </summary>
-		public ICommand EnableSeenNowMarkFilterCommand
-		{
+		public ICommand EnableSeenNowMarkFilterCommand {
 			get;
 			set;
 		}
@@ -2821,8 +2731,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Disable seen mark filter command.
 		/// </summary>
-		public ICommand DisableSeenMarkFilterCommand
-		{
+		public ICommand DisableSeenMarkFilterCommand {
 			get;
 			set;
 		}
@@ -2830,8 +2739,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Enable seen mark command.
 		/// </summary>
-		public ICommand EnableSeenMarkCardCommand
-		{
+		public ICommand EnableSeenMarkCardCommand {
 			get;
 			set;
 		}
@@ -2839,8 +2747,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Disable seen mark card command.
 		/// </summary>
-		public ICommand DisableSeenMarkCardCommand
-		{
+		public ICommand DisableSeenMarkCardCommand {
 			get;
 			set;
 		}
@@ -2848,8 +2755,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add download HD command.
 		/// </summary>
-		public ICommand AddDownloadHdCommand
-		{
+		public ICommand AddDownloadHdCommand {
 			get;
 			set;
 		}
@@ -2857,8 +2763,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add download SD command.
 		/// </summary>
-		public ICommand AddDownloadSdCommand
-		{
+		public ICommand AddDownloadSdCommand {
 			get;
 			set;
 		}
@@ -2866,8 +2771,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add download Hd and SD command.
 		/// </summary>
-		public ICommand AddDownloadHdAndSdCommand
-		{
+		public ICommand AddDownloadHdAndSdCommand {
 			get;
 			set;
 		}
@@ -2875,8 +2779,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add download (only not watch) Hd videos command.
 		/// </summary>
-		public ICommand AddDownloadNotWatchHdCommand
-		{
+		public ICommand AddDownloadNotWatchHdCommand {
 			get;
 			set;
 		}
@@ -2884,8 +2787,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add download (only not watch) Sd videos command.
 		/// </summary>
-		public ICommand AddDownloadNotWatchSdCommand
-		{
+		public ICommand AddDownloadNotWatchSdCommand {
 			get;
 			set;
 		}
@@ -2893,8 +2795,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add download (only not watch) Hd and Sd videos command.
 		/// </summary>
-		public ICommand AddDownloadNotWatchHdAndSdCommand
-		{
+		public ICommand AddDownloadNotWatchHdAndSdCommand {
 			get;
 			set;
 		}
@@ -2902,8 +2803,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Refresh current list command.
 		/// </summary>
-		public ICommand RefreshCurrentListCommand
-		{
+		public ICommand RefreshCurrentListCommand {
 			get;
 			set;
 		}
@@ -2911,8 +2811,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Watch video command.
 		/// </summary>
-		public ICommand WatchVideoCommand
-		{
+		public ICommand WatchVideoCommand {
 			get;
 			set;
 		}
@@ -2920,8 +2819,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add release to favorites command.
 		/// </summary>
-		public ICommand AddReleaseToFavoritesCommand
-		{
+		public ICommand AddReleaseToFavoritesCommand {
 			get;
 			set;
 		}
@@ -2929,8 +2827,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove release from favorites command.
 		/// </summary>
-		public ICommand RemoveReleaseFromFavoritesCommand
-		{
+		public ICommand RemoveReleaseFromFavoritesCommand {
 			get;
 			set;
 		}
@@ -2938,8 +2835,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add seen mark from quick actions command.
 		/// </summary>
-		public ICommand AddSeenMarkFromQuickActionsCommand
-		{
+		public ICommand AddSeenMarkFromQuickActionsCommand {
 			get;
 			set;
 		}
@@ -2947,8 +2843,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Remove seen mark from quick actions command.
 		/// </summary>
-		public ICommand RemoveSeenMarkFromQuickActionsCommand
-		{
+		public ICommand RemoveSeenMarkFromQuickActionsCommand {
 			get;
 			set;
 		}
@@ -2956,8 +2851,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Add releases to cinema hall command.
 		/// </summary>
-		public ICommand AddReleasesToCinemaHallCommand
-		{
+		public ICommand AddReleasesToCinemaHallCommand {
 			get;
 			set;
 		}
@@ -2965,8 +2859,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Watch cinema hall command.
 		/// </summary>
-		public ICommand WatchCinemaHallCommand
-		{
+		public ICommand WatchCinemaHallCommand {
 			get;
 			set;
 		}
@@ -2974,8 +2867,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open HD online video in external player.
 		/// </summary>
-		public ICommand OpenInExternalPlayerHDCommand
-		{
+		public ICommand OpenInExternalPlayerHDCommand {
 			get;
 			set;
 		}
@@ -2983,8 +2875,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open SD online video in external player.
 		/// </summary>
-		public ICommand OpenInExternalPlayerSDCommand
-		{
+		public ICommand OpenInExternalPlayerSDCommand {
 			get;
 			set;
 		}
@@ -2992,8 +2883,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Copy open release name to clipboard.
 		/// </summary>
-		public ICommand CopyNameToClipboardCommand
-		{
+		public ICommand CopyNameToClipboardCommand {
 			get;
 			set;
 		}
@@ -3001,8 +2891,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Copy open release original name to clipboard.
 		/// </summary>
-		public ICommand CopyOriginalNameToClipboardCommand
-		{
+		public ICommand CopyOriginalNameToClipboardCommand {
 			get;
 			set;
 		}
@@ -3010,8 +2899,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Copy open release all name to clipboard.
 		/// </summary>
-		public ICommand CopyAllNameToClipboardCommand
-		{
+		public ICommand CopyAllNameToClipboardCommand {
 			get;
 			set;
 		}
@@ -3019,8 +2907,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Search opened release name in google.
 		/// </summary>
-		public ICommand SearchReleaseNameInGoogleCommand
-		{
+		public ICommand SearchReleaseNameInGoogleCommand {
 			get;
 			set;
 		}
@@ -3028,8 +2915,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Search opened release original name in google.
 		/// </summary>
-		public ICommand SearchReleaseOriginalNameInGoogleCommand
-		{
+		public ICommand SearchReleaseOriginalNameInGoogleCommand {
 			get;
 			set;
 		}
@@ -3037,8 +2923,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open hd playlist in mpc player.
 		/// </summary>
-		public ICommand OpenInMpcPlayerHDCommand
-		{
+		public ICommand OpenInMpcPlayerHDCommand {
 			get;
 			set;
 		}
@@ -3046,8 +2931,7 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Open sd playlist in mpc player.
 		/// </summary>
-		public ICommand OpenInMpcPlayerSDCommand
-		{
+		public ICommand OpenInMpcPlayerSDCommand {
 			get;
 			set;
 		}
@@ -3055,8 +2939,23 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Copy description to clipboard.
 		/// </summary>
-		public ICommand CopyDescriptionToClipboardCommand
-		{
+		public ICommand CopyDescriptionToClipboardCommand {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Set background image command.
+		/// </summary>
+		public ICommand SetBackgroundImageCommand {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Reset background command.
+		/// </summary>
+		public ICommand ResetBackgroundImageCommand {
 			get;
 			set;
 		}

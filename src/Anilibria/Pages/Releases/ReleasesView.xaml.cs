@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Anilibria.Pages.Releases.PresentationClasses;
 using Anilibria.Services.Implementations;
 using Anilibria.ThemeChanger;
 using Windows.ApplicationModel;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -12,6 +15,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Anilibria.Pages.Releases {
 
@@ -40,6 +45,7 @@ namespace Anilibria.Pages.Releases {
 			Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
 
 			m_ViewModel.SetCommentsUrl = SetCommentsUrl;
+			m_ViewModel.RefreshBackground = LoadReleaseBackground;
 		}
 
 		private void Dispatcher_AcceleratorKeyActivated ( CoreDispatcher sender , AcceleratorKeyEventArgs args ) {
@@ -341,6 +347,33 @@ namespace Anilibria.Pages.Releases {
 
 		private void Grid_RightTapped ( object sender , RightTappedRoutedEventArgs e ) => FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
 
+		private async void Grid_Loaded(object sender, RoutedEventArgs e) => await LoadReleaseBackground();
+
+		private async Task LoadReleaseBackground()
+		{
+			var folder = ApplicationData.Current.LocalFolder;
+			var backgroundImage = await folder.TryGetItemAsync("releasebackground.image");
+			if (backgroundImage == null)
+			{
+				GridImageBackground.Background = null;
+				return;
+			}
+
+			var file = await folder.GetFileAsync("releasebackground.image");
+			using (var stream = await file.OpenAsync(FileAccessMode.Read))
+			{
+				var bitmapImage = new BitmapImage();
+				await bitmapImage.SetSourceAsync(stream);
+
+				var decoder = await BitmapDecoder.CreateAsync(stream);
+
+				GridImageBackground.Background = new ImageBrush
+				{
+
+					ImageSource = bitmapImage
+				};
+			}
+		}
 	}
 
 }
