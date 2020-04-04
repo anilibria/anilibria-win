@@ -292,3 +292,5 @@ __pycache__/
 /srcnport/Makefile
 /srcnport/.qmake.stash
 /srcnport/qml_qmlcache.qrc
+/installer/installer.exe
+/installer/tools
