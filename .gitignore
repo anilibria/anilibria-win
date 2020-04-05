@@ -294,3 +294,6 @@ __pycache__/
 /srcnport/qml_qmlcache.qrc
 /installer/installer.exe
 /installer/tools
+/installer/ic.bat
+/installer/certutil.exe
+/installer/certificate.cer

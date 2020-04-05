@@ -1,14 +1,10 @@
 package main
 
 import (
-	"archive/zip"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"os/exec"
-	"path/filepath"
-	"strings"
 	"io/ioutil"
 
 	"golang.org/x/sys/windows/registry"
@@ -45,7 +41,7 @@ func extractFileFromResources(path string, resultFile string) {
 }
 
 func setSideloadingKeysInRegistry() {
-	k, err := registry.OpenKey(registry.LOCAL_MACHINE, `\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock`, registry.QUERY_VALUE|registry.SET_VALUE)
+	k, err := registry.OpenKey(registry.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock`, registry.QUERY_VALUE|registry.SET_VALUE)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,7 +74,7 @@ func installCertificate() {
 }
 
 func runAppInstaller() {
-	cmd := exec.Command("ms-appinstaller:?source=https://anilibria.github.io/anilibria-win/dist/Anilibria.appinstaller")
+	cmd := exec.Command("rundll32", "url.dll,FileProtocolHandler", "ms-appinstaller:?source=https://anilibria.github.io/anilibria-win/dist/Anilibria.appinstaller")
 	cmd.Start()
 	cmd.Wait()
 }
