@@ -297,3 +297,4 @@ __pycache__/
 /installer/ic.bat
 /installer/certutil.exe
 /installer/certificate.cer
+/installer/installer.zip
