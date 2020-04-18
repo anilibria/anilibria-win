@@ -11,3 +11,7 @@
 ## Обратная связь
 
 На [этом сайте](https://anilibriawin10.reformal.ru/) Вы можете оставлять вопросы, сообщать об ошибках а также предлагать идеи.
+
+## Что насчет Windows 7/8/8.1 или Windows 10 младше 1803 а также macOS и Linux?
+
+В [соседнем репозитории](https://github.com/anilibria/anilibria-winmaclinux) разрабатывается remake win10 приложения для младших версий windows а также других операционных систем таких как macOS и Linux.
