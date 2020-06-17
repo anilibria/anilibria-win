@@ -1550,8 +1550,6 @@ namespace Anilibria.Pages.Releases {
 		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode () {
 			return m_ReleasesCollection
 				.Find ( a => true )
-				.ToList ()
-				.Where ( a => !a.Blocked ) // All blocking releases not showed on releases page!!!
 				.ToList ();
 		}
 

@@ -571,6 +571,10 @@ namespace Anilibria.Pages.OnlinePlayer {
 				ChangePosition ( lastPosition );
 			}
 			IsMediaOpened = true;
+
+			if ( Is2xSpeed ) ChangePlaybackRate ( 2 );
+			if ( Is3xSpeed ) ChangePlaybackRate ( 3 );
+			if ( Is4xSpeed ) ChangePlaybackRate ( 4 );
 		}
 
 		private ReleaseModel MapToReleaseModel ( ReleaseEntity releaseEntity ) {
