@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,6 +15,8 @@ using Anilibria.Services.Implementations;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
 using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 
@@ -231,10 +234,53 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			ShowSidebarCommand = CreateCommand ( OpenSidebar );
 			DeleteFilesCommand = CreateCommand<DownloadItemModel> ( DeleteFiles );
 			DeleteVideoCommand = CreateCommand<string> ( DeleteVideo );
+			SaveVideoCommand = CreateCommand<string> ( SaveVideo );
 			FilterCommand = CreateCommand ( Filter );
 			StartDownloadCommand = CreateCommand ( StartDownload );
 			PauseDownloadCommand = CreateCommand ( PauseDownload );
 			WatchReleaseCommand = CreateCommand<DownloadItemModel> ( WatchRelease );
+		}
+
+		private async void SaveVideo ( string identifier ) {
+			var id = GetIdentifierFromString ( identifier );
+			var quality = identifier.Replace ( id , "" );
+			var enumQuality = quality == "HD" ? VideoQuality.HD : VideoQuality.SD;
+			var videoId = Convert.ToInt32 ( id );
+			var release = m_DownloadService.GetDownloadRelease ( SelectedDownload.ReleaseId );
+			var video = release.Videos.FirstOrDefault ( a => a.Id == videoId && a.Quality == enumQuality );
+
+			var savePicker = new FileSavePicker ();
+			savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+			savePicker.FileTypeChoices.Add ( "Video file" , new List<string> () { ".mp4" } );
+			savePicker.SuggestedFileName = "Video";
+			var file = await savePicker.PickSaveFileAsync ();
+			var failed = false;
+			if ( file != null ) {
+				CachedFileManager.DeferUpdates ( file );
+
+				try {
+					var storageFile = await StorageFile.GetFileFromPathAsync ( video.DownloadedPath );
+					using ( var inputStream = await storageFile.OpenStreamForReadAsync () )
+					using ( var outputStream = await file.OpenStreamForWriteAsync () ) {
+						await inputStream.CopyToAsync ( outputStream );
+					}
+				} catch {
+					failed = true;
+				}
+
+				var status = await CachedFileManager.CompleteUpdatesAsync ( file );
+				if ( status != FileUpdateStatus.Complete ) failed = true;
+
+				if (failed) {
+					ObserverEvents.FireEvent (
+						"showMessage" ,
+						new MessageModel {
+							Header = $"Копирование серии" ,
+							Message = $"Не удалось скопировать серию"
+						}
+					);
+				}
+			}
 		}
 
 		private void WatchRelease ( DownloadItemModel downloadRelease ) {
@@ -265,12 +311,14 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private void Filter () => RefreshDownloadItems ();
 
 		private async void DeleteVideo ( string identifier ) {
-			var id = identifier.Replace ( "D" , "" ).Replace ( "H" , "" ).Replace ( "S" , "" );
+			var id = GetIdentifierFromString ( identifier );
 			var quality = identifier.Replace ( id , "" );
 			await m_DownloadService.RemoveDownloadFile ( SelectedDownload.ReleaseId , Convert.ToInt32 ( id ) , GetEnumQuality ( quality ) );
 
 			RefreshDownloadItems ();
 		}
+
+		private static string GetIdentifierFromString ( string identifier ) => identifier.Replace ( "D" , "" ).Replace ( "H" , "" ).Replace ( "S" , "" );
 
 		private async void DeleteFiles ( DownloadItemModel item ) {
 			await m_DownloadService.RemoveDownloadRelease ( item.ReleaseId );
@@ -329,8 +377,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Change page handler.
 		/// </summary>
-		public Action<string , object> ChangePage
-		{
+		public Action<string , object> ChangePage {
 			get;
 			set;
 		}
@@ -338,8 +385,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Filter by name.
 		/// </summary>
-		public string FilterByName
-		{
+		public string FilterByName {
 			get => m_FilterByName;
 			set => Set ( ref m_FilterByName , value );
 		}
@@ -347,8 +393,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Is multiple select.
 		/// </summary>
-		public bool IsMultipleSelect
-		{
+		public bool IsMultipleSelect {
 			get => m_IsMultipleSelect;
 			set => Set ( ref m_IsMultipleSelect , value );
 		}
@@ -356,8 +401,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Not filtered downloads count.
 		/// </summary>
-		public bool NoFilteredDownloads
-		{
+		public bool NoFilteredDownloads {
 			get => m_NoFilteredDownloads;
 			set => Set ( ref m_NoFilteredDownloads , value );
 		}
@@ -365,8 +409,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Is paused.
 		/// </summary>
-		public bool IsPaused
-		{
+		public bool IsPaused {
 			get => m_IsPaused;
 			set => Set ( ref m_IsPaused , value );
 		}
@@ -374,8 +417,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Pause color.
 		/// </summary>
-		public Brush PauseColor
-		{
+		public Brush PauseColor {
 			get => m_PauseColor;
 			set => Set ( ref m_PauseColor , value );
 		}
@@ -383,8 +425,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Play color.
 		/// </summary>
-		public Brush PlayColor
-		{
+		public Brush PlayColor {
 			get => m_PlayColor;
 			set => Set ( ref m_PlayColor , value );
 		}
@@ -392,8 +433,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Downloads.
 		/// </summary>
-		public IEnumerable<DownloadItemModel> Downloads
-		{
+		public IEnumerable<DownloadItemModel> Downloads {
 			get => m_Downloads;
 			set => Set ( ref m_Downloads , value );
 		}
@@ -401,8 +441,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Selected download.
 		/// </summary>
-		public DownloadItemModel SelectedDownload
-		{
+		public DownloadItemModel SelectedDownload {
 			get => m_SelectedDownload;
 			set => Set ( ref m_SelectedDownload , value );
 		}
@@ -410,11 +449,9 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Filter by name.
 		/// </summary>
-		public DownloadSectionItem SelectedSection
-		{
+		public DownloadSectionItem SelectedSection {
 			get => m_SelectedSection;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedSection , value ) ) return;
 
 				RefreshDownloadItems ();
@@ -424,8 +461,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Sections;
 		/// </summary>
-		public ObservableCollection<DownloadSectionItem> Sections
-		{
+		public ObservableCollection<DownloadSectionItem> Sections {
 			get => m_Sections;
 			set => Set ( ref m_Sections , value );
 		}
@@ -433,11 +469,9 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Is full notification.
 		/// </summary>
-		public bool IsFullNotification
-		{
+		public bool IsFullNotification {
 			get => m_IsFullNotification;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsFullNotification , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[IsFullNotificationSettings] = value;
@@ -447,8 +481,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Show sidebar.
 		/// </summary>
-		public Action ShowSidebar
-		{
+		public Action ShowSidebar {
 			get;
 			set;
 		}
@@ -456,8 +489,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Show sidebar command.
 		/// </summary>
-		public ICommand ShowSidebarCommand
-		{
+		public ICommand ShowSidebarCommand {
 			get;
 			set;
 		}
@@ -465,8 +497,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Delete files command.
 		/// </summary>
-		public ICommand DeleteFilesCommand
-		{
+		public ICommand DeleteFilesCommand {
 			get;
 			set;
 		}
@@ -474,8 +505,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Delete video command.
 		/// </summary>
-		public ICommand DeleteVideoCommand
-		{
+		public ICommand DeleteVideoCommand {
 			get;
 			set;
 		}
@@ -483,8 +513,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Filter command.
 		/// </summary>
-		public ICommand FilterCommand
-		{
+		public ICommand FilterCommand {
 			get;
 			set;
 		}
@@ -492,8 +521,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Start download command.
 		/// </summary>
-		public ICommand StartDownloadCommand
-		{
+		public ICommand StartDownloadCommand {
 			get;
 			set;
 		}
@@ -501,8 +529,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Pause download command.
 		/// </summary>
-		public ICommand PauseDownloadCommand
-		{
+		public ICommand PauseDownloadCommand {
 			get;
 			set;
 		}
@@ -510,8 +537,15 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		/// <summary>
 		/// Watch release command.
 		/// </summary>
-		public ICommand WatchReleaseCommand
-		{
+		public ICommand WatchReleaseCommand {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Save video command.
+		/// </summary>
+		public ICommand SaveVideoCommand {
 			get;
 			set;
 		}

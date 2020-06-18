@@ -387,16 +387,30 @@
 											<Run Text="{Binding DownloadedSize}"></Run>
 										</TextBlock>
 									</StackPanel>
-									<Button
-										Grid.Column="2"
-										Margin="0 1 18 1"
-										Width="100"
-										Command="{Binding ElementName=DownloadContainer, Path=DataContext.DeleteVideoCommand}"
-										CommandParameter="{Binding Identifier}"
-										VerticalAlignment="Center"
-										converters:BackgroundThemeConverter.ActionButton="Origin">
-										Удалить
-									</Button>
+									<StackPanel
+										Orientation="Horizontal"
+										Grid.Column="2">
+										<Button
+											Margin="0 1 2 1"
+											Width="96"
+											Visibility="{Binding IsDownloaded}"
+											Command="{Binding ElementName=DownloadContainer, Path=DataContext.SaveVideoCommand}"
+											CommandParameter="{Binding Identifier}"
+											VerticalAlignment="Center"
+											converters:BackgroundThemeConverter.ActionButton="Origin">
+											Сохранить
+										</Button>
+										<Button
+											Grid.Column="2"
+											Margin="0 1 18 1"
+											Width="96"
+											Command="{Binding ElementName=DownloadContainer, Path=DataContext.DeleteVideoCommand}"
+											CommandParameter="{Binding Identifier}"
+											VerticalAlignment="Center"
+											converters:BackgroundThemeConverter.ActionButton="Origin">
+											Удалить
+										</Button>
+									</StackPanel>
 								</Grid>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
