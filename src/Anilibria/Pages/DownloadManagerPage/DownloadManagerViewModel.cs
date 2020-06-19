@@ -253,6 +253,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 			savePicker.FileTypeChoices.Add ( "Video file" , new List<string> () { ".mp4" } );
 			savePicker.SuggestedFileName = "Video";
+
 			var file = await savePicker.PickSaveFileAsync ();
 			var failed = false;
 			if ( file != null ) {
