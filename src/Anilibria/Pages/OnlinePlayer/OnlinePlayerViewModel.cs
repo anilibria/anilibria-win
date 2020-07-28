@@ -214,6 +214,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private bool m_Is4xSpeed;
 
+		private bool m_Is15xSpeed;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
@@ -573,6 +575,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			IsMediaOpened = true;
 
 			if ( Is2xSpeed ) ChangePlaybackRate ( 2 );
+			if ( Is15xSpeed ) ChangePlaybackRate ( 1.5 );
 			if ( Is3xSpeed ) ChangePlaybackRate ( 3 );
 			if ( Is4xSpeed ) ChangePlaybackRate ( 4 );
 		}
@@ -1017,9 +1020,11 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !Set ( ref m_IsNormalSpeed , value ) ) return;
 
 				m_Is2xSpeed = !value;
+				m_Is15xSpeed = !value;
 				m_Is3xSpeed = !value;
 				m_Is4xSpeed = !value;
 
+				RaisePropertyChanged ( () => Is15xSpeed );
 				RaisePropertyChanged ( () => Is2xSpeed );
 				RaisePropertyChanged ( () => Is3xSpeed );
 				RaisePropertyChanged ( () => Is4xSpeed );
@@ -1039,14 +1044,38 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !Set ( ref m_Is2xSpeed , value ) ) return;
 
 				m_IsNormalSpeed = !value;
+				m_Is15xSpeed = !value;
 				m_Is3xSpeed = !value;
 				m_Is4xSpeed = !value;
 
 				RaisePropertyChanged ( () => IsNormalSpeed );
+				RaisePropertyChanged ( () => Is15xSpeed );
 				RaisePropertyChanged ( () => Is3xSpeed );
 				RaisePropertyChanged ( () => Is4xSpeed );
 
 				ChangePlaybackRate ( 2 );
+			}
+		}
+
+		/// <summary>
+		/// Is 2x speed.
+		/// </summary>
+		public bool Is15xSpeed {
+			get => m_Is15xSpeed;
+			set {
+				if ( !Set ( ref m_Is15xSpeed , value ) ) return;
+
+				m_IsNormalSpeed = !value;
+				m_Is2xSpeed = !value;
+				m_Is3xSpeed = !value;
+				m_Is4xSpeed = !value;
+
+				RaisePropertyChanged ( () => IsNormalSpeed );
+				RaisePropertyChanged ( () => Is2xSpeed );
+				RaisePropertyChanged ( () => Is3xSpeed );
+				RaisePropertyChanged ( () => Is4xSpeed );
+
+				ChangePlaybackRate ( 1.5 );
 			}
 		}
 
@@ -1061,10 +1090,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !Set ( ref m_Is3xSpeed , value ) ) return;
 
 				m_IsNormalSpeed = !value;
+				m_Is15xSpeed = !value;
 				m_Is2xSpeed = !value;
 				m_Is4xSpeed = !value;
 
 				RaisePropertyChanged ( () => IsNormalSpeed );
+				RaisePropertyChanged ( () => Is15xSpeed );
 				RaisePropertyChanged ( () => Is2xSpeed );
 				RaisePropertyChanged ( () => Is4xSpeed );
 
@@ -1083,10 +1114,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 				if ( !Set ( ref m_Is4xSpeed , value ) ) return;
 
 				m_IsNormalSpeed = !value;
+				m_Is15xSpeed = !value;
 				m_Is3xSpeed = !value;
 				m_Is2xSpeed = !value;
 
 				RaisePropertyChanged ( () => IsNormalSpeed );
+				RaisePropertyChanged ( () => Is15xSpeed );
 				RaisePropertyChanged ( () => Is3xSpeed );
 				RaisePropertyChanged ( () => Is2xSpeed );
 

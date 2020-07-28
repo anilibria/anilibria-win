@@ -1177,6 +1177,16 @@
 														Foreground="Black"
 														Height="40"
 														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is15xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x1.5
+													</ToggleButton>
+													<ToggleButton
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
+														IsTabStop="False"
+														Style="{StaticResource QualityToggleButton}"
+														Foreground="Black"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
 														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is2xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 														x2
 													</ToggleButton>
