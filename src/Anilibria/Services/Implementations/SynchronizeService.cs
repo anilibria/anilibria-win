@@ -6,6 +6,8 @@ using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Newtonsoft.Json;
+using Windows.Storage;
 
 namespace Anilibria.Services.Implementations {
 
@@ -46,8 +48,7 @@ namespace Anilibria.Services.Implementations {
 				if ( userFavorite != null ) {
 					userFavorite.Releases = favorites.ToList ();
 					userFavoritesCollection.Update ( userFavorite );
-				}
-				else {
+				} else {
 					userFavoritesCollection.Add (
 						new UserFavoriteEntity {
 							Id = userModel.Id ,
@@ -55,8 +56,7 @@ namespace Anilibria.Services.Implementations {
 						}
 					);
 				}
-			}
-			catch {
+			} catch {
 				ObserverEvents.FireEvent (
 					"showMessage" ,
 					new MessageModel {
@@ -75,8 +75,6 @@ namespace Anilibria.Services.Implementations {
 				Description = release.Description ,
 				Genres = release.Genres.ToArray () ,
 				Rating = release.Favorite?.Rating ?? 0 ,
-				Blocked = release.BlockedInfo?.Blocked ?? false ,
-				BlockedReason = release.BlockedInfo?.Reason ?? "" ,
 				Names = release.Names.ToArray () ,
 				Poster = release.Poster ,
 				Status = release.Status ,
@@ -119,15 +117,6 @@ namespace Anilibria.Services.Implementations {
 		}
 
 		private void UpdateCachedRelease ( Release release , ReleaseEntity releaseEntity , ChangesEntity changesEntity ) {
-			var blocked = release.BlockedInfo?.Blocked ?? false;
-			var blockedReason = release.BlockedInfo?.Reason ?? "";
-
-			if ( blocked && !releaseEntity.Blocked ) {
-				//TODO: blocked changes!!!!
-			}
-			releaseEntity.Blocked = blocked;
-			releaseEntity.BlockedReason = blockedReason;
-
 			if ( releaseEntity.Description != release.Description ) releaseEntity.Description = release.Description;
 			if ( releaseEntity.Type != release.Type ) releaseEntity.Type = release.Type;
 			if ( releaseEntity.Status != release.Status ) releaseEntity.Status = release.Status;
@@ -198,23 +187,21 @@ namespace Anilibria.Services.Implementations {
 
 		public async Task SynchronizeReleases () {
 			try {
-				//uncomment experimental feature
-				//var touchedReleases = await m_AnilibriaApiService.GetTouchedReleases ();
 				var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
 				var schedules = await m_AnilibriaApiService.GetSchedule ();
 
 				SaveSchedule ( schedules );
 
-				var collection = m_DataContext.GetCollection<ReleaseEntity> ();
+				var localFolder = ApplicationData.Current.LocalFolder;
+				var releasesFile = await localFolder.TryGetItemAsync ( "releases.cache" );
+				if ( releasesFile == null ) releasesFile = await localFolder.CreateFileAsync ( "releases.cache" );
+				var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
+				var cacheReleases = relasesJson.Length > 0 ? JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) : Enumerable.Empty<ReleaseEntity> ().ToList();
+
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
 				var changes = GetChanges ( changesCollection );
 
-				if ( changes != null ) SaveHistoryChanges ( changes , collection );
-
-				var cacheReleases = collection.Find ( a => true );
-
-				var addReleases = new List<ReleaseEntity> ();
-				var updatedReleases = new List<ReleaseEntity> ();
+				if ( changes != null ) SaveHistoryChanges ( changes , cacheReleases );
 
 				var cacheReleasesDictionary = cacheReleases.ToDictionary ( a => a.Id );
 
@@ -222,26 +209,22 @@ namespace Anilibria.Services.Implementations {
 					cacheReleasesDictionary.TryGetValue ( release.Id , out var cacheRelease );
 
 					if ( cacheRelease == null ) {
-						addReleases.Add ( MapToRelease ( release ) );
+						cacheReleases.Add ( MapToRelease ( release ) );
 						if ( cacheReleases.Count () > 0 ) {
 							if ( changes.NewReleases == null ) {
 								changes.NewReleases = new List<long> { release.Id };
-							}
-							else {
+							} else {
 								var newReleases = changes.NewReleases.ToList ();
 								newReleases.Add ( release.Id );
 								changes.NewReleases = newReleases;
 							}
 						}
-					}
-					else {
+					} else {
 						UpdateCachedRelease ( release , cacheRelease , changes );
-						updatedReleases.Add ( cacheRelease );
 					}
 				}
-				if ( addReleases.Any () ) collection.AddRange ( addReleases );
-				if ( updatedReleases.Any () ) collection.Update ( updatedReleases );
-				changesCollection.Update ( changes );
+
+				await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( cacheReleases ) );
 
 				ObserverEvents.FireEvent ( "synchronizedReleases" , null );
 				ObserverEvents.FireEvent (
@@ -251,8 +234,7 @@ namespace Anilibria.Services.Implementations {
 						Message = "Синхронизация релизов успешно выполнена"
 					}
 				);
-			}
-			catch {
+			} catch {
 				ObserverEvents.FireEvent (
 					"showMessage" ,
 					new MessageModel {
@@ -272,8 +254,7 @@ namespace Anilibria.Services.Implementations {
 						Days = schedules
 					}
 				);
-			}
-			else {
+			} else {
 				entity.Days = schedules;
 				collection.Update ( entity );
 			}
@@ -294,8 +275,8 @@ namespace Anilibria.Services.Implementations {
 			return changes;
 		}
 
-		private void SaveHistoryChanges ( ChangesEntity changes , IEntityCollection<ReleaseEntity> releaseCollection ) {
-			var allReleases = releaseCollection.Find ( a => true );
+		private void SaveHistoryChanges ( ChangesEntity changes , IEnumerable<ReleaseEntity> releaseCollection ) {
+			var allReleases = releaseCollection.ToList();
 			var collection = m_DataContext.GetCollection<HistoryChangeEntity> ();
 			var historyChanges = collection.FirstOrDefault ();
 			var releasesIds = changes.NewOnlineSeries.Select ( a => a.Key );
@@ -311,8 +292,7 @@ namespace Anilibria.Services.Implementations {
 					ReleaseOnlineSeries = releaseOnlineSeries
 				};
 				collection.Add ( historyChanges );
-			}
-			else {
+			} else {
 				historyChanges.NewOnlineSeries = changes.NewOnlineSeries ?? new Dictionary<long , int> ();
 				historyChanges.NewReleases = changes.NewReleases ?? new List<long> ();
 				historyChanges.NewTorrents = changes.NewTorrents ?? new Dictionary<long , int> ();

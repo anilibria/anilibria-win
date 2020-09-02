@@ -162,24 +162,6 @@ namespace Anilibria.Storage.Entities {
 		}
 
 		/// <summary>
-		/// Sign of blocking.
-		/// </summary>
-		public bool Blocked
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Blocked reason.
-		/// </summary>
-		public string BlockedReason
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// Last view timestamp.
 		/// </summary>
 		public long LastViewTimestamp

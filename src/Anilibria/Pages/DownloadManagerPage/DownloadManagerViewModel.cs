@@ -14,6 +14,7 @@ using Anilibria.Services;
 using Anilibria.Services.Implementations;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Newtonsoft.Json;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
@@ -38,8 +39,6 @@ namespace Anilibria.Pages.DownloadManagerPage {
 		private IDownloadService m_DownloadService;
 
 		private readonly IAnalyticsService m_AnalyticsService;
-
-		private readonly IEntityCollection<ReleaseEntity> m_ReleaseCollection;
 
 		private readonly Brush LightGrayColor = new SolidColorBrush ( Color.FromArgb ( 255 , 211 , 211 , 211 ) );
 
@@ -87,7 +86,6 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 			m_DownloadService.SetDownloadProgress ( ProgressHandler );
 			m_DownloadService.SetDownloadFinished ( FinishHandler );
-			m_ReleaseCollection = dataContext.GetCollection<ReleaseEntity> ();
 			CreateCommands ();
 			RestoreSettings ();
 
@@ -218,10 +216,14 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			};
 		}
 
-		private void RefreshAfterSynchronize ( object parameter ) {
-			m_Releases = m_ReleaseCollection
-				.All ()
-				.ToList ();
+		private async void RefreshAfterSynchronize ( object parameter ) {
+			m_Releases = Enumerable.Empty<ReleaseEntity> ();
+
+			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
+			if ( releasesFile == null ) return;
+
+			var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
+			m_Releases = relasesJson.Length > 0 ? JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) : Enumerable.Empty<ReleaseEntity> ();
 		}
 
 		/// <summary>

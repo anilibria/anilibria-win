@@ -11,6 +11,7 @@ using Anilibria.Services;
 using Anilibria.Services.Implementations;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Newtonsoft.Json;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System.Display;
@@ -200,8 +201,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private int m_JumpSeconds;
 
-		private IEntityCollection<ReleaseEntity> m_ReleasesCollection;
-
 		private bool m_IsXbox;
 
 		private bool m_IsCinemaHall = false;
@@ -251,8 +250,6 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 			m_ReleaseStateCollection = m_DataContext.GetCollection<ReleaseVideoStateEntity> ();
 			m_IsSupportedCompactOverlay = ApplicationView.GetForCurrentView ().IsViewModeSupported ( ApplicationViewMode.CompactOverlay );
-
-			m_ReleasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
 		}
 
 		private void RestoreSettings () {
@@ -283,11 +280,16 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private async Task SaveReleaseWatchTimestamp ( long releaseId ) {
-			var releases = m_ReleasesCollection.Find ( a => true );
+			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
+
+			var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
+			var releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson );
+
 			var release = releases.FirstOrDefault ( a => a.Id == releaseId );
 
 			release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
-			m_ReleasesCollection.Update ( release );
+
+			await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( releases ) );
 
 			var lastThreeWatchReleases = releases
 				.Where ( a => a.LastWatchTimestamp > 0 )
