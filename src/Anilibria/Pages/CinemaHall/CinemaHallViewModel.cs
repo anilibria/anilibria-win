@@ -10,6 +10,8 @@ using Anilibria.Pages.OnlinePlayer.PresentationClasses;
 using Anilibria.Services;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Newtonsoft.Json;
+using Windows.Storage;
 
 namespace Anilibria.Pages.CinemaHall {
 
@@ -129,7 +131,7 @@ namespace Anilibria.Pages.CinemaHall {
 		/// Navigate to.
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
-		public void NavigateTo ( object parameter ) {
+		public async void NavigateTo ( object parameter ) {
 
 			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
 			m_ReleasesEntity = collection.FirstOrDefault ();
@@ -143,8 +145,12 @@ namespace Anilibria.Pages.CinemaHall {
 
 			IsEmptyList = !m_ReleasesEntity.Releases.Any ();
 
-			var releasesCollection = m_DataContext.GetCollection<ReleaseEntity> ();
-			var releases = releasesCollection.All ();
+			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
+			var releases = Enumerable.Empty<ReleaseEntity> ();
+			if ( releasesFile != null ) {
+				var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
+				releases = relasesJson.Length > 0 ? JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) : Enumerable.Empty<ReleaseEntity> ();
+			}
 
 			var releasesDictionary = releases.ToDictionary ( a => a.Id );
 
