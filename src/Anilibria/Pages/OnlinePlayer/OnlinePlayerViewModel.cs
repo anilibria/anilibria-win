@@ -280,28 +280,32 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private async Task SaveReleaseWatchTimestamp ( long releaseId ) {
-			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
+			try {
+				var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
 
-			var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-			var releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson );
+				var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
+				var releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson );
 
-			var release = releases.FirstOrDefault ( a => a.Id == releaseId );
+				var release = releases.FirstOrDefault ( a => a.Id == releaseId );
 
-			release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
+				release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
 
-			await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( releases ) );
+				await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( releases ) );
 
-			var lastThreeWatchReleases = releases
-				.Where ( a => a.LastWatchTimestamp > 0 )
-				.OrderByDescending ( a => a.LastWatchTimestamp )
-				.Take ( 3 )
-				.ToList ();
-			if ( !lastThreeWatchReleases.Any () ) return;
+				var lastThreeWatchReleases = releases
+					.Where ( a => a.LastWatchTimestamp > 0 )
+					.OrderByDescending ( a => a.LastWatchTimestamp )
+					.Take ( 3 )
+					.ToList ();
+				if ( !lastThreeWatchReleases.Any () ) return;
 
-			var jumpService = new JumpListService ();
-			var dictionary = new Dictionary<long , string> ();
-			foreach ( var watchRelease in lastThreeWatchReleases ) dictionary.Add ( watchRelease.Id , watchRelease.Title );
-			await jumpService.ChangeWatchHistoryItems ( dictionary );
+				var jumpService = new JumpListService ();
+				var dictionary = new Dictionary<long , string> ();
+				foreach ( var watchRelease in lastThreeWatchReleases ) dictionary.Add ( watchRelease.Id , watchRelease.Title );
+				await jumpService.ChangeWatchHistoryItems ( dictionary );
+			} catch {
+				//If file is busy just miss save session
+			}
 		}
 
 		/// <summary>
