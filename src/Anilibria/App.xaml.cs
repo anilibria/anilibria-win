@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Anilibria.GlobalState;
 using Anilibria.Pages.DiagnosticsPage;
 using Anilibria.Pages.ProtocolsPages;
@@ -56,8 +57,7 @@ namespace Anilibria {
 
 					if ( isNotStarted ) {
 						TransitionToChangeApiPath ( newUrl );
-					}
-					else {
+					} else {
 						var frame = (Frame) Window.Current.Content;
 						var homeView = ( frame.Content as HomeView );
 						homeView.SetApiPath ( newUrl );
@@ -95,7 +95,7 @@ namespace Anilibria {
 			//if app started on xbox then increase screen size on full screen.
 			TransitionToFullScreen ();
 
-			if ( e.PreviousExecutionState != ApplicationExecutionState.Suspended && e.PreviousExecutionState != ApplicationExecutionState.Running ) PopulateFirstStartReleases ();
+			if ( e.PreviousExecutionState != ApplicationExecutionState.Suspended && e.PreviousExecutionState != ApplicationExecutionState.Running ) await PopulateFirstStartReleases ();
 
 			LaunchParameters.SetArguments ( e.Arguments );
 
@@ -118,10 +118,12 @@ namespace Anilibria {
 			if ( SystemService.GetDeviceFamilyType () == DeviceFamilyType.Xbox ) ApplicationView.GetForCurrentView ().SetDesiredBoundsMode ( ApplicationViewBoundsMode.UseCoreWindow );
 		}
 
-		private void PopulateFirstStartReleases () {
+		private async Task PopulateFirstStartReleases () {
+			await ReleaseSingletonService.LoadReleases ();
+
 			//don't wait for release sync because it may take longer than expected
 #pragma warning disable CS4014
-			new SynchronizeService ( ApiService.Current () , StorageService.Current () ).SynchronizeReleases ();
+			new SynchronizeService ( ApiService.Current () , StorageService.Current () , ReleaseSingletonService.Current () ).SynchronizeReleases ();
 #pragma warning restore CS4014
 		}
 

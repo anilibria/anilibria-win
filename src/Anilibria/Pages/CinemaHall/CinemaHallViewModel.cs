@@ -36,14 +36,17 @@ namespace Anilibria.Pages.CinemaHall {
 
 		private readonly IAnilibriaApiService m_AnilibriaApiService;
 
+		private readonly IReleasesService m_ReleasesService;
+
 		private CinemaHallReleaseEntity m_ReleasesEntity;
 
 		private CinemaHallReleaseModel m_ReorderItem;
 
-		public CinemaHallViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , IAnalyticsService analyticsService ) {
+		public CinemaHallViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , IAnalyticsService analyticsService , IReleasesService releasesService ) {
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
+			m_ReleasesService = releasesService ?? throw new ArgumentNullException ( nameof ( releasesService ) );
 
 			RefreshSelectedReleases ();
 
@@ -131,7 +134,7 @@ namespace Anilibria.Pages.CinemaHall {
 		/// Navigate to.
 		/// </summary>
 		/// <param name="parameter">Parameter.</param>
-		public async void NavigateTo ( object parameter ) {
+		public void NavigateTo ( object parameter ) {
 
 			var collection = m_DataContext.GetCollection<CinemaHallReleaseEntity> ();
 			m_ReleasesEntity = collection.FirstOrDefault ();
@@ -145,12 +148,7 @@ namespace Anilibria.Pages.CinemaHall {
 
 			IsEmptyList = !m_ReleasesEntity.Releases.Any ();
 
-			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
-			var releases = Enumerable.Empty<ReleaseEntity> ();
-			if ( releasesFile != null ) {
-				var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-				releases = relasesJson.Length > 0 ? JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) : Enumerable.Empty<ReleaseEntity> ();
-			}
+			var releases = m_ReleasesService.GetReleases ();
 
 			var releasesDictionary = releases.ToDictionary ( a => a.Id );
 

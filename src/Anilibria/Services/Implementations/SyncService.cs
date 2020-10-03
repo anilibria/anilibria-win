@@ -14,7 +14,7 @@
 		/// </summary>
 		public static ISynchronizationService Current () {
 			lock ( m_LockObject ) {
-				if ( m_SynchronizeService == null ) m_SynchronizeService = new SynchronizeService ( ApiService.Current () , StorageService.Current () );
+				if ( m_SynchronizeService == null ) m_SynchronizeService = new SynchronizeService ( ApiService.Current () , StorageService.Current (), ReleaseSingletonService.Current() );
 			}
 
 			return m_SynchronizeService;

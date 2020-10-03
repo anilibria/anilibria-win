@@ -38,7 +38,7 @@ namespace Anilibria.Pages.Releases {
 		public ReleasesView () {
 			InitializeComponent ();
 
-			m_ViewModel = new ReleasesViewModel ( ApiService.Current () , StorageService.Current () , SyncService.Current () , new AnalyticsService () );
+			m_ViewModel = new ReleasesViewModel ( ApiService.Current () , StorageService.Current () , SyncService.Current () , new AnalyticsService () , ReleaseSingletonService.Current () );
 			DataContext = m_ViewModel;
 
 			Window.Current.CoreWindow.KeyUp += GlobalKeyUpHandler;
@@ -347,28 +347,24 @@ namespace Anilibria.Pages.Releases {
 
 		private void Grid_RightTapped ( object sender , RightTappedRoutedEventArgs e ) => FlyoutBase.ShowAttachedFlyout ( sender as FrameworkElement );
 
-		private async void Grid_Loaded(object sender, RoutedEventArgs e) => await LoadReleaseBackground();
+		private async void Grid_Loaded ( object sender , RoutedEventArgs e ) => await LoadReleaseBackground ();
 
-		private async Task LoadReleaseBackground()
-		{
+		private async Task LoadReleaseBackground () {
 			var folder = ApplicationData.Current.LocalFolder;
-			var backgroundImage = await folder.TryGetItemAsync("releasebackground.image");
-			if (backgroundImage == null)
-			{
+			var backgroundImage = await folder.TryGetItemAsync ( "releasebackground.image" );
+			if ( backgroundImage == null ) {
 				GridImageBackground.Background = null;
 				return;
 			}
 
-			var file = await folder.GetFileAsync("releasebackground.image");
-			using (var stream = await file.OpenAsync(FileAccessMode.Read))
-			{
-				var bitmapImage = new BitmapImage();
-				await bitmapImage.SetSourceAsync(stream);
+			var file = await folder.GetFileAsync ( "releasebackground.image" );
+			using ( var stream = await file.OpenAsync ( FileAccessMode.Read ) ) {
+				var bitmapImage = new BitmapImage ();
+				await bitmapImage.SetSourceAsync ( stream );
 
-				var decoder = await BitmapDecoder.CreateAsync(stream);
+				var decoder = await BitmapDecoder.CreateAsync ( stream );
 
-				GridImageBackground.Background = new ImageBrush
-				{
+				GridImageBackground.Background = new ImageBrush {
 
 					ImageSource = bitmapImage
 				};

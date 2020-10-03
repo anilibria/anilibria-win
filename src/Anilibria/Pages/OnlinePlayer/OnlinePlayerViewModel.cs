@@ -82,6 +82,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 
 		private readonly IDownloadService m_DownloadService;
 
+		private readonly IReleasesService m_ReleasesService;
+
 		private bool m_IsHD;
 
 		private bool m_IsSD;
@@ -204,7 +206,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		private bool m_IsXbox;
 
 		private bool m_IsCinemaHall = false;
-		
+
 		private bool m_IsNormalSpeed = true;
 
 		private bool m_Is2xSpeed;
@@ -222,11 +224,12 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <param name="dataContext">Data context.</param>
 		/// <param name="anilibriaApiService">Anilibria restful service.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public OnlinePlayerViewModel ( IAnalyticsService analyticsService , IDataContext dataContext , IAnilibriaApiService anilibriaApiService , IDownloadService downloadService ) {
+		public OnlinePlayerViewModel ( IAnalyticsService analyticsService , IDataContext dataContext , IAnilibriaApiService anilibriaApiService , IDownloadService downloadService , IReleasesService releasesService ) {
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
+			m_ReleasesService = releasesService ?? throw new ArgumentNullException ( nameof ( releasesService ) );
 			m_IsSD = true;
 			m_Volume = .8;
 
@@ -280,32 +283,23 @@ namespace Anilibria.Pages.OnlinePlayer {
 		}
 
 		private async Task SaveReleaseWatchTimestamp ( long releaseId ) {
-			try {
-				var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
+			var release = m_ReleasesService.GetReleaseById ( releaseId );
 
-				var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-				var releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson );
+			release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
 
-				var release = releases.FirstOrDefault ( a => a.Id == releaseId );
+			await m_ReleasesService.SaveReleases ();
 
-				release.LastWatchTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
+			var lastThreeWatchReleases = m_ReleasesService.GetReleases ()
+				.Where ( a => a.LastWatchTimestamp > 0 )
+				.OrderByDescending ( a => a.LastWatchTimestamp )
+				.Take ( 3 )
+				.ToList ();
+			if ( !lastThreeWatchReleases.Any () ) return;
 
-				await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( releases ) );
-
-				var lastThreeWatchReleases = releases
-					.Where ( a => a.LastWatchTimestamp > 0 )
-					.OrderByDescending ( a => a.LastWatchTimestamp )
-					.Take ( 3 )
-					.ToList ();
-				if ( !lastThreeWatchReleases.Any () ) return;
-
-				var jumpService = new JumpListService ();
-				var dictionary = new Dictionary<long , string> ();
-				foreach ( var watchRelease in lastThreeWatchReleases ) dictionary.Add ( watchRelease.Id , watchRelease.Title );
-				await jumpService.ChangeWatchHistoryItems ( dictionary );
-			} catch {
-				//If file is busy just miss save session
-			}
+			var jumpService = new JumpListService ();
+			var dictionary = new Dictionary<long , string> ();
+			foreach ( var watchRelease in lastThreeWatchReleases ) dictionary.Add ( watchRelease.Id , watchRelease.Title );
+			await jumpService.ChangeWatchHistoryItems ( dictionary );
 		}
 
 		/// <summary>
@@ -345,8 +339,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					}
 				);
 				onlineVideo.IsSeen = true;
-			}
-			else {
+			} else {
 				onlineVideo.IsSeen = !onlineVideo.IsSeen;
 				videoState.IsSeen = onlineVideo.IsSeen;
 			}
@@ -377,8 +370,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					PositionPercent = 0;
 					SelectedOnlineVideo = previousTrack;
 				}
-			}
-			else {
+			} else {
 				SetPreviousVideoInCinemaHall ();
 			}
 		}
@@ -395,8 +387,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 					PositionPercent = 0;
 					SelectedOnlineVideo = nextTrack;
 				}
-			}
-			else {
+			} else {
 				SetNextVideoInCinemaHall ();
 			}
 		}
@@ -410,8 +401,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			view.FullScreenSystemOverlayMode = FullScreenSystemOverlayMode.Minimal;
 			if ( view.IsFullScreenMode ) {
 				view.ExitFullScreenMode ();
-			}
-			else {
+			} else {
 				view.TryEnterFullScreenMode ();
 			}
 		}
@@ -430,8 +420,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( IsMuted ) {
 				IsMuted = false;
 				Volume = m_PreviousVolume;
-			}
-			else {
+			} else {
 				m_PreviousVolume = Volume;
 				IsMuted = true;
 				Volume = 0;
@@ -505,8 +494,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 						PositionPercent = 0;
 						SelectedOnlineVideo = newSeria;
 					}
-				}
-				else {
+				} else {
 					SetNextVideoInCinemaHall ();
 				}
 			}
@@ -632,8 +620,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 						LastPosition = Position
 					}
 				);
-			}
-			else {
+			} else {
 				videoState.LastPosition = Position == 0 && videoState.LastPosition > 0 ? videoState.LastPosition : Position;
 
 				if ( !videoState.IsSeen && PositionPercent >= 90 && PositionPercent <= 100 ) {
@@ -688,8 +675,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			try {
 				if ( m_DisplayRequest == null ) m_DisplayRequest = new DisplayRequest ();
 				m_DisplayRequest.RequestActive ();
-			}
-			catch {
+			} catch {
 			}
 
 			UpdateVolumeState ( m_Volume );
@@ -697,8 +683,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			if ( parameter == null ) {
 				if ( VideoSource != null ) {
 					ChangePlayback ( PlaybackState.Play , false );
-				}
-				else {
+				} else {
 					IsCinemaHall = false;
 
 					if ( m_PlayerRestoreEntity != null && m_PlayerRestoreEntity.ReleaseId > 0 ) {
@@ -708,8 +693,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							if ( cinemaHallEntity == null ) return;
 
 							var cinemaHallReleasesIds = cinemaHallEntity.Releases.ToList ();
-							var releases = m_DataContext.GetCollection<ReleaseEntity> ()
-								.Find ( a => true )
+							var releases = m_ReleasesService.GetReleases ()
 								.Where ( a => cinemaHallEntity.Releases.Contains ( a.Id ) )
 								.OrderBy ( a => cinemaHallReleasesIds.IndexOf ( a.Id ) )
 								.ToList ();
@@ -726,9 +710,8 @@ namespace Anilibria.Pages.OnlinePlayer {
 								GroupingOnlineVideos = new ObservableCollection<IGrouping<string , OnlineVideoModel>> ( onlineVideos.GroupBy ( a => a.ReleaseName ) );
 								m_NotUpdateSelectedRelese = false;
 							}
-						}
-						else {
-							var release = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == m_PlayerRestoreEntity.ReleaseId );
+						} else {
+							var release = m_ReleasesService.GetReleaseById ( m_PlayerRestoreEntity.ReleaseId );
 							if ( release != null ) {
 								m_RestorePosition = m_PlayerRestoreEntity.VideoPosition;
 								SelectedRelease = MapToReleaseModel ( release );
@@ -742,21 +725,19 @@ namespace Anilibria.Pages.OnlinePlayer {
 						}
 					}
 				}
-			}
-			else {
+			} else {
 				IsCinemaHall = false;
 
 				var releaseLink = parameter as ReleaseLinkModel;
 				var cinemHallLink = parameter as CinemaHallLinkModel;
 
 				if ( releaseLink != null ) {
-					var releaseLinkEntity = m_DataContext.GetCollection<ReleaseEntity> ().FirstOrDefault ( a => a.Id == releaseLink.ReleaseId );
+					var releaseLinkEntity = m_ReleasesService.GetReleases ().FirstOrDefault ( a => a.Id == releaseLink.ReleaseId );
 					if ( releaseLinkEntity != null ) Releases = new List<ReleaseModel> { MapToReleaseModel ( releaseLinkEntity ) };
-				}
-				else if ( cinemHallLink != null ) {
+				} else if ( cinemHallLink != null ) {
 					var releasesIds = cinemHallLink.Releases.ToList ();
-					var cinemaHallLinkEntity = m_DataContext.GetCollection<ReleaseEntity> ()
-						.Find ( a => cinemHallLink.Releases.Contains ( a.Id ) )
+					var cinemaHallLinkEntity = m_ReleasesService.GetReleases()
+						.Where ( a => cinemHallLink.Releases.Contains ( a.Id ) )
 						.ToList ();
 					if ( cinemaHallLinkEntity != null ) {
 						Releases = cinemaHallLinkEntity
@@ -765,8 +746,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 							.ToList ();
 					}
 					IsCinemaHall = true;
-				}
-				else {
+				} else {
 					Releases = parameter as IEnumerable<ReleaseModel>;
 				}
 				var release = Releases.First ();
@@ -826,16 +806,14 @@ namespace Anilibria.Pages.OnlinePlayer {
 				SelectedOnlineVideo = null;
 				if ( parameter == null && m_PlayerRestoreEntity != null ) {
 					SelectedOnlineVideo = SelectedRelease.OnlineVideos.FirstOrDefault ( a => a.Order == m_PlayerRestoreEntity.VideoId );
-				}
-				else {
+				} else {
 					PositionPercent = 0;
 					SelectedOnlineVideo = Releases.SelectMany ( a => a.OnlineVideos ).FirstOrDefault ( a => !a.IsSeen );
 				}
 
 				if ( SelectedOnlineVideo != null ) {
 					ChangePlayback ( PlaybackState.Play , false );
-				}
-				else {
+				} else {
 					VideoSource = null;
 				}
 				await SaveReleaseWatchTimestamp ( SelectedRelease.Id );
@@ -859,8 +837,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		public void NavigateFrom () {
 			try {
 				m_DisplayRequest.RequestRelease ();
-			}
-			catch {
+			} catch {
 			}
 			ShowPlaylistButton = true;
 
@@ -873,8 +850,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is videos flyout visible.
 		/// </summary>
-		public bool IsVideosFlyoutVisible
-		{
+		public bool IsVideosFlyoutVisible {
 			get => m_IsVideosFlyoutVisible;
 			set => Set ( ref m_IsVideosFlyoutVisible , value );
 		}
@@ -882,8 +858,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Media opened.
 		/// </summary>
-		public bool IsMediaOpened
-		{
+		public bool IsMediaOpened {
 			get => m_IsMediaOpened;
 			set => Set ( ref m_IsMediaOpened , value );
 		}
@@ -891,11 +866,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Volume.
 		/// </summary>
-		public double Volume
-		{
+		public double Volume {
 			get => m_Volume;
-			set
-			{
+			set {
 				if ( !Set ( ref m_Volume , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[PlayerVolumeSettings] = value;
@@ -913,8 +886,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is buffering.
 		/// </summary>
-		public bool IsBuffering
-		{
+		public bool IsBuffering {
 			get => m_IsBuffering;
 			set => Set ( ref m_IsBuffering , value );
 		}
@@ -922,8 +894,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Display duration.
 		/// </summary>
-		public string DisplayDuration
-		{
+		public string DisplayDuration {
 			get => m_DisplayDuration;
 			set => Set ( ref m_DisplayDuration , value );
 		}
@@ -931,8 +902,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Display position.
 		/// </summary>
-		public string DisplayPosition
-		{
+		public string DisplayPosition {
 			get => m_DisplayPosition;
 			set => Set ( ref m_DisplayPosition , value );
 		}
@@ -940,8 +910,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Position.
 		/// </summary>
-		public double Position
-		{
+		public double Position {
 			get => m_Position;
 			set => Set ( ref m_Position , value );
 		}
@@ -949,8 +918,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is muted.
 		/// </summary>
-		public bool IsMuted
-		{
+		public bool IsMuted {
 			get => m_IsMuted;
 			set => Set ( ref m_IsMuted , value );
 		}
@@ -958,11 +926,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is HD quality.
 		/// </summary>
-		public bool IsHD
-		{
+		public bool IsHD {
 			get => m_IsHD;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsHD , value ) ) return;
 
 				m_IsSD = !value;
@@ -980,11 +946,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is SD quality.
 		/// </summary>
-		public bool IsSD
-		{
+		public bool IsSD {
 			get => m_IsSD;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsSD , value ) ) return;
 
 				m_IsHD = !value;
@@ -1002,11 +966,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is HD quality.
 		/// </summary>
-		public bool IsFullHD
-		{
+		public bool IsFullHD {
 			get => m_IsFullHD;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsFullHD , value ) ) return;
 
 				m_IsHD = !value;
@@ -1019,8 +981,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 			}
 		}
 
-		public bool IsNormalSpeed
-		{
+		public bool IsNormalSpeed {
 			get => m_IsNormalSpeed;
 			set {
 				if ( !Set ( ref m_IsNormalSpeed , value ) ) return;
@@ -1042,11 +1003,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is 2x speed.
 		/// </summary>
-		public bool Is2xSpeed
-		{
+		public bool Is2xSpeed {
 			get => m_Is2xSpeed;
-			set
-			{
+			set {
 				if ( !Set ( ref m_Is2xSpeed , value ) ) return;
 
 				m_IsNormalSpeed = !value;
@@ -1088,11 +1047,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is 3x speed.
 		/// </summary>
-		public bool Is3xSpeed
-		{
+		public bool Is3xSpeed {
 			get => m_Is3xSpeed;
-			set
-			{
+			set {
 				if ( !Set ( ref m_Is3xSpeed , value ) ) return;
 
 				m_IsNormalSpeed = !value;
@@ -1112,11 +1069,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is 4x speed.
 		/// </summary>
-		public bool Is4xSpeed
-		{
+		public bool Is4xSpeed {
 			get => m_Is4xSpeed;
-			set
-			{
+			set {
 				if ( !Set ( ref m_Is4xSpeed , value ) ) return;
 
 				m_IsNormalSpeed = !value;
@@ -1136,8 +1091,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// is exists fullHD quality.
 		/// </summary>
-		public bool IsExistsFullHD
-		{
+		public bool IsExistsFullHD {
 			get => m_IsExistsFullHD;
 			set => Set ( ref m_IsExistsFullHD , value );
 		}
@@ -1145,8 +1099,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Display volume.
 		/// </summary>
-		public string DisplayVolume
-		{
+		public string DisplayVolume {
 			get => m_DisplayVolume;
 			set => Set ( ref m_DisplayVolume , value );
 		}
@@ -1154,8 +1107,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Display position percent.
 		/// </summary>
-		public double PositionPercent
-		{
+		public double PositionPercent {
 			get => m_PositionPercent;
 			set => Set ( ref m_PositionPercent , value );
 		}
@@ -1163,8 +1115,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Display position percent.
 		/// </summary>
-		public string DisplayPositionPercent
-		{
+		public string DisplayPositionPercent {
 			get => m_DisplayPositionPercent;
 			set => Set ( ref m_DisplayPositionPercent , value );
 		}
@@ -1172,8 +1123,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Video source.
 		/// </summary>
-		public Uri VideoSource
-		{
+		public Uri VideoSource {
 			get => m_VideoSource;
 			set => Set ( ref m_VideoSource , value );
 		}
@@ -1181,8 +1131,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Duration.
 		/// </summary>
-		public double DurationSecond
-		{
+		public double DurationSecond {
 			get => m_DurationSecond;
 			set => Set ( ref m_DurationSecond , value );
 		}
@@ -1190,11 +1139,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Selected video.
 		/// </summary>
-		public OnlineVideoModel SelectedOnlineVideo
-		{
+		public OnlineVideoModel SelectedOnlineVideo {
 			get => m_SelectedOnlineVideo;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedOnlineVideo , value ) ) return;
 
 				if ( m_NotUpdateSelectedRelese ) return;
@@ -1222,8 +1169,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change volume handler.
 		/// </summary>
-		public Action<double> ChangeVolumeHandler
-		{
+		public Action<double> ChangeVolumeHandler {
 			get;
 			set;
 		}
@@ -1231,8 +1177,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change volume handler.
 		/// </summary>
-		public Action<double> ChangePlaybackRate
-		{
+		public Action<double> ChangePlaybackRate {
 			get;
 			set;
 		}
@@ -1240,8 +1185,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change playback state (pause, play or stop).
 		/// </summary>
-		public Action<PlaybackState , bool> ChangePlayback
-		{
+		public Action<PlaybackState , bool> ChangePlayback {
 			get;
 			set;
 		}
@@ -1249,8 +1193,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Show release info.
 		/// </summary>
-		public bool IsShowReleaseInfo
-		{
+		public bool IsShowReleaseInfo {
 			get => m_IsShowReleaseInfo;
 			set => Set ( ref m_IsShowReleaseInfo , value );
 		}
@@ -1258,11 +1201,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is need show release info.
 		/// </summary>
-		public bool IsNeedShowReleaseInfo
-		{
+		public bool IsNeedShowReleaseInfo {
 			get => m_IsNeedShowReleaseInfo;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsNeedShowReleaseInfo , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[NeedShowReleaseInfoSettings] = value;
@@ -1272,8 +1213,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Releases.
 		/// </summary>
-		public IEnumerable<ReleaseModel> Releases
-		{
+		public IEnumerable<ReleaseModel> Releases {
 			get => m_Releases;
 			set => Set ( ref m_Releases , value );
 		}
@@ -1281,8 +1221,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Selected release.
 		/// </summary>
-		public ReleaseModel SelectedRelease
-		{
+		public ReleaseModel SelectedRelease {
 			get => m_SelectedRelease;
 			set => Set ( ref m_SelectedRelease , value );
 		}
@@ -1290,8 +1229,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Online videos.
 		/// </summary>
-		public ObservableCollection<OnlineVideoModel> OnlineVideos
-		{
+		public ObservableCollection<OnlineVideoModel> OnlineVideos {
 			get => m_OnlineVideos;
 			set => Set ( ref m_OnlineVideos , value );
 		}
@@ -1299,8 +1237,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Grouping online videos.
 		/// </summary>
-		public ObservableCollection<IGrouping<string , OnlineVideoModel>> GroupingOnlineVideos
-		{
+		public ObservableCollection<IGrouping<string , OnlineVideoModel>> GroupingOnlineVideos {
 			get => m_GroupingOnlineVideos;
 			set => Set ( ref m_GroupingOnlineVideos , value );
 		}
@@ -1308,11 +1245,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Show playlist button.
 		/// </summary>
-		public bool ShowPlaylistButton
-		{
+		public bool ShowPlaylistButton {
 			get => m_ShowPlaylistButton;
-			set
-			{
+			set {
 				if ( !Set ( ref m_ShowPlaylistButton , value ) ) return;
 
 				if ( SelectedOnlineVideo != null && !value ) ScrollToSelectedPlaylist ();
@@ -1322,11 +1257,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Enable/disable auto transition beetween videos.
 		/// </summary>
-		public bool IsAutoTransition
-		{
+		public bool IsAutoTransition {
 			get => m_IsAutoTransition;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsAutoTransition , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[AutoTransitionSettings] = value;
@@ -1336,11 +1269,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is supported compact overlay.
 		/// </summary>
-		public bool IsCompactOverlayEnabled
-		{
+		public bool IsCompactOverlayEnabled {
 			get => m_IsCompactOverlayEnabled;
-			set
-			{
+			set {
 				if ( !Set ( ref m_IsCompactOverlayEnabled , value ) ) return;
 
 				SetVisiblePlaybackButtons ( !value );
@@ -1350,8 +1281,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is supported compact overlay.
 		/// </summary>
-		public bool IsSupportedCompactOverlay
-		{
+		public bool IsSupportedCompactOverlay {
 			get => m_IsSupportedCompactOverlay;
 			set => Set ( ref m_IsSupportedCompactOverlay , value );
 		}
@@ -1359,11 +1289,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Control panel opacity.
 		/// </summary>
-		public double ControlPanelOpacity
-		{
+		public double ControlPanelOpacity {
 			get => m_ControlPanelOpacity;
-			set
-			{
+			set {
 				if ( !Set ( ref m_ControlPanelOpacity , value ) ) return;
 
 				ApplicationData.Current.RoamingSettings.Values[ControlPanelOpacitySettings] = value;
@@ -1373,8 +1301,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Playlist buttons positions.
 		/// </summary>
-		public ObservableCollection<PlaylistButtonPositionItem> PlaylistButtonPositions
-		{
+		public ObservableCollection<PlaylistButtonPositionItem> PlaylistButtonPositions {
 			get => m_PlaylistButtonPositions;
 			set => Set ( ref m_PlaylistButtonPositions , value );
 		}
@@ -1382,11 +1309,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Selected playlist button position.
 		/// </summary>
-		public PlaylistButtonPositionItem SelectedPlaylistButtonPosition
-		{
+		public PlaylistButtonPositionItem SelectedPlaylistButtonPosition {
 			get => m_SelectedPlaylistButtonPosition;
-			set
-			{
+			set {
 				var oldValue = m_SelectedPlaylistButtonPosition;
 				if ( !Set ( ref m_SelectedPlaylistButtonPosition , value ) ) return;
 				if ( value == null ) return;
@@ -1399,8 +1324,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Jump minutes.
 		/// </summary>
-		public int JumpMinutes
-		{
+		public int JumpMinutes {
 			get => m_JumpMinutes;
 			set => m_JumpMinutes = value;
 		}
@@ -1408,8 +1332,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Jump seconds.
 		/// </summary>
-		public int JumpSeconds
-		{
+		public int JumpSeconds {
 			get => m_JumpSeconds;
 			set => m_JumpSeconds = value;
 		}
@@ -1417,11 +1340,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Selected minute.
 		/// </summary>
-		public MinuteItem SelectedMinute
-		{
+		public MinuteItem SelectedMinute {
 			get => m_SelectedMinute;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedMinute , value ) ) return;
 
 				if ( m_SelectedMinute == null ) return;
@@ -1434,8 +1355,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Minutes.
 		/// </summary>
-		public ObservableCollection<MinuteItem> Minutes
-		{
+		public ObservableCollection<MinuteItem> Minutes {
 			get => m_Minutes;
 			set => Set ( ref m_Minutes , value );
 		}
@@ -1443,11 +1363,9 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Selected minute.
 		/// </summary>
-		public SecondItem SelectedSecond
-		{
+		public SecondItem SelectedSecond {
 			get => m_SelectedSecond;
-			set
-			{
+			set {
 				if ( !Set ( ref m_SelectedSecond , value ) ) return;
 
 				if ( m_SelectedSecond == null ) return;
@@ -1460,8 +1378,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Seconds.
 		/// </summary>
-		public ObservableCollection<SecondItem> Seconds
-		{
+		public ObservableCollection<SecondItem> Seconds {
 			get => m_Seconds;
 			set => Set ( ref m_Seconds , value );
 		}
@@ -1469,8 +1386,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is xbox.
 		/// </summary>
-		public bool IsXbox
-		{
+		public bool IsXbox {
 			get => m_IsXbox;
 			set => Set ( ref m_IsXbox , value );
 		}
@@ -1478,8 +1394,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Is cinema hall.
 		/// </summary>
-		public bool IsCinemaHall
-		{
+		public bool IsCinemaHall {
 			get => m_IsCinemaHall;
 			set => Set ( ref m_IsCinemaHall , value );
 		}
@@ -1487,8 +1402,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change page handler.
 		/// </summary>
-		public Action<string , object> ChangePage
-		{
+		public Action<string , object> ChangePage {
 			get;
 			set;
 		}
@@ -1496,8 +1410,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Show sidebar.
 		/// </summary>
-		public Action ShowSidebar
-		{
+		public Action ShowSidebar {
 			get;
 			set;
 		}
@@ -1505,8 +1418,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change position.
 		/// </summary>
-		public Action<TimeSpan> ChangePosition
-		{
+		public Action<TimeSpan> ChangePosition {
 			get;
 			set;
 		}
@@ -1514,8 +1426,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Scroll to selected item in playlist.
 		/// </summary>
-		public Action ScrollToSelectedPlaylist
-		{
+		public Action ScrollToSelectedPlaylist {
 			get;
 			set;
 		}
@@ -1523,8 +1434,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Set visible playback buttons.
 		/// </summary>
-		public Action<bool> SetVisiblePlaybackButtons
-		{
+		public Action<bool> SetVisiblePlaybackButtons {
 			get;
 			set;
 		}
@@ -1532,8 +1442,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change position for playlist button.
 		/// </summary>
-		public Action ChangeOpenPlaylistButton
-		{
+		public Action ChangeOpenPlaylistButton {
 			get;
 			set;
 		}
@@ -1541,8 +1450,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Change volume.
 		/// </summary>
-		public ICommand ChangeVolumeCommand
-		{
+		public ICommand ChangeVolumeCommand {
 			get;
 			set;
 		}
@@ -1550,8 +1458,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Mute command.
 		/// </summary>
-		public ICommand MuteCommand
-		{
+		public ICommand MuteCommand {
 			get;
 			set;
 		}
@@ -1559,8 +1466,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Show sidebar command.
 		/// </summary>
-		public ICommand ShowSidebarCommand
-		{
+		public ICommand ShowSidebarCommand {
 			get;
 			set;
 		}
@@ -1568,8 +1474,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Toggle full screen command.
 		/// </summary>
-		public ICommand ToggleFullScreenCommand
-		{
+		public ICommand ToggleFullScreenCommand {
 			get;
 			set;
 		}
@@ -1577,8 +1482,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Show playlist command.
 		/// </summary>
-		public ICommand ShowPlaylistCommand
-		{
+		public ICommand ShowPlaylistCommand {
 			get;
 			set;
 		}
@@ -1586,8 +1490,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Open next track in playlist command.
 		/// </summary>
-		public ICommand NextTrackCommand
-		{
+		public ICommand NextTrackCommand {
 			get;
 			set;
 		}
@@ -1595,8 +1498,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Open previous track in playlist command.
 		/// </summary>
-		public ICommand PreviousTrackCommand
-		{
+		public ICommand PreviousTrackCommand {
 			get;
 			set;
 		}
@@ -1604,8 +1506,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Enable compact mode command.
 		/// </summary>
-		public ICommand EnableCompactModeCommand
-		{
+		public ICommand EnableCompactModeCommand {
 			get;
 			set;
 		}
@@ -1613,8 +1514,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Leave compact mode command.
 		/// </summary>
-		public ICommand LeaveCompactModeCommand
-		{
+		public ICommand LeaveCompactModeCommand {
 			get;
 			set;
 		}
@@ -1622,8 +1522,7 @@ namespace Anilibria.Pages.OnlinePlayer {
 		/// <summary>
 		/// Toggle seen mark command.
 		/// </summary>
-		public ICommand ToggleSeenMarkCommand
-		{
+		public ICommand ToggleSeenMarkCommand {
 			get;
 			set;
 		}

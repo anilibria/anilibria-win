@@ -81,9 +81,12 @@ namespace Anilibria.Pages.DownloadManagerPage {
 
 		private Brush m_PlayColor;
 
-		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext , IAnalyticsService analyticsService ) {
+		private readonly IReleasesService m_ReleasesService;
+
+		public DownloadManagerViewModel ( IDownloadService downloadService , IDataContext dataContext , IAnalyticsService analyticsService , IReleasesService releasesService ) {
 			m_DownloadService = downloadService ?? throw new ArgumentNullException ( nameof ( downloadService ) );
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
+			m_ReleasesService = releasesService ?? throw new ArgumentNullException ( nameof ( releasesService ) );
 			m_DownloadService.SetDownloadProgress ( ProgressHandler );
 			m_DownloadService.SetDownloadFinished ( FinishHandler );
 			CreateCommands ();
@@ -216,15 +219,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 			};
 		}
 
-		private async void RefreshAfterSynchronize ( object parameter ) {
-			m_Releases = Enumerable.Empty<ReleaseEntity> ();
-
-			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
-			if ( releasesFile == null ) return;
-
-			var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-			m_Releases = relasesJson.Length > 0 ? JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) : Enumerable.Empty<ReleaseEntity> ();
-		}
+		private void RefreshAfterSynchronize ( object parameter ) => m_Releases = m_ReleasesService.GetReleases ();
 
 		/// <summary>
 		/// Initialize.
@@ -274,7 +269,7 @@ namespace Anilibria.Pages.DownloadManagerPage {
 				var status = await CachedFileManager.CompleteUpdatesAsync ( file );
 				if ( status != FileUpdateStatus.Complete ) failed = true;
 
-				if (failed) {
+				if ( failed ) {
 					ObserverEvents.FireEvent (
 						"showMessage" ,
 						new MessageModel {

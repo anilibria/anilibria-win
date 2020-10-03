@@ -6,8 +6,6 @@ using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
-using Newtonsoft.Json;
-using Windows.Storage;
 
 namespace Anilibria.Services.Implementations {
 
@@ -20,15 +18,18 @@ namespace Anilibria.Services.Implementations {
 
 		private readonly IDataContext m_DataContext;
 
+		private readonly IReleasesService m_ReleasesService;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria api service.</param>
 		/// <param name="dataContext">Data context.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public SynchronizeService ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext ) {
+		public SynchronizeService ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext, IReleasesService releasesService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
+			m_ReleasesService = releasesService ?? throw new ArgumentNullException ( nameof ( releasesService ) );
 		}
 
 		/// <summary>
@@ -192,11 +193,7 @@ namespace Anilibria.Services.Implementations {
 
 				SaveSchedule ( schedules );
 
-				var localFolder = ApplicationData.Current.LocalFolder;
-				var releasesFile = await localFolder.TryGetItemAsync ( "releases.cache" );
-				if ( releasesFile == null ) releasesFile = await localFolder.CreateFileAsync ( "releases.cache" );
-				var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-				var cacheReleases = relasesJson.Length > 0 ? JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) : Enumerable.Empty<ReleaseEntity> ().ToList();
+				var cacheReleases = m_ReleasesService.GetReleases ().ToList();
 
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
 				var changes = GetChanges ( changesCollection );
@@ -224,7 +221,8 @@ namespace Anilibria.Services.Implementations {
 					}
 				}
 
-				await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( cacheReleases ) );
+				m_ReleasesService.SetReleases ( cacheReleases );
+				await m_ReleasesService.SaveReleases ();
 
 				ObserverEvents.FireEvent ( "synchronizedReleases" , null );
 				ObserverEvents.FireEvent (

@@ -90,6 +90,8 @@ namespace Anilibria.Pages.Releases {
 
 		private readonly IAnalyticsService m_AnalyticsService;
 
+		private readonly IReleasesService m_ReleasesService;
+
 		private ObservableCollection<TorrentDownloadModeModel> m_TorrentDownloadModes = new ObservableCollection<TorrentDownloadModeModel> (
 			new List<TorrentDownloadModeModel> {
 				new TorrentDownloadModeModel {
@@ -206,11 +208,12 @@ namespace Anilibria.Pages.Releases {
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria Api Service.</param>
-		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService , IAnalyticsService analyticsService ) {
+		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService , IAnalyticsService analyticsService, IReleasesService releasesService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
 			m_AnalyticsService = analyticsService ?? throw new ArgumentNullException ( nameof ( analyticsService ) );
+			m_ReleasesService = releasesService ?? throw new ArgumentNullException ( nameof ( releasesService ) );
 
 			CreateCommands ();
 			CreateSortingItems ();
@@ -1529,8 +1532,7 @@ namespace Anilibria.Pages.Releases {
 
 			release.LastViewTimestamp = (long) ( DateTime.UtcNow.Subtract ( new DateTime ( 1970 , 1 , 1 ) ) ).TotalSeconds;
 
-			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
-			if ( releasesFile != null ) await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( m_AllReleases ) );
+			await m_ReleasesService.SaveReleases ();
 
 			var lastThreeViewReleases = m_AllReleases
 				.Where ( a => a.LastViewTimestamp > 0 )
@@ -1546,13 +1548,7 @@ namespace Anilibria.Pages.Releases {
 
 		}
 
-		private async Task<IEnumerable<ReleaseEntity>> GetReleasesByCurrentMode () {
-			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( "releases.cache" );
-			if ( releasesFile == null ) return Enumerable.Empty<ReleaseEntity> ();
-			
-			var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-			return relasesJson.Length > 0 ? JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) : Enumerable.Empty<ReleaseEntity> ();
-		}
+		private IEnumerable<ReleaseEntity> GetReleasesByCurrentMode () => m_ReleasesService.GetReleases ().ToList ();
 
 		private ObservableCollection<IGrouping<string , ReleaseModel>> GetGroupedReleases () {
 			var releases = FilteringReleases ( m_AllReleases );
@@ -1565,8 +1561,8 @@ namespace Anilibria.Pages.Releases {
 		/// <summary>
 		/// Refresh releases.
 		/// </summary>
-		private async void RefreshReleases () {
-			await RefreshReleasesCache ();
+		private void RefreshReleases () {
+			RefreshReleasesCache ();
 
 			if ( GroupedGridVisible ) {
 				GroupingCollection = GetGroupedReleases ();
@@ -1580,8 +1576,8 @@ namespace Anilibria.Pages.Releases {
 			}
 		}
 
-		private async Task RefreshReleasesCache () {
-			m_AllReleases = await GetReleasesByCurrentMode ();
+		private void RefreshReleasesCache () {
+			m_AllReleases = GetReleasesByCurrentMode ();
 			m_SchedulesReleases = GetScheduleReleases ();
 			EmptyReleases = m_AllReleases.Count () == 0;
 		}
