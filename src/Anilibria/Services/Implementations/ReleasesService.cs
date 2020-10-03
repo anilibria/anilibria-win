@@ -20,10 +20,13 @@ namespace Anilibria.Services.Implementations {
 		public async Task LoadReleases () {
 			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( m_FileName );
 
-			if ( releasesFile == null ) return;
+			if ( releasesFile == null ) {
+				await ApplicationData.Current.LocalFolder.CreateFileAsync ( m_FileName , CreationCollisionOption.ReplaceExisting );
+				releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( m_FileName );
+			}
 
 			var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-			m_Releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson );
+			m_Releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) ?? Enumerable.Empty<ReleaseEntity>().ToList();
 		}
 
 		public async Task SaveReleases () {
