@@ -223,6 +223,8 @@ namespace Anilibria.Services.Implementations {
 
 				m_ReleasesService.SetReleases ( cacheReleases );
 				await m_ReleasesService.SaveReleases ();
+				
+				changesCollection.Update ( changes );
 
 				ObserverEvents.FireEvent ( "synchronizedReleases" , null );
 				ObserverEvents.FireEvent (

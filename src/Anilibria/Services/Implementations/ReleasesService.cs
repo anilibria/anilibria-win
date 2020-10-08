@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -15,6 +16,8 @@ namespace Anilibria.Services.Implementations {
 
 		private const string m_FileName = "releases.cache";
 
+		private static readonly SemaphoreSlim m_Semaphore = new SemaphoreSlim ( 1 , 1 );
+
 		private List<ReleaseEntity> m_Releases = Enumerable.Empty<ReleaseEntity> ().ToList ();
 
 		public async Task LoadReleases () {
@@ -26,12 +29,19 @@ namespace Anilibria.Services.Implementations {
 			}
 
 			var relasesJson = await FileIO.ReadTextAsync ( (IStorageFile) releasesFile );
-			m_Releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) ?? Enumerable.Empty<ReleaseEntity>().ToList();
+			m_Releases = JsonConvert.DeserializeObject<List<ReleaseEntity>> ( relasesJson ) ?? Enumerable.Empty<ReleaseEntity> ().ToList ();
 		}
 
 		public async Task SaveReleases () {
 			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( m_FileName );
-			if ( releasesFile != null ) await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( m_Releases ) );
+			if ( releasesFile == null ) return;
+
+			await m_Semaphore.WaitAsync ( 1000 );
+			try {
+				await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( m_Releases ) );
+			} finally {
+				m_Semaphore.Release ();
+			}
 		}
 
 		/// <summary>
