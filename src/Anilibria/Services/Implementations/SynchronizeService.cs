@@ -26,7 +26,7 @@ namespace Anilibria.Services.Implementations {
 		/// <param name="anilibriaApiService">Anilibria api service.</param>
 		/// <param name="dataContext">Data context.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public SynchronizeService ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext, IReleasesService releasesService ) {
+		public SynchronizeService ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , IReleasesService releasesService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_ReleasesService = releasesService ?? throw new ArgumentNullException ( nameof ( releasesService ) );
@@ -188,12 +188,14 @@ namespace Anilibria.Services.Implementations {
 
 		public async Task SynchronizeReleases () {
 			try {
+				var firstRun = !m_ReleasesService.GetReleases ().Any ();
+
 				var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
 				var schedules = await m_AnilibriaApiService.GetSchedule ();
 
 				SaveSchedule ( schedules );
 
-				var cacheReleases = m_ReleasesService.GetReleases ().ToList();
+				var cacheReleases = m_ReleasesService.GetReleases ().ToList ();
 
 				var changesCollection = m_DataContext.GetCollection<ChangesEntity> ();
 				var changes = GetChanges ( changesCollection );
@@ -223,8 +225,8 @@ namespace Anilibria.Services.Implementations {
 
 				m_ReleasesService.SetReleases ( cacheReleases );
 				await m_ReleasesService.SaveReleases ();
-				
-				changesCollection.Update ( changes );
+
+				if ( !firstRun ) changesCollection.Update ( changes );
 
 				ObserverEvents.FireEvent ( "synchronizedReleases" , null );
 				ObserverEvents.FireEvent (
@@ -276,7 +278,7 @@ namespace Anilibria.Services.Implementations {
 		}
 
 		private void SaveHistoryChanges ( ChangesEntity changes , IEnumerable<ReleaseEntity> releaseCollection ) {
-			var allReleases = releaseCollection.ToList();
+			var allReleases = releaseCollection.ToList ();
 			var collection = m_DataContext.GetCollection<HistoryChangeEntity> ();
 			var historyChanges = collection.FirstOrDefault ();
 			var releasesIds = changes.NewOnlineSeries.Select ( a => a.Key );
