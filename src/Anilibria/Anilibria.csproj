@@ -31,7 +31,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <AppxPackageDir>D:\romanus\work\AnilibriaClient\anilibria-win\src\Anilibria\AppPackages\Anilibria_1.0.15.0_Test\</AppxPackageDir>
+    <AppxPackageDir>D:\romanus\work\AnilibriaClient\anilibria-win\src\Anilibria\AppPackages\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
