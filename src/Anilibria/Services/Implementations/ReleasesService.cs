@@ -36,11 +36,11 @@ namespace Anilibria.Services.Implementations {
 			var releasesFile = await ApplicationData.Current.LocalFolder.TryGetItemAsync ( m_FileName );
 			if ( releasesFile == null ) return;
 
-			await m_Semaphore.WaitAsync ( 1000 );
+			await m_Semaphore.WaitAsync ();
 			try {
 				await FileIO.WriteTextAsync ( (IStorageFile) releasesFile , JsonConvert.SerializeObject ( m_Releases ) );
 			} finally {
-				m_Semaphore.Release ();
+				if ( m_Semaphore.CurrentCount == 0 ) m_Semaphore.Release ();
 			}
 		}
 
