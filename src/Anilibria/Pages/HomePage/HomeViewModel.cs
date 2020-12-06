@@ -36,6 +36,8 @@ namespace Anilibria.Pages.HomePage {
 
 		public const string CinemaHall = "CinemaHall";
 
+		public const string Maintenance = "Maintenance";
+
 		private const string OpenReleasesPageLaunchParameter = "openreleasepage";
 
 		private const string OpenVideoPlayerPageLaunchParameter = "openvideoplayer";
@@ -105,6 +107,13 @@ namespace Anilibria.Pages.HomePage {
 					IconUri = new Uri("ms-appx:///Assets/Icons/donate.svg"),
 					IsVisible = StubMenuIsVisible,
 					IsCinemaHallPage = true
+				},
+				new SplitViewItem {
+					Name = "Обслуживание",
+					Page = Maintenance,
+					IconUri = new Uri("ms-appx:///Assets/Icons/donate.svg"),
+					IsVisible = StubMenuIsVisible,
+					IsMaintenancePage = true
 				},
 				new SplitViewItem {
 					Name = "Поддержать проект",

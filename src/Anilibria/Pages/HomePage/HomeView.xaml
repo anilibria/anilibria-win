@@ -16,6 +16,7 @@
 	xmlns:downloadmanager="using:Anilibria.Pages.DownloadManagerPage"
 	xmlns:cinemahall="using:Anilibria.Pages.CinemaHall"
 	xmlns:protocolpage="using:Anilibria.Pages.ProtocolsPages"
+	xmlns:maintenancepage="using:Anilibria.Pages.MaintenancePage"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance viewmodel:HomeViewModel}"
 	Loaded="Page_Loaded">
@@ -161,6 +162,12 @@
 										IconColor="White"
 										Visibility="{Binding IsCinemaHallPage}"
 									/>
+									<controls:MaintenanceIcon
+										IconWidth="24"
+										IconHeight="24"
+										IconColor="White"
+										Visibility="{Binding IsMaintenancePage}"
+									/>
 									<TextBlock
 										Text="{Binding Name}"
 										VerticalAlignment="Center"
@@ -257,6 +264,10 @@
 				/>
 				<cinemahall:CinemaHallView
 					x:Name="CinemaHall"
+					Visibility="Collapsed"
+				/>
+				<maintenancepage:MaintenancePageView
+					x:Name="Maintenance"
 					Visibility="Collapsed"
 				/>
 			</Grid>

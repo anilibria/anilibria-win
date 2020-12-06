@@ -160,6 +160,9 @@
     <Compile Include="Controls\DonateIcon.xaml.cs">
       <DependentUpon>DonateIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MaintenanceIcon.xaml.cs">
+      <DependentUpon>MaintenanceIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PopcornIcon.xaml.cs">
       <DependentUpon>PopcornIcon.xaml</DependentUpon>
     </Compile>
@@ -266,6 +269,10 @@
     <Compile Include="Pages\HomePage\HomeViewModel.cs" />
     <Compile Include="Pages\HomePage\PresentationClasses\SplitViewItem.cs" />
     <Compile Include="Pages\INavigation.cs" />
+    <Compile Include="Pages\MaintenancePage\MaintenancePageView.xaml.cs">
+      <DependentUpon>MaintenancePageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MaintenancePage\MaintenancePageViewModel.cs" />
     <Compile Include="Pages\Models\ReleaseNavigateEvent.cs" />
     <Compile Include="Pages\Models\ReleaseNavigateEventType.cs" />
     <Compile Include="Pages\OnlinePlayer\OnlinePlayerView.xaml.cs">
@@ -517,6 +524,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MaintenanceIcon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\PopcornIcon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -612,6 +623,10 @@
     <Page Include="Pages\HomePage\HomeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\MaintenancePage\MaintenancePageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\OnlinePlayer\OnlinePlayerView.xaml">
       <SubType>Designer</SubType>

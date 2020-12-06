@@ -1,0 +1,80 @@
+﻿<UserControl
+    x:Class="Anilibria.Pages.MaintenancePage.MaintenancePageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:Anilibria.Converters"
+	xmlns:controls="using:Anilibria.Controls"
+	mc:Ignorable="d"
+	x:Name="MaintenanceActions">
+
+	<Grid
+		converters:BackgroundThemeConverter.BackgroundMapper="MainBackground">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+
+		<Border
+			Grid.Row="0"
+			Grid.Column="0"
+			converters:BackgroundThemeConverter.BackgroundMapper="HumburgerBackground"
+			MinHeight="44"
+			Width="48">
+			<Button
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Style="{StaticResource IconsButtonStyle}"
+				Command="{Binding ShowSidebarCommand}">
+				<controls:HumburgerIcon
+					IconWidth="{StaticResource IconSize}"
+					IconHeight="{StaticResource IconSize}"
+					IconColor="White"
+				/>
+			</Button>
+		</Border>
+		<Border
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			converters:BackgroundThemeConverter.BackgroundMapper="PanelBackground"
+			Width="48">
+		</Border>
+		<Border
+			Grid.Row="0"
+			Grid.Column="1"
+			converters:BackgroundThemeConverter.BackgroundMapper="UpperPanel">
+			<RelativePanel
+				HorizontalAlignment="Stretch">
+			</RelativePanel>
+		</Border>
+
+		<Grid
+			Grid.Row="1"
+			Grid.Column="1">
+			<StackPanel
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Orientation="Vertical">
+				<TextBlock
+					converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
+					FontSize="24"
+					HorizontalAlignment="Center">
+					Нет релизов по фильтру
+				</TextBlock>
+				<TextBlock
+					converters:BackgroundThemeConverter.TextMapper="TextBlock"
+					FontSize="20"
+					TextWrapping="WrapWholeWords"
+					HorizontalAlignment="Center">
+					Загрузки добавляются на странице Каталог релизов
+				</TextBlock>
+			</StackPanel>
+		</Grid>
+	</Grid>
+</UserControl>

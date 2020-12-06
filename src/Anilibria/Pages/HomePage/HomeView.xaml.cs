@@ -18,6 +18,7 @@ using Anilibria.Pages.DonatePage;
 using Anilibria.Pages.DownloadManagerPage;
 using Anilibria.Pages.CinemaHall;
 using Windows.System;
+using Anilibria.Pages.MaintenancePage;
 
 namespace Anilibria {
 
@@ -47,6 +48,7 @@ namespace Anilibria {
 			m_Pages.Add ( "Donate" , Donate );
 			m_Pages.Add ( "DownloadManager" , DownloadManager );
 			m_Pages.Add ( "CinemaHall" , CinemaHall );
+			m_Pages.Add ( "Maintenance" , Maintenance );
 
 			CreateViewModels ();
 
@@ -82,6 +84,12 @@ namespace Anilibria {
 			CreateDonateViewModel ();
 			CreateDownloadManagerViewModel ();
 			CreateCinemaHallViewModel ();
+			CreateMaintenanceViewModel ();
+		}
+
+		private void CreateMaintenanceViewModel () {
+			var viewModel = Maintenance.DataContext as MaintenancePageViewModel;
+			viewModel.ShowSidebar = ShowSidebar;
 		}
 
 		private void CreateCinemaHallViewModel () {

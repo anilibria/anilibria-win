@@ -115,6 +115,11 @@ namespace Anilibria.Pages.HomePage.PresentationClasses {
 			set;
 		}
 
+		public bool IsMaintenancePage {
+			get;
+			set;
+		}
+
 	}
 
 }
