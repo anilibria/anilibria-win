@@ -57,24 +57,63 @@
 		<Grid
 			Grid.Row="1"
 			Grid.Column="1">
-			<StackPanel
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-				Orientation="Vertical">
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			
+			<Grid
+				Grid.Row="0"
+				VerticalAlignment="Top">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="240" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Button
+						Grid.Column="0"
+						Margin="0 4 0 0"
+						Command="{Binding ClearPosterCacheCommand}"
+						converters:BackgroundThemeConverter.ActionButton="Origin"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center">
+					Очистить кеш постеров
+				</Button>
 				<TextBlock
-					converters:BackgroundThemeConverter.TextMapper="TextBlockAccent"
-					FontSize="24"
-					HorizontalAlignment="Center">
-					Нет релизов по фильтру
-				</TextBlock>
-				<TextBlock
+					Grid.Column="1"
 					converters:BackgroundThemeConverter.TextMapper="TextBlock"
-					FontSize="20"
+					FontSize="18"
 					TextWrapping="WrapWholeWords"
-					HorizontalAlignment="Center">
-					Загрузки добавляются на странице Каталог релизов
+					VerticalAlignment="Center">
+					Удалить все сохраненные локально сохраненные постеры, после выполнения операции необходимо перезапустить приложение.
 				</TextBlock>
-			</StackPanel>
+			</Grid>
+			<Grid
+				Grid.Row="1"
+				VerticalAlignment="Top">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="240" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Button
+						Grid.Column="0"
+						Margin="0 4 0 0"
+						Command="{Binding ClearPosterCacheCommand}"
+						converters:BackgroundThemeConverter.ActionButton="Origin"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center">
+					Импорт релизов из файла
+				</Button>
+				<TextBlock
+					Grid.Column="1"
+					converters:BackgroundThemeConverter.TextMapper="TextBlock"
+					FontSize="18"
+					TextWrapping="WrapWholeWords"
+					VerticalAlignment="Center">
+					Позволяет импортировать релизы из файла. Импортированные релизы не будут обновляться.
+				</TextBlock>
+			</Grid>
+
 		</Grid>
 	</Grid>
 </UserControl>
