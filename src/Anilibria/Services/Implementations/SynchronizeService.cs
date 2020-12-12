@@ -6,6 +6,7 @@ using Anilibria.Pages.PresentationClasses;
 using Anilibria.Services.PresentationClasses;
 using Anilibria.Storage;
 using Anilibria.Storage.Entities;
+using Newtonsoft.Json;
 
 namespace Anilibria.Services.Implementations {
 
@@ -186,14 +187,30 @@ namespace Anilibria.Services.Implementations {
 				.ToList ();
 		}
 
+		public async Task SynchronizeReleasesFromContent ( string content ) {
+			await SynchronizeReleasesFromSource (
+				() => Task.FromResult ( JsonConvert.DeserializeObject<IEnumerable<Release>> ( content ) )
+			);
+		}
+
 		public async Task SynchronizeReleases () {
+			await SynchronizeReleasesFromSource (
+				async () => {
+					var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
+					var schedules = await m_AnilibriaApiService.GetSchedule ();
+
+					SaveSchedule ( schedules );
+
+					return releases;
+				}
+			);
+		}
+
+		private async Task SynchronizeReleasesFromSource ( Func<Task<IEnumerable<Release>>> loadContentHandler ) {
 			try {
 				var firstRun = !m_ReleasesService.GetReleases ().Any ();
 
-				var releases = await m_AnilibriaApiService.GetPage ( 1 , 2000 );
-				var schedules = await m_AnilibriaApiService.GetSchedule ();
-
-				SaveSchedule ( schedules );
+				var releases = await loadContentHandler ();
 
 				var cacheReleases = m_ReleasesService.GetReleases ().ToList ();
 

@@ -18,6 +18,12 @@ namespace Anilibria.Services {
 		Task SynchronizeReleases ();
 
 		/// <summary>
+		/// Synchronize releases from json content.
+		/// </summary>
+		/// <param name="content">Json content.</param>
+		Task SynchronizeReleasesFromContent ( string content );
+
+		/// <summary>
 		/// Synchronize youtubes.
 		/// </summary>
 		Task SynchronizeYoutubes ();
