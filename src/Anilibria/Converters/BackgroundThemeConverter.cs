@@ -3,8 +3,10 @@ using Anilibria.ThemeChanger;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace Anilibria.Converters {
 
@@ -32,6 +34,18 @@ namespace Anilibria.Converters {
 			if ( border != null ) {
 				border.Background = brush;
 				return;
+			}
+
+			var rectangle = element as Rectangle;
+			if ( rectangle != null ) {
+				rectangle.Fill = brush;
+				return;
+			}
+
+			var iconUserControl = element as IIconUserControl;
+			if ( iconUserControl != null ) {
+				iconUserControl.IconColor = brush;
+				iconUserControl.IconStroke = brush;
 			}
 		}
 
@@ -182,6 +196,114 @@ namespace Anilibria.Converters {
 		public static void SetTextMapper ( DependencyObject textBlock , string value ) => textBlock.SetValue ( TextMapperProperty , value );
 
 		public static string GetTextMapper ( DependencyObject textBlock ) => (string) textBlock.GetValue ( TextMapperProperty );
+
+		public static readonly DependencyProperty SliderProperty =
+			DependencyProperty.RegisterAttached (
+				"Slider" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , SliderChanged )
+			);
+
+		private static void SetSliderStyle ( DependencyObject element , string themeName ) {
+			var slider = (Slider) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					slider.Style = (Style) App.Current.Resources["IconSliderStyle"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					slider.Style = (Style) App.Current.Resources["DarkIconSliderStyle"];
+					break;
+			}
+		}
+
+		private static void SliderChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetSliderStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				"Slider" ,
+				element ,
+				( string name , DependencyObject target ) => SetSliderStyle ( target , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetSlider ( DependencyObject slider , string value ) => slider.SetValue ( SliderProperty , value );
+
+		public static string GetSlider ( DependencyObject slider ) => (string) slider.GetValue ( SliderProperty );
+
+		public static readonly DependencyProperty ToggleButtonProperty =
+			DependencyProperty.RegisterAttached (
+				"ToggleButton" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , ToggleButtonChanged )
+			);
+
+		private static void SetToggleButtonStyle ( DependencyObject element , string themeName ) {
+			var toggleButton = (ToggleButton) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					toggleButton.Style = (Style) App.Current.Resources["QualityToggleButton"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					toggleButton.Style = (Style) App.Current.Resources["DarkQualityToggleButton"];
+					break;
+			}
+		}
+
+		private static void ToggleButtonChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetToggleButtonStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				"ToggleButton" ,
+				element ,
+				( string name , DependencyObject target ) => SetToggleButtonStyle ( target , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetToggleButton ( DependencyObject toggleButton , string value ) => toggleButton.SetValue ( ToggleButtonProperty , value );
+
+		public static string GetToggleButton ( DependencyObject toggleButton ) => (string) toggleButton.GetValue ( ToggleButtonProperty );
+
+		public static readonly DependencyProperty PlayerButtonProperty =
+			DependencyProperty.RegisterAttached (
+				"PlayerButton" ,
+				typeof ( string ) ,
+				typeof ( BackgroundThemeConverter ) ,
+				new PropertyMetadata ( null , PlayerButtonChanged )
+			);
+
+		private static void SetPlayerButtonStyle ( DependencyObject element , string themeName ) {
+			var playerButton = (Button) element;
+			switch ( themeName ) {
+				case ControlsThemeChanger.DefaultTheme:
+					playerButton.Style = (Style) App.Current.Resources["PlayerFlyoutButtonStyle"];
+					break;
+				case ControlsThemeChanger.DarkTheme:
+					playerButton.Style = (Style) App.Current.Resources["DarkPlayerFlyoutButtonStyle"];
+					break;
+			}
+		}
+
+		private static void PlayerButtonChanged ( DependencyObject element , DependencyPropertyChangedEventArgs e ) {
+			var themeResourceName = e.NewValue.ToString ();
+
+			SetPlayerButtonStyle ( element , ControlsThemeChanger.CurrentTheme () );
+
+			ControlsThemeChanger.RegisterSubscriber (
+				"PlayerButton" ,
+				element ,
+				( string name , DependencyObject target ) => SetPlayerButtonStyle ( target , ControlsThemeChanger.CurrentTheme () )
+			);
+		}
+
+		public static void SetPlayerButton ( DependencyObject playerButton , string value ) => playerButton.SetValue ( PlayerButtonProperty , value );
+
+		public static string GetPlayerButton ( DependencyObject playerButton ) => (string) playerButton.GetValue ( PlayerButtonProperty );
 
 		public static readonly DependencyProperty MenuFlyoutProperty =
 			DependencyProperty.RegisterAttached (

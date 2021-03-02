@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Anilibria.Controls {
 
-	public sealed partial class EyeIcon : UserControl {
+	public sealed partial class EyeIcon : UserControl, IIconUserControl {
 
 		public EyeIcon () => InitializeComponent ();
 
