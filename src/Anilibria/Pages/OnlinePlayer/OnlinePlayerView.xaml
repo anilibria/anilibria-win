@@ -766,8 +766,48 @@
 														converters:BackgroundThemeConverter.ToggleButton="Origin"
 														Height="40"
 														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is025xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x0.25
+													</ToggleButton>
+													<ToggleButton
+														Margin="0 0 0 0"
+														IsTabStop="False"
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
+														converters:BackgroundThemeConverter.ToggleButton="Origin"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is05xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x0.5
+													</ToggleButton>
+													<ToggleButton
+														Margin="0 0 0 0"
+														IsTabStop="False"
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
+														converters:BackgroundThemeConverter.ToggleButton="Origin"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is075xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x0.75
+													</ToggleButton>
+													<ToggleButton
+														Margin="0 0 0 0"
+														IsTabStop="False"
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
+														converters:BackgroundThemeConverter.ToggleButton="Origin"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
 														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsNormalSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 														x1
+													</ToggleButton>
+													<ToggleButton
+														Margin="0 0 0 0"
+														IsTabStop="False"
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
+														converters:BackgroundThemeConverter.ToggleButton="Origin"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is125xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x1.25
 													</ToggleButton>
 													<ToggleButton
 														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
@@ -777,6 +817,15 @@
 														FontSize="{ThemeResource MTCMediaFontSize}"
 														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is15xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 														x1.5
+													</ToggleButton>
+													<ToggleButton
+														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
+														IsTabStop="False"
+														converters:BackgroundThemeConverter.ToggleButton="Origin"
+														Height="40"
+														FontSize="{ThemeResource MTCMediaFontSize}"
+														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is175xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+														x1.75
 													</ToggleButton>
 													<ToggleButton
 														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
@@ -795,15 +844,6 @@
 														FontSize="{ThemeResource MTCMediaFontSize}"
 														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is3xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 														x3
-													</ToggleButton>
-													<ToggleButton
-														Visibility="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.IsCompactOverlayEnabled, Converter={StaticResource InverseBoolConverter}}"
-														IsTabStop="False"
-														converters:BackgroundThemeConverter.ToggleButton="Origin"
-														Height="40"
-														FontSize="{ThemeResource MTCMediaFontSize}"
-														IsChecked="{Binding ElementName=OnlinePlayerContainer, Path=DataContext.Is4xSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-														x4
 													</ToggleButton>
 												</StackPanel>
 												<TextBlock x:Name='TimeRemainingElement'

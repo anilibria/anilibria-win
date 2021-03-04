@@ -134,6 +134,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Collections\IncrementalLoadingCollection.cs" />
+    <Compile Include="Controls\AlphabetUserControl.xaml.cs">
+      <DependentUpon>AlphabetUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BindableGridControl.cs" />
     <Compile Include="Controls\BindableListView.cs" />
     <Compile Include="Controls\ExternalLinkIcon.xaml.cs">
@@ -197,6 +200,7 @@
       <DependentUpon>PlayIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PointingGridControl.cs" />
+    <Compile Include="Controls\PresentationClasses\AlphabetModel.cs" />
     <Compile Include="Controls\RefreshIcon.xaml.cs">
       <DependentUpon>RefreshIcon.xaml</DependentUpon>
     </Compile>
@@ -494,6 +498,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AlphabetUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ExternalLinkIcon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

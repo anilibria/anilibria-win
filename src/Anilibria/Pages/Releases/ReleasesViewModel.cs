@@ -204,11 +204,15 @@ namespace Anilibria.Pages.Releases {
 
 		private bool m_VoicesAll;
 
+		private List<char> m_AlphabetCharacters = new List<char> ();
+
+		private bool m_IsAlphabetVisible;
+
 		/// <summary>
 		/// Constructor injection.
 		/// </summary>
 		/// <param name="anilibriaApiService">Anilibria Api Service.</param>
-		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService , IAnalyticsService analyticsService, IReleasesService releasesService ) {
+		public ReleasesViewModel ( IAnilibriaApiService anilibriaApiService , IDataContext dataContext , ISynchronizationService synchronizationService , IAnalyticsService analyticsService , IReleasesService releasesService ) {
 			m_AnilibriaApiService = anilibriaApiService ?? throw new ArgumentNullException ( nameof ( anilibriaApiService ) );
 			m_DataContext = dataContext ?? throw new ArgumentNullException ( nameof ( dataContext ) );
 			m_SynchronizeService = synchronizationService ?? throw new ArgumentNullException ( nameof ( synchronizationService ) );
@@ -574,6 +578,24 @@ namespace Anilibria.Pages.Releases {
 			SearchReleaseOriginalNameInGoogleCommand = CreateCommand ( SearchReleaseOriginalNameInGoogle );
 			SetBackgroundImageCommand = CreateCommand ( SetBackgroundImage );
 			ResetBackgroundImageCommand = CreateCommand ( ResetBackgroundImage );
+			CheckedAlphabetCharacterCommand = CreateCommand<string> ( CheckedAlphabetCharacter );
+			UncheckedAlphabetCharacterCommand = CreateCommand<string> ( UncheckedAlphabetCharacter );
+			CloseAlphabetCharactersCommand = CreateCommand ( ToggleAlphabetCharacters );
+			OpenAlphabetCharactersCommand = CreateCommand ( ToggleAlphabetCharacters );
+		}
+
+		private void ToggleAlphabetCharacters () => IsAlphabetVisible = !IsAlphabetVisible;
+
+		private void UncheckedAlphabetCharacter ( string character ) {
+			m_AlphabetCharacters.Remove ( character[0] );
+
+			Filter ();
+		}
+
+		private void CheckedAlphabetCharacter ( string character ) {
+			m_AlphabetCharacters.Add ( character[0] );
+
+			Filter ();
 		}
 
 		private async void ResetBackgroundImage () {
@@ -1637,6 +1659,7 @@ namespace Anilibria.Pages.Releases {
 		private IEnumerable<ReleaseEntity> FilteringReleases ( IEnumerable<ReleaseEntity> releases ) {
 			if ( releases == null ) return Enumerable.Empty<ReleaseEntity> ();
 
+			if ( m_AlphabetCharacters.Any () ) releases = releases.Where ( a => m_AlphabetCharacters.Any ( alphabetCharacter => a.Title.ToLowerInvariant ().StartsWith ( alphabetCharacter.ToString ().ToLowerInvariant () ) ) );
 			if ( !string.IsNullOrEmpty ( FilterByName ) ) releases = releases.Where ( a => ContainsInArrayCaseSensitive ( FilterByName , a.Names ) );
 			if ( !string.IsNullOrEmpty ( FilterByType ) ) releases = releases.Where ( a => a.Type?.ToLowerInvariant ().Contains ( FilterByType.ToLowerInvariant () ) ?? false );
 			if ( !string.IsNullOrEmpty ( FilterByDescription ) ) releases = releases.Where ( a => a.Description?.ToLowerInvariant ().Contains ( FilterByDescription.ToLowerInvariant () ) ?? false );
@@ -2452,6 +2475,12 @@ namespace Anilibria.Pages.Releases {
 			}
 		}
 
+
+		public bool IsAlphabetVisible {
+			get => m_IsAlphabetVisible;
+			set => Set ( ref m_IsAlphabetVisible , value );
+		}
+
 		/// <summary>
 		/// Show sidebar command.
 		/// </summary>
@@ -2951,6 +2980,38 @@ namespace Anilibria.Pages.Releases {
 		/// Reset background command.
 		/// </summary>
 		public ICommand ResetBackgroundImageCommand {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Checked alphabet character command.
+		/// </summary>
+		public ICommand CheckedAlphabetCharacterCommand {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Unchecked alphabet character command.
+		/// </summary>
+		public ICommand UncheckedAlphabetCharacterCommand {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Close alphabet characters panel command.
+		/// </summary>
+		public ICommand CloseAlphabetCharactersCommand {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Open alphabet characters panel command.
+		/// </summary>
+		public ICommand OpenAlphabetCharactersCommand {
 			get;
 			set;
 		}

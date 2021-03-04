@@ -1642,6 +1642,18 @@
 					Text="{Binding FilterByName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					TimeoutCommand="{Binding FilterCommand}"
 				/>
+				<Grid>
+					<Button
+						Margin="4 0 8 0"
+						converters:BackgroundThemeConverter.ActionButton="Origin"
+						Command="{Binding OpenAlphabetCharactersCommand}">
+						<FontIcon
+							FontSize="14"
+							FontFamily="Segoe MDL2 Assets"
+							Glyph="&#xE84B;"
+						/>
+					</Button>
+				</Grid>
 				<ComboBox
 					Margin="0 -1 0 0"
 					RelativePanel.AlignHorizontalCenterWithPanel="True"
@@ -2336,5 +2348,14 @@
 				/>
 			</controls:PointingGridControl>
 		</Grid>
+		<controls:AlphabetUserControl
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="1"
+			Checked="{Binding CheckedAlphabetCharacterCommand}"
+			UnChecked="{Binding UncheckedAlphabetCharacterCommand}"
+			ClickOutside="{Binding CloseAlphabetCharactersCommand}"
+			Visibility="{Binding IsAlphabetVisible}"
+		/>
 	</Grid>
 </UserControl>
