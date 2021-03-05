@@ -74,6 +74,10 @@ namespace Anilibria.Pages.Releases {
 					Rectangle_Tapped ( null , null );
 					return;
 				}
+				if ( m_ViewModel.IsAlphabetVisible ) {
+					m_ViewModel.IsAlphabetVisible = false;
+					return;
+				}
 			}
 
 			if ( m_ViewModel.IsShowReleaseCard ) return;
