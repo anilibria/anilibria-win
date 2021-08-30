@@ -3,6 +3,13 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/mmy41v654e7e8jgd?svg=true)](https://ci.appveyor.com/project/trueromanus/anilibria-win)
 [![License](https://raw.githubusercontent.com/anilibria/anilibria-win/master/license-MIT-green.svg?sanitize=true)](https://raw.githubusercontent.com/anilibria/anilibria-win/master/license-MIT-green.svg?sanitize=true)
 
+## Важное объявление!
+
+Поддержка данного приложения скоро закончиться.  
+Поэтому рекомендую Вам переходить на [новое приложение](https://github.com/anilibria/anilibria-winmaclinux).  
+Оно очень похоже как визуально так и по функционалу на приложение для win10. Весь функционал который есть в приложении win10 в том или ином виде есть и в новом приложении.  
+К сожалению альтернативы для пользователей Xbox нет :(
+
 ## Установка приложения
 
 **Внимание! Установка через Windows Store больше не работает поэтому пользуйтесь двумя другими видами установки и не спешите удалять уже установленное приложение, особенно это касается пользователей на Xbox One!**  
@@ -19,7 +26,3 @@
 ## Обратная связь
 
 На [этом сайте](https://anilibriawin10.reformal.ru/) Вы можете оставлять вопросы, сообщать об ошибках а также предлагать идеи.
-
-## Что насчет Windows 7/8/8.1 или Windows 10 младше 1803 а также macOS и Linux?
-
-В [соседнем репозитории](https://github.com/anilibria/anilibria-winmaclinux) разрабатывается remake win10 приложения для младших версий windows а также других операционных систем таких как macOS и Linux.  
