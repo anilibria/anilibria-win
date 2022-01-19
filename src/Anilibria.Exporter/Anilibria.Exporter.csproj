@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Anilibria\Storage\Entities\ChangesEntity.cs" Link="ChangesEntity.cs" />
+    <Compile Include="..\Anilibria\Storage\Entities\CinemaHallReleaseEntity.cs" Link="CinemaHallReleaseEntity.cs" />
+    <Compile Include="..\Anilibria\Storage\Entities\HistoryChangeEntity.cs" Link="HistoryChangeEntity.cs" />
+    <Compile Include="..\Anilibria\Storage\Entities\PlaylistItemEntity.cs" Link="PlaylistItemEntity.cs" />
+    <Compile Include="..\Anilibria\Storage\Entities\ReleaseEntity.cs" Link="ReleaseEntity.cs" />
+    <Compile Include="..\Anilibria\Storage\Entities\ReleaseVideoStateEntity.cs" Link="ReleaseVideoStateEntity.cs" />
+    <Compile Include="..\Anilibria\Storage\Entities\TorrentItemEntity.cs" Link="TorrentItemEntity.cs" />
+    <Compile Include="..\Anilibria\Storage\Entities\VideoStateEntity.cs" Link="VideoStateEntity.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiteDB" Version="4.1.4" />
+  </ItemGroup>
+
+</Project>
