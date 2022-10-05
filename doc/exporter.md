@@ -12,7 +12,8 @@
 ### Как пользоваться экспортером
 
 Перед использованием экспортера необходимо выйти из приложения!  
-Скачиваем экспортер по [ссылке](https://github.com/anilibria/anilibria-win/releases/download/1.0.18/AnilibriaExporter.zip).  
+
+Скачиваем экспортер по [ссылке](https://github.com/anilibria/anilibria-win/releases/download/1.0.18/Anilibria.Exporter.exe).  
 Запускаем файл ``Anilibria.Exporter.exe``.
 Откроется консольное окно в котором будет отображаться ход работы и возможные ошибки.
 В случае если все прошло успешно то будет выведено сообщение ``All processes completed!`` в конце.  
